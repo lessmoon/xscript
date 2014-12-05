@@ -11,7 +11,6 @@ public class Var extends Expr {
 
     public Constant getValue(){
         Constant v = VarTable.getTop().getVar(op);
-        System.out.println("get " + op + " = " + v );
         return v;
     }
     

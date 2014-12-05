@@ -85,14 +85,16 @@ public class Lexer {
                 v = 10 * v + Character.digit(peek,10);
                 readch();
             }while(Character.isDigit(peek));
-            if(peek != '.') return new Num(v);
+            if(peek != '.')
+                return new Num(v);
             float x = v;
             float d = 10;
             for(;;){
                 readch();
                 if(! Character.isDigit(peek))
                     break;
-                x = x + Character.digit(peek,10)/d;d = d*10;
+                x = x + Character.digit(peek,10)/d;
+                d = d*10;
             }
             return new Real(x);
         }

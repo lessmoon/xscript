@@ -77,6 +77,7 @@ public class VarTable {
     }
 
     public Constant setVar(Token id,Constant v){
+        //System.out.println("set " + id + " as " + v);
         VarTable tb = this;
         ConstantReference ref;
         while(tb != null){

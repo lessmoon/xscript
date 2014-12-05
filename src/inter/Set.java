@@ -13,7 +13,6 @@ public class Set extends Expr {
     
     public Constant getValue(){
         Constant v = expr.getValue();
-        System.out.println("set " + id + " as " + v);
         return id.setValue(v);
     }
 }

@@ -10,7 +10,7 @@ public class Type extends Word {
 
     public static final Type 
         Int     =   new Type( "int" , Tag.BASIC),
-        Float   =   new Type( "float" , Tag.BASIC),
+        Float   =   new Type( "real" , Tag.BASIC),
         Str     =   new Type( "string" , Tag.BASIC),
         Bool    =   new Type( "bool" , Tag.BASIC);
 

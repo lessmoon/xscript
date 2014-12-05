@@ -35,6 +35,15 @@ public class Parser{
             error("syntax error");
     }
 
+    public boolean check(int t) throws IOException{
+        if(look.tag == t){
+            move();
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     public Stmt block() throws IOException {
         match('{');
         Env savedEnv = top;
@@ -50,13 +59,26 @@ public class Parser{
 
     public Decls decls() throws IOException{
         Decls s = new Decls();
+        Expr  e = null;
         while( look.tag == Tag.BASIC){
             Type p = type();
-            Token tok = look;
-            match(Tag.ID);
+            Token tok;
+            do{
+                e = null;
+                tok = look;
+                match(Tag.ID);
+                top.put(tok,p);
+                if(check('=')){
+                    e = expr();
+                    if(e.type != p)
+                        e = ConversionFactory.getConversion(e,p);
+                    if(e == null){
+                        error("Can't convert "+ e.type +" to " + p);
+                    }
+                }
+                s.addDecl(new Decl(tok,p,e));
+            } while(check(','));
             match(';');
-            top.put(tok,p);
-            s.addDecl(new Decl(tok,p));
         }
         return s;
     }

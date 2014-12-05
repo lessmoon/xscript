@@ -1,7 +1,10 @@
 {
-    int i ;
-    string str;
-    str = "ok" + 212;
-    i = 25;
-    str = str + i;
+    real pi = 0,i = 1,j = 1,x;
+    do{
+        x = j / i;
+        j = j * -1;
+        i = i + 2;
+        pi = pi + x;
+    }while(x > 0.00001 || x < -0.00001);
+    pi = pi * 4;
 }
