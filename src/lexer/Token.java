@@ -6,6 +6,6 @@ public class Token {
         tag = t; 
     }
     public String toString() {
-        return "" + (char)tag;
+        return String.valueOf((char)tag);
     }
 }
