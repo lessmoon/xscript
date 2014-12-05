@@ -1,0 +1,20 @@
+package inter;
+
+import lexer.*;
+import symbols.*;
+
+public class FunctionInvoke extends Expr {
+    Para paralist ;
+    Expr(Token tok,Type t,Para p){
+        super(tok,t);
+        paralist = p;
+    }
+
+    public String toString(){
+        return op.toString();
+    }
+    
+    public Constant getValue(){
+        return Constant.False;/*At Present*/
+    }
+}
