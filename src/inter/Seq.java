@@ -10,10 +10,10 @@ public class Seq extends Stmt{
     }
     
     public void run(){
-        if(stmt1 != null){
+        if(stmt1 != Stmt.Null){
             stmt1.run();
         }
-        if(stmt2 != null){
+        if(stmt2 != Stmt.Null){
             stmt2.run();
         }
     }

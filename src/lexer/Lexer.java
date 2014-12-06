@@ -42,12 +42,30 @@ public class Lexer {
         for(;;readch()){
             if(peek == '\n') {
                 line++;
-            } else if(Character.isWhitespace(peek))
+            } else if(Character.isWhitespace(peek)){
                 continue;
-            else {
+            } else if(peek == '/'){
+                if(readch('*')){
+                    readch();
+                    do{
+                        while(peek != '*'){
+                            if(peek == '\n')
+                                line ++;
+                            readch();
+                        }
+                        readch();
+                    }while( peek != '/' );
+                } else if( peek == '/' ){
+                    while(!readch('\n'));
+                    line++;
+                } else {
+                    return new Token('/');
+                }
+            } else {
                 break;
             }
         }
+
         switch(peek){
             case '&':
                 if(readch('&')) 
@@ -63,23 +81,53 @@ public class Lexer {
                 if(readch('='))
                     return Word.eq;
                 else
-                    return new Token('=');
+                    return Word.ass;
             case '!':
                 if(readch('='))
                     return Word.ne;
                 else
-                    return new Token('!');
+                    return Word.not;
             case '<':
                 if(readch('='))
                     return Word.le;
                 else
-                    return new Token('<');
+                    return Word.ls;
             case '>':
                 if(readch('='))
                     return Word.ge;
                 else 
-                    return new Token('>');
+                    return Word.gt;
+            case '+':
+                if(readch('+'))
+                    return Word.inc;
+                else if(peek == '=')
+                    return Word.addass;
+                else
+                    return Word.add;
+            case '-':
+                if(readch('-'))
+                    return Word.dec;
+                else if(peek == '=')
+                    return Word.minass;
+                else
+                    return Word.min;
+            case '*':
+                if(readch('='))
+                    return Word.multass;
+                else
+                    return Word.mult;
+            case '/':
+                if(readch('='))
+                    return Word.divass;
+                else
+                    return Word.div;
+            case '%':
+                if(readch('='))
+                    return Word.modass;
+                else 
+                    return Word.mod;
         }
+
         if(Character.isDigit(peek)){
             int v = 0;
             do{
@@ -119,7 +167,36 @@ public class Lexer {
             StringBuffer b = new StringBuffer();
             readch();
             while(peek != '\"'){
-                b.append((char)peek);
+                int c = peek;
+                if(peek == '\\'){
+                    readch();
+                    c = peek;
+                    switch(peek){
+                    case '\'':
+                    case '\"':
+                    case '?':
+                    case '\\':
+                        break;
+                    case 'b':
+                        c = '\b';
+                        break;
+                    case 'f':
+                        c = '\f';
+                        break;
+                    case 'n':
+                        c = '\n';
+                        break;
+                    case 'r':
+                        c = '\r';
+                        break;
+                    case 't':
+                        c = '\t';
+                        break;
+                    default:
+                        /*error*/
+                    }
+                }
+                b.append((char)c);
                 readch();
             }
             readch();

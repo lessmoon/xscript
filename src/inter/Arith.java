@@ -14,10 +14,10 @@ public abstract class Arith extends Op {
             error("type error");
     }
 
-    public Expr optimaze(){
+    public Expr optimize(){
         if(isChangeable()){
-            expr1 = expr1.optimaze();
-            expr2 = expr2.optimaze();
+            expr1 = expr1.optimize();
+            expr2 = expr2.optimize();
             return this;
         } else {
             return getValue();

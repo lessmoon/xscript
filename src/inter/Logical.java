@@ -17,10 +17,10 @@ public abstract class Logical extends Expr {
         return expr1.isChangeable() || expr1.isChangeable();
     }
 
-    public Expr optimaze(){
+    public Expr optimize(){
         if(isChangeable()){
-            expr1 = expr1.optimaze();
-            expr2 = expr2.optimaze();
+            expr1 = expr1.optimize();
+            expr2 = expr2.optimize();
             return this;
         } else {
             return getValue();

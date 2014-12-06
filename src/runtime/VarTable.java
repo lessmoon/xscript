@@ -29,22 +29,27 @@ public class VarTable {
 
     static public VarTable popTop(){
         VarTable tmp = t;
+        //System.out.println("Want undo old stack top " );
         if(t.prev == null)
             return null;
         else{
+            //System.out.println("Undo old stack top " );
             t = t.prev;
             return tmp;
         }
     }
 
     static public VarTable pushTop(){
+        //System.out.println("New stack top " );
         t = new VarTable(t);
         return t;
     }
 
     public boolean pushVar(Token id,Constant v){
+        
         if(table.containsKey(id))
             return false;
+        //System.out.println("Def " + id + " as " + v );
         table.put(id,new ConstantReference(v));
         return true;
     }

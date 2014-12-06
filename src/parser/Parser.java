@@ -170,7 +170,7 @@ public class Parser{
     }
 
     public Expr expr() throws IOException {
-        return assign().optimaze();
+        return assign().optimize();
     }
 
     public Expr assign() throws IOException {
@@ -239,12 +239,16 @@ public class Parser{
     }
 
     public Expr unary() throws IOException {
-       if(look.tag == '!' ){
-            return new Not(copymove(),unary());  
-       } else if(look.tag == '-' ){
+       switch(look.tag){
+       case '!':
+            return new Not(copymove(),unary());
+       case '-':
+       case Tag.INC:
+       case Tag.DEC:
             return UnaryFactory.getUnary(copymove(),unary());
-       } else
+       default:
             return factor();
+       }    
     }
 
     public Expr factor() throws IOException {

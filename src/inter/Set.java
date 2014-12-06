@@ -15,6 +15,11 @@ public class Set extends Expr {
         return true;
     }
     
+    public Expr optimize(){
+        expr = expr.optimize();
+        return this;
+    }
+    
     public Constant getValue(){
         Constant v = expr.getValue();
         return id.setValue(v);

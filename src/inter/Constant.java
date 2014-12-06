@@ -14,7 +14,7 @@ public class Constant extends Expr{
     public Constant(String s){
         super(new Str(s),Type.Str);
     }
-    
+
     public Constant(float r){
         super(new Real(r),Type.Float);
     }

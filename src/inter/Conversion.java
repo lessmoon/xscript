@@ -14,9 +14,9 @@ public abstract class Conversion extends Expr {
         return e.isChangeable();
     }
     
-    public Expr optimaze(){
+    public Expr optimize(){
         if(isChangeable()){
-            e = e.optimaze();
+            e = e.optimize();
             return this;
         } else {
             return getValue();

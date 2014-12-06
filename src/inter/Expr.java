@@ -13,7 +13,7 @@ public abstract class Expr extends Node {
 
     abstract boolean isChangeable();
     public abstract Constant getValue();
-    public Expr optimaze() {
+    public Expr optimize() {
         return this;
     }
     

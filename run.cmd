@@ -1,3 +1,5 @@
+echo OFF
+cls
 SET BIN_PATH=bin/
 SET SRC_PATH=src/
 cd %BIN_PATH%

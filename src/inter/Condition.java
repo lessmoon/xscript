@@ -34,11 +34,11 @@ public class Condition extends Expr {
         }
     }
 
-    public Expr optimaze(){
+    public Expr optimize(){
         if(isChangeable()){
-            cond = cond.optimaze();
-            iftrue = iftrue.optimaze();
-            iffalse = iffalse.optimaze();
+            cond = cond.optimize();
+            iftrue = iftrue.optimize();
+            iffalse = iffalse.optimize();
             return this;
         } else {
             return getValue();

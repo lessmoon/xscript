@@ -6,23 +6,54 @@ import symbols.*;
 class IntUnary extends Unary {
     public IntUnary(Token tok,Expr x){
         super(tok,x);
+        check();
+    }
+
+    void check(){
+        switch(op.tag){
+        case Tag.INC:
+        case Tag.DEC:
+            if(!(expr instanceof Var))
+                error("operand `" + op + "' should be used for variable");
+            return;
+        case '-':
+            return ;
+        default:
+            error("Unknown operand:`" + op + "'");
+            return;
+        }
     }
 
     public Constant getValue(){
-        if(op.tag == '-'){
-            Constant c = expr.getValue();
+        Constant c = expr.getValue();
+        switch(op.tag){
+        case Tag.INC:
+            return ((Var)expr).setValue(new Constant(((Num)(c.op)).value + 1));
+        case Tag.DEC:
+            return ((Var)expr).setValue(new Constant(((Num)(c.op)).value + 1));
+        case '-':
             return new Constant(-((Num)(c.op)).value);
-        } else {
+        default:
             error("Unknown operand:`" + op + "'");
             return null;
         }
     }
-    
 }
 
 class RealUnary extends Unary {
     public RealUnary(Token tok,Expr x){
         super(tok,x);
+        check();
+    }
+    
+    void check(){
+        switch(op.tag){
+        case '-':
+            return;
+        default:
+            error("Operand:`" + op + "' is not permitted here");
+            return;
+        }
     }
     
     public Constant getValue(){

@@ -15,9 +15,9 @@ public abstract class Unary extends Op{
         return expr.isChangeable();
     }
 
-    public Expr optimaze(){
+    public Expr optimize(){
         if(isChangeable()){
-            expr = expr.optimaze();
+            expr = expr.optimize();
             return this;
         } else {
             return getValue();
