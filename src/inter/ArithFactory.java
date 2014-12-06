@@ -22,6 +22,8 @@ class IntArith extends Arith {
             return new Constant(lv * rv);
         case '/':
             return new Constant(lv / rv);
+        case '%':
+            return new Constant(lv % rv);
         default:/*error*/
             return null;
         }

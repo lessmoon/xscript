@@ -11,5 +11,5 @@ public class Word extends  Token {
         eq      =   new Word("==",Tag.EQ),      ne  = new Word("!=",Tag.NE),
         le      =   new Word("<=",Tag.LE),      ge  = new Word(">=",Tag.GE),
         True    =   new Word("true",Tag.TRUE),
-        False   =   new Word("false",Tag.FALSE);
+        False   =   new Word("false",Tag.FALSE),print   =   new Word("print",Tag.ID);
 }

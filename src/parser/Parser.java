@@ -9,9 +9,12 @@ public class Parser{
     private Lexer lex;
     private Token look;
     Env top = null;
+    FuncTable table = new FuncTable();
+    
     public  Parser(Lexer l) throws IOException{
         lex = l;
         move();
+        table.addFunc(Word.print,Type.Bool);
     }
 
     public void move() throws IOException{
@@ -167,9 +170,25 @@ public class Parser{
     }
 
     public Expr expr() throws IOException {
-        return bool();
+        return assign().optimaze();
     }
 
+    public Expr assign() throws IOException {
+        return condition();
+    }
+    
+    public Expr condition() throws IOException {
+        Expr e = bool();
+        Token t = look;
+        if(check('?')){
+            Expr iftrue = assign();
+            match(':');
+            Expr iffalse = condition();
+            e = new Condition(t,e,iftrue,iffalse);
+        }
+        return e;
+    }
+    
     public Expr bool() throws IOException {
        Expr l =  join();
        while(look.tag == Tag.OR){
@@ -213,7 +232,7 @@ public class Parser{
 
     public Expr mult() throws IOException {
        Expr l =  unary();
-       while(look.tag == '*' || look.tag == '/' ){
+       while(look.tag == '*' || look.tag == '/' || look.tag == '%'){
             l = ArithFactory.getArith(copymove(),l,unary());
        }
        return l;
@@ -233,17 +252,19 @@ public class Parser{
         Token tmp = copymove();
         switch(tmp.tag){
         case Tag.ID:
+            if(look.tag == '(')
+                return function(tmp);
             Var v = new Var(tmp,top.get(tmp));
             if( look.tag != '=' ){
                 return v;
             }
             tmp = look;
             move();
-            r = expr();
+            r = assign();
             if(r.type != v.type){
                 l = ConversionFactory.getConversion(r,v.type);
                 if(l == null){
-                    error("Can't convert " + r.type + " to " +v.type);
+                    error("Can't convert " + r.type + " to " + v.type);
                 }
                 r = l;
             }
@@ -255,7 +276,7 @@ public class Parser{
         case Tag.REAL:
             return new Constant(tmp,Type.Float);
         case '(':
-            l = expr();
+            l = assign();
             match(')');
             return l;
         default:
@@ -264,6 +285,18 @@ public class Parser{
         }
     }
 
+    public Expr function(Token id) throws IOException {
+        Type t = table.getFuncType(id);
+        if(t == null) {
+            error("Function " + id + " not found.");
+        }
+        match('(');
+        Expr p = assign();
+        assert(p != null);
+        match(')');
+        return new FunctionInvoke(id,t,p);
+    }
+    
     public static void main(String[] args) throws Exception {
         new Parser(new Lexer()).stmt().run();
     }

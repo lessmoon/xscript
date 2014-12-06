@@ -11,8 +11,12 @@ public abstract class Expr extends Node {
         type = p;
     }
 
+    abstract boolean isChangeable();
     public abstract Constant getValue();
-
+    public Expr optimaze() {
+        return this;
+    }
+    
     public String toString(){
         return op.toString();
     }

@@ -11,6 +11,10 @@ public class Set extends Expr {
         expr = x;
     }
     
+    boolean isChangeable(){
+        return true;
+    }
+    
     public Constant getValue(){
         Constant v = expr.getValue();
         return id.setValue(v);

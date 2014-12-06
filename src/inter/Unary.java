@@ -11,6 +11,19 @@ public abstract class Unary extends Op{
         type = Type.max(Type.Int,expr.type);
     }
 
+    boolean isChangeable(){
+        return expr.isChangeable();
+    }
+
+    public Expr optimaze(){
+        if(isChangeable()){
+            expr = expr.optimaze();
+            return this;
+        } else {
+            return getValue();
+        }
+    }
+    
     public String toString(){
         return op.toString() + " " + expr.toString();
     }

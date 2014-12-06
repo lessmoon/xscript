@@ -4,10 +4,14 @@ import lexer.*;
 import symbols.*;
 
 public class FunctionInvoke extends Expr {
-    Para paralist ;
-    Expr(Token tok,Type t,Para p){
+    Expr para;
+    public FunctionInvoke(Token tok,Type t,Expr p){
         super(tok,t);
-        paralist = p;
+        para = p;
+    }
+
+    boolean isChangeable(){
+        return true;
     }
 
     public String toString(){
@@ -15,6 +19,7 @@ public class FunctionInvoke extends Expr {
     }
     
     public Constant getValue(){
+        System.out.print(para.getValue());
         return Constant.False;/*At Present*/
     }
 }

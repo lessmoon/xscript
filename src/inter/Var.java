@@ -9,6 +9,10 @@ public class Var extends Expr {
         super(w,t);
     }
 
+    boolean isChangeable(){
+        return true;
+    }
+
     public Constant getValue(){
         Constant v = VarTable.getTop().getVar(op);
         return v;

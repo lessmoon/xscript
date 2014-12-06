@@ -9,5 +9,19 @@ public abstract class Conversion extends Expr {
         super(op,t);
         this.e = e;
     }
+    
+    boolean isChangeable(){
+        return e.isChangeable();
+    }
+    
+    public Expr optimaze(){
+        if(isChangeable()){
+            e = e.optimaze();
+            return this;
+        } else {
+            return getValue();
+        }
+    }
+    
     public abstract Constant getValue();
 }

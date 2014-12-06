@@ -12,6 +12,21 @@ public abstract class Logical extends Expr {
         if(type == null) 
             error("type error");
     }
+
+    boolean isChangeable(){
+        return expr1.isChangeable() || expr1.isChangeable();
+    }
+
+    public Expr optimaze(){
+        if(isChangeable()){
+            expr1 = expr1.optimaze();
+            expr2 = expr2.optimaze();
+            return this;
+        } else {
+            return getValue();
+        }
+    }
+
     public Type check(Type p1,Type p2){
         if(p1 == Type.Bool && p2 == Type.Bool)
             return Type.Bool;

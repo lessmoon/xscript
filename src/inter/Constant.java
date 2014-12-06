@@ -23,6 +23,10 @@ public class Constant extends Expr{
         return this;
     }
     
+    boolean isChangeable(){
+        return false;
+    }
+    
     public static final Constant
         True = new Constant(Word.True,Type.Bool),
         False = new Constant(Word.False,Type.Bool);
