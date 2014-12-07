@@ -13,18 +13,21 @@ public class Decl extends Stmt {
         id = i;
         type = t;
         value = v;
-        if(check(t,v) == null){
+
+        if(!check(t,v)){
             error("Can't assign " + value.type + " to " + id + "(" + type + ")");
         }
+
     }
     
-    public Type check(Type t1,Expr value){
-        if(value == null)
-            return t1;
-        else if(t1 == value.type){
-            return t1;
-        } else 
-            return null;
+    public boolean check(Type t,Expr value){
+        if(value == null){
+            return true;
+        } else if( type != value.type ) {
+            value = ConversionFactory.getConversion(value,type);
+            return value != null;
+        }
+        return true;
     }
     
     public void run(){

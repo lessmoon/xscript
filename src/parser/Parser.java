@@ -73,11 +73,6 @@ public class Parser{
                 top.put(tok,p);
                 if(check('=')){
                     e = expr();
-                    if(e.type != p)
-                        e = ConversionFactory.getConversion(e,p);
-                    if(e == null){
-                        error("Can't convert "+ e.type +" to " + p);
-                    }
                 }
                 s.addDecl(new Decl(tok,p,e));
             } while(check(','));
@@ -89,8 +84,9 @@ public class Parser{
     public Stmt stmts() throws IOException {
         if(look.tag == '}') {
             return Stmt.Null;
-        } else 
+        } else {
             return new Seq(stmt(),stmts());
+        }
     }
  
     public Stmt stmt() throws IOException{
@@ -104,7 +100,7 @@ public class Parser{
         case Tag.IF:
             match(Tag.IF);
             match('(');
-            x = bool();
+            x = expr();
             match(')');
             s1 = stmt();
             if(look.tag != Tag.ELSE) 
@@ -118,7 +114,7 @@ public class Parser{
             Stmt.Enclosing = whilenode;
             match(Tag.WHILE);
             match('(');
-            x = bool();
+            x = expr();
             match(')');
             s1 = stmt();
             whilenode.init(x,s1);
@@ -132,7 +128,7 @@ public class Parser{
             s1 = stmt();
             match(Tag.WHILE);
             match('(');
-            x = bool();
+            x = expr();
             match(')');
             match(';');
             donode.init(s1,x);
@@ -174,7 +170,12 @@ public class Parser{
     }
 
     public Expr assign() throws IOException {
-        return condition();
+        Expr l =  condition();
+        while(look.tag == '=' || look.tag == Tag.ADDASS || look.tag == Tag.MINASS 
+              || look.tag == Tag.MULTASS || look.tag == Tag.DIVASS || look.tag == Tag.MODASS){
+            l = SetFactory.getSet(copymove(),l,condition());
+        }
+        return l;
     }
     
     public Expr condition() throws IOException {
@@ -258,21 +259,11 @@ public class Parser{
         case Tag.ID:
             if(look.tag == '(')
                 return function(tmp);
-            Var v = new Var(tmp,top.get(tmp));
-            if( look.tag != '=' ){
-                return v;
+            Type t = top.get(tmp);
+            if(t == null){
+                error("Variable " + tmp + " not declared.");
             }
-            tmp = look;
-            move();
-            r = assign();
-            if(r.type != v.type){
-                l = ConversionFactory.getConversion(r,v.type);
-                if(l == null){
-                    error("Can't convert " + r.type + " to " + v.type);
-                }
-                r = l;
-            }
-            return new Set(tmp,v,r);
+            return new Var(tmp,t);
         case Tag.NUM:
             return new Constant(tmp,Type.Int);
         case Tag.STR:
@@ -284,7 +275,7 @@ public class Parser{
             match(')');
             return l;
         default:
-            error("Unknown token found:" + look.tag);
+            error("Unknown token found:" + tmp.tag);
             return null;
         }
     }

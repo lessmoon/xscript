@@ -1,12 +1,7 @@
 /*test code for the for loop*/
-{
-    int i;
-    for(i = 1;i <= 10; ++i){
-       int j = 1;
-       
-       for(j = 1;j <= i;++j){
-            print("" + i + "%" + j + "=" + (i%j) + "\t");
-       }
+{ 
+       int i= 0;
+       for(i;i<100;i+=2)
+            print("" + i + "\t");
        print("\n");
-    }
 }

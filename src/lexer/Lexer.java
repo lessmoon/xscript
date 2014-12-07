@@ -100,16 +100,18 @@ public class Lexer {
             case '+':
                 if(readch('+'))
                     return Word.inc;
-                else if(peek == '=')
+                else if(peek == '='){
+                    peek = ' ';
                     return Word.addass;
-                else
+                } else
                     return Word.add;
             case '-':
                 if(readch('-'))
                     return Word.dec;
-                else if(peek == '=')
+                else if(peek == '='){
+                    peek = ' ';
                     return Word.minass;
-                else
+                }else
                     return Word.min;
             case '*':
                 if(readch('='))
