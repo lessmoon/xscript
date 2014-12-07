@@ -238,7 +238,7 @@ public class Parser{
        }
        return l;
     }
-
+    
     public Expr unary() throws IOException {
        switch(look.tag){
        case '!':
@@ -248,15 +248,20 @@ public class Parser{
        case Tag.DEC:
             return UnaryFactory.getUnary(copymove(),unary());
        default:
-            return factor();
+            return postfix();
        }    
+    }
+
+    public Expr postfix() throws IOException {
+       return factor();
     }
 
     public Expr factor() throws IOException {
         Expr l,r;
-        Token tmp = copymove();
-        switch(tmp.tag){
+        
+        switch(look.tag){
         case Tag.ID:
+            Token tmp = copymove();
             if(look.tag == '(')
                 return function(tmp);
             Type t = top.get(tmp);
@@ -265,21 +270,42 @@ public class Parser{
             }
             return new Var(tmp,t);
         case Tag.NUM:
-            return new Constant(tmp,Type.Int);
+            return new Constant(copymove(),Type.Int);
         case Tag.STR:
-            return new Constant(tmp,Type.Str);
+            return new Constant(copymove(),Type.Str);
         case Tag.REAL:
-            return new Constant(tmp,Type.Float);
+            return new Constant(copymove(),Type.Float);
         case '(':
-            l = assign();
-            match(')');
-            return l;
+            return cast();
         default:
-            error("Unknown token found:" + tmp.tag);
+            error("Unknown token found:" + copymove().tag);
             return null;
         }
     }
 
+    public Expr cast() throws IOException {
+        Expr e = null;
+        match('(');
+        switch(look.tag){
+        case Tag.BASIC:
+            Type t = (Type) copymove();
+            match(')');
+            Expr f = unary();
+            assert(f != null);
+            e = f;
+            if(f.type != t)
+                e = ConversionFactory.getConversion(f,t);
+            if(e == null)
+                error("Can't convert from " + f.type + " to " + t);
+            break;
+        default:
+            e = assign();
+            match(')');
+            break;
+        }
+        return e;
+    }
+    
     public Expr function(Token id) throws IOException {
         Type t = table.getFuncType(id);
         if(t == null) {

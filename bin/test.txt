@@ -1,7 +1,7 @@
 /*test code for the for loop*/
 { 
-       int i= 0;
-       for(i;i<100;i+=2)
-            print("" + i + "\t");
+       int i= 1;
+       for(i;i < 100;i += 2)
+            print( (string)(i + 2 ) + "\t" );
        print("\n");
 }
