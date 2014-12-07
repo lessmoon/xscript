@@ -12,13 +12,11 @@ public class Type extends Word {
         Int     =   new Type( "int" , Tag.BASIC),
         Float   =   new Type( "real" , Tag.BASIC),
         Str     =   new Type( "string" , Tag.BASIC),
+        Char    =   new Type( "char" , Tag.BASIC),
         Bool    =   new Type( "bool" , Tag.BASIC);
 
     public static boolean numeric(Type p){
-        if(p == Type.Int || p == Type.Float ) 
-            return true;
-        else 
-            return false;
+        return (p == Type.Int || p == Type.Float || p == Type.Char);
     }
     
     public static Type max(Type p1,Type p2){
@@ -28,7 +26,9 @@ public class Type extends Word {
             return null;
         else if(p1 == Type.Float || p2 == Type.Float)
             return Type.Float;
-        else
+        else if(p1 == Type.Int || p2 == Type.Int)
             return Type.Int;
+        else
+            return Type.Char;
     }
 }

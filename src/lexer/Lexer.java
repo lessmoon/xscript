@@ -9,6 +9,7 @@ public class Lexer {
     void reserve(Word w){
         words.put(w.lexeme,w);
     }
+
     public Lexer(){
         reserve( new Word("if",Tag.IF) );
         reserve( new Word("else",Tag.ELSE) );
@@ -19,6 +20,7 @@ public class Lexer {
         reserve( Word.True );
         reserve( Word.False );
         reserve( Type.Int );
+        reserve( Type.Char );
         reserve( Type.Bool );
         reserve( Type.Float );
         reserve( Type.Str );
@@ -203,6 +205,42 @@ public class Lexer {
             }
             readch();
             return new Str(b.toString());
+        } else if( peek == '\''){
+            readch();
+            int c = peek;
+
+            if(peek == '\\'){
+                readch();
+                c = peek;
+                switch(peek){
+                case '\'':
+                case '\"':
+                case '?':
+                case '\\':
+                    break;
+                case 'b':
+                    c = '\b';
+                    break;
+                case 'f':
+                    c = '\f';
+                    break;
+                case 'n':
+                    c = '\n';
+                    break;
+                case 'r':
+                    c = '\r';
+                    break;
+                case 't':
+                    c = '\t';
+                    break;
+                default:
+                    /*error*/
+                }
+                
+            }
+            if(!readch('\''))
+                throw new Error("error");
+            return new Char((char)c);
         }
 
         Token tok = new Token(peek);

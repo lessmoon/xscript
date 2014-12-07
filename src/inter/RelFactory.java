@@ -38,6 +38,41 @@ class IntRel extends Rel {
     }
 }
 
+class CharRel extends Rel {
+    public CharRel(Token tok,Expr x1,Expr x2){
+        super(tok,x1,x2);
+    }
+    
+    public Constant getValue(){
+        assert(expr1!=null);
+        assert(expr2!=null);
+        assert(expr1.getValue()!=null);
+        assert(expr2.getValue()!=null);
+        assert(expr1.getValue().op != null);
+        assert(expr2.getValue().op != null);
+        char l = ((Char)(expr1.getValue().op)).value;
+        char r = ((Char)(expr2.getValue().op)).value;
+
+        switch(op.tag){
+        case '>':
+            return  l > r?Constant.True :Constant.False;
+        case '<':
+            return  l < r?Constant.True :Constant.False;
+        case Tag.EQ:
+            return  l == r?Constant.True :Constant.False;
+        case Tag.NE:
+            return  l != r?Constant.True :Constant.False;
+        case Tag.GE:
+            return  l >= r?Constant.True :Constant.False;
+        case Tag.LE:
+            return  l <= r?Constant.True :Constant.False;
+        default:
+            /*error*/
+            return null;
+        }
+    }
+}
+
 class BoolRel extends Rel {
     public BoolRel(Token tok,Expr x1,Expr x2){
         super(tok,x1,x2);
@@ -122,14 +157,16 @@ public class RelFactory {
             Type t = Type.max(x1.type,x2.type);
             if(t == null)
                 return null;
-            if(t != x1.type)
+            if( t != x1.type )
                 x1 = ConversionFactory.getConversion(x1,t);
-            if(t != x2.type)
+            if( t != x2.type )
                 x2 = ConversionFactory.getConversion(x2,t);
-            if(t == Type.Int)
+            if( t == Type.Int )
                 return new IntRel(tok,x1,x2);
             else if(t == Type.Bool)
                 return new BoolRel(tok,x1,x2);
+            else if(t == Type.Char)
+                return new CharRel(tok,x1,x2);
             else if(t == Type.Float)
                 return new RealRel(tok,x1,x2);
             else

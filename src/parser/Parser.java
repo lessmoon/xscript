@@ -275,6 +275,8 @@ public class Parser{
             return new Constant(copymove(),Type.Str);
         case Tag.REAL:
             return new Constant(copymove(),Type.Float);
+        case Tag.CHAR:
+            return new Constant(copymove(),Type.Char);
         case '(':
             return cast();
         default:
@@ -296,7 +298,7 @@ public class Parser{
             if(f.type != t)
                 e = ConversionFactory.getConversion(f,t);
             if(e == null)
-                error("Can't convert from " + f.type + " to " + t);
+                error("Can't convert " + f.type + " to " + t);
             break;
         default:
             e = assign();

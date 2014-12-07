@@ -49,7 +49,6 @@ public class VarTable {
         
         if(table.containsKey(id))
             return false;
-        //System.out.println("Def " + id + " as " + v );
         table.put(id,new ConstantReference(v));
         return true;
     }
@@ -82,11 +81,11 @@ public class VarTable {
     }
 
     public Constant setVar(Token id,Constant v){
-        //System.out.println("set " + id + " as " + v);
         VarTable tb = this;
         ConstantReference ref;
         while(tb != null){
             if((ref = tb.table.get(id)) != null){
+                
                 return (ref.v = v);
             }
             tb = tb.prev;

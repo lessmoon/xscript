@@ -30,6 +30,32 @@ class IntSet extends Set {
     }
 }
 
+class CharSet extends Set {
+    
+    public CharSet(Token tok,Expr i,Expr x){
+        super(tok,i,x);
+    }
+
+    public Constant getValue(){
+        char r = ((Char)(expr.getValue().op)).value;
+        char l = ((Char)(id.getValue().op)).value;
+        
+        switch(op.tag){
+        case Tag.ADDASS:
+            return id.setValue( new Constant(l + r));
+        case Tag.MINASS:
+            return id.setValue( new Constant(l - r));
+        case Tag.MULTASS:
+            return id.setValue( new Constant(l * r));
+        case Tag.DIVASS:
+            return id.setValue( new Constant(l / r));
+        case Tag.MODASS:
+            return id.setValue( new Constant(l % r));
+        default:
+            return null;
+        }
+    }
+}
 
 class RealSet extends Set {
     public RealSet(Token tok,Expr i,Expr x){
@@ -61,8 +87,10 @@ public class SetFactory {
             return new Set(tok,i,x);
         } else if( i.type == Type.Int ){
             return new IntSet(tok,i,x);
-        } else {
+        } else if( i.type == Type.Float){
             return new RealSet(tok,i,x);
+        } else {
+            return new CharSet(tok,i,x);
         }
     }
 }

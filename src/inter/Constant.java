@@ -1,10 +1,15 @@
 package inter;
 
-import lexer.*;import symbols.*;
+import lexer.*;
+import symbols.*;
 
 public class Constant extends Expr{
     public Constant(Token tok,Type p){
         super(tok,p);
+    }
+
+    public Constant(char c){
+        super(new Char(c),Type.Str);
     }
 
     public Constant(int i){
@@ -22,11 +27,11 @@ public class Constant extends Expr{
     public Constant getValue(){
         return this;
     }
-    
+
     boolean isChangeable(){
         return false;
     }
-    
+
     public static final Constant
         True = new Constant(Word.True,Type.Bool),
         False = new Constant(Word.False,Type.Bool);

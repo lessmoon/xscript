@@ -17,7 +17,7 @@ public class Set extends Expr {
         if( type == null ){
             error("Operand `" + op + "' should be used between " + id.type  + " variable and expression");
         }
-        if(expr.type != type){
+        if(expr.type != type){;
             expr = ConversionFactory.getConversion(expr,type);
         }
     }
@@ -43,15 +43,6 @@ public class Set extends Expr {
 
     public Constant getValue(){
         Constant v = expr.getValue();
-        switch(op.tag){
-        case '=':
-        case Tag.ADDASS:
-        case Tag.MINASS:
-        case Tag.MULTASS:
-        case Tag.DIVASS:
-        case Tag.MODASS:
-        }
-        
         return id.setValue(v);
     }
 }

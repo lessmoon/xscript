@@ -19,7 +19,8 @@ public class FunctionInvoke extends Expr {
     }
     
     public Constant getValue(){
-        System.out.print(para.getValue());
+        Constant c = para.getValue();
+        System.out.print(c);
         return Constant.False;/*At Present*/
     }
 }

@@ -15,7 +15,7 @@ public class Decls extends Stmt {
     public ArrayList<Decl> getDecls(){
         return decls;
     }
-    
+
     public int size(){
         return decls.size();
     }

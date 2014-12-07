@@ -17,14 +17,13 @@ public class Decl extends Stmt {
         if(!check(t,v)){
             error("Can't assign " + value.type + " to " + id + "(" + type + ")");
         }
-
     }
     
-    public boolean check(Type t,Expr value){
+    public boolean check(Type t,Expr v){
         if(value == null){
             return true;
         } else if( type != value.type ) {
-            value = ConversionFactory.getConversion(value,type);
+            value = ConversionFactory.getConversion(v,type);
             return value != null;
         }
         return true;

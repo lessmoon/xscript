@@ -56,6 +56,33 @@ class RealArith extends Arith {
     }
 }
 
+class CharArith extends Arith {  
+    public CharArith(Token op,Expr x1,Expr x2){
+        super(op,x1,x2);
+    }
+    
+    public Constant getValue(){
+        char lv = ((Char)(expr1.getValue().op)).value;
+        char rv = ((Char)(expr2.getValue().op)).value;
+
+        Constant v = null;
+        switch(op.tag){
+        case '+':
+            return new Constant(lv + rv);
+        case '-':
+            return new Constant(lv - rv);
+        case '*':
+            return new Constant(lv * rv);
+        case '/':
+            return new Constant(lv / rv);
+        case '%':
+            return new Constant(lv % rv);
+        default:/*error*/
+            return null;
+        }
+    }
+}
+
 class StringCat extends Arith {  
     public StringCat(Token op,Expr x1,Expr x2){
         super(op,x1,x2);
@@ -88,6 +115,8 @@ public class ArithFactory {
             return new IntArith(tok,e1,e2);
         } else if(t == Type.Float){
             return new RealArith(tok,e1,e2);
+        } else if(t == Type.Char){
+            return new CharArith(tok,e1,e2);
         } else if(t == Type.Str){
             if(tok.tag == '+'){
                 return new StringCat(tok,e1,e2);

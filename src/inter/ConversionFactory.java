@@ -45,18 +45,111 @@ class RealIntConversion extends Conversion{
     }
 }
 
-public class ConversionFactory {
-    public static Conversion getConversion(Expr src,Type t){
-        if(src.type == t){
+class CharIntConversion extends Conversion{
+    public CharIntConversion(Expr e){
+        super(e,Type.Int,Type.Int);
+    }
+
+    public Constant getValue(){
+        Constant v = e.getValue();
+        return new Constant((int)((Char)(v.op)).value);
+    }
+}
+
+class IntCharConversion extends Conversion{
+    public IntCharConversion(Expr e){
+        super(e,Type.Char,Type.Char);
+    }
+
+    public Constant getValue(){
+        Constant v = e.getValue();
+        return new Constant((char)((Num)(v.op)).value);
+    }
+}
+
+abstract class Factory {
+    public abstract Conversion getConversion(Expr src,Type t);
+}
+
+class IntConversionFactory extends Factory {
+    public  Conversion getConversion(Expr src,Type t){
+        if(t == Type.Int)
             return new NoConversion(src);
-        }else if(t == Type.Str){
-            return new StrConversion(src);
-        } else if(src.type == Type.Float && t == Type.Int){
-            return new RealIntConversion(src);
-        } else if(src.type == Type.Int && t == Type.Float){
+        else if(t == Type.Char)
+            return new IntCharConversion(src);
+        else if(t == Type.Float)
             return new IntRealConversion(src);
-        } else {
+        else if(t == Type.Str)
+            return new StrConversion(src);
+        else
             return null;
-        }
+    }
+}
+
+class RealConversionFactory extends Factory {
+    public  Conversion getConversion(Expr src,Type t){
+        if(t == Type.Int)
+            return new NoConversion(src);
+        else if(t == Type.Char)
+            return new IntRealConversion(new CharIntConversion(src));
+        else if(t == Type.Float)
+            return new NoConversion(src);
+        else if(t == Type.Str)
+            return new StrConversion(src);
+        else
+            return null;
+    }
+}
+
+class CharConversionFactory extends Factory {
+    public  Conversion getConversion(Expr src,Type t){
+        if(t == Type.Int)
+            return new CharIntConversion(src);
+        else if(t == Type.Char)
+            return new NoConversion(src);
+        else if(t == Type.Float)
+            return new IntRealConversion(new CharIntConversion(src));
+        else if(t == Type.Str)
+            return new StrConversion(src);
+        else
+            return null;
+    }
+}
+
+class StrConversionFactory extends Factory {
+    public  Conversion getConversion(Expr src,Type t){
+        if(t == Type.Str)
+            return new NoConversion(src);
+        else
+            return null;
+    }
+}
+
+class ConversionFactoryFactory {
+    static final IntConversionFactory intf = new IntConversionFactory();
+    static final RealConversionFactory realf = new RealConversionFactory();
+    static final CharConversionFactory charf = new CharConversionFactory();
+    static final StrConversionFactory strf = new StrConversionFactory();
+
+    static Factory getConversionFactory(Expr src){
+        Type t = src.type;
+        if(t == Type.Int)
+            return intf;
+        else if(t == Type.Char)
+            return charf;
+        else if(t == Type.Float)
+            return realf;
+        else if(t == Type.Str)
+            return strf;
+        else
+            return null;
+    }
+}
+
+public class ConversionFactory {
+    static public Conversion getConversion(Expr src,Type t){
+       Factory f = ConversionFactoryFactory.getConversionFactory(src);
+       assert(f!=null);       
+       return f != null?f.getConversion(src,t):null;
     }
 }
