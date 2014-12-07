@@ -7,5 +7,6 @@ public class Tag {
         INDEX   = 266 , LE      = 267 , CHAR    = 268 , NE      = 269 , NUM     = 270 , 
         OR      = 271 , REAL    = 272 , STR     = 273 , TRUE    = 274 , WHILE   = 275 ,
         FOR     = 276 , THIS    = 277 , INC     = 278 , DEC     = 279 , ADDASS  = 280 ,
-        MINASS  = 281 , MULTASS = 282 , DIVASS  = 283 , MODASS  = 284 ;
+        MINASS  = 281 , MULTASS = 282 , DIVASS  = 283 , MODASS  = 284 ,
+        ARRAY   = 285  ;
 }

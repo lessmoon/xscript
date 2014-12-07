@@ -253,7 +253,19 @@ public class Parser{
     }
 
     public Expr postfix() throws IOException {
-       return factor();
+       Expr e = factor();
+       switch(look.tag){
+       case Tag.INC:
+       case Tag.DEC:
+            return PostUnaryFactory.getUnary(copymove(),e);
+       case '[':
+            match('[');
+            Expr i = assign();
+            match(']');
+            return new StringAccess(e,i);
+       default:
+            return e;
+       }
     }
 
     public Expr factor() throws IOException {
@@ -269,6 +281,12 @@ public class Parser{
                 error("Variable " + tmp + " not declared.");
             }
             return new Var(tmp,t);
+        case Tag.TRUE:
+            move();
+            return Constant.True;
+        case Tag.FALSE:
+            move();
+            return Constant.False;            
         case Tag.NUM:
             return new Constant(copymove(),Type.Int);
         case Tag.STR:

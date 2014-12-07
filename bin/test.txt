@@ -1,6 +1,10 @@
 /*test code for the for loop*/
 { 
-       real i = 1;
-       i += 2;
-       print((string) i + "\n");
+   string a = "very long string ";
+   int i = 0;
+   while(true){
+       a = "" + i;
+       print(a + "\n");
+       i++; 
+   }
 }
