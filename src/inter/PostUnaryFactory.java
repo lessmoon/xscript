@@ -65,10 +65,10 @@ class CharPostUnary extends Unary {
         Constant c = expr.getValue();
         switch(op.tag){
         case Tag.INC:
-            ((Var)expr).setValue(new Constant(((Char)(c.op)).value + 1));
+            ((Var)expr).setValue(new Constant((char)(((Char)(c.op)).value + 1)));
             return c;
         case Tag.DEC:
-            ((Var)expr).setValue(new Constant(((Char)(c.op)).value - 1));
+            ((Var)expr).setValue(new Constant((char)(((Char)(c.op)).value - 1)));
             return c;
         default:
             error("Unknown operand:`" + op + "'");
@@ -81,9 +81,9 @@ public class PostUnaryFactory {
     public static Unary getUnary(Token tok,Expr e){
         if( Type.numeric(e.type) ){
             if( Type.Int == e.type ){
-                return new IntUnary(tok,e);
+                return new IntPostUnary(tok,e);
             } else if( Type.Char == e.type ){
-                return new CharUnary(tok,e);
+                return new CharPostUnary(tok,e);
             }
         }
         return null;

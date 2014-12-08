@@ -9,12 +9,6 @@ class IntRel extends Rel {
     }
     
     public Constant getValue(){
-        assert(expr1!=null);
-        assert(expr2!=null);
-        assert(expr1.getValue()!=null);
-        assert(expr2.getValue()!=null);
-        assert(expr1.getValue().op != null);
-        assert(expr2.getValue().op != null);
         int l = ((Num)(expr1.getValue().op)).value;
         int r = ((Num)(expr2.getValue().op)).value;
 
@@ -44,12 +38,6 @@ class CharRel extends Rel {
     }
     
     public Constant getValue(){
-        assert(expr1!=null);
-        assert(expr2!=null);
-        assert(expr1.getValue()!=null);
-        assert(expr2.getValue()!=null);
-        assert(expr1.getValue().op != null);
-        assert(expr2.getValue().op != null);
         char l = ((Char)(expr1.getValue().op)).value;
         char r = ((Char)(expr2.getValue().op)).value;
 

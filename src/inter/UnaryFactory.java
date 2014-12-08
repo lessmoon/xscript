@@ -75,6 +75,11 @@ class CharUnary extends Unary {
     
     void check(){
         switch(op.tag){
+        case Tag.INC:
+        case Tag.DEC:
+            if(!(expr instanceof Var))
+                error("operand `" + op + "' should be used for variable");
+            return;
         case '-':
             return;
         default:

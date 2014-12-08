@@ -1,10 +1,10 @@
 /*test code for the for loop*/
 { 
    string a = "very long string ";
+   char c = 'a';
    int i = 0;
-   while(true){
-       a = "" + i;
-       print(a + "\n");
-       i++; 
+   while(c <= 'z'){
+       print((string)(int)c + ":" +  (string)c + "\n");
+       c++;
    }
 }
