@@ -116,6 +116,15 @@ class CharConversionFactory extends Factory {
     }
 }
 
+class BoolConversionFactory extends Factory {
+    public  Conversion getConversion(Expr src,Type t){
+        if(t == Type.Str)
+            return new StrConversion(src);
+        else
+            return null;
+    }
+}
+
 class StrConversionFactory extends Factory {
     public  Conversion getConversion(Expr src,Type t){
         if(t == Type.Str)
@@ -125,12 +134,14 @@ class StrConversionFactory extends Factory {
     }
 }
 
+
 class ConversionFactoryFactory {
     static final IntConversionFactory intf = new IntConversionFactory();
     static final RealConversionFactory realf = new RealConversionFactory();
     static final CharConversionFactory charf = new CharConversionFactory();
     static final StrConversionFactory strf = new StrConversionFactory();
-
+    static final BoolConversionFactory boolf = new BoolConversionFactory();
+    
     static Factory getConversionFactory(Expr src){
         Type t = src.type;
         if(t == Type.Int)
@@ -141,6 +152,8 @@ class ConversionFactoryFactory {
             return realf;
         else if(t == Type.Str)
             return strf;
+        else if(t == Type.Bool)
+            return boolf;
         else
             return null;
     }

@@ -68,15 +68,15 @@ class CharArith extends Arith {
         Constant v = null;
         switch(op.tag){
         case '+':
-            return new Constant(lv + rv);
+            return new Constant((char)(lv + rv));
         case '-':
-            return new Constant(lv - rv);
+            return new Constant((char)(lv - rv));
         case '*':
-            return new Constant(lv * rv);
+            return new Constant((char)(lv * rv));
         case '/':
-            return new Constant(lv / rv);
+            return new Constant((char)(lv / rv));
         case '%':
-            return new Constant(lv % rv);
+            return new Constant((char)(lv % rv));
         default:/*error*/
             return null;
         }

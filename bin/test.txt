@@ -1,0 +1,51 @@
+/*test code */
+def int max(int a,int b){
+    return a>b?a:b;
+}
+
+def string trim(string str){
+    string result = "";
+    int len = strlen(str);
+    int i = 0,j = len - 1;
+    while(str[i] == ' ') i++;
+    while(str[j] == ' ') j--;
+    for(i;i <= j;i++){
+       result += str[i];
+    }
+    return result;
+}
+
+def string gestring(string str,char c,int i){
+     string result = "";
+     while(i < strlen(str)){
+          if(str[i] >= c)
+              result += str[i];
+          i++;
+     }
+     return result;
+}
+
+def string lsstring(string str,char c,int i){
+     int l = strlen(str);
+     string result = "";
+     while(i < l){
+          if(str[i] < c)
+              result += str[i];
+          i++;
+     }
+     return result;
+}
+
+def string quick_sort(string str){
+      if(strlen(str) <= 1){
+            return str;
+      }else{
+            return quick_sort(lsstring(str,str[0],1)) + str[0] +  quick_sort(gestring(str,str[0],1));
+      }
+}
+
+{
+    string a = "very long string   ";
+    print("quicksort(\"" + a + "\") = \""+ quick_sort(a) + "\"\n");
+    print("trim( \"" + a +"\") = \"" + trim(a) + "\"\n");
+}

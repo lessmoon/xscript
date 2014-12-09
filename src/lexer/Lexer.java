@@ -157,12 +157,12 @@ public class Lexer {
             return new Real(x);
         }
 
-        if(Character.isLetter(peek)){
+        if(Character.isLetter(peek)||peek == '_'){
             StringBuffer b = new StringBuffer();
             do{
                 b.append((char)peek);
                 readch();
-            } while(Character.isLetterOrDigit(peek));
+            } while(Character.isLetterOrDigit(peek)||peek == '_');
             String s = b.toString();
             Word w = (Word)words.get(s);
             if(w != null)

@@ -1,4 +1,5 @@
 /*test code */
+
 def int max(int a,int b){
     return a>b?a:b;
 }
@@ -23,6 +24,54 @@ def string gestring(string str,char c,int i){
           i++;
      }
      return result;
+}
+
+def bool is_prime(int n){
+    if(n == 1)
+        return false;
+    int i = 2;
+    for(i;i * i <= n;i++ ){
+        if(n%i == 0){
+            return false;
+        }
+    }
+    return true;
+}
+
+def real sqrt(real n){
+    real a = n/2;
+    int i = 0;
+    for(i;i < 20;i++){
+        a = (n/a+a)/2;
+    }
+    return a;
+}
+
+def int string2int(string s){
+    int i = 0;
+    int v = 0;
+    int len = strlen(s);
+    for(i;i < len;i++){
+        v *= 10;
+        v += (s[i] - '0');
+    }
+    return v;
+}
+
+def bool println(string str){
+    print(str);
+    return print("\n");
+}
+
+{
+    println((string)string2int("2556478"));
+    int n = 0;
+    while(n++ < 1000){
+        if(is_prime(n))
+            print((string)n + "\n");
+    }
+
+    print("" + sqrt(3) + "\n");
 }
 
 def string lsstring(string str,char c,int i){

@@ -378,7 +378,7 @@ public class Parser{
             return Constant.True;
         case Tag.FALSE:
             move();
-            return Constant.False;            
+            return Constant.False;
         case Tag.NUM:
             return new Constant(copymove(),Type.Int);
         case Tag.STR:

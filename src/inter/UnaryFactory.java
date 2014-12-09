@@ -91,7 +91,7 @@ class CharUnary extends Unary {
     public Constant getValue(){
         if(op.tag == '-'){
             Constant c = expr.getValue();
-            return new Constant(-((Char)(c.op)).value);
+            return new Constant((char)(-((Char)(c.op)).value));
         } else {
             error("Unknown operand:`" + op + "'");
             return null;
