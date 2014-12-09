@@ -1,21 +1,22 @@
 package symbols;
 
 import lexer.*;
+import inter.*;
 
 import java.util.*;
 
 public class FuncTable {
-    HashMap<Token,Type> table = new HashMap<Token,Type>(); 
+    HashMap<Token,Function> table = new HashMap<Token,Function>(); 
 
     public FuncTable(){
         
     }
     
-    public boolean addFunc(Token id,Type t){
-        return table.put(id,t) != null;
+    public boolean addFunc(Token id,Function f){
+        return table.put(id,f) != null;
     }
     
-    public Type getFuncType(Token id){
+    public Function getFuncType(Token id){
         return table.get(id);
     }
 }

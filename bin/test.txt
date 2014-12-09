@@ -1,10 +1,58 @@
-/*test code for the for loop*/
-{ 
-   string a = "very long string ";
-   char c = 'a';
-   int i = 0;
-   while(c <= 'z'){
-       print((string)(int)c + ":" +  (string)c + "\n");
-       c++;
-   }
+/*test code */
+def int max(int a,int b){
+    return a>b?a:b;
+}
+
+def string trim(string str){
+    string result = "";
+    int len = strlen(str);
+    int i = 0,j = len - 1;
+    while(str[i] == ' ') i++;
+    while(str[j] == ' ') j--;
+    for(i;i <= j;i++){
+       result += str[i];
+    }
+    return result;
+}
+
+def string gestring(string str,char c,int beg){
+     int i = beg;
+     int l = strlen(str);
+     string result = "";
+     while(i < l){
+          if(str[i] >= c){
+              result += str[i];
+          }
+          i++;
+     }
+     return result;
+}
+
+def string lsstring(string str,char c,int beg){
+     int i = beg;
+     int l = strlen(str);
+     string result = "";
+     while(i < l){
+          if(str[i] < c){
+              result += str[i];
+          }
+          i++;
+     }
+     return result;
+}
+
+def string quicksort(string str){
+      if(strlen(str) <= 1){
+            return str;
+      }else{
+            string left = lsstring(str,str[0],1);
+            string right = gestring(str,str[0],1);
+            return  quicksort(left) + str[0] +  quicksort(right);
+      }  
+}
+
+{
+    string a = "very long string   ";
+    print("quicksort(\"" + a + "\") = \""+ quicksort(a) + "\"\n");
+    print("trim( \"" + a +"\") = \"" + trim(a) + "\"\n");
 }

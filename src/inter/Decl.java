@@ -14,16 +14,16 @@ public class Decl extends Stmt {
         type = t;
         value = v;
 
-        if(!check(t,v)){
+        if(!check()){
             error("Can't assign " + value.type + " to " + id + "(" + type + ")");
         }
     }
     
-    public boolean check(Type t,Expr v){
+    public boolean check(){
         if(value == null){
             return true;
         } else if( type != value.type ) {
-            value = ConversionFactory.getConversion(v,type);
+            value = ConversionFactory.getConversion(value,type);
             return value != null;
         }
         return true;

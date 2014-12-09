@@ -9,7 +9,7 @@ public class Node {
     }
 
     void error(String s){
-        throw new Error("near line "+ lexline + ": " + s);
+        throw new RuntimeException("near line "+ lexline + ": " + s);
     }
 
 }

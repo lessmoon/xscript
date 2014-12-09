@@ -1,6 +1,8 @@
 package lexer;
 
-import java.io.*; import java.util.*; import symbols.*;
+import java.io.*; 
+import java.util.*;
+import symbols.*;
 
 public class Lexer {
     public static int line = 1;
@@ -17,6 +19,8 @@ public class Lexer {
         reserve( new Word("for",Tag.FOR) );
         reserve( new Word("do",Tag.DO) );
         reserve( new Word("break",Tag.BREAK) );
+        reserve( new Word("def",Tag.DEF) );
+        reserve( new Word("return",Tag.RETURN) );
         reserve( Word.True );
         reserve( Word.False );
         reserve( Type.Int );
@@ -25,6 +29,7 @@ public class Lexer {
         reserve( Type.Float );
         reserve( Type.Str );
         reserve( Word.print );
+        reserve( Word.strlen );
     }
 
     void readch() throws IOException{
@@ -239,7 +244,7 @@ public class Lexer {
                 
             }
             if(!readch('\''))
-                throw new Error("error");
+                throw new RuntimeException("error");
             return new Char((char)c);
         }
 

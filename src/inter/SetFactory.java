@@ -81,6 +81,25 @@ class RealSet extends Set {
     }
 }
 
+class StrSet extends Set {
+    public StrSet(Token tok,Expr i,Expr x){
+        super(tok,i,x);
+    }
+    
+    public Constant getValue(){
+        String r = ((Str)(expr.getValue().op)).value;
+        String l = ((Str)(id.getValue().op)).value;
+        
+        switch(op.tag){
+        case Tag.ADDASS:
+            return id.setValue( new Constant(l + r));
+        default:
+            return null;
+        }
+    }
+}
+
+
 public class SetFactory {
     static public Set getSet(Token tok,Expr i,Expr x){
         if(tok.tag == '='){
@@ -89,6 +108,8 @@ public class SetFactory {
             return new IntSet(tok,i,x);
         } else if( i.type == Type.Float){
             return new RealSet(tok,i,x);
+        } else if( i.type == Type.Str){
+            return new StrSet(tok,i,x);
         } else {
             return new CharSet(tok,i,x);
         }

@@ -17,7 +17,7 @@ public class Var extends Expr {
         Constant v = VarTable.getTop().getVar(op);
         return v;
     }
-    
+
     public Constant setValue(Constant v){
         return  VarTable.getTop().setVar(op,v);
     }

@@ -149,7 +149,7 @@ class ConversionFactoryFactory {
 public class ConversionFactory {
     static public Conversion getConversion(Expr src,Type t){
        Factory f = ConversionFactoryFactory.getConversionFactory(src);
-       assert(f!=null);       
+       assert(f!=null):"line:"+ src.lexline;
        return f != null?f.getConversion(src,t):null;
     }
 }

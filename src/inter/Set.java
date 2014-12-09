@@ -24,10 +24,15 @@ public class Set extends Expr {
     
     Type check(){
         if( op.tag == Tag.MODASS ){
-            if( id.type != Type.Int || expr.type != Type.Int ){
+            if(Type.max(id.type,expr.type) == Type.Int){
+                return id.type;
+            } else if( Type.max(id.type,expr.type) == Type.Char ) {
+                return Type.Char;
+            } else
                 return null;
-            }
-            return Type.Int;
+        } else if( id.type == Type.Str ){
+            if(op.tag != Tag.ADDASS)
+                return null;
         }
         return id.type;
     }

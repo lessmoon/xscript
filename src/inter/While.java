@@ -20,7 +20,14 @@ public class While extends Stmt{
 
     public void run(){
         while(expr.getValue() != Constant.False){
-            stmt.run();
+            try{
+                stmt.run();
+            }catch(RuntimeException e){
+                if(e.getCause() == Break.BreakCause)
+                    break;
+                else
+                    throw e;
+            }
         }
     }
 }

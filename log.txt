@@ -1,3 +1,3 @@
 
-C:\Users\lessmoon\Documents\GitHub\inLan>echo OFF 
-请按任意键继续. . . 
+C:\Users\lessmoon\Documents\GitHub\script>echo OFF 
+^C

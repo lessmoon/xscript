@@ -25,7 +25,6 @@ public class Decls extends Stmt {
     }
 
     public void run(){
-        VarTable top = VarTable.pushTop();
         for(Decl d : decls){
             d.run();
         }

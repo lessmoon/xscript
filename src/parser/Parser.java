@@ -1,20 +1,25 @@
 package parser;
 
-import java.io.*;
 import lexer.*;
 import symbols.*;
 import inter.*;
+
+import java.io.*;
+import java.util.ArrayList;
 
 public class Parser{
     private Lexer lex;
     private Token look;
     Env top = null;
     FuncTable table = new FuncTable();
+    Type returnType = Type.Int;
+    boolean hasDecl = false;
     
     public  Parser(Lexer l) throws IOException{
         lex = l;
         move();
-        table.addFunc(Word.print,Type.Bool);
+        table.addFunc(Word.print,Function.print);
+        table.addFunc(Word.strlen,Function.strlen);
     }
 
     public void move() throws IOException{
@@ -26,9 +31,9 @@ public class Parser{
         move();
         return tmp;
     }
-    
+
     public void error(String s){
-        throw new Error("near line " + lex.line + ":" + s);
+        throw new RuntimeException("near line " + lex.line + ":" + s);
     }
 
     public void match(int t) throws IOException{
@@ -46,41 +51,68 @@ public class Parser{
             return false;
         }
     }
+
+    public Stmt program() throws IOException {
+        Stmt s = Stmt.Null;
+        while(look.tag != -1){
+            switch(look.tag){
+            case Tag.DEF:
+                deffunc();
+                break;
+            default:
+                s = new Seq(s,stmt());
+                break;
+            }
+        }
+        return s;
+    }
+
+    public void deffunc() throws IOException {
+        match(Tag.DEF);
+        Type savedType = returnType;
+        ArrayList<Para> pl = new ArrayList<Para>();
+        returnType = type();
+        Token name = look;
+        match(Tag.ID);
+        match('(');
+        Env savedEnv = top;
+        top = new Env(top);
+        if(!check(')')){
+            do{
+                Type t = type();
+                Token n = look;
+                match(Tag.ID);
+                pl.add(new Para(t,n));
+                top.put(n,t);
+            }while(check(','));
+            match(')');
+        }
+        Function f = new Function(name,returnType,pl);
+        table.addFunc(name,f);
+        match('{');
+        Stmt s = stmts();
+        match('}');
+        f.init(name,returnType,s,pl);
+        top = savedEnv;
+        returnType = savedType;
+        return;
+    }
     
     public Stmt block() throws IOException {
         match('{');
         Env savedEnv = top;
+        boolean savedHasDecl = hasDecl;
+        hasDecl = false;
         top = new Env(top);
-        Decls d = decls();
         Stmt s = stmts();
         match('}');
-        if(d.size() > 0)
-            s = new Seq(d,new Seq(s,Stmt.Recover));
+        if(hasDecl)
+            s = new Seq(s,Stmt.Recover);
         top = savedEnv;
+        hasDecl = savedHasDecl;
         return s;
     }
 
-    public Decls decls() throws IOException{
-        Decls s = new Decls();
-        Expr  e = null;
-        while( look.tag == Tag.BASIC){
-            Type p = type();
-            Token tok;
-            do{
-                e = null;
-                tok = look;
-                match(Tag.ID);
-                top.put(tok,p);
-                if(check('=')){
-                    e = expr();
-                }
-                s.addDecl(new Decl(tok,p,e));
-            } while(check(','));
-            match(';');
-        }
-        return s;
-    }
-    
     public Stmt stmts() throws IOException {
         if(look.tag == '}') {
             return Stmt.Null;
@@ -89,7 +121,7 @@ public class Parser{
         }
     }
  
-    public Stmt stmt() throws IOException{
+    public Stmt stmt() throws IOException {
         Expr x;
         Stmt s,s1,s2;
         Stmt savedStmt;
@@ -135,6 +167,9 @@ public class Parser{
             Stmt.Enclosing = savedStmt;
             return donode;
         case Tag.FOR:
+            For fornode = new For();
+            savedStmt = Stmt.Enclosing;
+            Stmt.Enclosing = fornode;
             move();
             match('(');
             Expr e1 = expr();
@@ -144,13 +179,23 @@ public class Parser{
             Expr e3 = expr();
             match(')');
             s = stmt();
-            return new For(e1,e2,e3,s);
+            Stmt.Enclosing = savedStmt;
+            fornode.init(e1,e2,e3,s);
+            return fornode;
         case Tag.BREAK:
             match(Tag.BREAK);
             match(';');
             return new Break();
+        case Tag.RETURN:
+            match(Tag.RETURN);
+            Expr e = expr();
+            match(';');
+            return new Return(e,returnType);
         case '{':
             return block();
+        case Tag.BASIC:
+            hasDecl = true;
+            return decls();
         default:
             /*single expression statement*/
             s = new ExprStmt(expr());
@@ -159,9 +204,37 @@ public class Parser{
         }
     }    
 
+    public Decls decls() throws IOException{
+        Decls s = new Decls();
+        Expr  e = null;
+        while( look.tag == Tag.BASIC){
+            Type p = type();
+            Token tok;
+            do{
+                e = null;
+                tok = look;
+                match(Tag.ID);
+                top.put(tok,p);
+                if(check('=')){
+                    e = expr();
+                }
+                s.addDecl(new Decl(tok,p,e));
+            } while(check(','));
+            match(';');
+        }
+        return s;
+    }    
+    
     public Type type() throws IOException {
         Type p = (Type)look;
         match(Tag.BASIC);
+        while( look.tag == '[' ){
+            match('[');
+            Token sz = look;
+            match(Tag.NUM);
+            p = new Array(p,((Num)sz).value);
+            match(']');
+        }
         return p;
     }
 
@@ -177,7 +250,7 @@ public class Parser{
         }
         return l;
     }
-    
+
     public Expr condition() throws IOException {
         Expr e = bool();
         Token t = look;
@@ -238,7 +311,7 @@ public class Parser{
        }
        return l;
     }
-    
+
     public Expr unary() throws IOException {
        switch(look.tag){
        case '!':
@@ -262,6 +335,9 @@ public class Parser{
             match('[');
             Expr i = assign();
             match(']');
+            if(e instanceof Var){
+                return new StringVarAccess((Var)e,i);
+            }
             return new StringAccess(e,i);
        default:
             return e;
@@ -327,18 +403,23 @@ public class Parser{
     }
     
     public Expr function(Token id) throws IOException {
-        Type t = table.getFuncType(id);
-        if(t == null) {
+        Function f = table.getFuncType(id);
+        ArrayList<Expr> paras = new ArrayList<Expr>();
+        if(f == null) {
             error("Function " + id + " not found.");
         }
         match('(');
-        Expr p = assign();
-        assert(p != null);
-        match(')');
-        return new FunctionInvoke(id,t,p);
+        if(!check(')')){
+            do{
+                paras.add(assign());
+            }while(check(','));
+            match(')');
+        }
+
+        return new FunctionInvoke(f,paras);
     }
     
     public static void main(String[] args) throws Exception {
-        new Parser(new Lexer()).stmt().run();
+        new Parser(new Lexer()).program().run();
     }
 }
