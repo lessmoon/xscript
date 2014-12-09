@@ -1,6 +1,7 @@
 package inter;
 
 import symbols.*;
+import runtime.*;
 
 class ReturnResult extends RuntimeException {
     public final Constant value;
@@ -11,10 +12,11 @@ class ReturnResult extends RuntimeException {
 
 public class Return extends Stmt {
     public Expr expr;
-
-    public Return(Expr e,Type t){
+    final int sizeOfStack;
+    public Return(Expr e,Type t,int s){
         expr = e;
         check(t);
+        sizeOfStack = s;
     }
 
     public void check(Type t){
@@ -33,6 +35,10 @@ public class Return extends Stmt {
          * But it works well.
          * Maybe I will change the virtual machine.
          */
-        throw new ReturnResult(expr.getValue());
+        ReturnResult r = new ReturnResult(expr.getValue());
+        for(int i = 0 ; i < sizeOfStack;i++)
+            VarTable.popTop();
+        
+        throw r;
     }
 }

@@ -15,40 +15,29 @@ def string trim(string str){
     return result;
 }
 
-def string gestring(string str,char c,int beg){
-     int i = beg;
-     int l = strlen(str);
+def string gestring(string str,char c,int i){
      string result = "";
-     while(i < l){
-          if(str[i] >= c){
+     while(i < strlen(str)){
+          if(str[i] >= c)
               result += str[i];
-          }
           i++;
      }
      return result;
 }
 
-def string lsstring(string str,char c,int beg){
-     int i = beg;
+def string lsstring(string str,char c,int i){
      int l = strlen(str);
      string result = "";
      while(i < l){
-          if(str[i] < c){
+          if(str[i] < c)
               result += str[i];
-          }
           i++;
      }
      return result;
 }
 
 def string quicksort(string str){
-      if(strlen(str) <= 1){
-            return str;
-      }else{
-            string left = lsstring(str,str[0],1);
-            string right = gestring(str,str[0],1);
-            return  quicksort(left) + str[0] +  quicksort(right);
-      }  
+            return strlen(str) <= 1?str:quicksort(lsstring(str,str[0],1)) + str[0] +  quicksort(gestring(str,str[0],1));  
 }
 
 {

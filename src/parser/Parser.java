@@ -14,6 +14,10 @@ public class Parser{
     FuncTable table = new FuncTable();
     Type returnType = Type.Int;
     boolean hasDecl = false;
+    /*integer numbers standing for the stack level*/
+    public int lastIterationLevel = -1;
+    public int lastFunctionLevel = 0;
+    public int nowLevel = 0;
     
     public  Parser(Lexer l) throws IOException{
         lex = l;
@@ -77,6 +81,8 @@ public class Parser{
         match('(');
         Env savedEnv = top;
         top = new Env(top);
+        boolean savedHasDecl = hasDecl;
+        hasDecl = true;
         if(!check(')')){
             do{
                 Type t = type();
@@ -95,9 +101,10 @@ public class Parser{
         f.init(name,returnType,s,pl);
         top = savedEnv;
         returnType = savedType;
+        hasDecl = savedHasDecl;
         return;
     }
-    
+
     public Stmt block() throws IOException {
         match('{');
         Env savedEnv = top;
@@ -107,8 +114,10 @@ public class Parser{
         Stmt s = stmts();
         match('}');
         if(hasDecl)
-            s = new Seq(s,Stmt.Recover);
+            s = new Seq(Stmt.PushStack,new Seq(s,Stmt.RecoverStack));
         top = savedEnv;
+        if(hasDecl)
+            nowLevel--;
         hasDecl = savedHasDecl;
         return s;
     }
@@ -120,11 +129,13 @@ public class Parser{
             return new Seq(stmt(),stmts());
         }
     }
- 
+
     public Stmt stmt() throws IOException {
         Expr x;
         Stmt s,s1,s2;
         Stmt savedStmt;
+        int savedLastIterationLevel = lastIterationLevel;
+
         switch(look.tag){
         case ';':
             move();
@@ -151,6 +162,7 @@ public class Parser{
             s1 = stmt();
             whilenode.init(x,s1);
             Stmt.Enclosing = savedStmt;
+            lastIterationLevel = savedLastIterationLevel;
             return whilenode;
         case Tag.DO:
             Do donode = new Do();
@@ -165,6 +177,7 @@ public class Parser{
             match(';');
             donode.init(s1,x);
             Stmt.Enclosing = savedStmt;
+            lastIterationLevel = savedLastIterationLevel;
             return donode;
         case Tag.FOR:
             For fornode = new For();
@@ -181,19 +194,22 @@ public class Parser{
             s = stmt();
             Stmt.Enclosing = savedStmt;
             fornode.init(e1,e2,e3,s);
+            lastIterationLevel = savedLastIterationLevel;
             return fornode;
         case Tag.BREAK:
             match(Tag.BREAK);
             match(';');
-            return new Break();
+            return new Break(nowLevel - lastIterationLevel);
         case Tag.RETURN:
             match(Tag.RETURN);
             Expr e = expr();
             match(';');
-            return new Return(e,returnType);
+            return new Return(e,returnType,nowLevel - lastFunctionLevel);
         case '{':
             return block();
         case Tag.BASIC:
+            if(!hasDecl)
+                nowLevel ++;
             hasDecl = true;
             return decls();
         default:
@@ -202,7 +218,7 @@ public class Parser{
             match(';');
             return s;
         }
-    }    
+    }
 
     public Decls decls() throws IOException{
         Decls s = new Decls();
@@ -224,7 +240,7 @@ public class Parser{
         }
         return s;
     }    
-    
+
     public Type type() throws IOException {
         Type p = (Type)look;
         match(Tag.BASIC);
@@ -262,7 +278,7 @@ public class Parser{
         }
         return e;
     }
-    
+
     public Expr bool() throws IOException {
        Expr l =  join();
        while(look.tag == Tag.OR){

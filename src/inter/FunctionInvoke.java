@@ -40,11 +40,11 @@ public class FunctionInvoke extends Expr {
     public Expr optimize(){
         return this;
     }
-    
+
     public String toString(){
         return op.toString();
     }
-    
+
     public Constant getValue(){
         try {
             VarTable top = VarTable.pushTop();
