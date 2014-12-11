@@ -11,7 +11,15 @@ public class Array extends Type {
         of = t;
         size =  sz;
     }
-
+    
+    public int getSize() {
+        return size * of.getSize();
+    }
+    
+    public int getArraySize(){
+        return size;
+    }
+    
     public String toString(){
         return "[" + size + "] " + of.toString();
     }

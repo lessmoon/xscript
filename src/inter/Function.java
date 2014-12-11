@@ -5,11 +5,8 @@ import symbols.*;
 
 import java.util.ArrayList;
 
-public class Function extends Stmt {
-    public Type  type;
-    public Token name;
+public class Function extends FunctionBasic {
     public Stmt  stmt;
-    public ArrayList<Para> paralist;
 
     static {
         ArrayList<Para> paralist = new ArrayList<Para>();
@@ -33,8 +30,9 @@ public class Function extends Stmt {
 
     public static final Function print,strlen;
 
-    public Function(Token name,Type t,ArrayList<Para> p){
-        init(name,t,null,p);    
+    public Function(Token n,Type t,ArrayList<Para> p){
+        super(n,t,p);
+        stmt = null;
     }
 
     public void init(Token n,Type t,Stmt s,ArrayList<Para> p){
@@ -45,33 +43,13 @@ public class Function extends Stmt {
     }
     
     public Function(Token n,Type t,Stmt s,ArrayList<Para> p){
-        init(n,t,s,p);
+        super(n,t,p);
+        stmt = s;
     }
 
-    public Para getParaInfo(int i){
-        return paralist.get(i);
-    }
-
-    public int getParaNumber(){
-        return paralist.size();
-    }
-    
     public void run(){
         stmt.run();
         return;
     }
 
-    public String toString(){
-        StringBuffer sb = new StringBuffer(type.toString());
-        sb.append(" " + name + "(");
-        int i = 0;
-        if(i < paralist.size()){
-            sb.append(paralist.get(i++).toString());
-            while(i < paralist.size() ){
-                sb.append(paralist.get(i++).toString());
-            }
-        }
-        sb.append(")");
-        return sb.toString();
-    }
 }

@@ -8,6 +8,10 @@ public class Type extends Word {
         super(s,tag);
     }
 
+    public int getSize(){
+        return 1;
+    }
+    
     public static final Type 
         Int     =   new Type( "int" , Tag.BASIC),
         Float   =   new Type( "real" , Tag.BASIC),

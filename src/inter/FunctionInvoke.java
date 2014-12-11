@@ -7,10 +7,10 @@ import runtime.*;
 import java.util.ArrayList;
 
 public class FunctionInvoke extends Expr {
-    Function        func;
-    ArrayList<Expr> para;
+    FunctionBasic        func;
+    ArrayList<Expr>      para;
 
-    public FunctionInvoke(Function f,ArrayList<Expr> p){
+    public FunctionInvoke(FunctionBasic f,ArrayList<Expr> p){
         super(f.name,f.type);
         
         func = f;

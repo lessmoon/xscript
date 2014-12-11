@@ -36,11 +36,11 @@ public class Set extends Expr {
         }
         return id.type;
     }
-    
+
     boolean isChangeable(){
         return true;
     }
-    
+
     public Expr optimize(){
         expr = expr.optimize();
         return this;

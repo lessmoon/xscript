@@ -21,6 +21,7 @@ public class Lexer {
         reserve( new Word("break",Tag.BREAK) );
         reserve( new Word("def",Tag.DEF) );
         reserve( new Word("return",Tag.RETURN) );
+        reserve( new Word("loadfunc",Tag.LDFUNC));
         reserve( Word.True );
         reserve( Word.False );
         reserve( Type.Int );

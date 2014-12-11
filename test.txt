@@ -1,4 +1,26 @@
 /*test code */
+loadfunc<extension>{
+    bool PutChar(char c);
+    int open(string fname);
+    int close(int fid);
+    int readch(int fid);
+    int writech(int fid,char c);
+}
+
+{
+   int file = open("t.txt");
+   writech(file,'2');
+   close(file);
+   real y = 1.5;
+    for (y; y > -1.5; y -= 0.1) {
+       real x = -1.5;
+        for (x; x < 1.5; x += 0.05) {
+            real a = x * x + y * y - 1;
+            print(a * a * a - x * x * y * y * y <= 0.0 ? '*' : ' ');
+        }
+        print('\n');
+    }
+}
 
 def int max(int a,int b){
     return a>b?a:b;
@@ -14,16 +36,6 @@ def string trim(string str){
        result += str[i];
     }
     return result;
-}
-
-def string gestring(string str,char c,int i){
-     string result = "";
-     while(i < strlen(str)){
-          if(str[i] >= c)
-              result += str[i];
-          i++;
-     }
-     return result;
 }
 
 def bool is_prime(int n){
@@ -74,6 +86,17 @@ def bool println(string str){
     print("" + sqrt(3) + "\n");
 }
 
+def string gestring(string str,char c,int i){
+     string result = "";
+     while(i < strlen(str)){
+          if(str[i] >= c)
+              result += str[i];
+          i++;
+     }
+     return result;
+}
+
+
 def string lsstring(string str,char c,int i){
      int l = strlen(str);
      string result = "";
@@ -86,7 +109,7 @@ def string lsstring(string str,char c,int i){
 }
 
 def string quicksort(string str){
-            return strlen(str) <= 1?str:quicksort(lsstring(str,str[0],1)) + str[0] +  quicksort(gestring(str,str[0],1));  
+            return strlen(str) <= 1?str:quicksort(lsstring(str,str[0],1)) + str[0] +  quicksort(gestring(str,str[0],1));
 }
 
 {

@@ -6,17 +6,17 @@ import inter.*;
 import java.util.*;
 
 public class FuncTable {
-    HashMap<Token,Function> table = new HashMap<Token,Function>(); 
+    HashMap<Token,FunctionBasic> table = new HashMap<Token,FunctionBasic>(); 
 
     public FuncTable(){
         
     }
     
-    public boolean addFunc(Token id,Function f){
+    public boolean addFunc(Token id,FunctionBasic f){
         return table.put(id,f) != null;
     }
     
-    public Function getFuncType(Token id){
+    public FunctionBasic getFuncType(Token id){
         return table.get(id);
     }
 }

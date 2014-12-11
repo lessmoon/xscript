@@ -3,9 +3,11 @@ package parser;
 import lexer.*;
 import symbols.*;
 import inter.*;
+import runtime.LoadFunc;
 
 import java.io.*;
 import java.util.ArrayList;
+
 
 public class Parser{
     private Lexer lex;
@@ -63,12 +65,43 @@ public class Parser{
             case Tag.DEF:
                 deffunc();
                 break;
+            case Tag.LDFUNC:
+                loadfunc();
+                break;
             default:
                 s = new Seq(s,stmt());
                 break;
             }
         }
         return s;
+    }
+
+    public void loadfunc() throws IOException {
+        ArrayList<Para> pl  = null;
+        match(Tag.LDFUNC);
+        match('<');
+        Token pkg = look;
+        match(Tag.ID);
+        match('>');
+        match('{');
+        while(!check('}')){
+            pl = new ArrayList<Para>();
+            Type t = type();
+            Token name = look;
+            match(Tag.ID);
+            match('(');
+            if(!check(')')){
+                do{
+                    Type vt = type();
+                    Token n = look;
+                    match(Tag.ID);
+                    pl.add(new Para(vt,n));
+                }while(check(','));
+                match(')');
+            }
+            match(';');
+            table.addFunc(name,LoadFunc.loadFunc(t,pkg,name,pl));
+        }
     }
 
     public void deffunc() throws IOException {
@@ -244,8 +277,7 @@ public class Parser{
     public Type type() throws IOException {
         Type p = (Type)look;
         match(Tag.BASIC);
-        while( look.tag == '[' ){
-            match('[');
+        while( check('[') ){
             Token sz = look;
             match(Tag.NUM);
             p = new Array(p,((Num)sz).value);
@@ -419,7 +451,7 @@ public class Parser{
     }
     
     public Expr function(Token id) throws IOException {
-        Function f = table.getFuncType(id);
+        FunctionBasic f = table.getFuncType(id);
         ArrayList<Expr> paras = new ArrayList<Expr>();
         if(f == null) {
             error("Function " + id + " not found.");
