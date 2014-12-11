@@ -8,18 +8,33 @@ loadfunc<extension>{
 }
 
 {
-   int file = open("t.txt");
-   writech(file,'2');
-   close(file);
+  string[10][20] nums;
+  int i = 0; 
+  for(i ;i < 10;i++){
+    int j = 0;
+    for(i ;j < 20;j++)
+      nums[i][j] = (string)i + "," + j;
+  }
+  for(i = 0 ;i < 10;i++){
+    int j = 0;
+    for(i ;j < 20;j++)
+      print("(" + nums[i][0] + ")");
+    print("\n");
+  }
+  print("\n");
+  int fid= open("t.txt");
+  
    real y = 1.5;
     for (y; y > -1.5; y -= 0.1) {
        real x = -1.5;
         for (x; x < 1.5; x += 0.05) {
             real a = x * x + y * y - 1;
-            print(a * a * a - x * x * y * y * y <= 0.0 ? '*' : ' ');
+            writech(fid,a * a * a - x * x * y * y * y <= 0.0 ? '*' : ' ');
         }
-        print('\n');
+        writech(fid,'\r');
+        writech(fid,'\n');
     }
+   close(fid);
 }
 
 def int max(int a,int b){

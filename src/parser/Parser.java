@@ -267,7 +267,7 @@ public class Parser{
                 if(check('=')){
                     e = expr();
                 }
-                s.addDecl(new Decl(tok,p,e));
+                s.addDecl(Decl.getDecl(tok,p,e));
             } while(check(','));
             match(';');
         }
@@ -380,16 +380,57 @@ public class Parser{
        case Tag.DEC:
             return PostUnaryFactory.getUnary(copymove(),e);
        case '[':
-            match('[');
-            Expr i = assign();
-            match(']');
-            if(e instanceof Var){
-                return new StringVarAccess((Var)e,i);
-            }
-            return new StringAccess(e,i);
+            return offset(e);
        default:
             return e;
        }
+    }
+
+    public Expr offset(Expr e) throws IOException {
+        match('[');
+        Expr loc = expr();
+        match(']');
+        /*if it is string item access*/
+        if(e.type == Type.Str){
+            if(e instanceof Var){
+                e = new StringVarAccess((Var)e,loc);
+            } else {
+                e = new StringAccess(e,loc);
+            }
+            if(look.tag != '['){
+                return e;
+            }
+        }
+
+        if(!(e instanceof Var && e.type instanceof Array)){
+            error("Operand `[]` should be used for array variable or string,not for " + e.type);
+        }
+
+        Type t = ((Array)(e.type)).of;/*element type*/
+        int w = t.getSize();
+        if(w != 1){
+            loc = ArithFactory.getArith(Word.mult,loc,new Constant(w));
+        }
+        /*it is normal array access*/
+        while(look.tag == '['){
+            /*array end*/
+            if(!(t instanceof Array))
+                break;
+            match('[');
+            Expr i = expr();
+            t = ((Array)t).of;/*element type*/
+            w = t.getSize();
+            if(w != 1){
+                i = ArithFactory.getArith(Word.mult,i,new Constant(w));
+            }
+            loc = ArithFactory.getArith(Word.add,loc,i);
+            match(']');
+        }
+
+        e = new ArrayVar(e.op,t,loc);
+
+        /*for string index access*/
+        return look.tag == '['?offset(e):e;
     }
 
     public Expr factor() throws IOException {

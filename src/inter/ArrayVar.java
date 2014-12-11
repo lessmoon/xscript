@@ -22,7 +22,8 @@ public class ArrayVar extends Var {
     }
 
     public Constant setValue(Constant v){
-        int l = ((Num)(loc.getValue()).op).ArrayConst var = (ArrayConst)VarTable.getTop().getVar(op);
+        int l = ((Num)(loc.getValue()).op).value;
+        ArrayConst var = (ArrayConst)VarTable.getTop().getVar(op);
         var.setElement(l,v);
         return  v;
     }

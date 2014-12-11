@@ -9,6 +9,8 @@ src\inter\And.java
 src\inter\Arith.java 
 src\inter\ArithFactory.java 
 src\inter\ArrayConst.java 
+src\inter\ArrayDecl.java 
+src\inter\ArrayVar.java 
 src\inter\Break.java 
 src\inter\Condition.java 
 src\inter\Constant.java 

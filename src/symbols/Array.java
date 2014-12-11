@@ -16,7 +16,7 @@ public class Array extends Type {
         return size * of.getSize();
     }
     
-    public int getArraySize(){
+    public int getElementNumber(){
         return size;
     }
     

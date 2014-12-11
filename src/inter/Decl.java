@@ -8,7 +8,7 @@ public class Decl extends Stmt {
     Token id;
     Type  type;
     Expr  value;
-    
+
     public Decl(Token i,Type t,Expr v){
         id = i;
         type = t;
@@ -18,7 +18,7 @@ public class Decl extends Stmt {
             error("Can't assign " + value.type + " to " + id + "(" + type + ")");
         }
     }
-    
+
     public boolean check(){
         if(value == null){
             return true;
@@ -28,9 +28,17 @@ public class Decl extends Stmt {
         }
         return true;
     }
-    
+
     public void run(){
         Constant v = (value == null)?null:value.getValue();
         VarTable.getTop().pushVar(id,v);
+    }
+    
+    public static Decl getDecl(Token i,Type t,Expr v){
+        if(t instanceof Array){
+            return new ArrayDecl(i,t,v);
+        } else {
+            return new Decl(i,t,v);
+        }
     }
 }

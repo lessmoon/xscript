@@ -7,12 +7,12 @@ import java.util.ArrayList;
 
 public class ArrayConst extends Constant {
     public  int size;
-    ArrayList<Constant> arr;
-    
-    public ArrayConst( Array t){
+    Constant[] arr;
+
+    public ArrayConst( Array t ){
         super(Word.array,t);
         size = t.getSize();
-        arr = new ArrayList<Constant>( size );
+        arr = new Constant[size];
     }
 
     public Constant getValue(){
@@ -20,10 +20,14 @@ public class ArrayConst extends Constant {
     }
 
     public Constant setElement(int i,Constant c){
-        arr.set(i,c);
+        arr[i] = c;
         return c;
     }
 
+    public Constant getElement(int i){
+        return arr[i];
+    }
+    
     public int getSize(){
         return size;
     }

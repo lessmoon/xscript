@@ -15,7 +15,7 @@ public class Set extends Expr {
         expr = x;
         type =  check();
         if( type == null ){
-            error("Operand `" + op + "' should be used between " + id.type  + " variable and expression");
+            error("Operand `" + op + "' should be used between " + id.type  + " variable and expression,actually " + id.type + "=" + expr.type);
         }
         if(expr.type != type){
             expr = ConversionFactory.getConversion(expr,type);
@@ -31,7 +31,9 @@ public class Set extends Expr {
             } else
                 return null;
         } else if( id.type == Type.Str ){
-            if(op.tag != Tag.ADDASS)
+            if(expr.type == Type.Str)
+                return Type.Str;
+            else if(op.tag != Tag.ADDASS)
                 return null;
         }
         return id.type;
