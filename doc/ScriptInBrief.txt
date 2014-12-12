@@ -1,0 +1,47 @@
+1.Basic Types:
+    1.char:2 Bytes
+    2.int:4 Bytes
+    3.real:4 Bytes
+    4.string:x Bytes
+    5.bool:1 Bytes
+2.Grammar
+    1.Loop Statements:
+        1.while(bool type expression) statement
+        2.for(expression;boolean type expression;expression) statement
+        3.do statement while(boolean type expression);
+    2.Condition Statement
+        1.if(bool type expression) statement
+        2.if(bool type expression) else statement
+    3.Jump Statement
+        1.break;(in loops)
+        2.return expression;(in functions)
+    4.Expressions:
+        1.variable++
+        2.variable--
+        3.++variable
+        4.--variable
+        5.variable += expression(variable type can be string)
+        6.variable (=,-=,*=,/=,%=) expression(%= for integer)
+        7.cast expression
+            (typename) expression
+        8.string\array access:varname[expression]...
+        9.unary expression:
+            1.prefix:-,!,++,--
+            2.postfix:++,--
+        10.expression (+,-,*,/,%) expression(% for integer)
+        11.expression (==,!=,>,>=,<,<=) expression
+        12.bool type expression (&&,||) bool type  expression
+    5.Variable Declaration
+        Basic-Type identifier[,...] (identifier must begin with one of [a-zA-Z_])
+        Basic-Type identifier = initial-value[,...](with initial-value)
+        Basic-Type [integer constant]... identifier[,...](for array declaration)
+    6.Function Declaration
+        def return-type identifier (para-type para-identifier[,...]){
+            statement
+        }
+    7.Constant:
+        1.integer:just support decimal integer
+        2.string:"character"(character includes escape character \n,\t,\r,\',\",\?,\b,\f,\\)
+        3.real:just support decimal real number
+        4.char:'character'(character includes escape character \n,\t,\r,\',\",\?,\b,\f,\\)
+        5.boolean:true,false

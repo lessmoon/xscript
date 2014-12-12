@@ -16,8 +16,6 @@ class IntPostUnary extends Unary {
             if(!(expr instanceof Var))
                 error("operand `" + op + "' should be used for variable");
             return;
-        case '-':
-            return ;
         default:
             error("Unknown operand:`" + op + "'");
             return;
@@ -53,8 +51,6 @@ class CharPostUnary extends Unary {
             if(!(expr instanceof Var))
                 error("operand `" + op + "' should be used for variable");
             return;
-        case '-':
-            return ;
         default:
             error("Unknown operand:`" + op + "'");
             return;

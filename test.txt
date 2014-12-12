@@ -51,7 +51,7 @@ def int[10][10] mult( int[10][10] a,int[10][10] b){
       b[i][j] = j;
     }
   }
-  
+
   c = mult(a,b);
   for(i = 0 ;i < 10;i++){
     int j = 0;
@@ -62,7 +62,7 @@ def int[10][10] mult( int[10][10] a,int[10][10] b){
     }
     print(" ]\n");
   }
-  
+
   for(i = 0;i < strlen(test);i++){
     c_str[i] = test[i];
   }
@@ -188,7 +188,7 @@ def string lsstring(string str,char c,int i){
 }
 
 def string quicksort(string str){
-            return strlen(str) <= 1?str:quicksort(lsstring(str,str[0],1)) + str[0] +  quicksort(gestring(str,str[0],1));
+    return strlen(str) <= 1?str:quicksort(lsstring(str,str[0],1)) + str[0] +  quicksort(gestring(str,str[0],1));
 }
 
 {
