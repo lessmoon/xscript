@@ -263,6 +263,9 @@ public class Parser{
                 e = null;
                 tok = look;
                 match(Tag.ID);
+                if(top.containsVar(tok)){
+                    error("variable `" + tok.toString() + "' redefined here");
+                }
                 top.put(tok,p);
                 if(check('=')){
                     e = expr();
@@ -428,7 +431,6 @@ public class Parser{
         }
 
         e = new ArrayVar(e.op,t,loc);
-
         /*for string index access*/
         return look.tag == '['?offset(e):e;
     }

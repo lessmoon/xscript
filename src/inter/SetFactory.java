@@ -85,7 +85,7 @@ class StrSet extends Set {
     public StrSet(Token tok,Expr i,Expr x){
         super(tok,i,x);
     }
-    
+
     public Constant getValue(){
         String r = ((Str)(expr.getValue().op)).value;
         String l = ((Str)(id.getValue().op)).value;

@@ -7,23 +7,46 @@ loadfunc<extension>{
     int writech(int fid,char c);
 }
 
+def string toString( char[80] c_str ){
+    string r = "";
+    int i = 0;
+    while(c_str[i] != '\0'){
+        r += c_str[i++];
+    }
+    return r;
+}
+
 {
   string[10][20] nums;
-  int i = 0; 
+  int i = 0;
+  string test = "i am a test value";
+  char[80] c_str;
+  
+  for(i;i < strlen(test);i++){
+    c_str[i] = test[i];
+  }
+  c_str[i] = '\0';
+  
+  print(toString(c_str));
+  print("\n");
+  i = 0;
   for(i ;i < 10;i++){
     int j = 0;
-    for(i ;j < 20;j++)
+    for(i ;j < 20;j++){
       nums[i][j] = (string)i + "," + j;
+    }
   }
+
   for(i = 0 ;i < 10;i++){
     int j = 0;
-    for(i ;j < 20;j++)
-      print("(" + nums[i][0] + ")");
+    for(i ;j < 20;j++){
+        print("(" + nums[i][j] + ")");
+    }
     print("\n");
   }
   print("\n");
   int fid= open("t.txt");
-  
+   
    real y = 1.5;
     for (y; y > -1.5; y -= 0.1) {
        real x = -1.5;
@@ -35,6 +58,7 @@ loadfunc<extension>{
         writech(fid,'\n');
     }
    close(fid);
+
 }
 
 def int max(int a,int b){
@@ -110,7 +134,6 @@ def string gestring(string str,char c,int i){
      }
      return result;
 }
-
 
 def string lsstring(string str,char c,int i){
      int l = strlen(str);

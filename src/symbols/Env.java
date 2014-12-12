@@ -12,6 +12,7 @@ public class Env {
     public void put(Token w,Type t){
         table.put(w,t);
     }
+    
     public Type get(Token w){
         for(Env e = this; e != null; e = e.prev){
             Type found = e.table.get(w);
@@ -19,5 +20,12 @@ public class Env {
                 return found;
         }
         return null;
+    }
+    
+    /*
+     * return if the top environment contains this variable(w) 
+     */
+    public boolean containsVar(Token w){
+        return table.containsKey(w);
     }
 }

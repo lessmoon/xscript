@@ -12,6 +12,10 @@ public class Type extends Word {
         return 1;
     }
     
+    public boolean equals( Type t ){
+        return this == t;
+    }
+
     public static final Type 
         Int     =   new Type( "int" , Tag.BASIC),
         Float   =   new Type( "real" , Tag.BASIC),

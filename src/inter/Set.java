@@ -17,7 +17,7 @@ public class Set extends Expr {
         if( type == null ){
             error("Operand `" + op + "' should be used between " + id.type  + " variable and expression,actually " + id.type + "=" + expr.type);
         }
-        if(expr.type != type){
+        if(!expr.type.equals(type)){
             expr = ConversionFactory.getConversion(expr,type);
         }
     }
