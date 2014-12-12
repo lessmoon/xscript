@@ -20,7 +20,7 @@ public class Return extends Stmt {
     }
 
     public void check(Type t){
-        if(t == expr.type){
+        if(t.equals(expr.type)){
             return;
         } else {
             expr = ConversionFactory.getConversion(expr,t);
