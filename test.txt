@@ -5,6 +5,7 @@ loadfunc<extension>{
     int close(int fid);
     int readch(int fid);
     int writech(int fid,char c);
+    int time();
 }
 
 def string toString( char[80] c_str ){
@@ -35,12 +36,64 @@ def int[10][10] mult( int[10][10] a,int[10][10] b){
     return res;
 }
 
+int RAND_SEED = 0;
+
+def int abs(int a){
+    return a>0?a:-a;
+}
+
+def int srand(int v){
+    return RAND_SEED = v;
+}
+
+def int rand(){
+    RAND_SEED = (RAND_SEED * 123 + 59) % 2147483647;
+    return abs(RAND_SEED);
+}
+
+def int[100] qsort(int[100] s,int l,int r){
+    if (l < r){        
+        int i = l, j = r, x = s[l];  
+        while (i < j)  
+        {  
+            while(i < j && s[j]>= x) j--;   
+            if(i < j) s[i++] = s[j];  
+            while(i < j && s[i]< x) i++;   
+            if(i < j) s[j--] = s[i];  
+        }
+        s[i] = x;  
+        qsort(s, l, i - 1);//µÝ¹éµ÷ÓÃ
+        qsort(s, i + 1, r);
+    }
+}
+
+def int printarray(int[2] arr,int len){
+    int i = 0;
+    print("[");
+    for(i;i<len;i++){
+        print(" " + arr[i]);
+    }
+    print(" ]\n");
+    return len;
+}
+
 {
-  string[10][20] nums;
+  print("time = " + time() + "\n");
+  int[20] arr;
   int i = 0;
+  srand( time() );
+  for(i = 0 ; i < 20;i++){
+    arr[i] = rand()%10;
+  }
+  printarray(arr,20);
+  qsort(arr,0,19);
+  printarray(arr,20);
+
+  string[10][20] nums;
+  i = 0;
   string test = "i am a test value";
   char[80] c_str;
-
+  
   int[10][10] a;
   int[10][10] b;
   int[10][10] c;

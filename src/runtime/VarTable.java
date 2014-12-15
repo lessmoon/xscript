@@ -19,6 +19,10 @@ public class VarTable {
     HashMap <Token,ConstantReference> table = new HashMap <Token,ConstantReference>();
     public final VarTable prev ;
 
+    static private int levels(VarTable r){
+        return r.prev==null?1:levels(r.prev) + 1;
+    }
+    
     private VarTable(VarTable prev){
         this.prev = prev;
     }
@@ -29,24 +33,32 @@ public class VarTable {
 
     static public VarTable popTop(){
         VarTable tmp = t;
-        //System.out.println("Want undo old stack top " );
         if(t.prev == null)
             return null;
         else{
+            //for(int i = 0; i< levels(t);i++)
+                //System.out.print("  |" );
             //System.out.println("Undo old stack top " );
+            //(new Throwable()).printStackTrace();
             t = t.prev;
             return tmp;
         }
     }
 
     static public VarTable pushTop(){
-        //System.out.println("New stack top " );
         t = new VarTable(t);
+        //for(int i = 0; i< levels(t);i++)
+                //System.out.print("  |" );
+        //System.out.println("New stack top " );
+        //(new Throwable()).printStackTrace();
         return t;
     }
 
     public boolean pushVar(Token id,Constant v){
-        
+        //for(int i = 0; i< levels(t);i++)
+                //System.out.print("  |" );
+        //System.out.println("Defines new Var " + id);
+        //(new Throwable()).printStackTrace();
         if(table.containsKey(id))
             return false;
         table.put(id,new ConstantReference(v));
@@ -73,8 +85,13 @@ public class VarTable {
         VarTable tb = this;
         while(tb != null){
             ref = tb.table.get(id);
-            if(ref != null)
+            if(ref != null){
+                //for(int i = 0; i< levels(tb);i++)
+                    //System.out.print("  |" );
+                //System.out.println("Get var " + id);
+                //(new Throwable()).printStackTrace();
                 return ref.v;
+            }
             tb = tb.prev;
         }
         return null;
@@ -85,7 +102,10 @@ public class VarTable {
         ConstantReference ref;
         while(tb != null){
             if((ref = tb.table.get(id)) != null){
-                
+                //for(int i = 0; i< levels(tb);i++)
+                    //System.out.print("  |" );
+                //System.out.println("Set " + id + "=" + v);
+                //(new Throwable()).printStackTrace();
                 return (ref.v = v);
             }
             tb = tb.prev;

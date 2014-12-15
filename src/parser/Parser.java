@@ -12,15 +12,19 @@ import java.util.ArrayList;
 public class Parser{
     private Lexer lex;
     private Token look;
-    Env top = null;
+    Env top = new Env(null);
     FuncTable table = new FuncTable();
     Type returnType = Type.Int;
-    boolean hasDecl = false;
+    boolean hasDecl = true;
     /*integer numbers standing for the stack level*/
     public int lastIterationLevel = -1;
+    /* The variable lastFunctionLevel is for the  
+     * local function definition.
+     * For now,it is just 0(which means global level).
+     */
     public int lastFunctionLevel = 0;
     public int nowLevel = 0;
-    
+
     public  Parser(Lexer l) throws IOException{
         lex = l;
         move();
@@ -441,8 +445,10 @@ public class Parser{
         switch(look.tag){
         case Tag.ID:
             Token tmp = copymove();
-            if(look.tag == '(')
+            
+            if(look.tag == '('){
                 return function(tmp);
+            }
             Type t = top.get(tmp);
             if(t == null){
                 error("Variable " + tmp + " not declared.");

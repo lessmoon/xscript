@@ -4,6 +4,7 @@ src\extension\Function.java
 src\extension\open.java 
 src\extension\PutChar.java 
 src\extension\readch.java 
+src\extension\time.java 
 src\extension\writech.java 
 src\inter\And.java 
 src\inter\Arith.java 
