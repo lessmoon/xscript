@@ -1,11 +1,21 @@
 /*test code */
 loadfunc<extension>{
     bool PutChar(char c);
-    int open(string fname);
-    int close(int fid);
-    int readch(int fid);
-    int writech(int fid,char c);
+    //int open(string fname);
+    //int close(int fid);
+    //int readch(int fid);
+    //int writech(int fid,char c);
     int time();
+}
+
+
+def int f(int[256][50] d){
+   return 1;  
+}
+
+{
+   int[255][50] a;
+   f(a);
 }
 
 def string toString( char[80] c_str ){
@@ -47,7 +57,12 @@ def int srand(int v){
 }
 
 def int rand(){
-    RAND_SEED = (RAND_SEED * 123 + 59) % 2147483647;
+    int r ;
+    real i;
+    RAND_SEED *= 134775813;
+    RAND_SEED = RAND_SEED % 1073676287;
+    i = (real)RAND_SEED / 1073676286;
+    r =  i * 2147483647;
     return abs(RAND_SEED);
 }
 
@@ -58,11 +73,11 @@ def int[100] qsort(int[100] s,int l,int r){
         {  
             while(i < j && s[j]>= x) j--;   
             if(i < j) s[i++] = s[j];  
-            while(i < j && s[i]< x) i++;   
-            if(i < j) s[j--] = s[i];  
+            while(i < j && s[i]< x) i++;
+            if(i < j) s[j--] = s[i];
         }
         s[i] = x;  
-        qsort(s, l, i - 1);//µÝ¹éµ÷ÓÃ
+        qsort(s, l, i - 1);
         qsort(s, i + 1, r);
     }
 }
@@ -70,7 +85,7 @@ def int[100] qsort(int[100] s,int l,int r){
 def int printarray(int[2] arr,int len){
     int i = 0;
     print("[");
-    for(i;i<len;i++){
+    for(i;i < len;i++){
         print(" " + arr[i]);
     }
     print(" ]\n");
@@ -78,22 +93,24 @@ def int printarray(int[2] arr,int len){
 }
 
 {
-  print("time = " + time() + "\n");
-  int[20] arr;
+  int[1000] arr;
   int i = 0;
-  srand( time() );
-  for(i = 0 ; i < 20;i++){
-    arr[i] = rand()%10;
+  int seed = time();
+  print("seed = " + seed + "\n");
+  srand( seed );
+  int len = rand()%200;
+  for(i = 0 ; i < len;i++){
+    arr[i] = rand()%len;
   }
-  printarray(arr,20);
-  qsort(arr,0,19);
-  printarray(arr,20);
+  printarray(arr,len);
+  qsort(arr,0,len-1);
+  printarray(arr,len);
 
   string[10][20] nums;
   i = 0;
   string test = "i am a test value";
   char[80] c_str;
-  
+
   int[10][10] a;
   int[10][10] b;
   int[10][10] c;
@@ -139,20 +156,21 @@ def int printarray(int[2] arr,int len){
     print("\n");
   }
   print("\n");
+  /*
   int fid= open("t.txt");
    
-   real y = 1.5;
-    for (y; y > -1.5; y -= 0.1) {
-       real x = -1.5;
-        for (x; x < 1.5; x += 0.05) {
-            real a = x * x + y * y - 1;
-            writech(fid,a * a * a - x * x * y * y * y <= 0.0 ? '*' : ' ');
-        }
-        writech(fid,'\r');
-        writech(fid,'\n');
+  real y = 1.5;
+  for (y; y > -1.5; y -= 0.1) {
+    real x = -1.5;
+    for (x; x < 1.5; x += 0.05) {
+        real a = x * x + y * y - 1;
+        writech(fid,a * a * a - x * x * y * y * y <= 0.0 ? '*' : ' ');
     }
+    writech(fid,'\r');
+    writech(fid,'\n');
+  }
    close(fid);
-
+    */
 }
 
 def int max(int a,int b){
@@ -210,12 +228,6 @@ def bool println(string str){
 
 {
     println((string)string2int("2556478"));
-    int n = 0;
-    while(n++ < 1000){
-        if(is_prime(n))
-            print((string)n + "\n");
-    }
-
     print("" + sqrt(3) + "\n");
 }
 
@@ -245,7 +257,7 @@ def string quicksort(string str){
 }
 
 {
-    string a = "very long string   ";
+    string a = "32145547852248562244";
     print("quicksort(\"" + a + "\") = \""+ quicksort(a) + "\"\n");
     print("trim( \"" + a +"\") = \"" + trim(a) + "\"\n");
 }

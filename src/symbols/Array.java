@@ -21,11 +21,14 @@ public class Array extends Type {
             return true;
         if(!(t instanceof Array))
             return false;
-        /* 1-dimension array just match types*/
-        if(!(of instanceof Array) && !(((Array)t).of instanceof Array)){
-            return of.equals(((Array)t).of);
+        /*we don't care the first dimension*/
+        Type t1 = of;
+        Type t2 = ((Array)t).of;
+        for(;t1 instanceof Array;t1 = ((Array)t1).of,t2 = ((Array)t2).of){
+            if(!(t2 instanceof Array) || t2.getElementNumber() != t1.getElementNumber())
+                return false;
         }
-        return size == ((Array)t).size && of.equals(((Array)t).of) ;
+        return t2 == t1;
     }
 
     public int getElementNumber(){
@@ -33,7 +36,7 @@ public class Array extends Type {
     }
     
     public String toString(){
-        return "[" + size + "] " + of.toString();
+        return  of.toString() + "[" + size + "]" ;
     }
 
 }

@@ -12,6 +12,10 @@ public class Type extends Word {
         return 1;
     }
     
+    public int getElementNumber(){
+        return 1;
+    }
+    
     public boolean equals( Type t ){
         return this == t;
     }

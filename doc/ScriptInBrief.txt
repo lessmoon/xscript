@@ -45,3 +45,7 @@
         3.real:just support decimal real number
         4.char:'character'(character includes escape character \n,\t,\r,\',\",\?,\b,\f,\\)
         5.boolean:true,false
+    8.Load Extension Function:
+        1.loadfunc<package-name>{
+            return-type class-name ( parameters' types);
+        }

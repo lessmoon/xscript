@@ -8,11 +8,11 @@ public class Lexer {
     public static int line = 1;
     int peek = ' ';
     HashMap<String,Token> words = new HashMap<String,Token>();
-    void reserve(Word w){
+    void reserve(Word w) {
         words.put(w.lexeme,w);
     }
 
-    public Lexer(){
+    public Lexer() {
         reserve( new Word("if",Tag.IF) );
         reserve( new Word("else",Tag.ELSE) );
         reserve( new Word("while",Tag.WHILE) );
@@ -22,6 +22,7 @@ public class Lexer {
         reserve( new Word("def",Tag.DEF) );
         reserve( new Word("return",Tag.RETURN) );
         reserve( new Word("loadfunc",Tag.LDFUNC));
+
         reserve( Word.True );
         reserve( Word.False );
         reserve( Type.Int );
@@ -33,12 +34,12 @@ public class Lexer {
         reserve( Word.strlen );
     }
 
-    void readch() throws IOException{
+    void readch() throws IOException {
         int p = System.in.read();
         peek = p > 0?(char) p : p;
     }
 
-    boolean readch(char c) throws IOException{
+    boolean readch(char c) throws IOException {
         readch();
         if(peek != c)
             return false;
@@ -46,7 +47,7 @@ public class Lexer {
         return true;
     }
 
-    public Token scan() throws IOException{
+    public Token scan() throws IOException {
         for(;;readch()){
             if(peek == '\n') {
                 line++;

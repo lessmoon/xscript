@@ -26,7 +26,7 @@ public class FunctionInvoke extends Expr {
                 Expr e = para.get(i);
                 Expr f = ConversionFactory.getConversion(e,func.getParaInfo(i).type);
                 if(f == null){
-                    error("function parameter type not match:" + func.getParaInfo(i).name + " need " + para.get(i).type + " actually " + e.type);
+                    error("function `" + func + "' parameter type not match:`" + func.getParaInfo(i).name + "' need " + func.getParaInfo(i).type + " actually " + para.get(i).type);
                 }
                 para.set(i,f);
             }
