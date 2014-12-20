@@ -49,3 +49,12 @@
         1.loadfunc<package-name>{
             return-type class-name ( parameters' types);
         }
+3.Features In Future
+    1.Structure definition:
+        struct name {
+            type id[:default value];[...]
+        }
+      Structure member visit:
+        name.member-name
+    2.Inline function definition:
+        defmacro name([Type name[...]]) = expression;

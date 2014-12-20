@@ -6,9 +6,11 @@ import symbols.*;
 
 public class ArrayVar extends Var {
     Expr loc;
-    public ArrayVar(Token w,Type t,Expr l){
-        super(w,t);
+    Var array;
+    public ArrayVar(Var arr,Type t,Expr l){
+        super(Word.array,t);
         loc = l;
+        array = arr;
     }
 
     boolean isChangeable(){
@@ -16,14 +18,14 @@ public class ArrayVar extends Var {
     }
 
     public Constant getValue(){
-        ArrayConst v = (ArrayConst)VarTable.getTop().getVar(op);
+        ArrayConst v = (ArrayConst)array.getValue();
         int l = ((Num)(loc.getValue()).op).value;
         return v.getElement(l);
     }
 
     public Constant setValue(Constant v){
         int l = ((Num)(loc.getValue()).op).value;
-        ArrayConst var = (ArrayConst)VarTable.getTop().getVar(op);
+        ArrayConst var = (ArrayConst)array.getValue();
         var.setElement(l,v);
         return  v;
     }

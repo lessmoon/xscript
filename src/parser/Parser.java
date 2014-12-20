@@ -69,6 +69,9 @@ public class Parser{
             case Tag.DEF:
                 deffunc();
                 break;
+            case Tag.STRUCT:
+                defstruct();
+                break;
             case Tag.LDFUNC:
                 loadfunc();
                 break;
@@ -108,6 +111,33 @@ public class Parser{
         }
     }
 
+    public void defstruct() throws IOException {
+        match(Tag.STRUCT);
+        
+        /*
+         * Struct definition:
+         *      struct name {
+         *          type name;[...]
+         *      }
+         */
+        
+        Token name = look;
+        match(Tag.ID);
+        Struct s = new Struct(name);
+        if( top.get(name) != null ){
+            error("Struct `" + name + "' has a same name with a variable");
+        }
+        lex.defType(s);
+        match('{');
+        do{
+            Type t = type();
+            Token m = look;
+            match(Tag.ID);
+            s.addEntry(m,t);
+            match(';');
+        }while(!check('}'));
+    }
+    
     public void deffunc() throws IOException {
         match(Tag.DEF);
         Type savedType = returnType;
@@ -387,10 +417,28 @@ public class Parser{
        case Tag.DEC:
             return PostUnaryFactory.getUnary(copymove(),e);
        case '[':
-            return offset(e);
+       case '.':
+            return access(e);
        default:
             return e;
        }
+    }
+    
+    public Expr access(Expr e) throws IOException {
+        do{
+            if(look.tag == '.')
+                e = memeber(e);
+            else
+                e = offset(e);
+        }while(look.tag == '[' || look.tag == '.');
+        return e;
+    }
+    
+    public Expr memeber(Expr e) throws IOException {
+        match('.');
+        Token mname = look;
+        match(Tag.ID);
+        return new StructMemberAccess(e,mname);
     }
 
     public Expr offset(Expr e) throws IOException {
@@ -434,9 +482,9 @@ public class Parser{
             match(']');
         }
 
-        e = new ArrayVar(e.op,t,loc);
+        e = new ArrayVar((Var)e,t,loc);
         /*for string index access*/
-        return look.tag == '['?offset(e):e;
+        return e;
     }
 
     public Expr factor() throws IOException {

@@ -8,14 +8,74 @@ loadfunc<extension>{
     int time();
 }
 
+struct list {
+    int    value;
+    list   next;
+}
 
-def int f(int[256][50] d){
-   return 1;  
+struct tttt{
+    int[2] value;
+}
+tttt oo;
+int[2] v;
+/*array and struct member in struct is not initialled*/
+oo.value = v;
+oo.value[1] = 2;
+oo.value[0] = 3;
+print("oo=" + (string)oo + "\n");
+
+int RAND_SEED = 0;
+
+def int abs(int a){
+    return a>0?a:-a;
+}
+
+def int srand(int v){
+    return RAND_SEED = v;
+}
+
+def int rand(){
+    int r ;
+    real i;
+    RAND_SEED *= 134775813;
+    RAND_SEED = RAND_SEED % 1073676287;
+    i = (real)RAND_SEED / 1073676286;
+    r =  i * 2147483647;
+    return abs(RAND_SEED);
+}
+
+
+def list create_list(list next,int value){
+    list tmp ;
+    tmp.value = value;
+    tmp.next  = next;
+    return tmp;
+}
+
+def list nulllist(){
+    list tmp;
+    return tmp.next;
+}
+
+def list printlist(list d){	
+	list tmp = d;
+	while( nulllist() != tmp){
+   		print( (string)tmp + "\n" );
+   		tmp = tmp.next;
+	}
 }
 
 {
-   int[255][50] a;
-   f(a);
+   int i = 0;
+   print("pok\n");
+   srand(time());
+   list d = nulllist();
+   int max = rand()%20;
+   print("max = " + max + "\n");
+   for(i = 0 ; i < max; i++){
+        d = create_list(d,rand()%20);
+   }
+   printlist(d);
 }
 
 def string toString( char[80] c_str ){
@@ -46,25 +106,7 @@ def int[10][10] mult( int[10][10] a,int[10][10] b){
     return res;
 }
 
-int RAND_SEED = 0;
 
-def int abs(int a){
-    return a>0?a:-a;
-}
-
-def int srand(int v){
-    return RAND_SEED = v;
-}
-
-def int rand(){
-    int r ;
-    real i;
-    RAND_SEED *= 134775813;
-    RAND_SEED = RAND_SEED % 1073676287;
-    i = (real)RAND_SEED / 1073676286;
-    r =  i * 2147483647;
-    return abs(RAND_SEED);
-}
 
 def int[100] qsort(int[100] s,int l,int r){
     if (l < r){        

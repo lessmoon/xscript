@@ -12,6 +12,10 @@ public class Lexer {
         words.put(w.lexeme,w);
     }
 
+    public Token defType(Type t) {
+        return words.put(t.lexeme,t);
+    }
+
     public Lexer() {
         reserve( new Word("if",Tag.IF) );
         reserve( new Word("else",Tag.ELSE) );
@@ -22,6 +26,7 @@ public class Lexer {
         reserve( new Word("def",Tag.DEF) );
         reserve( new Word("return",Tag.RETURN) );
         reserve( new Word("loadfunc",Tag.LDFUNC));
+        reserve( new Word("struct",Tag.STRUCT));
 
         reserve( Word.True );
         reserve( Word.False );

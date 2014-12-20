@@ -27,7 +27,7 @@ public class StringVarAccess extends Var {
     boolean isChangeable(){
         return true;
     }
-    
+
     public Expr optimize(){
         if(isChangeable()){
             index = index.optimize();

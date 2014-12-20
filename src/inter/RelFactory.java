@@ -133,9 +133,35 @@ class StrRel extends Rel {
     }
 }
 
+class ObjectRel extends Rel {
+    public ObjectRel(Token tok,Expr x1,Expr x2){
+        super(tok,x1,x2);
+    }
+    
+    public Constant getValue(){
+        Constant l = expr1.getValue();
+        Constant r = expr2.getValue();
+        switch(op.tag){
+        case Tag.EQ:
+            return  (l == r)?Constant.True:Constant.False;
+        case Tag.NE:
+            return  (l != r)?Constant.True:Constant.False;
+        default:
+            /*error*/
+            return null;
+        }
+
+    }
+}
+
 public class RelFactory {
     public static Rel getRel(Token tok,Expr x1,Expr x2){
-        if( x1.type == Type.Str ){
+        if( x1.type instanceof Array || x1.type instanceof Struct ){
+            if(x1.type.equals(x2.type))
+                return new ObjectRel(tok,x1,x2);
+            else
+                return null;
+        } else if( x1.type == Type.Str ){
             if( x2.type != Type.Str ){
                 /*error*/
                 return null;

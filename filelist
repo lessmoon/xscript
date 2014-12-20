@@ -45,6 +45,9 @@ src\inter\SetFactory.java
 src\inter\Stmt.java 
 src\inter\StringAccess.java 
 src\inter\StringVarAccess.java 
+src\inter\StructConst.java 
+src\inter\StructDecl.java 
+src\inter\StructMemberAccess.java 
 src\inter\Unary.java 
 src\inter\UnaryFactory.java 
 src\inter\Var.java 
@@ -64,4 +67,5 @@ src\runtime\VarTable.java
 src\symbols\Array.java 
 src\symbols\Env.java 
 src\symbols\FuncTable.java 
+src\symbols\Struct.java 
 src\symbols\Type.java 
