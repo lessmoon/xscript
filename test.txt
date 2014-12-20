@@ -7,27 +7,9 @@ loadfunc<extension>{
     //int writech(int fid,char c);
     int time();
 }
-
-struct list {
-    int    value;
-    list   next;
-}
-
-struct tttt{
-    int[2] value;
-}
-tttt oo;
-int[2] v;
-/*array and struct member in struct is not initialled*/
-oo.value = v;
-oo.value[1] = 2;
-oo.value[0] = 3;
-print("oo=" + (string)oo + "\n");
-
 int RAND_SEED = 0;
-
 def int abs(int a){
-    return a>0?a:-a;
+    return a > 0? a : -a;
 }
 
 def int srand(int v){
@@ -44,6 +26,59 @@ def int rand(){
     return abs(RAND_SEED);
 }
 
+struct point{
+    int x;
+    int y;
+}
+
+tree_node null;
+null = null.left;
+
+struct list {
+    int    value;
+    list   next;
+}
+
+
+def int repeat_print(string s,int c){
+    int i = 0;
+    for(i = 0;i < c;i++)
+        print(s);
+}
+
+struct tree_node{
+    tree_node left;
+    tree_node right;
+    int value;
+}
+
+def tree_node randomly_create_tree(){
+    tree_node t;
+    if(rand()%10 > 5)
+        t.left  = randomly_create_tree();
+    if(rand()%10 < 5)
+        t.right = randomly_create_tree();
+    t.value = rand()%1000;
+    return t;
+}
+
+def int prettily_show_tree(tree_node tree,int level){
+    if(tree != null){
+        repeat_print("  |",level);
+        print(tree.value);
+        print("\n");
+        prettily_show_tree( tree.left,level + 1 );
+        prettily_show_tree( tree.right,level + 1 );
+    }
+    return level;
+}
+
+{
+    srand(time());
+    tree_node tree ;
+    tree  = randomly_create_tree();
+    prettily_show_tree(tree,0);
+}
 
 def list create_list(list next,int value){
     list tmp ;

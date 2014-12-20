@@ -4,11 +4,11 @@ import runtime.*;
 import lexer.*;
 import symbols.*;
 
-public class StructMemberAccess extends Var {
+public class StructMemeberAccess extends Var {
     Expr    value;
     Token   memeber;
 
-    public StructMemberAccess(Expr v,Token m){
+    public StructMemeberAccess(Expr v,Token m){
         super(Word.struct,null);
         value = v;
         memeber = m;

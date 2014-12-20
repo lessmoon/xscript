@@ -47,7 +47,7 @@ src\inter\StringAccess.java
 src\inter\StringVarAccess.java 
 src\inter\StructConst.java 
 src\inter\StructDecl.java 
-src\inter\StructMemberAccess.java 
+src\inter\StructMemeberAccess.java 
 src\inter\Unary.java 
 src\inter\UnaryFactory.java 
 src\inter\Var.java 

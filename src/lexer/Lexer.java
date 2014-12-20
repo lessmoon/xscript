@@ -28,6 +28,7 @@ public class Lexer {
         reserve( new Word("loadfunc",Tag.LDFUNC));
         reserve( new Word("struct",Tag.STRUCT));
 
+        
         reserve( Word.True );
         reserve( Word.False );
         reserve( Type.Int );

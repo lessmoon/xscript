@@ -6,7 +6,7 @@ import symbols.*;
 public class StringAccess extends Expr {
     Expr array;
     Expr index;
-    
+
     public StringAccess(Expr a,Expr i){
         super(Word.array,Type.Char);
         array = a;

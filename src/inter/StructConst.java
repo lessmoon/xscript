@@ -17,7 +17,11 @@ public class StructConst extends Constant {
         Iterator<Entry<Token,Type>> iter = t.table.entrySet().iterator();
         while(iter.hasNext()){
             Entry<Token,Type> info = iter.next();
-            table.put(info.getKey(),null);
+            Constant c = null;
+            if(info.getValue() instanceof Array){
+                c = new ArrayConst((Array)info.getValue());
+            }
+            table.put(info.getKey(),c);
         }
     }
 

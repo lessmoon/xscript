@@ -133,7 +133,9 @@ public class Parser{
             Type t = type();
             Token m = look;
             match(Tag.ID);
-            s.addEntry(m,t);
+            if(s.addEntry(m,t) != null){
+                error("Memeber `" + m.toString() + "' defined previously ");
+            }
             match(';');
         }while(!check('}'));
     }
@@ -438,7 +440,7 @@ public class Parser{
         match('.');
         Token mname = look;
         match(Tag.ID);
-        return new StructMemberAccess(e,mname);
+        return new StructMemeberAccess(e,mname);
     }
 
     public Expr offset(Expr e) throws IOException {
