@@ -28,8 +28,6 @@ public class Parser{
     public  Parser(Lexer l) throws IOException{
         lex = l;
         move();
-        table.addFunc(Word.print,Function.print);
-        table.addFunc(Word.strlen,Function.strlen);
     }
 
     public void move() throws IOException {

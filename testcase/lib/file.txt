@@ -1,8 +1,6 @@
 loadfunc<extension>{
-    bool PutChar(char c);
     int open(string fname);
     int close(int fid);
     int readch(int fid);
     int writech(int fid,char c);
-    int time();
 }

@@ -1,13 +1,50 @@
 /*test code */
+loadfunc<extension>{
+    bool PutChar(char c);
+    //int open(string fname);
+    //int close(int fid);
+    //int readch(int fid);
+    //int writech(int fid,char c);
+    int time();
+}
 
-import  "lib/file.txt";
-import  "lib/system.txt";
-import  "math/Math.txt";
+int RAND_SEED = 0;
+def int abs(int a){
+    return a > 0? a : -a;
+}
+
+def int srand(int v){
+    return RAND_SEED = v;
+}
+
+def int rand(){
+    int r ;
+    real i;
+    RAND_SEED *= 134775813;
+    RAND_SEED = RAND_SEED % 1073676287;
+    i = (real)RAND_SEED / 1073676286;
+    r =  i * 2147483647;
+    return abs(RAND_SEED);
+}
+
+struct point{
+    int x;
+    int y;
+}
+
+tree_node null;
+null = null.left;
 
 struct list {
     int    value;
     list   next;
-    list   prev;
+}
+
+
+def int repeat_print(string s,int c){
+    int i = 0;
+    for(i = 0;i < c;i++)
+        print(s);
 }
 
 struct tree_node{
@@ -15,9 +52,6 @@ struct tree_node{
     tree_node right;
     int value;
 }
-
-tree_node null;
-null = null.left;
 
 def tree_node randomly_create_tree(){
     tree_node t;
@@ -108,6 +142,23 @@ def int[10][10] mult( int[10][10] a,int[10][10] b){
     return res;
 }
 
+
+
+def int[100] qsort(int[100] s,int l,int r){
+    if (l < r){        
+        int i = l, j = r, x = s[l];  
+        while (i < j)  
+        {  
+            while(i < j && s[j]>= x) j--;   
+            if(i < j) s[i++] = s[j];  
+            while(i < j && s[i]< x) i++;
+            if(i < j) s[j--] = s[i];
+        }
+        s[i] = x;  
+        qsort(s, l, i - 1);
+        qsort(s, i + 1, r);
+    }
+}
 
 def int printarray(int[2] arr,int len){
     int i = 0;
@@ -288,4 +339,3 @@ def string quicksort(string str){
     print("quicksort(\"" + a + "\") = \""+ quicksort(a) + "\"\n");
     print("trim( \"" + a +"\") = \"" + trim(a) + "\"\n");
 }
-print("ok\n");

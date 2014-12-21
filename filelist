@@ -2,8 +2,10 @@ src\extension\close.java
 src\extension\ExFile.java 
 src\extension\Function.java 
 src\extension\open.java 
+src\extension\print.java 
 src\extension\PutChar.java 
 src\extension\readch.java 
+src\extension\strlen.java 
 src\extension\time.java 
 src\extension\writech.java 
 src\inter\And.java 

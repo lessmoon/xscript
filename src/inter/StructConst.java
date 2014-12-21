@@ -48,18 +48,37 @@ public class StructConst extends Constant {
         return true;
     }
 
-    public String toString(){
-        StringBuffer sb = new StringBuffer("{");
+    private String toString( int level ){
+        StringBuffer sb = new StringBuffer("{\n");
         Iterator<Entry<Token,Constant>> iter = table.entrySet().iterator();
         while(iter.hasNext()){
             Entry<Token,Constant> info = iter.next();
+            Constant c = info.getValue();
+            for(int i = 0 ; i < level;i++){
+                sb.append("  ");
+            }
             sb.append(info.getKey().toString());
-            sb.append("=");
-            sb.append("" + info.getValue());
-            sb.append(";");
+            sb.append(":");
+            if(c == null){
+                sb.append("null");
+            } else {
+                if(c instanceof StructConst){
+                    sb.append(((StructConst)c).toString(level + 1));
+                } else {
+                    sb.append(c.toString());
+                }
+            }
+            sb.append("\n");
+        }
+        for(int i = 0 ; i < level;i++){
+            sb.append("  ");
         }
         sb.append("}");
         return sb.toString();
+    }
+    
+    public String toString(){
+        return toString(0);
     }
 
 }
