@@ -1,8 +1,12 @@
 /*test code */
 
-import  "lib/file.txt";
-import  "lib/system.txt";
-import  "math/Math.txt";
+import  "lib/file.xs";
+import  "lib/system.xs";
+import  "math/Math.xs";
+/*
+    def
+*/
+
 
 struct list {
     int    value;
@@ -43,7 +47,7 @@ def int prettily_show_tree(tree_node tree,int level){
 {
     srand(time());
     tree_node tree ;
-    tree  = randomly_create_tree();
+    tree = randomly_create_tree();
     prettily_show_tree(tree,0);
 }
 
@@ -164,7 +168,7 @@ def int printarray(int[2] arr,int len){
     c_str[i] = test[i];
   }
   c_str[i] = '\0';
-  
+
   print(toString(c_str));
   print("\n");
   i = 0;
@@ -197,7 +201,7 @@ def int printarray(int[2] arr,int len){
     writech(fid,'\n');
   }
    close(fid);
-    */
+  */
 }
 
 def int max(int a,int b){
@@ -280,12 +284,12 @@ def string lsstring(string str,char c,int i){
 }
 
 def string quicksort(string str){
-    return strlen(str) <= 1?str:quicksort(lsstring(str,str[0],1)) + str[0] +  quicksort(gestring(str,str[0],1));
+    return strlen(str) <= 1?str:quicksort(lsstring(str,str[0],1)) + str[0]+quicksort(gestring(str,str[0],1));
 }
 
 {
-    string a = "32145547852248562244";
+    string a = "    32145547852248562244    ";
     print("quicksort(\"" + a + "\") = \""+ quicksort(a) + "\"\n");
     print("trim( \"" + a +"\") = \"" + trim(a) + "\"\n");
 }
-print("ok\n");
+print("end test\n");
