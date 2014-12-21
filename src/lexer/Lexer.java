@@ -1,17 +1,44 @@
 package lexer;
 
-import java.io.*; 
-import java.util.*;
+
 import symbols.*;
+
+import java.util.HashMap;
+import java.util.Stack;
+import java.io.*; 
+
+class Info {
+    InputStreamReader in;
+    int         peek;
+    String      filename;
+    int         line;
+    String      path;
+
+    public Info(InputStreamReader i,int p,String f,int l,String pt){
+        in = i;
+        peek = p;
+        filename = f;
+        line = l;
+        path = pt;
+    }
+}
 
 public class Lexer {
     public static int line = 1;
+    public static String filename = "";
     int peek = ' ';
+    Stack<Info> list = new Stack<Info>();
+    InputStreamReader in = null;
     HashMap<String,Token> words = new HashMap<String,Token>();
+
     void reserve(Word w) {
         words.put(w.lexeme,w);
     }
 
+    public void error(String s){
+        throw new RuntimeException("Line " + line + " in file `" +  filename + "':\n\t" + s);
+    }
+    
     public Token defType(Type t) {
         return words.put(t.lexeme,t);
     }
@@ -26,8 +53,9 @@ public class Lexer {
         reserve( new Word("def",Tag.DEF) );
         reserve( new Word("return",Tag.RETURN) );
         reserve( new Word("loadfunc",Tag.LDFUNC));
+        reserve( new Word("import",Tag.IMPORT));
         reserve( new Word("struct",Tag.STRUCT));
-
+        
         
         reserve( Word.True );
         reserve( Word.False );
@@ -40,8 +68,70 @@ public class Lexer {
         reserve( Word.strlen );
     }
 
+    void save(String path){
+        list.push(new Info(in,peek,filename,line,path));
+    }
+
+    /*
+     * Save the file name
+     */
+    public void open( String file ) throws IOException {
+        /*for the first open*/
+        File f = new File(file);
+        f = f.getCanonicalFile();
+        if(in != null)
+            save(System.getProperty("user.dir"));
+        try{
+            System.setProperty("user.dir",f.getCanonicalFile().getParent());
+        } catch(Exception e){
+            error(e.toString());
+        }
+        if(!f.isFile()){
+            error("File `" + file + "' doesn't exist");
+        }
+
+        if(!f.canRead()) {
+            error("File `" + file + "' can't be read");
+        }
+
+        in = new InputStreamReader(new FileInputStream(f));
+        line = 1;
+        peek = ' ';
+        filename = file;
+    }
+
+    /*
+     * Recover the lexer's info,if the stack is 
+     * empty,do nothing
+     * Return false if the stack is empty,or true
+     */
+    public boolean recover(){
+        if(list.empty()){
+            return false;
+        } else {
+            Info i = list.pop();
+            in = i.in;
+            filename = i.filename;
+            line = i.line;
+            peek = i.peek;
+            try{
+                System.setProperty("user.dir",i.path);
+            } catch(Exception e){
+                error(e.toString());
+            }
+            return true;
+        }
+    }
+
     void readch() throws IOException {
-        int p = System.in.read();
+        int p = in.read();
+        while(p < 0){
+            in.close();
+            if(!recover()){
+                break;
+            }
+            p = in.read();
+        }
         peek = p > 0?(char) p : p;
     }
 
@@ -252,7 +342,7 @@ public class Lexer {
                 
             }
             if(!readch('\''))
-                throw new RuntimeException("error");
+                error("Wrong character constant.");
             return new Char((char)c);
         }
 

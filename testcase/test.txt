@@ -1,38 +1,12 @@
 /*test code */
-loadfunc<extension>{
-    bool PutChar(char c);
-    //int open(string fname);
-    //int close(int fid);
-    //int readch(int fid);
-    //int writech(int fid,char c);
-    int time();
-}
-int RAND_SEED = 0;
-def int abs(int a){
-    return a > 0? a : -a;
-}
 
-def int srand(int v){
-    return RAND_SEED = v;
-}
-
-def int rand(){
-    int r ;
-    real i;
-    RAND_SEED *= 134775813;
-    RAND_SEED = RAND_SEED % 1073676287;
-    i = (real)RAND_SEED / 1073676286;
-    r =  i * 2147483647;
-    return abs(RAND_SEED);
-}
+import  "lib/lib.txt";
+import  "math/Math.txt";
 
 struct point{
     int x;
     int y;
 }
-
-tree_node null;
-null = null.left;
 
 struct list {
     int    value;
@@ -51,6 +25,8 @@ struct tree_node{
     tree_node right;
     int value;
 }
+tree_node null;
+null = null.left;
 
 def tree_node randomly_create_tree(){
     tree_node t;
@@ -338,3 +314,4 @@ def string quicksort(string str){
     print("quicksort(\"" + a + "\") = \""+ quicksort(a) + "\"\n");
     print("trim( \"" + a +"\") = \"" + trim(a) + "\"\n");
 }
+print("ok\n");

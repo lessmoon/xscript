@@ -32,7 +32,7 @@ public class Parser{
         table.addFunc(Word.strlen,Function.strlen);
     }
 
-    public void move() throws IOException{
+    public void move() throws IOException {
         look = lex.scan();
     }
 
@@ -43,7 +43,7 @@ public class Parser{
     }
 
     public void error(String s){
-        throw new RuntimeException("near line " + lex.line + ":" + s);
+        throw new RuntimeException("Line " + lex.line + " in file `" +  lex.filename + "':\n\t" + s);
     }
 
     public void match(int t) throws IOException{
@@ -75,12 +75,25 @@ public class Parser{
             case Tag.LDFUNC:
                 loadfunc();
                 break;
+            case Tag.IMPORT:
+                importlib();
+                break;
             default:
                 s = new Seq(s,stmt());
                 break;
             }
         }
         return s;
+    }
+
+    public void importlib() throws IOException {
+        match(Tag.IMPORT);
+        Token l = look;
+        match(Tag.STR);
+        if( look.tag != ';'){
+            error("Want ';'");
+        }
+        lex.open(((Str)l).value);
     }
 
     public void loadfunc() throws IOException {
@@ -139,7 +152,7 @@ public class Parser{
             match(';');
         }while(!check('}'));
     }
-    
+
     public void deffunc() throws IOException {
         match(Tag.DEF);
         Type savedType = returnType;
@@ -425,7 +438,7 @@ public class Parser{
             return e;
        }
     }
-    
+
     public Expr access(Expr e) throws IOException {
         do{
             if(look.tag == '.')
@@ -435,7 +448,7 @@ public class Parser{
         }while(look.tag == '[' || look.tag == '.');
         return e;
     }
-    
+
     public Expr memeber(Expr e) throws IOException {
         match('.');
         Token mname = look;
@@ -501,7 +514,7 @@ public class Parser{
             }
             Type t = top.get(tmp);
             if(t == null){
-                error("Variable " + tmp + " not declared.");
+                error("Variable `" + tmp + "' not declared.");
             }
             return new Var(tmp,t);
         case Tag.TRUE:
@@ -548,7 +561,7 @@ public class Parser{
         }
         return e;
     }
-    
+
     public Expr function(Token id) throws IOException {
         FunctionBasic f = table.getFuncType(id);
         ArrayList<Expr> paras = new ArrayList<Expr>();
@@ -565,8 +578,10 @@ public class Parser{
 
         return new FunctionInvoke(f,paras);
     }
-    
+
     public static void main(String[] args) throws Exception {
-        new Parser(new Lexer()).program().run();
+        Lexer l = new Lexer();
+        l.open("test.txt");
+        new Parser(l).program().run();
     }
 }
