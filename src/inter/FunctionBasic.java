@@ -36,6 +36,7 @@ public abstract class FunctionBasic extends Stmt {
         if(i < paralist.size()){
             sb.append(paralist.get(i++).toString());
             while(i < paralist.size() ){
+                sb.append(",");
                 sb.append(paralist.get(i++).toString());
             }
         }

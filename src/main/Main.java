@@ -24,11 +24,11 @@ public class Main{
         try {
             s = parser.program();
         } catch (RuntimeException e){
-            System.err.println("Compile Error:");
+            System.err.println("Compile Error:" +Lexer.filename + Lexer.line);
             System.err.println(e.getMessage());
             return;
         } catch( IOException e){
-            System.err.println("Compile Error:");
+            System.err.println("Compile Error(IO):");
             System.err.println(e.getMessage());
             return;
         }

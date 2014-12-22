@@ -419,16 +419,24 @@ public class Parser{
        case Tag.DEC:
             return UnaryFactory.getUnary(copymove(),unary());
        default:
-            return postfix();
-       }    
+            return postinc();
+       }
     }
-
+  
+    public Expr postinc() throws IOException {
+        Expr e = postfix();
+        switch(look.tag){
+        case Tag.INC:
+        case Tag.DEC:
+            return PostUnaryFactory.getUnary(copymove(),e);
+        default:
+            return e;
+        }
+    }
+    
     public Expr postfix() throws IOException {
        Expr e = factor();
        switch(look.tag){
-       case Tag.INC:
-       case Tag.DEC:
-            return PostUnaryFactory.getUnary(copymove(),e);
        case '[':
        case '.':
             return access(e);

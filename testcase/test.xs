@@ -1,18 +1,28 @@
-/*test code */
+/* test code */
 
 import  "lib/file.xs";
 import  "lib/system.xs";
 import  "math/Math.xs";
-/*
-    def
-*/
+import  "container/list.xs";
 
 
-struct list {
-    int    value;
-    list   next;
-    list   prev;
+{
+    /*test code for list*/
+    list l = create_list();
+    srand(time());
+    int size = rand()%50;
+    for(size;size > 0;size--){
+        push_back(l,rand()%9);
+    }
+    print("ok\n");
+    /*
+     * FIXME:stackoverflow
+     */
+    //print(l);
+    print( list_toString(l) + "\n" );
+    print( list_toString(qlsort(l)) + "\n" );
 }
+
 
 struct tree_node{
     tree_node left;
@@ -51,38 +61,6 @@ def int prettily_show_tree(tree_node tree,int level){
     prettily_show_tree(tree,0);
 }
 
-def list create_list(list next,int value){
-    list tmp ;
-    tmp.value = value;
-    tmp.next  = next;
-    return tmp;
-}
-
-def list nulllist(){
-    list tmp;
-    return tmp.next;
-}
-
-def list printlist(list d){	
-	list tmp = d;
-	while( nulllist() != tmp){
-   		print( (string)tmp + "\n" );
-   		tmp = tmp.next;
-	}
-}
-
-{
-   int i = 0;
-   print("pok\n");
-   srand(time());
-   list d = nulllist();
-   int max = rand()%20;
-   print("max = " + max + "\n");
-   for(i = 0 ; i < max; i++){
-        d = create_list(d,rand()%20);
-   }
-   printlist(d);
-}
 
 def string toString( char[80] c_str ){
     string r = "";
