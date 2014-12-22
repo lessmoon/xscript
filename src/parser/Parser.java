@@ -307,12 +307,14 @@ public class Parser{
         move();
         match('(');
         Stmt s1;
+        Env savedTop = top;
         boolean hasdecl = false;
         if(look.tag == ';'){
             s1 = Stmt.Null;
         } else if( look.tag == Tag.BASIC) {
             System.out.println("ffff" + Lexer.line + ":" + Lexer.filename);
             hasdecl = true;
+            top = new Env(top);
             s1 = fordecl();
         } else {
             s1 = new ExprStmt(expr());
@@ -323,6 +325,7 @@ public class Parser{
         Stmt s3 = (look.tag == ')')?Stmt.Null:new ExprStmt(expr());
         match(')');
         Stmt s = stmt();
+        top = savedTop;
         Stmt.Enclosing = savedStmt;
         fornode.init(s1,e2,s3,s);
         s = hasdecl?new Seq(Stmt.PushStack,new Seq(fornode,Stmt.RecoverStack)):fornode;
