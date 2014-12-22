@@ -1,6 +1,7 @@
 src\extension\close.java 
 src\extension\ExFile.java 
 src\extension\Function.java 
+src\extension\getchar.java 
 src\extension\open.java 
 src\extension\print.java 
 src\extension\PutChar.java 
@@ -17,6 +18,7 @@ src\inter\ArrayVar.java
 src\inter\Break.java 
 src\inter\Condition.java 
 src\inter\Constant.java 
+src\inter\Continue.java 
 src\inter\Conversion.java 
 src\inter\ConversionFactory.java 
 src\inter\Decl.java 

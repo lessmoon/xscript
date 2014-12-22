@@ -22,6 +22,8 @@ public class Do extends Stmt{
             }catch(RuntimeException e){
                 if(e.getCause() == Break.BreakCause)
                     break;
+                else if(e.getCause() == Continue.ContinueCause)
+                    continue;
                 else
                     throw e;
             }

@@ -190,14 +190,17 @@ public class Parser{
         Env savedEnv = top;
         boolean savedHasDecl = hasDecl;
         hasDecl = false;
-        top = new Env(top);
+        //top = new Env(top);/*should not*/
+        
         Stmt s = stmts();
         match('}');
         if(hasDecl)
             s = new Seq(Stmt.PushStack,new Seq(s,Stmt.RecoverStack));
-        top = savedEnv;
-        if(hasDecl)
+        
+        if(hasDecl){
             nowLevel--;
+            top = savedEnv;
+        }
         hasDecl = savedHasDecl;
         return s;
     }
@@ -232,6 +235,7 @@ public class Parser{
             s2 = stmt();
             return new Else(x,s1,s2);
         case Tag.WHILE:
+            lastIterationLevel = nowLevel;
             While whilenode = new While();
             savedStmt = Stmt.Enclosing;
             Stmt.Enclosing = whilenode;
@@ -245,6 +249,7 @@ public class Parser{
             lastIterationLevel = savedLastIterationLevel;
             return whilenode;
         case Tag.DO:
+            lastIterationLevel = nowLevel;
             Do donode = new Do();
             savedStmt = Stmt.Enclosing;
             Stmt.Enclosing = donode;
@@ -260,26 +265,18 @@ public class Parser{
             lastIterationLevel = savedLastIterationLevel;
             return donode;
         case Tag.FOR:
-            For fornode = new For();
-            savedStmt = Stmt.Enclosing;
-            Stmt.Enclosing = fornode;
-            move();
-            match('(');
-            Expr e1 = expr();
-            match(';');
-            Expr e2 = expr();
-            match(';');
-            Expr e3 = expr();
-            match(')');
-            s = stmt();
-            Stmt.Enclosing = savedStmt;
-            fornode.init(e1,e2,e3,s);
+            lastIterationLevel = nowLevel;
+            Stmt fornode = forloop();
             lastIterationLevel = savedLastIterationLevel;
             return fornode;
         case Tag.BREAK:
             match(Tag.BREAK);
             match(';');
             return new Break(nowLevel - lastIterationLevel);
+        case Tag.CONTINUE:
+            match(Tag.CONTINUE);
+            match(';');
+            return new Continue(nowLevel - lastIterationLevel);
         case Tag.RETURN:
             match(Tag.RETURN);
             Expr e = expr();
@@ -288,8 +285,10 @@ public class Parser{
         case '{':
             return block();
         case Tag.BASIC:
-            if(!hasDecl)
+            if(!hasDecl){
+                top = new Env(top);
                 nowLevel ++;
+            }
             hasDecl = true;
             return decls();
         default:
@@ -298,6 +297,59 @@ public class Parser{
             match(';');
             return s;
         }
+    }
+
+    public Stmt forloop() throws IOException {
+        lastIterationLevel = nowLevel;
+        For fornode = new For();
+        Stmt savedStmt = Stmt.Enclosing;
+        Stmt.Enclosing = fornode;
+        move();
+        match('(');
+        Stmt s1;
+        boolean hasdecl = false;
+        if(look.tag == ';'){
+            s1 = Stmt.Null;
+        } else if( look.tag == Tag.BASIC) {
+            System.out.println("ffff" + Lexer.line + ":" + Lexer.filename);
+            hasdecl = true;
+            s1 = fordecl();
+        } else {
+            s1 = new ExprStmt(expr());
+        }
+        match(';');
+        Expr e2 = (look.tag == ';')?Constant.True:expr();
+        match(';');
+        Stmt s3 = (look.tag == ')')?Stmt.Null:new ExprStmt(expr());
+        match(')');
+        Stmt s = stmt();
+        Stmt.Enclosing = savedStmt;
+        fornode.init(s1,e2,s3,s);
+        s = hasdecl?new Seq(Stmt.PushStack,new Seq(fornode,Stmt.RecoverStack)):fornode;
+        return s;
+    }
+    
+    Stmt fordecl() throws IOException {
+        /*
+         * for(int i = 0,j = 0;;)
+         */
+        Decls s = new Decls();
+        Type p = type();
+        Token tok;
+        do{
+            Expr e = null;
+            tok = look;
+            match(Tag.ID);
+            if(top.containsVar(tok)){
+                error("variable `" + tok.toString() + "' redefined here");
+            }
+            top.put(tok,p);
+            if(check('=')){
+                e = expr();
+            }
+            s.addDecl(Decl.getDecl(tok,p,e));
+        } while(check(','));
+        return s;
     }
 
     public Decls decls() throws IOException{

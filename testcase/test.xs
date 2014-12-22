@@ -4,9 +4,77 @@ import  "lib/file.xs";
 import  "lib/system.xs";
 import  "math/Math.xs";
 import  "container/list.xs";
+
+
+
 print("-----------------\n");
 print("+   Test Begin  +\n");
 print("-----------------\n");
+
+{
+    print("---------------------\n");
+    print("+ Test For Continue +\n");
+    print("---------------------\n");
+    for(int i = 0;i < 10;i++){
+        if(i % 2 == 0 )
+            continue;
+        print((string)i + "i:\n");
+        for(int j = 0;j < 20;j++){
+            if(i*j % 3 == 0 )
+                continue;
+            print((string)j + "j\n");
+        }
+    }
+}
+
+int buffer = -1;
+
+def int bufgetchar(){
+    if(buffer < 0){
+        return getchar();
+    } else {
+        int tmp = buffer;
+        buffer = -1;
+        return tmp;
+    }
+}
+
+def int readint(){
+    int i = 0;
+    int c = bufgetchar();
+    while(c <= '9' && c >= '0'){
+        i *= 10;
+        i += c - '0';
+        c = bufgetchar();
+    }
+    buffer = c;
+    return i;
+}
+
+{
+    print("-----------------\n");
+    print("+Test For Input +\n");
+    print("-----------------\n");
+    int i = readint();
+    int t = bufgetchar();
+    int j = readint();
+    print("" + i + " " + (char) t + " " + j + "=");
+    if(t == '+'){
+        print(i+j);
+    } else if(t == '-'){
+        print(i-j);
+    } else if(t == '*'){
+        print(i*j);
+    } else if(t == '/'){
+        print(i/j);
+    } else {
+        print("error");
+    }
+    print("\n");
+    getchar();
+    getchar();
+}
+
 {
     /*test code for list*/
     list l = create_list();
@@ -15,10 +83,7 @@ print("-----------------\n");
     for(size;size > 0;size--){
         push_back(l,rand()%9);
     }
-    /*
-     * FIXME:stackoverflow
-     */
-    //print(l);
+
     print( list_toString(l) + "\n" );
     l = qlsort(l);
     print( list_toString(l) + "\n" );

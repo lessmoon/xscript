@@ -50,12 +50,12 @@ public class Lexer {
         reserve( new Word("for",Tag.FOR) );
         reserve( new Word("do",Tag.DO) );
         reserve( new Word("break",Tag.BREAK) );
+        reserve( new Word("continue",Tag.CONTINUE));
         reserve( new Word("def",Tag.DEF) );
         reserve( new Word("return",Tag.RETURN) );
         reserve( new Word("loadfunc",Tag.LDFUNC));
         reserve( new Word("import",Tag.IMPORT));
         reserve( new Word("struct",Tag.STRUCT));
-        
         
         reserve( Word.True );
         reserve( Word.False );

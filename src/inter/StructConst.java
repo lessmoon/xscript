@@ -69,6 +69,7 @@ public class StructConst extends Constant {
                 }
             }
             sb.append("\n");
+            System.out.println(sb.toString());
         }
         for(int i = 0 ; i < level;i++){
             sb.append("  ");

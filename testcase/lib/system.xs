@@ -3,6 +3,7 @@ loadfunc<extension>{
     bool print(string str);
     int  strlen(string len);
     int  time();
+    int  getchar();
 }
 
 def int repeat_print(string s,int c){
