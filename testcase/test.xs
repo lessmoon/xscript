@@ -4,8 +4,9 @@ import  "lib/file.xs";
 import  "lib/system.xs";
 import  "math/Math.xs";
 import  "container/list.xs";
-
-
+print("-----------------\n");
+print("+   Test Begin  +\n");
+print("-----------------\n");
 {
     /*test code for list*/
     list l = create_list();
@@ -14,13 +15,14 @@ import  "container/list.xs";
     for(size;size > 0;size--){
         push_back(l,rand()%9);
     }
-    print("ok\n");
     /*
      * FIXME:stackoverflow
      */
     //print(l);
     print( list_toString(l) + "\n" );
-    print( list_toString(qlsort(l)) + "\n" );
+    l = qlsort(l);
+    print( list_toString(l) + "\n" );
+    //print( qlsort(l) + "\n" );
 }
 
 
@@ -262,7 +264,7 @@ def string lsstring(string str,char c,int i){
 }
 
 def string quicksort(string str){
-    return strlen(str) <= 1?str:quicksort(lsstring(str,str[0],1)) + str[0]+quicksort(gestring(str,str[0],1));
+    return strlen(str) <= 1?str:quicksort(lsstring(str,str[0],1)) + str[0] + quicksort(gestring(str,str[0],1));
 }
 
 {
@@ -270,4 +272,6 @@ def string quicksort(string str){
     print("quicksort(\"" + a + "\") = \""+ quicksort(a) + "\"\n");
     print("trim( \"" + a +"\") = \"" + trim(a) + "\"\n");
 }
-print("end test\n");
+print("-----------------\n");
+print("+   Test End    +\n");
+print("-----------------\n");

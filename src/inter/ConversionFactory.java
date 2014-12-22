@@ -171,6 +171,10 @@ class ConversionFactoryFactory {
 public class ConversionFactory {
     static public Conversion getConversion(Expr src,Type t){
        Factory f = ConversionFactoryFactory.getConversionFactory(src);
-       return f.getConversion(src,t);
+       Conversion c = f.getConversion(src,t);
+       if(c == null){
+            src.error("Can't convert `" + src.type + "' to " + t.toString());
+       }
+       return c;
     }
 }

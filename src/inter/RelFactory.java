@@ -156,36 +156,33 @@ class ObjectRel extends Rel {
 
 public class RelFactory {
     public static Rel getRel(Token tok,Expr x1,Expr x2){
+        Rel r = null;
         if( x1.type instanceof Array || x1.type instanceof Struct ){
             if(x1.type.equals(x2.type))
-                return new ObjectRel(tok,x1,x2);
-            else
-                return null;
+                r = new ObjectRel(tok,x1,x2);
         } else if( x1.type == Type.Str ){
-            if( x2.type != Type.Str ){
-                /*error*/
-                return null;
+            if( x2.type == Type.Str ){
+                r = new StrRel(tok,x1,x2);
             }
-            return new StrRel(tok,x1,x2);
         } else {
             Type t = Type.max(x1.type,x2.type);
-            if(t == null)
-                return null;
-            if( t != x1.type )
-                x1 = ConversionFactory.getConversion(x1,t);
-            if( t != x2.type )
-                x2 = ConversionFactory.getConversion(x2,t);
-            if( t == Type.Int )
-                return new IntRel(tok,x1,x2);
-            else if(t == Type.Bool)
-                return new BoolRel(tok,x1,x2);
-            else if(t == Type.Char)
-                return new CharRel(tok,x1,x2);
-            else if(t == Type.Float)
-                return new RealRel(tok,x1,x2);
-            else
-                return null;
+            if(t != null){
+                if( t != x1.type )
+                    x1 = ConversionFactory.getConversion(x1,t);
+                if( t != x2.type )
+                    x2 = ConversionFactory.getConversion(x2,t);
+                if( t == Type.Int )
+                    r = new IntRel(tok,x1,x2);
+                else if(t == Type.Bool)
+                    r = new BoolRel(tok,x1,x2);
+                else if(t == Type.Char)
+                    r = new CharRel(tok,x1,x2);
+                else if(t == Type.Float)
+                    r = new RealRel(tok,x1,x2);
+            }
         }
-
+        if(r == null)
+            x1.error("Operand `" + tok + "' can't be used between " + x1.type + " and " + x2.type);
+        return r;
     }
 }

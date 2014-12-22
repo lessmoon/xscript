@@ -4,12 +4,6 @@ C:\Users\lessmoon\Documents\GitHub\script>SET BIN_PATH=bin/
 C:\Users\lessmoon\Documents\GitHub\script>SET SRC_PATH=src/ 
 
 C:\Users\lessmoon\Documents\GitHub\script>javac @filelist -d "bin/" 
-src\extension\time.java:8: 错误: 找不到符号
-        return new Constant( (int)(new Date().getTime()/1000) );
-                                       ^
-  符号:   类 Date
-  位置: 类 time
-1 个错误
 
 C:\Users\lessmoon\Documents\GitHub\script>pause
 请按任意键继续. . . 

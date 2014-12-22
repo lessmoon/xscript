@@ -12,8 +12,12 @@ public abstract class Arith extends Op {
         type = Type.max(expr1.type,expr2.type);
         if(type == null)
             error("type error");
+        if(!check())
+            x1.error("Operand `" + tok + "' can't be used between " + x1.type + " and " + x2.type);
     }
 
+    public abstract boolean check();
+    
     public Expr optimize(){
         if(isChangeable()){
             expr1 = expr1.optimize();
