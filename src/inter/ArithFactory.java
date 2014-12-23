@@ -24,7 +24,6 @@ class IntArith extends Arith {
     public Constant getValue(){
         int lv = ((Num)(expr1.getValue().op)).value;
         int rv = ((Num)(expr2.getValue().op)).value;
-
         Constant v = null;
         switch(op.tag){
         case '+':

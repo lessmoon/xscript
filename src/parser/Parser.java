@@ -632,7 +632,7 @@ public class Parser{
         match('(');
         if(!check(')')){
             do{
-                paras.add(assign());
+                paras.add(expr());
             }while(check(','));
             match(')');
         }

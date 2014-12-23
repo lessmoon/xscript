@@ -11,21 +11,6 @@ print("-----------------\n");
 print("+   Test Begin  +\n");
 print("-----------------\n");
 
-{
-    print("---------------------\n");
-    print("+ Test For Continue +\n");
-    print("---------------------\n");
-    for(int i = 0;i < 10;i++){
-        if(i % 2 == 0 )
-            continue;
-        print((string)i + "i:\n");
-        for(int j = 0;j < 20;j++){
-            if(i*j % 3 == 0 )
-                continue;
-            print((string)j + "j\n");
-        }
-    }
-}
 
 int buffer = -1;
 
@@ -96,6 +81,8 @@ struct tree_node{
     tree_node right;
     int value;
 }
+
+print(1+2);
 
 tree_node null;
 null = null.left;
