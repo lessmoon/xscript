@@ -7,109 +7,83 @@ import symbols.*;
 import java.util.*;
 
 class ConstantReference {
-    Constant v; 
+    Constant v;
     ConstantReference(Constant v){
         this.v = v;
     }
 }
 
 public class VarTable {
-    static private VarTable t = new VarTable(null);
-
-    HashMap <Token,ConstantReference> table = new HashMap <Token,ConstantReference>();
-    public final VarTable prev ;
-
-    static private int levels(VarTable r){
-        return r.prev==null?1:levels(r.prev) + 1;
+    static private Stack<ArrayList<ConstantReference>> table = new Stack<ArrayList<ConstantReference>>();
+    static {
+        pushTop();
     }
     
-    private VarTable(VarTable prev){
-        this.prev = prev;
+    static private int levels(VarTable r){
+        return 1;//r.prev==null?1:levels(r.prev) + 1;
     }
 
-    static public VarTable getTop(){
-        return t;
+    static public ArrayList<Constant> getTop(){
+        ArrayList<Constant> arr = new ArrayList<Constant>();
+        for(ConstantReference c : table.peek())
+            arr.add(c.v);
+        return arr;
     }
 
-    static public VarTable popTop(){
-        VarTable tmp = t;
-        if(t.prev == null)
-            return null;
-        else{
-            //for(int i = 0; i< levels(t);i++)
-                //System.out.print("  |" );
-            //System.out.println("Undo old stack top " );
-            //(new Throwable()).printStackTrace();
-            t = t.prev;
-            return tmp;
-        }
+    static public void popTop(){
+        table.pop();
+        for(int i = 0 ; i < table.size() ; i++)
+            System.out.print("  |");
+        System.out.println("pop");
     }
 
-    static public VarTable pushTop(){
-        t = new VarTable(t);
-        //for(int i = 0; i< levels(t);i++)
-                //System.out.print("  |" );
-        //System.out.println("New stack top " );
-        //(new Throwable()).printStackTrace();
-        return t;
+    static public void pushTop(){
+        for(int i = 0 ; i < table.size() ; i++)
+            System.out.print("  |");
+        System.out.println("push");
+        table.push(new ArrayList<ConstantReference>());
     }
 
-    public boolean pushVar(Token id,Constant v){
-        //for(int i = 0; i< levels(t);i++)
-                //System.out.print("  |" );
-        //System.out.println("Defines new Var " + id);
-        //(new Throwable()).printStackTrace();
-        if(table.containsKey(id))
-            return false;
-        table.put(id,new ConstantReference(v));
-        return true;
+    static public void pushVar(Constant v){
+        for(int i = 0 ; i < table.size() ; i++)
+            System.out.print("  |");
+        System.out.println("def");
+        table.peek().add(new ConstantReference(v));
     }
 
-    public boolean topContains(Token id){
-        return table.containsKey(id);
+    static public Constant getVar(int sloff,int offset){
+        /*for(int i = 0 ; i < sloff ; i++)
+            System.out.print("  |");
+        System.out.println("get");*/
+        int nowlevel = table.size() - 1 ;
+        return getVarAbsolutely(nowlevel - sloff,offset);
     }
 
-    public boolean contains(Token id){
-        VarTable tb = this;
-        while(tb != null){
-            if(tb.table.containsKey(id)){
-                return true;
-            }
-            tb = tb.prev;
-        }
-        return false;
+    static public Constant setVar(int sloff,int offset,Constant v){
+        /*for(int i = 0 ; i < sl ; i++)
+            System.out.print("  |");
+        System.out.println("set");*/
+        int nowlevel = table.size() - 1 ;
+        return setVarAbsolutely(nowlevel - sloff,offset,v);
     }
-
-    public Constant getVar(Token id){
-        ConstantReference ref = null;
-        VarTable tb = this;
-        while(tb != null){
-            ref = tb.table.get(id);
-            if(ref != null){
-                //for(int i = 0; i< levels(tb);i++)
-                    //System.out.print("  |" );
-                //System.out.println("Get var " + id);
-                //(new Throwable()).printStackTrace();
-                return ref.v;
-            }
-            tb = tb.prev;
-        }
-        return null;
+    
+    static public Constant getVarAbsolutely(int sl,int offset){
+        
+        for(int i = 0 ; i < sl ; i++)
+            System.out.print("  |");
+        System.out.println("get");
+        ArrayList<ConstantReference> c = table.get(sl);
+        return c.get(offset).v;
     }
-
-    public Constant setVar(Token id,Constant v){
-        VarTable tb = this;
-        ConstantReference ref;
-        while(tb != null){
-            if((ref = tb.table.get(id)) != null){
-                //for(int i = 0; i< levels(tb);i++)
-                    //System.out.print("  |" );
-                //System.out.println("Set " + id + "=" + v);
-                //(new Throwable()).printStackTrace();
-                return (ref.v = v);
-            }
-            tb = tb.prev;
-        }
-        return null;
+    
+    static public Constant setVarAbsolutely(int sl,int offset,Constant v){
+        
+            for(int i = 0 ; i < sl ; i++)
+                System.out.print("  |");
+            System.out.println("set");
+        
+        ArrayList<ConstantReference> c = table.get(sl);
+        c.get(offset).v = v;
+        return v;
     }
 }

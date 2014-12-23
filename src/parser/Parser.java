@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Parser{
     private Lexer lex;
     private Token look;
-    Env top = new Env(null);
+    Env top = new Env();
     FuncTable table = new FuncTable();
     Type returnType = Type.Int;
     boolean hasDecl = true;
@@ -477,7 +477,7 @@ public class Parser{
             return postinc();
        }
     }
-  
+
     public Expr postinc() throws IOException {
         Expr e = postfix();
         switch(look.tag){
@@ -488,7 +488,7 @@ public class Parser{
             return e;
         }
     }
-    
+
     public Expr postfix() throws IOException {
        Expr e = factor();
        switch(look.tag){
@@ -573,11 +573,18 @@ public class Parser{
             if(look.tag == '('){
                 return function(tmp);
             }
-            Type t = top.get(tmp);
-            if(t == null){
+            EnvEntry ee = top.get(tmp);
+            if(ee == null){
                 error("Variable `" + tmp + "' not declared.");
             }
-            return new Var(tmp,t);
+            /*
+             * Level 0 is for the global variables
+             * By default,use offset to present stack level to get var 
+             * address in runtime stack<stackoffset,varoffset>
+             * But for the global variable,we can't know what it is 
+             * exactly in functions.So we use the AbsoluteVar<stackbackoffset,varoffset>.
+             */
+            return ee.stacklevel == 0? new AbsoluteVar(tmp,ee.type,0,ee.offset) : new Var(tmp,ee.type,top.level - ee.stacklevel,ee.offset);
         case Tag.TRUE:
             move();
             return Constant.True;

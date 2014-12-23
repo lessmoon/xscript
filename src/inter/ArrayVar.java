@@ -8,7 +8,7 @@ public class ArrayVar extends Var {
     Expr loc;
     Var array;
     public ArrayVar(Var arr,Type t,Expr l){
-        super(Word.array,t);
+        super(Word.array,t,arr.stacklevel,arr.offset);
         loc = l;
         array = arr;
     }

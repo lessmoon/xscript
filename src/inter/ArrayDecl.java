@@ -18,6 +18,6 @@ public class ArrayDecl extends Decl {
     }
 
     public void run(){
-        VarTable.getTop().pushVar(id,new ArrayConst((Array)type));
+        VarTable.pushVar(new ArrayConst((Array)type));
     }
 }

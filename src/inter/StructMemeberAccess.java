@@ -9,7 +9,7 @@ public class StructMemeberAccess extends Var {
     Token   memeber;
 
     public StructMemeberAccess(Expr v,Token m){
-        super(Word.struct,null);
+        super(Word.struct,null,0,0);
         value = v;
         memeber = m;
         check();

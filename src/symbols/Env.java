@@ -1,21 +1,30 @@
 package symbols;
 
-import java.util.*;import lexer.*; import inter.*;
+import java.util.*;
+import lexer.*;
+import inter.*;
 
 public class Env {
-    private HashMap<Token,Type> table;
-    protected Env prev;
+    private     HashMap<Token,EnvEntry> table = new HashMap<Token,EnvEntry>();
+    protected   final Env prev;
+    public      final int level;
     public Env(Env n){
-        table = new HashMap<Token,Type>();
-        prev = n;
-    }
-    public void put(Token w,Type t){
-        table.put(w,t);
+        prev  = n;
+        level = n.level + 1;
     }
     
-    public Type get(Token w){
+    public Env(){
+        prev  = null;
+        level = 0;
+    }
+
+    public void put(Token w,Type t){
+        table.put(w,new EnvEntry(t,level,table.size()));
+    }
+
+    public EnvEntry get(Token w){
         for(Env e = this; e != null; e = e.prev){
-            Type found = e.table.get(w);
+            EnvEntry found = e.table.get(w);
             if( found != null)
                 return found;
         }

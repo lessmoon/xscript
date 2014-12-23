@@ -31,7 +31,7 @@ public class Decl extends Stmt {
 
     public void run(){
         Constant v = (value == null)?null:value.getValue();
-        VarTable.getTop().pushVar(id,v);
+        VarTable.pushVar(v);
     }
     
     public static Decl getDecl(Token i,Type t,Expr v){

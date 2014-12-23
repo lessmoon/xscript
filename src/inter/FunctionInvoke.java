@@ -46,20 +46,20 @@ public class FunctionInvoke extends Expr {
     }
 
     public Constant getValue(){
-        //System.out.println("Invoke " + func.toString());
         try {
-            VarTable top = VarTable.pushTop();
+            System.out.println("Invoke " + func.toString());
+            VarTable.pushTop();
             for(int i = 0 ; i < para.size();i++){
-                top.pushVar(func.getParaInfo(i).name,para.get(i).getValue());
+                VarTable.pushVar(para.get(i).getValue());
             }
             func.run();
         } catch(ReturnResult e){
             VarTable.popTop();
-            //System.out.println("End Invoke#1 " + func.toString());
+            System.out.println("End Invoke#1 " + func.toString());
             return e.value;
         }
-        //System.out.println("End Invoke#2 " + func.toString());
         VarTable.popTop();
+        System.out.println("End Invoke#2 " + func.toString());
         return null;
     }
 }

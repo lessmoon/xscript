@@ -5,8 +5,12 @@ import lexer.*;
 import symbols.*;
 
 public class Var extends Expr {
-    public Var(Token w,Type t){
+    final int stacklevel;
+    final int offset;
+    public Var(Token w,Type t,int sl,int o){
         super(w,t);
+        stacklevel = sl;
+        offset = o;
     }
 
     boolean isChangeable(){
@@ -14,11 +18,10 @@ public class Var extends Expr {
     }
 
     public Constant getValue(){
-        Constant v = VarTable.getTop().getVar(op);
-        return v;
+        return VarTable.getVar(stacklevel,offset);
     }
 
     public Constant setValue(Constant v){
-        return  VarTable.getTop().setVar(op,v);
+        return  VarTable.setVar(stacklevel,offset,v);
     }
 }
