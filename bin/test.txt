@@ -1,110 +1,45 @@
 push
-  |def
-  |def
-get
-set
+def RAND_SEED = 0
+{
+value:null
+
+{
+value:null
+prev:null
+
+{
+value:null
+prev:null
+next:null
+
+def _LIST_NULL_CONSTANT_ = {
+value:null
+prev:null
+next:null
+}
+get _LIST_NULL_CONSTANT_
+set _LIST_NULL_CONSTANT_ = null
 Invoke bool print(string str)
   |push
-  |  |def
+  |def str = +   Test Begin  +
+
 +   Test Begin  +
   |pop
 End Invoke#1 bool print(string str)
-  |def
+def buffer = -1
   |push
 Invoke bool print(string str)
   |  |push
-  |  |  |def
+  |  |def str = +Test For Input +
+
 +Test For Input +
   |  |pop
 End Invoke#1 bool print(string str)
 Invoke int readint()
   |  |push
-  |  |  |def
+  |  |def i = 0
 Invoke int bufgetchar()
   |  |  |push
-get
+get buffer
 Invoke int getchar()
   |  |  |  |push
-  |  |  |  |pop
-End Invoke#1 int getchar()
-  |  |  |pop
-End Invoke#1 int bufgetchar()
-  |  |  |def
-  |  |get
-  |  |get
-  |  |get
-  |  |set
-  |  |get
-  |  |get
-  |  |set
-Invoke int bufgetchar()
-  |  |  |push
-get
-Invoke int getchar()
-  |  |  |  |push
-  |  |  |  |pop
-End Invoke#1 int getchar()
-  |  |  |pop
-End Invoke#1 int bufgetchar()
-  |  |set
-  |  |get
-  |  |get
-  |  |get
-set
-  |  |get
-  |  |pop
-End Invoke#1 int readint()
-  |  |def
-Invoke int bufgetchar()
-  |  |push
-get
-  |  |  |push
-get
-  |  |  |  |def
-set
-  |  |  |get
-  |  |  |pop
-  |  |pop
-End Invoke#1 int bufgetchar()
-  |  |def
-Invoke int readint()
-  |  |push
-  |  |  |def
-Invoke int bufgetchar()
-  |  |  |push
-get
-Invoke int getchar()
-  |  |  |  |push
-  |  |  |  |pop
-End Invoke#1 int getchar()
-  |  |  |pop
-End Invoke#1 int bufgetchar()
-  |  |  |def
-  |  |get
-  |  |get
-  |  |get
-  |  |set
-  |  |get
-  |  |get
-  |  |set
-Invoke int bufgetchar()
-  |  |  |push
-get
-Invoke int getchar()
-  |  |  |  |push
-  |  |  |  |pop
-End Invoke#1 int getchar()
-  |  |  |pop
-End Invoke#1 int bufgetchar()
-  |  |set
-  |  |get
-  |  |get
-  |  |get
-set
-  |  |get
-  |  |pop
-End Invoke#1 int readint()
-  |  |def
-Invoke bool print(string str)
-  |  |push
-  |  |get

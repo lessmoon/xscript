@@ -637,13 +637,21 @@ public class Parser{
             error("Function " + id + " not found.");
         }
         match('(');
+        /*
+         * Because when function invoke will 
+         * cause a stack push before calculate  
+         * the expr.We should make present
+         * level + 1
+         */
+        Env savedEnv = top;
+        top = new Env(top);
         if(!check(')')){
             do{
                 paras.add(expr());
             }while(check(','));
             match(')');
         }
-
+        top = savedEnv;
         return new FunctionInvoke(f,paras);
     }
 

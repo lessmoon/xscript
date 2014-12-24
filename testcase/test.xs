@@ -7,9 +7,9 @@ import  "container/list.xs";
 
 
 
-//print("-----------------\n");
+print("-----------------\n");
 print("+   Test Begin  +\n");
-//print("-----------------\n");
+print("-----------------\n");
 
 
 int buffer = -1;
@@ -37,9 +37,9 @@ def int readint(){
 }
 
 {
-    //print("-----------------\n");
+    print("-----------------\n");
     print("+Test For Input +\n");
-    //print("-----------------\n");
+    print("-----------------\n");
     int i = readint();
     int t = bufgetchar();
     int j = readint();

@@ -32,22 +32,22 @@ public class VarTable {
 
     static public void popTop(){
         table.pop();
-        for(int i = 0 ; i < table.size() ; i++)
+        /*for(int i = 0 ; i < table.size() ; i++)
             System.out.print("  |");
-        System.out.println("pop");
+        System.out.println("pop");*/
     }
 
     static public void pushTop(){
-        for(int i = 0 ; i < table.size() ; i++)
+        /*for(int i = 0 ; i < table.size() ; i++)
             System.out.print("  |");
-        System.out.println("push");
+        System.out.println("push");*/
         table.push(new ArrayList<ConstantReference>());
     }
-
+    
     static public void pushVar(Constant v){
-        for(int i = 0 ; i < table.size() ; i++)
+        /*for(int i = 0 ; i < table.size() - 1 ; i++)
             System.out.print("  |");
-        System.out.println("def");
+        System.out.println("def " + op + " = " + v);*/
         table.peek().add(new ConstantReference(v));
     }
 
@@ -69,19 +69,20 @@ public class VarTable {
     
     static public Constant getVarAbsolutely(int sl,int offset){
         
-        for(int i = 0 ; i < sl ; i++)
+        /*for(int i = 0 ; i < sl ; i++)
             System.out.print("  |");
-        System.out.println("get");
+        System.out.println("get " + op );*/
         ArrayList<ConstantReference> c = table.get(sl);
+
         return c.get(offset).v;
     }
     
     static public Constant setVarAbsolutely(int sl,int offset,Constant v){
-        
+        /*
             for(int i = 0 ; i < sl ; i++)
                 System.out.print("  |");
-            System.out.println("set");
-        
+            System.out.println("set " + op + " = " + v);
+            */
         ArrayList<ConstantReference> c = table.get(sl);
         c.get(offset).v = v;
         return v;

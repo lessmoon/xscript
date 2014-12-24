@@ -47,7 +47,7 @@ public class FunctionInvoke extends Expr {
 
     public Constant getValue(){
         try {
-            System.out.println("Invoke " + func.toString());
+            //System.out.println("Invoke " + func.toString());
             VarTable.pushTop();
             for(int i = 0 ; i < para.size();i++){
                 VarTable.pushVar(para.get(i).getValue());
@@ -55,11 +55,11 @@ public class FunctionInvoke extends Expr {
             func.run();
         } catch(ReturnResult e){
             VarTable.popTop();
-            System.out.println("End Invoke#1 " + func.toString());
+            //System.out.println("End Invoke#1 " + func.toString());
             return e.value;
         }
         VarTable.popTop();
-        System.out.println("End Invoke#2 " + func.toString());
+        //System.out.println("End Invoke#2 " + func.toString());
         return null;
     }
 }
