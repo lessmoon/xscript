@@ -21,7 +21,7 @@ public class Struct extends Type {
     public Type addEntry(Token mname,Type t){
         return table.put(mname,t);
     }
-    
+
     /*
      * return the type of the member named mname
      * return null if it doesn't exist

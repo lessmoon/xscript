@@ -166,7 +166,7 @@ public class ArithFactory {
                 }
             }
         }
-        e1.error("Operand `" + tok + "' can't be used between " + e1.type + " and " + e2.type);
+        e1.error("Operand `" + tok + "' can't be used between `" + e1.type + "' and `" + e2.type + "'");
         return null;
     }
 }

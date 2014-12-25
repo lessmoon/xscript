@@ -12,20 +12,22 @@ print("+   Test Begin  +\n");
 print("-----------------\n");
 
 
-struct al{
-    int a;
-    int b;
-    int c;
-}
 def void println(string s){
     print(s + "\n");
     return;
 }
 
+{
+}
+
 println("Hello world!");
 
+/*FIXME*/
+int[22][23] a;
 int buffer = -1;
+int[23] x;
 
+print(a[21][0]);
 def int bufgetchar(){
     if(buffer < 0){
         return getchar();
