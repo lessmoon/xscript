@@ -173,7 +173,7 @@ public class ConversionFactory {
        Factory f = ConversionFactoryFactory.getConversionFactory(src);
        Conversion c = f.getConversion(src,t);
        if(c == null){
-            src.error("Can't convert `" + src.type + "' to " + t.toString());
+            src.error("Can't convert `" + src.type + "' to `" + t.toString() +"'");
        }
        return c;
     }

@@ -37,7 +37,7 @@ public class Decl extends Stmt {
     public static Decl getDecl(Token i,Type t,Expr v){
         if(t instanceof Struct){
             return new StructDecl(i,t,v);
-        }if(t instanceof Array){
+        } if (t instanceof Array){
             return new ArrayDecl(i,t,v);
         } else {
             return new Decl(i,t,v);

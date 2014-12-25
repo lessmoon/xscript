@@ -279,7 +279,9 @@ public class Parser{
             return new Continue(nowLevel - lastIterationLevel);
         case Tag.RETURN:
             match(Tag.RETURN);
-            Expr e = expr();
+            Expr e = Expr.VoidExpr;
+            if(returnType != Type.Void)
+                e = expr();
             match(';');
             return new Return(e,returnType,nowLevel - lastFunctionLevel);
         case '{':
@@ -339,6 +341,9 @@ public class Parser{
         Decls s = new Decls();
         Type p = type();
         Token tok;
+        if(p == Type.Void){
+            error("Can't declare " + p.toString() + " type variable");
+        }
         do{
             Expr e = null;
             tok = look;
@@ -360,6 +365,9 @@ public class Parser{
         Expr  e = null;
         while( look.tag == Tag.BASIC){
             Type p = type();
+            if(p == Type.Void){
+                error("Can't declare " + p.toString() + " type variable");
+            }
             Token tok;
             do{
                 e = null;
@@ -383,6 +391,9 @@ public class Parser{
         Type p = (Type)look;
         match(Tag.BASIC);
         while( check('[') ){
+            if(p == Type.Void){
+                error("Type `" + p.toString() + "' can't be element type of array");
+            }
             Token sz = look;
             match(Tag.NUM);
             p = new Array(p,((Num)sz).value);

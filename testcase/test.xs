@@ -12,6 +12,18 @@ print("+   Test Begin  +\n");
 print("-----------------\n");
 
 
+struct al{
+    int a;
+    int b;
+    int c;
+}
+def void println(string s){
+    print(s + "\n");
+    return;
+}
+
+println("Hello world!");
+
 int buffer = -1;
 
 def int bufgetchar(){

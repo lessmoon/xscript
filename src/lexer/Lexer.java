@@ -64,6 +64,7 @@ public class Lexer {
         reserve( Type.Bool );
         reserve( Type.Float );
         reserve( Type.Str );
+        reserve( Type.Void );
     }
 
     void save(String path){
