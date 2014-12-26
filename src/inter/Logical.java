@@ -1,6 +1,7 @@
 package inter;
 
-import lexer.*; import symbols.*;
+import lexer.*;
+import symbols.*;
 
 public abstract class Logical extends Expr {
     public Expr expr1,expr2;

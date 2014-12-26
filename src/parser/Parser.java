@@ -314,7 +314,6 @@ public class Parser{
         if(look.tag == ';'){
             s1 = Stmt.Null;
         } else if( look.tag == Tag.BASIC) {
-            System.out.println("ffff" + Lexer.line + ":" + Lexer.filename);
             hasdecl = true;
             top = new Env(top);
             s1 = fordecl();
@@ -390,18 +389,30 @@ public class Parser{
     public Type type() throws IOException {
         Type p = (Type)look;
         match(Tag.BASIC);
-        while( check('[') ){
+        //[4][3][2] = array of [3][]int
+        //[3][]int = array of []int
+        //[]int   = array of int
+        //row-wize
+        if( look.tag == '[' ){
             if(p == Type.Void){
                 error("Type `" + p.toString() + "' can't be element type of array");
             }
-            Token sz = look;
-            match(Tag.NUM);
-            p = new Array(p,((Num)sz).value);
-            match(']');
+            return arrtype(p);
         }
         return p;
     }
 
+    public Array arrtype(Type of) throws IOException {
+        match('[');
+        Token sz = look;
+        match(Tag.NUM);
+        match(']');
+        if( look.tag == '[' ){
+            of = arrtype(of);
+        }
+        return new Array(of,((Num)sz).value);
+    }
+    
     public Expr expr() throws IOException {
         return assign().optimize();
     }
@@ -530,6 +541,7 @@ public class Parser{
 
     public Expr offset(Expr e) throws IOException {
         match('[');
+        /*check type*/
         Expr loc = expr();
         match(']');
         /*if it is string item access*/
@@ -539,9 +551,7 @@ public class Parser{
             } else {
                 e = new StringAccess(e,loc);
             }
-            if(look.tag != '['){
-                return e;
-            }
+            return e;
         }
 
         if(!(e instanceof Var && e.type instanceof Array)){
@@ -549,25 +559,6 @@ public class Parser{
         }
 
         Type t = ((Array)(e.type)).of;/*element type*/
-        int w = t.getSize();
-        if(w != 1){
-            loc = ArithFactory.getArith(Word.mult,loc,new Constant(w));
-        }
-        /*it is normal array access*/
-        while(look.tag == '['){
-            /*array end*/
-            if(!(t instanceof Array))
-                break;
-            match('[');
-            Expr i = expr();
-            t = ((Array)t).of;/*element type*/
-            w = t.getSize();
-            if(w != 1){
-                i = ArithFactory.getArith(Word.mult,i,new Constant(w));
-            }
-            loc = ArithFactory.getArith(Word.add,loc,i);
-            match(']');
-        }
 
         e = new ArrayVar((Var)e,t,loc);
         /*for string index access*/

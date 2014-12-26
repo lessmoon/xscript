@@ -5,8 +5,6 @@ import  "lib/system.xs";
 import  "math/Math.xs";
 import  "container/list.xs";
 
-
-
 print("-----------------\n");
 print("+   Test Begin  +\n");
 print("-----------------\n");
@@ -18,6 +16,13 @@ def void println(string s){
 }
 
 {
+    int[2] tmp ;
+    int[56][56] x;
+    int[56][55] b;
+    b = x;
+    x[1] = tmp;
+    println("b[2] = " + b[2]);
+    println("b[1] = " + b[1]);
 }
 
 println("Hello world!");
@@ -25,11 +30,11 @@ println("Hello world!");
 /*FIXME*/
 int[22][23] a;
 int buffer = -1;
-int[23] x;
+a[21][0] = 212;
+int c = a[21][0];
 
-print(a[21][0]);
 def int bufgetchar(){
-    if(buffer < 0){
+    if( buffer < 0 ){
         return getchar();
     } else {
         int tmp = buffer;
@@ -181,7 +186,7 @@ def int printarray(int[2] arr,int len){
   qsort(arr,0,len-1);
   printarray(arr,len);
 
-  string[10][20] nums;
+
   i = 0;
   string test = "i am a test value";
   char[80] c_str;
@@ -212,17 +217,17 @@ def int printarray(int[2] arr,int len){
     c_str[i] = test[i];
   }
   c_str[i] = '\0';
-
+  string[10][20] nums;
   print(toString(c_str));
   print("\n");
-  i = 0;
-  for(i ;i < 10;i++){
-    int j = 0;
-    for(i ;j < 20;j++){
+  
+  for(i = 0 ;i < 10;i++){
+    for(int j = 0 ;j < 20;j++){
       nums[i][j] = (string)i + "," + j;
     }
   }
 
+  
   for(i = 0 ;i < 10;i++){
     int j = 0;
     for(i ;j < 20;j++){

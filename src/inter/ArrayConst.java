@@ -6,13 +6,18 @@ import symbols.*;
 import java.util.ArrayList;
 
 public class ArrayConst extends Constant {
-    public  int size;
-    Constant[] arr;
+    public  final int size;
+    final Constant[] arr;
 
     public ArrayConst( Array t ){
         super(Word.array,t);
-        size = t.getSize();
+        size = t.getElementNumber();
         arr = new Constant[size];
+        if(t.of instanceof Array){
+            for(int i = 0 ; i < size ;i++){
+                arr[i] = new ArrayConst((Array)t.of);
+            }
+        }
     }
 
     public Constant getValue(){
@@ -39,8 +44,7 @@ public class ArrayConst extends Constant {
     public String toString(){
         StringBuffer sb = new StringBuffer("[");
         for(Constant c : arr){
-            sb.append(" ");
-            sb.append(c.toString());
+            sb.append(" " + c);
         }
         sb.append(" ]");
         return sb.toString();
