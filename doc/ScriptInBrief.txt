@@ -4,16 +4,17 @@
     3.real:4 Bytes
     4.string:x Bytes
     5.bool:1 Bytes
+    6.User-defined structure
 2.Grammar
     1.Loop Statements:
         1.while(bool type expression) statement
-        2.for(expression;boolean type expression;expression) statement
+        2.for(def-expression;boolean type expression;expression) statement
         3.do statement while(boolean type expression);
     2.Condition Statement
         1.if(bool type expression) statement
         2.if(bool type expression) else statement
     3.Jump Statement
-        1.break;(in loops)
+        1.break(or continue);(in loops)
         2.return expression;(in functions)
     4.Expressions:
         1.variable++
@@ -57,6 +58,10 @@
         }
       Structure member visit:
         name.member-name
+    11.Dynamic array allocation:
+        new<Type>(expression);
+    12.Array size getter:
+        sizeof array-type-expression
 3.Features In Future
     1.Inline function definition:
-        defmacro name([Type name[...]]) = expression;
+        def Type name([Type name,...]) = expression;

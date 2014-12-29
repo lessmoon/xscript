@@ -35,6 +35,7 @@ src\inter\FunctionBasic.java
 src\inter\FunctionInvoke.java 
 src\inter\If.java 
 src\inter\Logical.java 
+src\inter\NewArray.java 
 src\inter\Node.java 
 src\inter\Not.java 
 src\inter\Op.java 
@@ -47,6 +48,7 @@ src\inter\Return.java
 src\inter\Seq.java 
 src\inter\Set.java 
 src\inter\SetFactory.java 
+src\inter\SizeOf.java 
 src\inter\Stmt.java 
 src\inter\StringAccess.java 
 src\inter\StringVarAccess.java 

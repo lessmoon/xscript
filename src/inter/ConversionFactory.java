@@ -19,7 +19,7 @@ class StrConversion extends Conversion{
     }
 
     public Constant getValue(){
-        return new Constant(e.getValue().toString());
+        return new Constant("" + e.getValue());
     }
 }
 

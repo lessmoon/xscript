@@ -332,7 +332,7 @@ public class Parser{
         s = hasdecl?new Seq(Stmt.PushStack,new Seq(fornode,Stmt.RecoverStack)):fornode;
         return s;
     }
-    
+
     Stmt fordecl() throws IOException {
         /*
          * for(int i = 0,j = 0;;)
@@ -403,14 +403,18 @@ public class Parser{
     }
 
     public Array arrtype(Type of) throws IOException {
+        int size = 0;
         match('[');
-        Token sz = look;
-        match(Tag.NUM);
+        if(look.tag != ']'){
+            Token sz = look;
+            match(Tag.NUM);
+            size = ((Num)sz).value;
+        }
         match(']');
         if( look.tag == '[' ){
             of = arrtype(of);
         }
-        return new Array(of,((Num)sz).value);
+        return new Array(of,size);
     }
     
     public Expr expr() throws IOException {
@@ -491,6 +495,20 @@ public class Parser{
        switch(look.tag){
        case '!':
             return new Not(copymove(),unary());
+       case Tag.SIZEOF:
+            return new SizeOf(copymove(),assign());
+       case Tag.NEW:
+            Token l = copymove();
+            match('<');
+            Type  t = type();
+            if(t == Type.Void){
+                error("Can't use type `" + t +"'");
+            }
+            match('>');
+            match('(');
+            Expr e = assign();
+            match(')');
+            return new NewArray(l,t,e);
        case '-':
        case Tag.INC:
        case Tag.DEC:

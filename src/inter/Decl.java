@@ -22,7 +22,7 @@ public class Decl extends Stmt {
     public boolean check(){
         if(value == null){
             return true;
-        } else if( type != value.type ) {
+        } else if( !type.equals(value.type) ) {
             value = ConversionFactory.getConversion(value,type);
             return value != null;
         }

@@ -20,6 +20,12 @@ public class ArrayConst extends Constant {
         }
     }
 
+    public ArrayConst(Array t,int sz){
+        super(Word.array,t);
+        size = sz;
+        arr = new Constant[size];
+    }
+
     public Constant getValue(){
         return this;
     }
@@ -30,14 +36,18 @@ public class ArrayConst extends Constant {
     }
 
     public Constant getElement(int i){
+        if(i >= size || i < 0){
+            error("Index " + i + " out of range( 0~" + size + " )");
+        }
         return arr[i];
     }
-    
+
     public int getSize(){
         return size;
     }
 
     boolean isChangeable(){
+        /*array reference is not changeable*/
         return true;
     }
 

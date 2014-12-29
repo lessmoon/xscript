@@ -9,18 +9,27 @@ print("-----------------\n");
 print("+   Test Begin  +\n");
 print("-----------------\n");
 
-
 def void println(string s){
     print(s + "\n");
     return;
 }
 
+/*NEEDTEST*/
+
 {
-    int[2] tmp ;
-    int[56][56] x;
-    int[56][55] b;
+    int[244] arr;
+    arr = new<int>(25);
+    println(sizeof arr);
+    println(sizeof new<int>(25));
+}
+
+{
+    int[] tmp ;
+    int[][] x;
+    int[][] b;
+    x = new<int[]>(30);
     b = x;
-    x[1] = tmp;
+    //x[1] = tmp;
     println("b[2] = " + b[2]);
     println("b[1] = " + b[1]);
 }
@@ -93,7 +102,6 @@ def int readint(){
     print( list_toString(l) + "\n" );
     //print( qlsort(l) + "\n" );
 }
-
 
 struct tree_node{
     tree_node left;

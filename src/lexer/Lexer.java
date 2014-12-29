@@ -52,7 +52,9 @@ public class Lexer {
         reserve( new Word("break",Tag.BREAK) );
         reserve( new Word("continue",Tag.CONTINUE));
         reserve( new Word("def",Tag.DEF) );
+        reserve( new Word("new",Tag.NEW));
         reserve( new Word("return",Tag.RETURN) );
+        reserve( new Word("sizeof",Tag.SIZEOF));
         reserve( new Word("loadfunc",Tag.LDFUNC));
         reserve( new Word("import",Tag.IMPORT));
         reserve( new Word("struct",Tag.STRUCT));
