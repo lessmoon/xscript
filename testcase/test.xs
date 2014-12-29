@@ -9,12 +9,29 @@ print("-----------------\n");
 print("+   Test Begin  +\n");
 print("-----------------\n");
 
+struct CORD{
+    real x;
+    real y;
+    def string toString(){
+        return "(" + this.x  + "," + this.y + ")";
+    }
+}
+
+{
+    CORD o;
+    o.x = 0;
+    o.y = 1;
+    string x = o.toString();
+    //print(x);
+}
+
 def void println(string s){
     print(s + "\n");
     return;
 }
 
 /*NEEDTEST*/
+
 
 {
     int[244] arr;
@@ -24,7 +41,7 @@ def void println(string s){
 }
 
 {
-    int[] tmp ;
+    int[] tmp;
     int[][] x;
     int[][] b;
     x = new<int[]>(30);
@@ -102,6 +119,7 @@ def int readint(){
     print( list_toString(l) + "\n" );
     //print( qlsort(l) + "\n" );
 }
+
 
 struct tree_node{
     tree_node left;

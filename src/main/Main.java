@@ -24,6 +24,7 @@ public class Main{
         try {
             s = parser.program();
         } catch (RuntimeException e){
+            e.printStackTrace();
             System.err.println("Compile Error:");
             System.err.println(e.getMessage());
             return;
@@ -35,6 +36,7 @@ public class Main{
         try {
             s.run();
         } catch (RuntimeException e){
+            e.printStackTrace();
             System.err.println("Runtime Error:");
             System.err.println(e.getMessage());
             return;

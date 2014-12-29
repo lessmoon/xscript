@@ -61,6 +61,7 @@ public class Lexer {
         
         reserve( Word.True );
         reserve( Word.False );
+        reserve( Word.This );
         reserve( Type.Int );
         reserve( Type.Char );
         reserve( Type.Bool );

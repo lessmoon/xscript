@@ -8,6 +8,7 @@ public class Word extends  Token {
     }
 
     public static final Word
+        This    =   new Word("this",Tag.ID),
         struct  =   new Word("{}",Tag.STRUCT),
         array   =   new Word("[]",Tag.ARRAY),
         and     =   new Word("&&",Tag.AND),     or  = new Word("||",Tag.OR),

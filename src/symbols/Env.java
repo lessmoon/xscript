@@ -18,8 +18,8 @@ public class Env {
         level = 0;
     }
 
-    public void put(Token w,Type t){
-        table.put(w,new EnvEntry(t,level,table.size()));
+    public EnvEntry put(Token w,Type t){
+        return table.put(w,new EnvEntry(t,level,table.size()));
     }
 
     public EnvEntry get(Token w){

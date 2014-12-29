@@ -4,14 +4,14 @@ import runtime.*;
 import lexer.*;
 import symbols.*;
 
-public class StructMemeberAccess extends Var {
+public class StructMemberAccess extends Var {
     Expr    value;
-    Token   memeber;
+    Token   member;
 
-    public StructMemeberAccess(Expr v,Token m){
+    public StructMemberAccess(Expr v,Token m){
         super(Word.struct,null,0,0);
         value = v;
-        memeber = m;
+        member = m;
         check();
     }
 
@@ -19,9 +19,9 @@ public class StructMemeberAccess extends Var {
         if( ! (value.type instanceof Struct) ){
             error("struct access can't be used for " + value.type );
         }
-        type = ((Struct)(value.type)).getType(memeber);
+        type = ((Struct)(value.type)).getType(member);
         if( type == null ){
-            error("Can't find memeber `" + memeber + "' in " + value.type);
+            error("Can't find member `" + member + "' in " + value.type);
         }
     }
     
@@ -36,11 +36,11 @@ public class StructMemeberAccess extends Var {
 
     public Constant getValue(){
         StructConst s = (StructConst)value.getValue();
-        return s.getElement(memeber);
+        return s.getElement(member);
     }
 
     public Constant setValue(Constant c){
         StructConst s = (StructConst)value.getValue();
-        return s.setElement(memeber,c);
+        return s.setElement(member,c);
     }
 }

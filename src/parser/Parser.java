@@ -124,7 +124,7 @@ public class Parser{
 
     public void defstruct() throws IOException {
         match(Tag.STRUCT);
-        
+
         /*
          * Struct definition:
          *      struct name {
@@ -141,48 +141,83 @@ public class Parser{
         lex.defType(s);
         match('{');
         do{
-            Type t = type();
-            Token m = look;
-            match(Tag.ID);
-            if(s.addEntry(m,t) != null){
-                error("Memeber `" + m.toString() + "' defined previously ");
+            /*Function definition*/
+            if(check(Tag.DEF)){
+                Type savedType = returnType;
+                returnType = type();
+                Token fname = look;
+                match(Tag.ID);
+                Env savedEnv = top;
+                top = new Env(top);
+                boolean savedHasDecl = hasDecl;
+                hasDecl = true;
+                /*pass `this' reference as the first argument*/
+                top.put(Word.This,s);
+                ArrayList<Para> l = arguments();
+                l.add(0,new Para(s,Word.This));
+                Function f = new Function(fname,returnType,l);
+                /*member function redefined*/
+                if(s.addFunc(fname,f) != null){
+                    error("Member function name `" + fname + "' has been used");
+                }
+                match('{');
+                Stmt stmt = stmts();
+                match('}');
+                f.init(fname,returnType,stmt,l);
+                top = savedEnv;
+                returnType = savedType;
+                hasDecl = savedHasDecl;
+            } else {
+                Type t = type();
+                Token m = look;
+                match(Tag.ID);
+                if(s.addEntry(m,t) != null){
+                    error("Member `" + m.toString() + "' defined previously ");
+                }
+                match(';');
             }
-            match(';');
         }while(!check('}'));
     }
 
     public void deffunc() throws IOException {
         match(Tag.DEF);
         Type savedType = returnType;
-        ArrayList<Para> pl = new ArrayList<Para>();
         returnType = type();
         Token name = look;
         match(Tag.ID);
-        match('(');
         Env savedEnv = top;
         top = new Env(top);
         boolean savedHasDecl = hasDecl;
         hasDecl = true;
-        if(!check(')')){
-            do{
-                Type t = type();
-                Token n = look;
-                match(Tag.ID);
-                pl.add(new Para(t,n));
-                top.put(n,t);
-            }while(check(','));
-            match(')');
-        }
-        Function f = new Function(name,returnType,pl);
+        ArrayList<Para> l = arguments();
+        Function f = new Function(name,returnType,l);
         table.addFunc(name,f);
         match('{');
         Stmt s = stmts();
         match('}');
-        f.init(name,returnType,s,pl);
+        f.init(name,returnType,s,l);
         top = savedEnv;
         returnType = savedType;
         hasDecl = savedHasDecl;
         return;
+    }
+
+    public ArrayList<Para> arguments() throws IOException {
+        ArrayList<Para> pl = new ArrayList<Para>();
+        match('(');
+        if(!check(')')){
+            do{
+                Type t = type();
+                Token name = look;
+                match(Tag.ID);
+                pl.add(new Para(t , name));
+                if( top.put( name , t ) != null ){
+                    error("Function parameters names have conflict:`"+ name.toString() + "'" );
+                }
+            }while(check(','));
+            match(')');
+        }
+        return pl;
     }
 
     public Stmt block() throws IOException {
@@ -543,18 +578,31 @@ public class Parser{
     public Expr access(Expr e) throws IOException {
         do{
             if(look.tag == '.')
-                e = memeber(e);
+                e = member(e);
             else
                 e = offset(e);
         }while(look.tag == '[' || look.tag == '.');
         return e;
     }
 
-    public Expr memeber(Expr e) throws IOException {
+    public Expr member(Expr e) throws IOException {
         match('.');
         Token mname = look;
         match(Tag.ID);
-        return new StructMemeberAccess(e,mname);
+        ArrayList<Expr> p = null;
+        if(look.tag == '('){
+            p = parameters();
+            if(!(e.type instanceof Struct))
+                error("Member function is for struct,not for `" + e.type +"'");
+            FunctionBasic f = ((Struct)(e.type)).getFunc(mname);
+            
+            if(f == null)
+                error("Member function `" + mname + "' not found");
+            p.add(0,e);
+
+            return new FunctionInvoke(f,p);
+        }
+        return new StructMemberAccess(e,mname);
     }
 
     public Expr offset(Expr e) throws IOException {
@@ -652,11 +700,10 @@ public class Parser{
 
     public Expr function(Token id) throws IOException {
         FunctionBasic f = table.getFuncType(id);
-        ArrayList<Expr> paras = new ArrayList<Expr>();
+
         if(f == null) {
             error("Function " + id + " not found.");
         }
-        match('(');
         /*
          * Because when function invoke will 
          * cause a stack push before calculate  
@@ -665,16 +712,23 @@ public class Parser{
          */
         Env savedEnv = top;
         top = new Env(top);
+        ArrayList<Expr> p = parameters();
+        top = savedEnv;
+        return new FunctionInvoke(f,p);
+    }
+
+    public ArrayList<Expr> parameters() throws IOException  {
+        match('(');
+        ArrayList<Expr> p = new ArrayList<Expr>();
         if(!check(')')){
             do{
-                paras.add(expr());
+                p.add(expr());
             }while(check(','));
             match(')');
         }
-        top = savedEnv;
-        return new FunctionInvoke(f,paras);
+        return p;
     }
-
+    
     public static void main(String[] args) throws Exception {
         Lexer l = new Lexer();
         l.open("test.txt");
