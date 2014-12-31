@@ -9,31 +9,67 @@ print("-----------------\n");
 print("+   Test Begin  +\n");
 print("-----------------\n");
 
-struct CORD{
-    real x;
-    real y;
-    def string toString(){
-        return "(" + this.x  + "," + this.y + ")";
-    }
-}
-
-{
-    CORD o;
-    o.x = 0;
-    o.y = 1;
-    string x = o.toString();
-    //print(x);
-}
-
 def void println(string s){
     print(s + "\n");
     return;
 }
 
-/*NEEDTEST*/
+print("--------------------------\n");
+print("+   Test For List Union  +\n");
+print("--------------------------\n");
+
+{
+    srand(time());
+    /*test code for list union*/
+    list a ;
+    a.init();
+    list b ;
+    b.init();
+    int size = 7;
+    for(int i = 0;i < size ;i++){
+        a.push_front(rand()%31);
+        b.push_front(rand()%31);
+    }
+    print("33\n");
+    print("a=");print_list(a);
+    print("b=");print_list(b);
+    print("a U b=");print_list(union_list(a,b));
+    print("SORT\n");
+    print("sort(a)=\n");print_list(qlsort(a));
+    getchar();
+}
+//return 0;
+
+struct CORD{
+    real x;
+    real y;
+    def void init(real x,real y){
+        this.x = x;
+        this.y = y;
+    }
+    def string toString(){
+        return "("+this.x+","+this.y+")";
+    }
+}
+
 
 
 {
+    println("Test for member functions");
+    srand(time());
+    CORD o;
+    o.x = rand()%25;
+    o.y = rand()%25;
+    println(o.toString());
+    o.init(rand()%25,rand()%25);
+    println(o.toString());
+}
+
+
+/*NEEDTEST*/
+
+{
+    println("Test for dynamic array");
     int[244] arr;
     arr = new<int>(25);
     println(sizeof arr);
@@ -41,6 +77,7 @@ def void println(string s){
 }
 
 {
+    println("Test for dynamic array");
     int[] tmp;
     int[][] x;
     int[][] b;
@@ -105,18 +142,23 @@ def int readint(){
     getchar();
 }
 
+
+
 {
     /*test code for list*/
-    list l = create_list();
+    println("Test for list");
+    list l ;
+    l.init();
     srand(time());
     int size = rand()%50;
     for(size;size > 0;size--){
-        push_back(l,rand()%9);
+        l.push_front(rand()%9);
     }
-
-    print( list_toString(l) + "\n" );
+    println("Original array:");
+    print_list(l);
     l = qlsort(l);
-    print( list_toString(l) + "\n" );
+    println("Sorted array:");
+    //print_list(l);
     //print( qlsort(l) + "\n" );
 }
 
@@ -325,11 +367,6 @@ def int string2int(string s){
         v += (s[i] - '0');
     }
     return v;
-}
-
-def bool println(string str){
-    print(str);
-    return print("\n");
 }
 
 {

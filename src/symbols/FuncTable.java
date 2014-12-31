@@ -13,7 +13,7 @@ public class FuncTable {
     }
     
     public boolean addFunc(Token id,FunctionBasic f){
-        return table.put(id,f) != null;
+        return table.put(id,f) == null;
     }
     
     public FunctionBasic getFuncType(Token id){

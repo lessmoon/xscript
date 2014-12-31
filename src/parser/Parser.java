@@ -143,14 +143,14 @@ public class Parser{
         do{
             /*Function definition*/
             if(check(Tag.DEF)){
-                Type savedType = returnType;
-                returnType = type();
-                Token fname = look;
-                match(Tag.ID);
                 Env savedEnv = top;
                 top = new Env(top);
                 boolean savedHasDecl = hasDecl;
                 hasDecl = true;
+                Type savedType = returnType;
+                returnType = type();
+                Token fname = look;
+                match(Tag.ID);
                 /*pass `this' reference as the first argument*/
                 top.put(Word.This,s);
                 ArrayList<Para> l = arguments();
@@ -181,17 +181,22 @@ public class Parser{
 
     public void deffunc() throws IOException {
         match(Tag.DEF);
-        Type savedType = returnType;
-        returnType = type();
-        Token name = look;
-        match(Tag.ID);
         Env savedEnv = top;
         top = new Env(top);
         boolean savedHasDecl = hasDecl;
         hasDecl = true;
+        Type savedType = returnType;
+        returnType = type();
+        Token name = look;
+        match(Tag.ID);
+
         ArrayList<Para> l = arguments();
         Function f = new Function(name,returnType,l);
-        table.addFunc(name,f);
+        /*check if its name has been used*/
+        if(!table.addFunc(name,f)){
+            error("Function name has conflict:" + f );
+        }
+
         match('{');
         Stmt s = stmts();
         match('}');
@@ -589,15 +594,16 @@ public class Parser{
         match('.');
         Token mname = look;
         match(Tag.ID);
-        ArrayList<Expr> p = null;
         if(look.tag == '('){
-            p = parameters();
+           ArrayList<Expr>  p = parameters();
             if(!(e.type instanceof Struct))
                 error("Member function is for struct,not for `" + e.type +"'");
             FunctionBasic f = ((Struct)(e.type)).getFunc(mname);
             
             if(f == null)
                 error("Member function `" + mname + "' not found");
+
+            /*Pass `this' reference as the first argument*/
             p.add(0,e);
 
             return new FunctionInvoke(f,p);
@@ -702,18 +708,9 @@ public class Parser{
         FunctionBasic f = table.getFuncType(id);
 
         if(f == null) {
-            error("Function " + id + " not found.");
+            error("Function `" + id + "' not found.");
         }
-        /*
-         * Because when function invoke will 
-         * cause a stack push before calculate  
-         * the expr.We should make present
-         * level + 1
-         */
-        Env savedEnv = top;
-        top = new Env(top);
         ArrayList<Expr> p = parameters();
-        top = savedEnv;
         return new FunctionInvoke(f,p);
     }
 

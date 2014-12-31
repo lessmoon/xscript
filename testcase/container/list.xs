@@ -2,125 +2,93 @@
 
 struct list_node {
     list_node next;
-    list_node prev;
     int  value;
+    
+    def void set_next(list_node next){
+        this.next = next;
+    }
+    
+    def void set_value(int v){
+        this.value = v;
+    }
 }
 
 struct list {
     list_node head;
     list_node tail;
     int count;
-}
 
-list_node _LIST_NULL_CONSTANT_;
-_LIST_NULL_CONSTANT_ = _LIST_NULL_CONSTANT_.prev;
-
-def list create_list(){
-    list_node head;
-    list_node tail;
-    list l ;
-    l.head = head;
-    l.tail  = tail;
-    l.count = 0;
-    head.next = tail;
-    head.prev = _LIST_NULL_CONSTANT_;
-    tail.next  = _LIST_NULL_CONSTANT_;
-    tail.prev  = head;
-    return l;
-}
-
-def list push_back(list l,int value){
-    list_node n;
-    l.count++;
-    n.value = value;
-    n.prev = l.tail.prev;
-    n.next = l.tail;
-    n.prev.next = n;
-    l.tail.prev = n;
-    return l;
-}
-
-def bool list_isEmpty(list l){
-    return l.count == 0;
-}
-
-def int list_size(list l){
-    return l.count;
-}
-
-def int pop_front(list l){
-    list_node n;
-    if(l.count > 0){
-        n = l.head.next;
-        l.head.next = n.next;
-        n.next.prev = n.prev;/*head*/
-        l.count--;
-        return n.value;
+    def void init(){
+        int i = 22;
+        list_node head,tail;
+        this.head = head;
+        this.head.set_next(tail);
+        this.tail = tail;
+        this.count = 0;
     }
-    return -1;
+    
+    def void push_front(int v){
+        list_node tmp;
+        tmp.set_next(this.head.next);
+        this.head.set_next(tmp);
+        tmp.set_value(v);
+        this.count ++;
+    }
+    
+    def int pop_front(){
+        if(this.count > 0){
+            list_node tmp = this.head.next;
+            this.head.set_next(tmp.next);
+            this.count--;
+            return tmp.value;
+        }
+        return -1;
+    }
+    
+    def int size(){
+        return this.count;
+    }
 }
 
-def int pop_back(list l){
-    list_node n;
-    if(l.count > 0){
-        n = l.tail.prev;
-        l.tail.prev = n.prev;
-        n.prev.next = n.next;/*tail*/
-        l.count--;
-        return n.value;
+def void print_list(list l){
+    print("[");
+    for(list_node n = l.head;n.next != l.tail;n = n.next){
+        print(" " + n.next.value );
     }
-    return -1;
+    print(" ]\n");
 }
 
 def list union_list(list a,list b){
-    a.tail.prev.next = b.head.next;
-    b.head.next.prev = a.tail.prev;
-    a.tail = b.tail;
-    a.count += b.count;
-    b = a;
-    return a;
-}
-
-def list lesslist(list l,int v){
-    list tmp = create_list();
-    list_node i = l.head;
-    while(i.next != l.tail){
-        if(i.next.value < v)
-            push_back(tmp,i.next.value);
-        i = i.next;
+    list tmp;
+    tmp.init();
+    for(list_node n = a.head;n.next != a.tail;n = n.next){
+        tmp.push_front(n.next.value);
+    }
+    for(list_node n = b.head;n.next != b.tail;n = n.next){
+        tmp.push_front(n.next.value);
     }
     return tmp;
 }
 
-def list greatlist(list l,int v){
-    list tmp = create_list();
-    list_node i = l.head;
-    while(i.next != l.tail){
-        if(i.next.value >= v)
-            push_back(tmp,i.next.value);
-        i = i.next;
+def list qlsort(list a){
+    list tmp = a;
+    if(a.size() > 0){
+        int p = a.pop_front();
+        list left,right;
+        left.init();right.init();
+        for(list_node n = a.head;n.next != a.tail;n = n.next){
+            if(n.next.value <= p)
+                left.push_front(n.next.value);
+        }
+        
+        for(list_node n = a.head;n.next != a.tail;n = n.next){
+            if(n.next.value > p)
+                right.push_front(n.next.value);
+        }
+        left = qlsort(left);
+        right = qlsort(right);
+        right.push_front(p);
+        tmp = union_list(left,right);
     }
     return tmp;
-}
-
-def list qlsort(list l){
-    if(l.count <= 1){
-        return l;
-    } else {
-        int v = pop_front(l);
-        list r = qlsort(lesslist(l,v));
-        push_back(r,v);
-        return union_list(r,qlsort(greatlist(l,v)));
-    }
-}
-
-def string list_toString(list l){
-    list_node i = l.head;
-    string v = "[ ";
-    while(i.next != l.tail){
-        v += (string) i.next.value + " ";
-        i = i.next;
-    }
-    v += "]";
-    return v;
 }

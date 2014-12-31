@@ -1,0 +1,5215 @@
+push
+def 0
+def 1
+get 1
+set 1 = 
+  |push
+  |def 0
+Invoke bool print(string str)
+-----------------
+End Invoke#1 bool print(string str)
+  |pop
+  |push
+  |def 0
+Invoke bool print(string str)
++   Test Begin  +
+End Invoke#1 bool print(string str)
+  |pop
+  |push
+  |def 0
+Invoke bool print(string str)
+-----------------
+End Invoke#1 bool print(string str)
+  |pop
+  |push
+  |def 0
+Invoke bool print(string str)
+--------------------------
+End Invoke#1 bool print(string str)
+  |pop
+  |push
+  |def 0
+Invoke bool print(string str)
++   Test For List Union  +
+End Invoke#1 bool print(string str)
+  |pop
+  |push
+  |def 0
+Invoke bool print(string str)
+--------------------------
+End Invoke#1 bool print(string str)
+  |pop
+  |push
+  |  |push
+Invoke int time()
+End Invoke#1 int time()
+  |  |pop
+  |  |push
+  |  |def 0
+Invoke int srand(int v)
+  |  |get 0
+set 0 = 
+End Invoke#1 int srand(int v)
+  |  |pop
+  |  |push
+Invoke struct list create_list()
+  |  |def 0
+  |  |def 1
+  |  |def 2
+  |  |get 0
+  |  |get 2
+  |  |get 1
+  |  |get 2
+  |  |get 2
+  |  |get 1
+  |  |get 0
+get 1
+  |  |get 0
+get 1
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |pop
+  |def 0
+  |  |push
+Invoke struct list create_list()
+  |  |def 0
+  |  |def 1
+  |  |def 2
+  |  |get 0
+  |  |get 2
+  |  |get 1
+  |  |get 2
+  |  |get 2
+  |  |get 1
+  |  |get 0
+get 1
+  |  |get 0
+get 1
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |pop
+  |def 1
+  |def 2
+  |  |push
+  |  |def 0
+  |  |get 0
+  |get 2
+  |get 0
+  |  |  |push
+Invoke int rand()
+  |  |  |def 0
+  |  |  |def 1
+get 0
+set 0 = 
+get 0
+set 0 = 
+get 0
+  |  |  |set 1 = 
+  |  |  |get 1
+  |  |  |set 0 = 
+get 0
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke int abs(int a)
+  |  |  |  |get 0
+  |  |  |  |get 0
+End Invoke#1 int abs(int a)
+  |  |  |  |pop
+End Invoke#1 int rand()
+  |  |  |pop
+  |  |  |push
+  |  |  |def 0
+  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |def 2
+  |  |  |get 0
+  |  |  |get 0
+  |  |  |get 1
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |pop
+  |get 1
+  |  |  |push
+Invoke int rand()
+  |  |  |def 0
+  |  |  |def 1
+get 0
+set 0 = 
+get 0
+set 0 = 
+get 0
+  |  |  |set 1 = 
+  |  |  |get 1
+  |  |  |set 0 = 
+get 0
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke int abs(int a)
+  |  |  |  |get 0
+  |  |  |  |get 0
+End Invoke#1 int abs(int a)
+  |  |  |  |pop
+End Invoke#1 int rand()
+  |  |  |pop
+  |  |  |push
+  |  |  |def 0
+  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |def 2
+  |  |  |get 0
+  |  |  |get 0
+  |  |  |get 1
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |pop
+  |  |get 0
+  |  |set 0 = 
+  |  |get 0
+  |get 2
+  |get 0
+  |  |  |push
+Invoke int rand()
+  |  |  |def 0
+  |  |  |def 1
+get 0
+set 0 = 
+get 0
+set 0 = 
+get 0
+  |  |  |set 1 = 
+  |  |  |get 1
+  |  |  |set 0 = 
+get 0
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke int abs(int a)
+  |  |  |  |get 0
+  |  |  |  |get 0
+End Invoke#1 int abs(int a)
+  |  |  |  |pop
+End Invoke#1 int rand()
+  |  |  |pop
+  |  |  |push
+  |  |  |def 0
+  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |def 2
+  |  |  |get 0
+  |  |  |get 0
+  |  |  |get 1
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |pop
+  |get 1
+  |  |  |push
+Invoke int rand()
+  |  |  |def 0
+  |  |  |def 1
+get 0
+set 0 = 
+get 0
+set 0 = 
+get 0
+  |  |  |set 1 = 
+  |  |  |get 1
+  |  |  |set 0 = 
+get 0
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke int abs(int a)
+  |  |  |  |get 0
+  |  |  |  |get 0
+End Invoke#1 int abs(int a)
+  |  |  |  |pop
+End Invoke#1 int rand()
+  |  |  |pop
+  |  |  |push
+  |  |  |def 0
+  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |def 2
+  |  |  |get 0
+  |  |  |get 0
+  |  |  |get 1
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |pop
+  |  |get 0
+  |  |set 0 = 
+  |  |get 0
+  |get 2
+  |get 0
+  |  |  |push
+Invoke int rand()
+  |  |  |def 0
+  |  |  |def 1
+get 0
+set 0 = 
+get 0
+set 0 = 
+get 0
+  |  |  |set 1 = 
+  |  |  |get 1
+  |  |  |set 0 = 
+get 0
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke int abs(int a)
+  |  |  |  |get 0
+  |  |  |  |get 0
+End Invoke#1 int abs(int a)
+  |  |  |  |pop
+End Invoke#1 int rand()
+  |  |  |pop
+  |  |  |push
+  |  |  |def 0
+  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |def 2
+  |  |  |get 0
+  |  |  |get 0
+  |  |  |get 1
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |pop
+  |get 1
+  |  |  |push
+Invoke int rand()
+  |  |  |def 0
+  |  |  |def 1
+get 0
+set 0 = 
+get 0
+set 0 = 
+get 0
+  |  |  |set 1 = 
+  |  |  |get 1
+  |  |  |set 0 = 
+get 0
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke int abs(int a)
+  |  |  |  |get 0
+  |  |  |  |get 0
+End Invoke#1 int abs(int a)
+  |  |  |  |pop
+End Invoke#1 int rand()
+  |  |  |pop
+  |  |  |push
+  |  |  |def 0
+  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |def 2
+  |  |  |get 0
+  |  |  |get 0
+  |  |  |get 1
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |pop
+  |  |get 0
+  |  |set 0 = 
+  |  |get 0
+  |get 2
+  |get 0
+  |  |  |push
+Invoke int rand()
+  |  |  |def 0
+  |  |  |def 1
+get 0
+set 0 = 
+get 0
+set 0 = 
+get 0
+  |  |  |set 1 = 
+  |  |  |get 1
+  |  |  |set 0 = 
+get 0
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke int abs(int a)
+  |  |  |  |get 0
+  |  |  |  |get 0
+End Invoke#1 int abs(int a)
+  |  |  |  |pop
+End Invoke#1 int rand()
+  |  |  |pop
+  |  |  |push
+  |  |  |def 0
+  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |def 2
+  |  |  |get 0
+  |  |  |get 0
+  |  |  |get 1
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |pop
+  |get 1
+  |  |  |push
+Invoke int rand()
+  |  |  |def 0
+  |  |  |def 1
+get 0
+set 0 = 
+get 0
+set 0 = 
+get 0
+  |  |  |set 1 = 
+  |  |  |get 1
+  |  |  |set 0 = 
+get 0
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke int abs(int a)
+  |  |  |  |get 0
+  |  |  |  |get 0
+End Invoke#1 int abs(int a)
+  |  |  |  |pop
+End Invoke#1 int rand()
+  |  |  |pop
+  |  |  |push
+  |  |  |def 0
+  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |def 2
+  |  |  |get 0
+  |  |  |get 0
+  |  |  |get 1
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |pop
+  |  |get 0
+  |  |set 0 = 
+  |  |get 0
+  |get 2
+  |get 0
+  |  |  |push
+Invoke int rand()
+  |  |  |def 0
+  |  |  |def 1
+get 0
+set 0 = 
+get 0
+set 0 = 
+get 0
+  |  |  |set 1 = 
+  |  |  |get 1
+  |  |  |set 0 = 
+get 0
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke int abs(int a)
+  |  |  |  |get 0
+  |  |  |  |get 0
+End Invoke#1 int abs(int a)
+  |  |  |  |pop
+End Invoke#1 int rand()
+  |  |  |pop
+  |  |  |push
+  |  |  |def 0
+  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |def 2
+  |  |  |get 0
+  |  |  |get 0
+  |  |  |get 1
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |pop
+  |get 1
+  |  |  |push
+Invoke int rand()
+  |  |  |def 0
+  |  |  |def 1
+get 0
+set 0 = 
+get 0
+set 0 = 
+get 0
+  |  |  |set 1 = 
+  |  |  |get 1
+  |  |  |set 0 = 
+get 0
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke int abs(int a)
+  |  |  |  |get 0
+  |  |  |  |get 0
+End Invoke#1 int abs(int a)
+  |  |  |  |pop
+End Invoke#1 int rand()
+  |  |  |pop
+  |  |  |push
+  |  |  |def 0
+  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |def 2
+  |  |  |get 0
+  |  |  |get 0
+  |  |  |get 1
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |pop
+  |  |get 0
+  |  |set 0 = 
+  |  |get 0
+  |get 2
+  |get 0
+  |  |  |push
+Invoke int rand()
+  |  |  |def 0
+  |  |  |def 1
+get 0
+set 0 = 
+get 0
+set 0 = 
+get 0
+  |  |  |set 1 = 
+  |  |  |get 1
+  |  |  |set 0 = 
+get 0
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke int abs(int a)
+  |  |  |  |get 0
+  |  |  |  |get 0
+End Invoke#1 int abs(int a)
+  |  |  |  |pop
+End Invoke#1 int rand()
+  |  |  |pop
+  |  |  |push
+  |  |  |def 0
+  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |def 2
+  |  |  |get 0
+  |  |  |get 0
+  |  |  |get 1
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |pop
+  |get 1
+  |  |  |push
+Invoke int rand()
+  |  |  |def 0
+  |  |  |def 1
+get 0
+set 0 = 
+get 0
+set 0 = 
+get 0
+  |  |  |set 1 = 
+  |  |  |get 1
+  |  |  |set 0 = 
+get 0
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke int abs(int a)
+  |  |  |  |get 0
+  |  |  |  |get 0
+End Invoke#1 int abs(int a)
+  |  |  |  |pop
+End Invoke#1 int rand()
+  |  |  |pop
+  |  |  |push
+  |  |  |def 0
+  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |def 2
+  |  |  |get 0
+  |  |  |get 0
+  |  |  |get 1
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |pop
+  |  |get 0
+  |  |set 0 = 
+  |  |get 0
+  |get 2
+  |get 0
+  |  |  |push
+Invoke int rand()
+  |  |  |def 0
+  |  |  |def 1
+get 0
+set 0 = 
+get 0
+set 0 = 
+get 0
+  |  |  |set 1 = 
+  |  |  |get 1
+  |  |  |set 0 = 
+get 0
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke int abs(int a)
+  |  |  |  |get 0
+  |  |  |  |get 0
+End Invoke#1 int abs(int a)
+  |  |  |  |pop
+End Invoke#1 int rand()
+  |  |  |pop
+  |  |  |push
+  |  |  |def 0
+  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |def 2
+  |  |  |get 0
+  |  |  |get 0
+  |  |  |get 1
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |pop
+  |get 1
+  |  |  |push
+Invoke int rand()
+  |  |  |def 0
+  |  |  |def 1
+get 0
+set 0 = 
+get 0
+set 0 = 
+get 0
+  |  |  |set 1 = 
+  |  |  |get 1
+  |  |  |set 0 = 
+get 0
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke int abs(int a)
+  |  |  |  |get 0
+  |  |  |  |get 0
+End Invoke#1 int abs(int a)
+  |  |  |  |pop
+End Invoke#1 int rand()
+  |  |  |pop
+  |  |  |push
+  |  |  |def 0
+  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |def 2
+  |  |  |get 0
+  |  |  |get 0
+  |  |  |get 1
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 2
+  |  |  |get 0
+  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |pop
+  |  |get 0
+  |  |set 0 = 
+  |  |get 0
+  |get 2
+  |  |pop
+  |  |push
+  |  |def 0
+Invoke bool print(string str)
+a=End Invoke#1 bool print(string str)
+  |  |pop
+  |get 0
+  |  |push
+  |  |def 0
+Invoke void print_list(struct list l)
+  |  |get 0
+  |  |def 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 19End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 22End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 28End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 23End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |pop
+  |  |push
+  |  |def 0
+Invoke bool print(string str)
+b=End Invoke#1 bool print(string str)
+  |  |pop
+  |get 1
+  |  |push
+  |  |def 0
+Invoke void print_list(struct list l)
+  |  |get 0
+  |  |def 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 2End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 21End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 16End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 3End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 7End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 11End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 4End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |pop
+  |  |push
+  |  |def 0
+Invoke bool print(string str)
+SORT
+End Invoke#1 bool print(string str)
+  |  |pop
+  |  |push
+  |  |def 0
+Invoke bool print(string str)
+sort(a)=
+End Invoke#1 bool print(string str)
+  |  |pop
+  |get 0
+  |  |push
+  |  |def 0
+Invoke struct list qlsort(struct list l)
+  |  |get 0
+  |  |  |push
+  |  |  |def 0
+  |  |  |def 1
+  |  |  |def 2
+  |  |  |def 3
+Invoke struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |push
+  |  |  |  |def 0
+  |  |  |  |get 0
+  |  |  |get 1
+  |  |  |  |pop
+  |  |  |get 1
+  |  |  |get 2
+  |  |  |get 3
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke bool print(string str)
+(0>=-1)=End Invoke#1 bool print(string str)
+  |  |  |  |pop
+  |  |  |get 0
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |get 0
+  |  |  |  |def 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 19End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 22End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 28End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 23End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |pop
+  |  |  |get 0
+  |  |  |  |push
+  |  |  |get 0
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke int pop_front(struct list l)
+  |  |  |  |  |def 1
+  |  |  |  |  |get 0
+  |  |  |  |  |get 0
+  |  |  |  |  |set 1 = 
+  |  |  |  |  |get 1
+  |  |  |  |  |get 0
+  |  |  |  |  |get 0
+  |  |  |  |  |get 1
+  |  |  |  |  |get 0
+  |  |  |  |  |get 0
+  |  |  |  |  |get 1
+End Invoke#1 int pop_front(struct list l)
+  |  |  |  |  |pop
+  |  |  |  |def 0
+  |  |  |get 0
+  |  |  |  |get 0
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+  |  |  |  |  |def 1
+Invoke struct list lesslist(struct list l,int v)
+  |  |  |  |  |  |push
+Invoke struct list create_list()
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |  |  |  |  |pop
+  |  |  |  |  |def 2
+  |  |  |  |  |get 0
+  |  |  |  |  |def 3
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 2
+End Invoke#1 struct list lesslist(struct list l,int v)
+  |  |  |  |  |pop
+  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+  |  |  |  |  |def 1
+  |  |  |  |  |def 2
+  |  |  |  |  |def 3
+Invoke struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |get 0
+  |  |  |  |  |get 1
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+(1<19)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 0
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 0
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |get 0
+  |  |  |  |  |get 1
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 1
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+Invoke bool print(string str)
++s(1)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 0
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 0
+End Invoke#1 struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |pop
+  |  |  |  |def 1
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |def 2
+  |  |  |  |  |get 0
+  |  |  |  |  |get 0
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 0
+  |  |  |  |  |get 2
+  |  |  |  |  |get 0
+  |  |  |  |  |get 2
+  |  |  |  |  |get 2
+  |  |  |  |  |get 2
+  |  |  |  |  |get 2
+  |  |  |  |  |get 0
+  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |get 0
+  |  |  |  |get 0
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+  |  |  |  |  |def 1
+Invoke struct list greatlist(struct list l,int v)
+  |  |  |  |  |  |push
+Invoke struct list create_list()
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |  |  |  |  |pop
+  |  |  |  |  |def 2
+  |  |  |  |  |get 0
+  |  |  |  |  |def 3
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 2
+End Invoke#1 struct list greatlist(struct list l,int v)
+  |  |  |  |  |pop
+  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+  |  |  |  |  |def 1
+  |  |  |  |  |def 2
+  |  |  |  |  |def 3
+Invoke struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |get 0
+  |  |  |  |  |get 1
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+(1>=19)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 0
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 22End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 28End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 23End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 0
+  |  |  |  |  |  |push
+  |  |  |  |  |get 0
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke int pop_front(struct list l)
+  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 1
+End Invoke#1 int pop_front(struct list l)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |def 0
+  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |def 1
+Invoke struct list lesslist(struct list l,int v)
+  |  |  |  |  |  |  |  |push
+Invoke struct list create_list()
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |def 3
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list lesslist(struct list l,int v)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |def 3
+Invoke struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+(2<22)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
++s(2)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |def 1
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |def 1
+Invoke struct list greatlist(struct list l,int v)
+  |  |  |  |  |  |  |  |push
+Invoke struct list create_list()
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |def 3
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list greatlist(struct list l,int v)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |def 3
+Invoke struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+(2>=22)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 28End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 23End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke int pop_front(struct list l)
+  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+End Invoke#1 int pop_front(struct list l)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list lesslist(struct list l,int v)
+  |  |  |  |  |  |  |  |  |  |push
+Invoke struct list create_list()
+  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |def 3
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list lesslist(struct list l,int v)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |def 3
+Invoke struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+(3<28)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 23End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke int pop_front(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+End Invoke#1 int pop_front(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list lesslist(struct list l,int v)
+  |  |  |  |  |  |  |  |  |  |  |  |push
+Invoke struct list create_list()
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |def 3
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list lesslist(struct list l,int v)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |def 3
+Invoke struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+(4<25)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 23End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
++s(4)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 23End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list greatlist(struct list l,int v)
+  |  |  |  |  |  |  |  |  |  |  |  |push
+Invoke struct list create_list()
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |def 3
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list greatlist(struct list l,int v)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |def 3
+Invoke struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+(4>=25)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke int pop_front(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+End Invoke#1 int pop_front(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list lesslist(struct list l,int v)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+Invoke struct list create_list()
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list lesslist(struct list l,int v)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 3
+Invoke struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+(5<25)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
++s(5)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list greatlist(struct list l,int v)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+Invoke struct list create_list()
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list greatlist(struct list l,int v)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 3
+Invoke struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+(5>=25)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
++s(5)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list union_list(struct list a,struct list b)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+Invoke struct list create_list()
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list union_list(struct list a,struct list b)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
++s(4)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list union_list(struct list a,struct list b)
+  |  |  |  |  |  |  |  |  |  |  |  |push
+Invoke struct list create_list()
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |def 3
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list union_list(struct list a,struct list b)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
++s(3)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list greatlist(struct list l,int v)
+  |  |  |  |  |  |  |  |  |  |push
+Invoke struct list create_list()
+  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |def 3
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list greatlist(struct list l,int v)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |def 3
+Invoke struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+  |End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+(3>=28)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
++s(3)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list union_list(struct list a,struct list b)
+  |  |  |  |  |  |  |  |  |  |push
+Invoke struct list create_list()
+  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |def 3
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list union_list(struct list a,struct list b)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
++s(2)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 28End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |def 1
+Invoke struct list union_list(struct list a,struct list b)
+  |  |  |  |  |  |  |  |push
+Invoke struct list create_list()
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |def 3
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |  |def 0
+  |  |  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |def 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 2
+  |  |  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |set 3 = 
+  |  |  |  |  |  |  |get 3
+  |  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |get 2
+End Invoke#1 struct list union_list(struct list a,struct list b)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |pop
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+   End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |set 0 = 
+  |  |  |  |  |  |get 0
+  |  |  |  |  |get 1
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 1
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+Invoke bool print(string str)
++s(1)=End Invoke#1 bool print(string str)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 0
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |def 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 28End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 28End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |set 1 = 
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |  |push
+  |  |  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 0
+End Invoke#1 struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |  |  |pop
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+  |  |  |  |  |def 1
+Invoke struct list union_list(struct list a,struct list b)
+  |  |  |  |  |  |push
+Invoke struct list create_list()
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |get 0
+get 1
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+End Invoke#1 struct list create_list()
+  |  |  |  |  |  |pop
+  |  |  |  |  |def 2
+  |  |  |  |  |get 0
+  |  |  |  |  |def 3
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 0
+  |  |  |  |  |get 1
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+  |  |  |  |  |get 3
+  |  |  |  |  |  |push
+  |  |  |  |  |  |def 0
+  |  |  |  |  |  |def 1
+Invoke struct list push_back(struct list l,int value)
+  |  |  |  |  |  |def 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 1
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 2
+  |  |  |  |  |  |get 0
+  |  |  |  |  |  |get 0
+End Invoke#1 struct list push_back(struct list l,int value)
+  |  |  |  |  |  |pop
+  |  |  |  |  |get 3
+  |  |  |  |  |set 3 = 
+  |  |  |  |  |get 3
+  |  |  |  |  |get 1
+  |  |  |  |  |get 2
+End Invoke#1 struct list union_list(struct list a,struct list b)
+  |  |  |  |  |pop
+  |  |  |set 0 = 
+  |  |  |  |pop
+  |  |  |  |push
+  |  |  |  |def 0
+  |  |  |  |get 0
+  |  |  |get 1
+  |  |  |  |pop
+  |  |  |get 1
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke bool print(string str)
++s(0)=End Invoke#1 bool print(string str)
+  |  |  |  |pop
+  |  |  |get 0
+  |  |  |  |push
+  |  |  |  |def 0
+Invoke void print_list(struct list l)
+  |  |  |  |get 0
+  |  |  |  |def 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 28End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 28End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |get 1
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ 28End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+  |  |  |  |get 1
+  |  |  |  |set 1 = 
+  |  |  |  |get 1
+  |  |  |  |get 0
+  |  |  |  |  |push
+  |  |  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |  |  |pop
+  |  |  |get 0
+End Invoke#1 struct list qlsort_debug(struct list l,int level,bool isgreat,int e)
+  |  |  |pop
+End Invoke#1 struct list qlsort(struct list l)
+  |  |pop
+  |  |push
+  |  |def 0
+Invoke void print_list(struct list l)
+  |  |get 0
+  |  |def 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+[End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 28End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 28End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 25End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |get 1
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ 28End Invoke#1 bool print(string str)
+  |  |  |pop
+  |  |get 1
+  |  |set 1 = 
+  |  |get 1
+  |  |get 0
+  |  |  |push
+  |  |  |def 0
+Invoke bool print(string str)
+ ]
+End Invoke#1 bool print(string str)
+  |  |  |pop
+End Invoke#2 void print_list(struct list l)
+  |  |pop
+  |  |push
+Invoke int getchar()
+End Invoke#1 int getchar()
+  |  |pop
+  |pop

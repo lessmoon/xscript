@@ -7,15 +7,17 @@ import runtime.*;
 import java.util.ArrayList;
 
 public class FunctionInvoke extends Expr {
+    static final boolean IS_DEBUG = false;
     FunctionBasic        func;
     ArrayList<Expr>      para;
+    final Constant[]     args;
 
     public FunctionInvoke(FunctionBasic f,ArrayList<Expr> p){
         super(f.name,f.type);
-        
         func = f;
         para = p;
         check();
+        args = new Constant[p.size()];
     }
 
     void check(){
@@ -46,20 +48,31 @@ public class FunctionInvoke extends Expr {
     }
 
     public Constant getValue(){
+        Constant result = null;
+        
+        for(int i = 0 ; i < args.length;i++){
+            args[i] = para.get(i).getValue();
+        }
+
+        VarTable.pushTop();
+        for(Constant c : args){
+            VarTable.pushVar(c);
+        }
+        if(IS_DEBUG){
+            System.out.println("Invoke " + func.toString());
+        }
         try {
-            //System.out.println("Invoke " + func.toString());
-            VarTable.pushTop();
-            for(int i = 0 ; i < para.size();i++){
-                VarTable.pushVar(para.get(i).getValue());
-            }
             func.run();
+            if(IS_DEBUG){
+                System.out.println("End Invoke#2 " + func.toString());
+            }
         } catch(ReturnResult e){
-            VarTable.popTop();
-            //System.out.println("End Invoke#1 " + func.toString());
-            return e.value;
+            if(IS_DEBUG){
+                System.out.println("End Invoke#1 " + func.toString());
+            }
+            result =  e.value;
         }
         VarTable.popTop();
-        //System.out.println("End Invoke#2 " + func.toString());
-        return null;
+        return result;
     }
 }
