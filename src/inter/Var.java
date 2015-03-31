@@ -24,4 +24,8 @@ public class Var extends Expr {
     public Constant setValue(Constant v){
         return  VarTable.setVar(stacklevel,offset,v);
     }
+    
+    public String toString(){
+        return "VAR["+stacklevel+","+offset+"](" + op + ")"; 
+    }
 }

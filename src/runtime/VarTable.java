@@ -51,10 +51,10 @@ public class VarTable {
         //*/
         table.push(new ArrayList<ConstantReference>());
     }
-    
+
     static public void pushVar(Constant v){
         ///*
-        if(IS_DEBUG){
+        if(IS_DEBUG&&false){
             for(int i = 0 ; i < table.size() - 1 ; i++)
                 System.out.print("  |");
             System.out.println("def " + table.peek().size());
@@ -84,7 +84,7 @@ public class VarTable {
     static public Constant getVarAbsolutely(int sl,int offset){
         
         ///*
-        if(IS_DEBUG){
+        if(IS_DEBUG&&false){
             for(int i = 0 ; i < sl ; i++)
                 System.out.print("  |");
             System.out.println("get " + offset );
@@ -96,7 +96,7 @@ public class VarTable {
     
     static public Constant setVarAbsolutely(int sl,int offset,Constant v){
         ///*
-        if(IS_DEBUG){
+        if(IS_DEBUG&&false){
             for(int i = 0 ; i < sl ; i++)
                 System.out.print("  |");
             System.out.println("set " + offset + " = " );

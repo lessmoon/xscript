@@ -22,4 +22,8 @@ public class AbsoluteVar extends Var {
         /*stack order:top to down*/
         return  VarTable.setVarAbsolutely(stacklevel,offset,v);
     }
+    
+    public String toString(){
+        return "aVAR["+stacklevel+","+offset+"](" + op + ")"; 
+    }
 }

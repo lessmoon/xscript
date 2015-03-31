@@ -43,4 +43,8 @@ public class StructMemberAccess extends Var {
         StructConst s = (StructConst)value.getValue();
         return s.setElement(member,c);
     }
+    
+    public String toString(){
+        return value.toString() + "." + member;
+    }
 }

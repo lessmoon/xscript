@@ -29,4 +29,12 @@ public class Decls extends Stmt {
             d.run();
         }
     }
+    
+    public String toString(){
+        StringBuffer sb = new StringBuffer();
+        for(Decl d : decls){
+            sb.append(d.toString());
+        } 
+        return sb.toString();
+    }
 }

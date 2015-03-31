@@ -43,4 +43,12 @@ public class Decl extends Stmt {
             return new Decl(i,t,v);
         }
     }
+    
+    public String toString(){
+        String res = "Decl[" + type + "] " + id ;
+        if(value != null){
+            res += "=" + value;
+        }
+        return res + "\n";
+    }
 }

@@ -201,6 +201,10 @@ public class Parser{
         Stmt s = stmts();
         match('}');
         f.init(name,returnType,s,l);
+        /*just for checking the code*/
+        //System.out.println(f.toString() +"{");
+        //System.out.print(s.toString());
+        //System.out.println("}" );
         top = savedEnv;
         returnType = savedType;
         hasDecl = savedHasDecl;

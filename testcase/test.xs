@@ -3,40 +3,52 @@
 import  "lib/file.xs";
 import  "lib/system.xs";
 import  "math/Math.xs";
-import  "container/list.xs";
-
-print("-----------------\n");
-print("+   Test Begin  +\n");
-print("-----------------\n");
 
 def void println(string s){
     print(s + "\n");
     return;
 }
-
-print("--------------------------\n");
-print("+   Test For List Union  +\n");
-print("--------------------------\n");
+import  "container/list.xs";
 
 {
-    srand(time());
+    int x = time();
+    println("Random seed:" + x);
+    srand(x);
+    
+}
+
+{
+    print("------------------\n");
+    print("+   Test Begin   +\n");
+    print("------------------\n");
+}
+
+{
+    /*test for classic code*/
+    println("Test for classic code");
+    println("hello world!");
+}    
+{
     /*test code for list union*/
-    list a ;
-    a.init();
-    list b ;
-    b.init();
+    list a = create_list() ;
+    //a.init();
+    list b = create_list() ;
+    //b.init();
     int size = 7;
     for(int i = 0;i < size ;i++){
-        a.push_front(rand()%31);
-        b.push_front(rand()%31);
+        push_back(a,rand()%31);
+        push_back(b,rand()%31);
     }
-    print("33\n");
-    print("a=");print_list(a);
-    print("b=");print_list(b);
-    print("a U b=");print_list(union_list(a,b));
+    println("Test for struct");
+    print("Generating Test Data\n");
+    print("a=");println(list_toString(a));
+    print("b=");println(list_toString(b));
+    
+    print("a U b=");println(list_toString(union_list(a,b)));
     print("SORT\n");
-    print("sort(a)=\n");print_list(qlsort(a));
-    getchar();
+    print("sort(a)=\n");
+    
+    println(list_toString(qlsort(a,0)));
 }
 //return 0;
 
@@ -69,7 +81,11 @@ struct CORD{
 /*NEEDTEST*/
 
 {
-    println("Test for dynamic array");
+    println("Test for dynamic array sizeof");
+    println("int[244] arr;");
+    println("arr = new<int>(25);");
+    println("println(sizeof arr);");
+    println("println(sizeof new<int>(25));");
     int[244] arr;
     arr = new<int>(25);
     println(sizeof arr);
@@ -88,7 +104,7 @@ struct CORD{
     println("b[1] = " + b[1]);
 }
 
-println("Hello world!");
+
 
 /*FIXME*/
 int[22][23] a;
@@ -122,6 +138,9 @@ def int readint(){
     print("-----------------\n");
     print("+Test For Input +\n");
     print("-----------------\n");
+    
+    println("Sample:1+2[ENTER]");
+    
     int i = readint();
     int t = bufgetchar();
     int j = readint();
@@ -143,10 +162,10 @@ def int readint(){
 }
 
 
-
+/*
 {
     /*test code for list*/
-    println("Test for list");
+/*    println("Test for list");
     list l ;
     l.init();
     srand(time());
@@ -160,7 +179,7 @@ def int readint(){
     println("Sorted array:");
     //print_list(l);
     //print( qlsort(l) + "\n" );
-}
+}*/
 
 
 struct tree_node{

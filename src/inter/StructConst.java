@@ -79,7 +79,7 @@ public class StructConst extends Constant {
     }
     
     public String toString(){
-        return toString(0);
+        return "Struct";
     }
 
 }

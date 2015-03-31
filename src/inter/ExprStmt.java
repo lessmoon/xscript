@@ -9,4 +9,8 @@ public class ExprStmt extends Stmt {
     public void run(){
         e.getValue();
     }
+    
+    public String toString(){
+        return e.toString() + "\n";
+    }
 }

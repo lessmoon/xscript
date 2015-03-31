@@ -17,4 +17,8 @@ public class Seq extends Stmt{
             stmt2.run();
         }
     }
+    
+    public String toString(){
+        return stmt1.toString() + stmt2.toString();
+    }
 }

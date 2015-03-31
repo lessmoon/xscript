@@ -35,6 +35,7 @@ public class Main{
         }
         try {
             s.run();
+            //System.out.print(s.toString());
         } catch (RuntimeException e){
             e.printStackTrace();
             System.err.println("Runtime Error:");

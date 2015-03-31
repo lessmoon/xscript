@@ -15,12 +15,22 @@ public class Stmt extends Node{
         public void run(){
             VarTable.popTop();
         }
+        public String toString(){
+            return "RecoverStack\n";
+        }
     };
     public static final Stmt PushStack = new Stmt(){
         public void run(){
             VarTable.pushTop();
         }
+        public String toString(){
+            return "PushStack\n";
+        }
     };
     
+    public String toString(){
+        return this.getClass().getName() + "\n";
+    }
+
     public static Stmt Enclosing = Null;
 }

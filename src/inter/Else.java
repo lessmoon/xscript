@@ -20,4 +20,12 @@ public class Else extends Stmt {
             stmt2.run();
         }
     }
+    
+    public String toString(){
+        return "if(" + expr.toString() + " ){\n"
+        + stmt1
+        + "}else {\n" + 
+        stmt2
+        +"}\n";
+    }
 }

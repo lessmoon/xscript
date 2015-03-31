@@ -41,4 +41,8 @@ public class Return extends Stmt {
         
         throw r;
     }
+    
+    public String toString(){
+        return "Return " + expr.toString() + "(" + sizeOfStack +")\n";
+    }
 }

@@ -35,4 +35,8 @@ public class Constant extends Expr{
     public static final Constant
         True = new Constant(Word.True,Type.Bool),
         False = new Constant(Word.False,Type.Bool);
+    
+    public String toString(){
+        return op.toString();
+    }
 }

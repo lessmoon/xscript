@@ -52,4 +52,8 @@ public class Set extends Expr {
         Constant v = expr.getValue();
         return id.setValue(v);
     }
+    
+    public String toString(){
+        return this.getClass().getName() + "(" + id.toString() +"," + expr +")";
+    }
 }
