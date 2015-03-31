@@ -22,7 +22,7 @@ def int rand(){
     return abs(RAND_SEED);
 }
 
-def int qsort(int[100] s,int l,int r){
+def int qsort(int[] s,int l,int r){
     if (l < r){        
         int i = l, j = r, x = s[l];  
         while (i < j)  

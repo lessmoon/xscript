@@ -6,6 +6,10 @@ import parser.*;
 import inter.Stmt;
 
 public class Main{
+    public static final int MAJOR_VERSION = 1;
+    public static final int MINOR_VERSION = 0;
+
+    
     public static void main(String[] args)throws IOException{
         Lexer lex = new Lexer();
         if(args.length > 0){

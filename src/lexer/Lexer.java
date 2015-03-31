@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Stack;
 import java.io.*; 
 
+import main.*;
+
 class Info {
     InputStreamReader in;
     int         peek;
@@ -264,6 +266,15 @@ public class Lexer {
                 readch();
             } while(Character.isLetterOrDigit(peek)||peek == '_');
             String s = b.toString();
+            
+            /*add two build-in variable*/
+            if(s.equals("_line_")){/*line number*/
+                return new Num(line);
+            } else if(s.equals("_file_")){/*file name*/
+                return new Str(filename);
+            } else if(s.equals("_version_")){
+                return new Num(Main.MAJOR_VERSION*100 + Main.MINOR_VERSION);
+            }
             Word w = (Word)words.get(s);
             if(w != null)
                 return w;

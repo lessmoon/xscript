@@ -22,6 +22,7 @@ def void println(string s){
     print(s + "\n");
     return;
 }
+
 import  "container/list.xs";
 
 {
@@ -42,6 +43,14 @@ import  "container/list.xs";
     println("Test for classic code");
     println("hello world!");
 }    
+
+
+{
+    println("Test for build-in variable");
+    println("This code is in file " + _file_ + " at " + _line_ );
+    println("Compiler version is " + _version_/100 + "." + _version_%100);
+}
+
 
 {
     println("Test for basic painting");
