@@ -4,6 +4,20 @@ import  "lib/file.xs";
 import  "lib/system.xs";
 import  "math/Math.xs";
 
+loadfunc<extension>{
+    int openPad(int w,int h);
+    int drawLine(int x1,int y1,int x2,int y2);
+    int drawPoint(int x,int y);
+    int addLine(int x1,int y1,int x2,int y2);
+    int addPoint(int x,int y);
+    int setBrushColor(int r,int g,int b);
+    int paint();
+    int closePad();
+    int clearPad();
+}
+
+
+
 def void println(string s){
     print(s + "\n");
     return;
@@ -28,6 +42,68 @@ import  "container/list.xs";
     println("Test for classic code");
     println("hello world!");
 }    
+
+{
+    println("Test for basic painting");
+    
+    setBrushColor(25,25,255);
+    {
+        real x,y;int a = 20,b = 20;
+        real x_m,y_m;
+        for(real t = -10.0; t < 0 ;t += 0.01){
+            x = 20*(t+1/t)/2;
+            x_m = -x;
+            x += 300;
+            x_m += 300;
+            y = 20*(t-1/t)/2;
+            y = -y;
+            y_m = -y;
+            y += 240;
+            y_m += 240;
+            if(x < 600 && y < 480 && x > 0 && y > 0){
+                addPoint(x,y);
+                addPoint(x,y_m);
+                addPoint(x_m,y);
+                addPoint(x_m,y_m);
+            }
+        }
+    }
+    
+    /*draw a red heart*/
+    setBrushColor(255,0,0);
+    for (real y = 1.5; y > -1.5; y -= 0.01) {
+        for (real x = -1.5; x < 1.5; x += 0.005) {
+            real a = x * x + y * y - 1;
+            if(a * a * a - x * x * y * y * y <= 0.0){
+                addPoint(x*100 + 300  - 100,-y*100 + 240 - 80);
+            }
+        }
+    }
+    
+    /*draw a green round*/
+    setBrushColor(0,255,0);
+    real r = 100.0;
+    for (int y = r; y > -r; y -= 1) {
+        for (int x = -r; x < 100; x += 1) {
+            int a = x * x + y * y ;
+            if(a <= r * r ){
+                addPoint(x + 300 + 100 ,-y + 240 + 100);
+            }
+        }
+    }
+    
+    
+    setBrushColor(0,0,0);
+    addLine(0,240,600,240);
+    addLine(300,0,300,480);
+    openPad(600,480);
+    paint();
+    
+    getchar();
+    getchar();
+    closePad();
+}
+
 {
     /*test code for list union*/
     list a = create_list() ;

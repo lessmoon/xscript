@@ -42,5 +42,6 @@ public class Main{
             System.err.println(e.getMessage());
             return;
         }
+        System.exit(0);
     }
 }

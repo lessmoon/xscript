@@ -89,7 +89,7 @@ class IntConversionFactory extends Factory {
 class RealConversionFactory extends Factory {
     public  Conversion getConversion(Expr src,Type t){
         if(t == Type.Int)
-            return new NoConversion(src);
+            return new RealIntConversion(src);
         else if(t == Type.Char)
             return new IntRealConversion(new CharIntConversion(src));
         else if(t == Type.Float)
