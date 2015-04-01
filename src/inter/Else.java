@@ -20,6 +20,19 @@ public class Else extends Stmt {
             stmt2.run();
         }
     }
+
+    public Stmt optimize(){
+        
+        stmt2 = stmt2.optimize();
+        if(expr == Constant.False){/*constant False,it will never happen to run the stmt2*/
+            return stmt2;
+        }
+        stmt1 = stmt1.optimize();
+        if(expr == Constant.True){/*it is always true,just remain stmt1 only*/
+            return stmt1;
+        }
+        return this;
+    }
     
     public String toString(){
         return "if(" + expr.toString() + " ){\n"

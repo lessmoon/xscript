@@ -24,4 +24,14 @@ public class Break extends Stmt {
 
         throw new RuntimeException(BreakCause);
     }
+    
+    /*
+        void emitBinaryCode(BinaryCode x){
+            x.emit(POPN_STACK);
+            x.emit(sizeOfStack);
+            Reference<Integer> i  = new Reference<Integer>(x.getCurrentAddress());
+            x.emit(JUMPOFF_TO);
+            x.emitIntegerOffsetReference(i,stmt.after);//stmt.after should be reference
+        }
+    */
 }

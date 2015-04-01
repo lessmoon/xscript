@@ -40,4 +40,37 @@ public class For extends Stmt {
             }
         }
     }
+
+    public Stmt optimize(){
+        begin = begin.optimize();
+        if(condition == Constant.False){
+            //just remain the begin,and the condition
+            return begin;
+        } else if(condition == Constant.True){/*TODO*/
+            
+        }
+        end = end.optimize();
+        stmt = stmt.optimize();
+        return this;
+    }
+
+    /*
+        void emitBinaryCode(BinaryCode x){
+            begin.emit(x);
+            int c = x.getCurrentAddress();
+            condition.emit(x);
+            int e = x.getCurrentAddress();
+            x.emit(JFAILED);
+            x.emitIntegerReference(Reference<Integer>(after));
+            x.emit(JOFF);
+            x.emitIntegerReference(Reference<Integer>(s));
+            end.emit(x);
+            int s = x.getCurrentAddress();
+            stmt.emit(x);
+            int p = x.getCurrentAddress();
+            x.emit(JOFF);
+            x.emitIntegerOffsetReference(Reference<Integer>(c),p);  
+            int after = x.getCurrentAddress();
+        }
+    */
 }

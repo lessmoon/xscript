@@ -3,9 +3,11 @@ package inter;
 import symbols.*;
 
 public class Do extends Stmt{
-    Expr expr;Stmt stmt;
+    Expr expr;
+    Stmt stmt;
     public Do(){
-        expr = null;stmt = null;
+        expr = null;
+        stmt = null;
     }
 
     public void init(Stmt s,Expr x){
@@ -14,7 +16,19 @@ public class Do extends Stmt{
         if(expr.type != Type.Bool)
             expr.error("boolean required in do");
     }
-    
+
+    public Stmt optimize(){
+        stmt = stmt.optimize();
+        /*
+         * Considering that if it has a break or continue in the loop statement
+         * so we couldn't replace the do-while with its statement(stmt)
+         */
+        /*if(expr == Constant.False){/*constant False,it will never happen to run the stmt*/
+        /*    return stmt;
+        }*/
+        return this;
+    }
+
     public void run(){
         do{
             try{

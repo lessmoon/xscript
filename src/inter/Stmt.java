@@ -18,6 +18,11 @@ public class Stmt extends Node{
         public String toString(){
             return "RecoverStack\n";
         }
+        /*
+            void emitBinaryCode(BinaryCode x){
+                x.emit(POP_STACK);
+            }
+        */
     };
     public static final Stmt PushStack = new Stmt(){
         public void run(){
@@ -26,10 +31,19 @@ public class Stmt extends Node{
         public String toString(){
             return "PushStack\n";
         }
+        /*
+            void emitBinaryCode(BinaryCode x){
+                x.emit(PUSH_STACK);
+            }
+        */
     };
-    
+
     public String toString(){
         return this.getClass().getName() + "\n";
+    }
+
+    public Stmt optimize(){
+        return this;
     }
 
     public static Stmt Enclosing = Null;

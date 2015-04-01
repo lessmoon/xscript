@@ -13,5 +13,9 @@ public class Node {
     void error(String s){
         throw new RuntimeException("Line " + lexline + " in file `" +  Lexer.filename + "':\n\t" + s);
     }
-
+    /*
+    void emitBinaryCode(BinaryCode x){
+        //
+    }
+    */
 }

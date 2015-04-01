@@ -25,11 +25,33 @@ public class Parser{
     public int lastFunctionLevel = 0;
     public int nowLevel = 0;
 
+    public final boolean ENABLE_EXPR_OPT ;
+    public final boolean ENABLE_STMT_OPT ;
+    public boolean PRINT_FUNC_TRANSLATE = false;
+    
     public  Parser(Lexer l) throws IOException{
         lex = l;
         move();
+        ENABLE_EXPR_OPT = false;
+        ENABLE_STMT_OPT = false;
     }
 
+    public  Parser(Lexer l,boolean expr_opt,boolean stmt_opt) throws IOException{
+        lex = l;
+        move();
+        ENABLE_EXPR_OPT = expr_opt;
+        ENABLE_STMT_OPT = stmt_opt;
+    }
+    
+    
+    public void enablePrintFuncTranslate(){
+        PRINT_FUNC_TRANSLATE = true;
+    }
+    
+    public void disablePrintFuncTranslate(){
+        PRINT_FUNC_TRANSLATE = false;
+    }
+    
     public void move() throws IOException {
         look = lex.scan();
     }
@@ -81,7 +103,8 @@ public class Parser{
                 break;
             }
         }
-        return s;
+
+        return ENABLE_STMT_OPT?s.optimize():s;
     }
 
     public void importlib() throws IOException {
@@ -199,12 +222,15 @@ public class Parser{
 
         match('{');
         Stmt s = stmts();
+        if(ENABLE_STMT_OPT)
+            s = s.optimize();
         match('}');
         f.init(name,returnType,s,l);
-        /*just for checking the code*/
-        //System.out.println(f.toString() +"{");
-        //System.out.print(s.toString());
-        //System.out.println("}" );
+        if(PRINT_FUNC_TRANSLATE){
+            System.out.println(f.toString() +"{");
+            System.out.print(s.toString());
+            System.out.println("}" );
+        }
         top = savedEnv;
         returnType = savedType;
         hasDecl = savedHasDecl;
@@ -462,7 +488,8 @@ public class Parser{
     }
     
     public Expr expr() throws IOException {
-        return assign().optimize();
+        Expr e = assign();
+        return ENABLE_EXPR_OPT?e.optimize():e;
     }
 
     public Expr assign() throws IOException {

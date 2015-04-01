@@ -32,4 +32,12 @@ public class While extends Stmt{
             }
         }
     }
+
+    public Stmt optimize(){
+        stmt = stmt.optimize();
+        if(expr == Constant.False){/*constant False,it will never happen to run the stmt*/
+            return Stmt.Null;
+        }
+        return this;
+    }
 }

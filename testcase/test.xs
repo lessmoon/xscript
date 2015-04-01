@@ -1,5 +1,3 @@
-/* test code */
-
 import  "lib/file.xs";
 import  "lib/system.xs";
 import  "math/Math.xs";
@@ -50,7 +48,6 @@ import  "container/list.xs";
     println("This code is in file " + _file_ + " at " + _line_ );
     println("Compiler version is " + _version_/100 + "." + _version_%100);
 }
-
 
 {
     println("Test for basic painting");

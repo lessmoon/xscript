@@ -12,7 +12,7 @@ public class FunctionInvoke extends Expr {
     ArrayList<Expr>      para;
     
     /*
-     * NOTE:
+     * NOTE:(fixed)
      * Wrong when recursively call itself
      * It may rewrite the args in another calling
      */

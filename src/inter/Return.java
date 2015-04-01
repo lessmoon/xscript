@@ -42,6 +42,20 @@ public class Return extends Stmt {
         throw r;
     }
     
+    /*
+        void emitBinaryCode(BinaryCode x){
+            if(Expr.VoidExpr != expr){
+                expr.emit(x,eax);
+            }
+            if(sizeOfStack == 0){
+                x.emit(SRET_CALL);
+            } else {
+                x.emit(RET_CALL);
+                x.emit(sizeOfStack);
+            }
+        }
+    */
+
     public String toString(){
         return "Return " + expr.toString() + "(" + sizeOfStack +")\n";
     }
