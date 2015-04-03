@@ -19,4 +19,8 @@ public class ExFunction extends FunctionBasic {
     public void run(){
         throw new ReturnResult(func.run(VarTable.getTop()));
     }
+    
+    public int getPosition(){
+        return -1;/*not available*/
+    }
 }

@@ -25,13 +25,11 @@ public class Break extends Stmt {
         throw new RuntimeException(BreakCause);
     }
     
-    /*
-        void emitBinaryCode(BinaryCode x){
-            x.emit(POPN_STACK);
-            x.emit(sizeOfStack);
-            Reference<Integer> i  = new Reference<Integer>(x.getCurrentAddress());
-            x.emit(JUMPOFF_TO);
-            x.emitIntegerOffsetReference(i,stmt.after);//stmt.after should be reference
-        }
-    */
+    public void emit(BinaryCodeGen bcg){
+        bcg.emit(CodeTag.POP_N_STACK);
+        bcg.emit(sizeOfStack);
+        int e = bcg.getCurrentPosition();
+        bcg.emit(CodeTag.JUMP_OP);
+        bcg.emit(new IntegerSubCode(stmt.after,new Reference<Integer>(e)));
+    }
 }

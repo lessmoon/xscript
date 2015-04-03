@@ -4,11 +4,11 @@ import java.io.*;
 import lexer.*; 
 import parser.*;
 import inter.Stmt;
+import gen.*;
 
 public class Main{
     public static final int     MAJOR_VERSION       = 1;
     public static final int     MINOR_VERSION       = 1;
-
     public static void usage(){
         System.out.println(
             "Usage of xxxscript " + MAJOR_VERSION + "." +  MINOR_VERSION + ":\n"+
@@ -24,7 +24,6 @@ public class Main{
     }
     
     public static void main(String[] args)throws IOException{
-        
         String filepath = null;
         boolean expr_opt = false;
         boolean stmt_opt  = false;

@@ -28,6 +28,20 @@ class IntSet extends Set {
             return null;
         }
     }
+    
+    /*
+     * emit(X,ADDASS){
+     *      expr.emit();
+     *      emit(TEMP);
+     *      id.emit(X,ADDASS){
+     *          X.emit(ADDASS<<STACK)
+     *          X.emit(stack,level)
+     *          
+     *      } or {
+     *          X.emit();
+     *      }
+     * }
+     */
 }
 
 class CharSet extends Set {

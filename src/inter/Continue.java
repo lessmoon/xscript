@@ -1,6 +1,7 @@
 package inter;
 
 import runtime.*;
+import gen.*;
 
 public class Continue extends Stmt {
     static public  final Throwable ContinueCause = new Throwable();
@@ -23,5 +24,13 @@ public class Continue extends Stmt {
             VarTable.popTop();
 
         throw new RuntimeException(ContinueCause);
+    }
+    
+    public void emit(BinaryCodeGen bcg){
+        bcg.emit(CodeTag.POP_N_STACK);
+        bcg.emit(sizeOfStack);
+        int e = bcg.getCurrentPosition();
+        bcg.emit(CodeTag.JUMP_OP);
+        bcg.emit(new IntegerSubCode(stmt.next,new Reference<Integer>(e)));
     }
 }

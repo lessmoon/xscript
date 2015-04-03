@@ -3,6 +3,8 @@ package inter;
 import lexer.*;
 import symbols.*;
 
+import gen.*;
+
 public abstract class Arith extends Op {
     public Expr expr1,expr2;
     public Arith(Token tok,Expr x1,Expr x2){

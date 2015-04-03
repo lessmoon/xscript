@@ -19,6 +19,14 @@ src\extension\setBrushColor.java
 src\extension\strlen.java 
 src\extension\time.java 
 src\extension\writech.java 
+src\gen\BinaryCodeGen.java 
+src\gen\CodeBasic.java 
+src\gen\CodeTag.java 
+src\gen\IntegerCode.java 
+src\gen\IntegerSubCode.java 
+src\gen\Reference.java 
+src\gen\StringCode.java 
+src\gen\WriteBinaryCode.java 
 src\inter\AbsoluteVar.java 
 src\inter\And.java 
 src\inter\Arith.java 

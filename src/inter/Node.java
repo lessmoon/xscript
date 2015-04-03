@@ -1,6 +1,7 @@
 package inter;
 
 import lexer.*;
+import gen.*;
 
 public class Node {
     int     lexline;
@@ -13,9 +14,6 @@ public class Node {
     void error(String s){
         throw new RuntimeException("Line " + lexline + " in file `" +  Lexer.filename + "':\n\t" + s);
     }
-    /*
-    void emitBinaryCode(BinaryCode x){
-        //
-    }
-    */
+    
+    public void emit(BinaryCodeGen bcg){}
 }

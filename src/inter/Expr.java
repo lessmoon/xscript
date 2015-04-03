@@ -30,4 +30,14 @@ public abstract class Expr extends Node {
     public String toString(){
         return getClass().getName();
     }
+
+    /*
+        public abstract void emit(BinaryCode x){
+            
+        }
+        
+        public abstract void emitRef(){
+            
+        }
+    */
 }

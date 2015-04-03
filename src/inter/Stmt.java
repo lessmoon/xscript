@@ -1,8 +1,13 @@
 package inter;
 
 import runtime.*;
+import gen.Reference;
 
 public class Stmt extends Node{
+
+    Reference<Integer> after = new Reference<Integer>();
+    Reference<Integer> next  = new Reference<Integer>();
+
     public Stmt()
     {}
 
@@ -32,7 +37,7 @@ public class Stmt extends Node{
             return "PushStack\n";
         }
         /*
-            void emitBinaryCode(BinaryCode x){
+        public    void emit(BinaryCodeGen bcg){
                 x.emit(PUSH_STACK);
             }
         */

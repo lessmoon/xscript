@@ -2,6 +2,7 @@ package inter;
 
 import lexer.*;
 import symbols.*;
+import gen.*;
 
 public class For extends Stmt {
     public Stmt begin = null;
@@ -54,23 +55,20 @@ public class For extends Stmt {
         return this;
     }
 
-    /*
-        void emitBinaryCode(BinaryCode x){
-            begin.emit(x);
-            int c = x.getCurrentAddress();
-            condition.emit(x);
-            int e = x.getCurrentAddress();
-            x.emit(JFAILED);
-            x.emitIntegerReference(Reference<Integer>(after));
-            x.emit(JOFF);
-            x.emitIntegerReference(Reference<Integer>(s));
-            end.emit(x);
-            int s = x.getCurrentAddress();
-            stmt.emit(x);
-            int p = x.getCurrentAddress();
-            x.emit(JOFF);
-            x.emitIntegerOffsetReference(Reference<Integer>(c),p);  
-            int after = x.getCurrentAddress();
-        }
-    */
+    void emitBinaryCode(BinaryCodeGen bcg){
+        begin.emit(bcg);
+        int c = bcg.getCurrentPosition();
+        condition.emit(bcg);
+        int e = bcg.getCurrentPosition();
+        bcg.emit(CodeTag.JUMP_OP | CodeTag.JC_NE << CodeTag.OTHER_POSITION);
+        bcg.emit(new IntegerSubCode(after,new Reference<Integer>(e)));//Should be offset//
+        stmt.emit(bcg);
+        int p = bcg.getCurrentPosition();
+        next.setValue(p);
+        end.emit(bcg);
+        bcg.emit(CodeTag.JUMP_OP);
+        bcg.emit(new IntegerSubCode(after,new Reference<Integer>(p)));
+        after.setValue(bcg.getCurrentPosition());
+    }
+
 }

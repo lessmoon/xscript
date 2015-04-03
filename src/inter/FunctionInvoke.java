@@ -3,6 +3,7 @@ package inter;
 import lexer.*;
 import symbols.*;
 import runtime.*;
+import gen.*;
 
 import java.util.ArrayList;
 
@@ -86,5 +87,18 @@ public class FunctionInvoke extends Expr {
         }
         VarTable.popTop();
         return result;
+    }
+    
+    public void emit(BinaryCodeGen bcg){
+        for(Expr e : para){
+            e.emit(bcg);
+            /*Maybe others*/
+            bcg.emit(CodeTag.DEF_OP | CodeTag.DEF_IVAR_V);
+        }
+        if(func instanceof Function)
+            bcg.emit(CodeTag.CALL_L);
+        else
+            bcg.emit(CodeTag.CALL_E);
+        bcg.emit(func.getPosition());
     }
 }

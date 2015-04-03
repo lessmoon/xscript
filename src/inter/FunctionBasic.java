@@ -28,7 +28,8 @@ public abstract class FunctionBasic extends Stmt {
     }
     
     public abstract void run();
-
+    public abstract int getPosition();
+    
     public String toString(){
         StringBuffer sb = new StringBuffer(type.toString());
         sb.append(" " + name + "(");
