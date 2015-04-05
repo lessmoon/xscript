@@ -60,7 +60,7 @@ public class For extends Stmt {
         int c = bcg.getCurrentPosition();
         condition.emit(bcg);
         int e = bcg.getCurrentPosition();
-        bcg.emit(CodeTag.JUMP_OP | CodeTag.JC_NE << CodeTag.OTHER_POSITION);
+        bcg.emit(CodeTag.JUMP_OP | CodeTag.JC_ZE << CodeTag.OTHER_POSITION);
         bcg.emit(new IntegerSubCode(after,new Reference<Integer>(e)));//Should be offset//
         stmt.emit(bcg);
         int p = bcg.getCurrentPosition();

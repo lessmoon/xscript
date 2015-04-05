@@ -1,6 +1,7 @@
 package inter;
 
 import runtime.*;
+import gen.*;
 
 public class Break extends Stmt {
     static public  final Throwable BreakCause = new Throwable();

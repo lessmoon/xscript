@@ -141,6 +141,24 @@ class StringCat extends Arith {
         String str = ((Str)(str1.op)).value + ((Str)(str2.op)).value;
         return new Constant(str);
     }
+
+    public Expr optimize(){
+        if(isChangeable()){
+            expr1 = expr1.optimize();
+            if(expr1 instanceof Constant
+                && expr1.toString().isEmpty()){
+                return expr2.optimize();
+            }
+            expr2 = expr2.optimize();
+            if(expr2 instanceof Constant
+                && expr2.toString().isEmpty()){
+                return expr1;
+            }
+            return this;
+        } else {
+            return getValue();
+        }
+    }
 }
 
 public class ArithFactory {

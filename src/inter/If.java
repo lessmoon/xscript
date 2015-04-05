@@ -1,6 +1,7 @@
 package inter;
 
 import symbols.*;
+import gen.*;
 
 public class If extends Stmt{
     Expr expr;
@@ -27,14 +28,13 @@ public class If extends Stmt{
         }
         return this;
     }
-    /*
-        void emitBinaryCode(BinaryCode x){
-            expr.emitBinaryCode(x);
-            x.emit(J_OFF);
-            int x = x.getCurrentAddress();
-            x.emitIntegerOffsetReference(after,x);
-            stmt.emitBinaryCode(x);
-            int after = x.getCurrentAddress();
-         }
-    */ 
+   
+    public void emit(BinaryCodeGen bcg){
+        expr.emit(bcg);
+        int x = bcg.getCurrentPosition();
+        bcg.emit(CodeTag.JUMP_OP | CodeTag.JC_ZE << CodeTag.OTHER_POSITION);
+        bcg.emit(new IntegerSubCode(after,new Reference<Integer>(x)));
+        stmt.emit(bcg);
+        after.setValue(bcg.getCurrentPosition());
+    } 
 }

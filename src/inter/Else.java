@@ -1,6 +1,7 @@
 package inter;
 
 import symbols.*;
+import gen.*;
 
 public class Else extends Stmt {
     Expr expr;
@@ -33,6 +34,23 @@ public class Else extends Stmt {
         }
         return this;
     }
+    
+    public void emit(BinaryCodeGen bcg){
+        expr.emit(bcg);
+        int x = bcg.getCurrentPosition();
+        bcg.emit(CodeTag.JUMP_OP | CodeTag.JC_ZE << CodeTag.OTHER_POSITION);
+        bcg.emit(new IntegerSubCode(next,new Reference<Integer>(x)));
+
+        stmt1.emit(bcg);
+
+        x = bcg.getCurrentPosition();
+        bcg.emit(CodeTag.JUMP_OP);
+        bcg.emit(new IntegerSubCode(after,new Reference<Integer>(x)));
+
+        next.setValue(bcg.getCurrentPosition());
+        stmt2.emit(bcg);
+        after.setValue(bcg.getCurrentPosition());
+    } 
     
     public String toString(){
         return "if(" + expr.toString() + " ){\n"

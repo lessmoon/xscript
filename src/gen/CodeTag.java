@@ -71,9 +71,9 @@ public class CodeTag {
             LOCAL_CALL   = 0,EXTENDED_CALL =  1,
             JC_ANY = 0,JC_LS = 1,JC_GT   =  2,
             JC_LE  = 3,JC_GE = 4,
-            JC_NE  = 5,JC_EQ = 6;
-            
-            
+            JC_NE  = 5,JC_EQ = 6,
+            JC_NZ  = 7,JC_ZE = 8;
+
     public static final int  
            /*Constant load*/
            /*
@@ -81,6 +81,10 @@ public class CodeTag {
             * |    ID    | Stored string of this file CONSTANT area
             */
             GET_SCONST = GET_OP  | STR_CODE,
+            GET_ICONST = GET_OP  | INT_CODE,
+            GET_BCONST = GET_OP  | BOOL_CODE,
+            GET_RCONST = GET_OP  | REAL_CODE,
+            GET_CCONST = GET_OP  | CHAR_CODE,
            /*
             * |SET_XV      |//XR[0] will be SET using immediate value
             * |X_VALUE     |//immediate number

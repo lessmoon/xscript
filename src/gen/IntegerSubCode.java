@@ -16,6 +16,6 @@ public class IntegerSubCode extends CodeBasic {
    }
 
    public int size(){
-        return 4;
+        return Integer.SIZE / 8;
    }
 }

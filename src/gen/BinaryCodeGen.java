@@ -23,6 +23,10 @@ public class BinaryCodeGen {
         this.mode = mode;
     }
 
+    public EmitMode getMode(){
+        return mode;
+    }
+    
     public int emit(CodeBasic c){
         if(this.mode == EmitMode.CODE_FUNC){
             func.add(c);

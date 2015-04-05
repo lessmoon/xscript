@@ -20,10 +20,12 @@ src\extension\strlen.java
 src\extension\time.java 
 src\extension\writech.java 
 src\gen\BinaryCodeGen.java 
+src\gen\CharacterCode.java 
 src\gen\CodeBasic.java 
 src\gen\CodeTag.java 
 src\gen\IntegerCode.java 
 src\gen\IntegerSubCode.java 
+src\gen\RealCode.java 
 src\gen\Reference.java 
 src\gen\StringCode.java 
 src\gen\WriteBinaryCode.java 
