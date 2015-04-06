@@ -2,6 +2,7 @@ package inter;
 
 import lexer.*;
 import symbols.*;
+import gen.*;
 
 class IntRel extends Rel {
     public IntRel(Token tok,Expr x1,Expr x2){
@@ -29,6 +30,16 @@ class IntRel extends Rel {
             /*error*/
             return null;
         }
+    }
+
+    public void emit(BinaryCodeGen bcg){
+        expr1.emit(bcg);
+        bcg.emit(CodeTag.DEF_IVAR_V);
+        expr2.emit(bcg);
+        bcg.emit(CodeTag.MOV_0_TO_1 | CodeTag.INT_CODE<< CodeTag.TYPE_1_POSITION | CodeTag.INT_CODE);
+        bcg.emit(CodeTag.UNDEF_OP | CodeTag.INT_CODE);
+        bcg.emit(CodeTag.CMP_OP | INT_CODE<< CodeTag.TYPE_1_POSITION | CodeTag.INT_CODE);
+        bcg.emit(CodeTag.SET_TRUE_IF | getRelCode() << CodeTag.OTHER_POSITION);
     }
 }
 

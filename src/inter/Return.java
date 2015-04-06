@@ -2,6 +2,7 @@ package inter;
 
 import symbols.*;
 import runtime.*;
+import gen.*;
 
 class ReturnResult extends RuntimeException {
     public final Constant value;
@@ -41,22 +42,19 @@ public class Return extends Stmt {
         
         throw r;
     }
-    
-    /*
-        void emitBinaryCode(BinaryCode x){
-            if(Expr.VoidExpr != expr){
-                expr.emit(x,eax);
-            }
-            if(sizeOfStack == 0){
-                x.emit(SRET_CALL);
-            } else {
-                x.emit(RET_CALL);
-                x.emit(sizeOfStack);
-            }
-        }
-    */
 
     public String toString(){
         return "Return " + expr.toString() + "(" + sizeOfStack +")\n";
+    }
+
+    public emit(BinaryCodeGen bcg){
+        if(Expr.VoidExpr != expr){
+            expr.emit(bcg);
+        }
+        if(sizeOfStack != 0){
+            bcg.emit(CodeTag.POP_N_STACK);
+            bcg.emit(sizeOfStack);
+        }
+        bcg.emit(CodeTag.RET_OP);
     }
 }

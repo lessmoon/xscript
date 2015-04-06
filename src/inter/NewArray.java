@@ -2,6 +2,7 @@ package inter;
 
 import lexer.*;
 import symbols.*;
+import gen.*;
 
 public class NewArray extends Op {
     public Expr size;
@@ -39,5 +40,10 @@ public class NewArray extends Op {
 
     public String toString(){
         return "new []" + type.toString();
+    }
+
+    public void emit(BinaryCodeGen bcg){
+        size.emit(bcg);
+        bcg.emit(CodeTag.NEW_OP);
     }
 }

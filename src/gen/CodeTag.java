@@ -40,13 +40,13 @@ public class CodeTag {
             SZOF_OP = 19 << OPRAND_POSITION,
             NEG_OP  = 20 << OPRAND_POSITION,
             NOT_OP  = 21 << OPRAND_POSITION,
-
+            UNDEF_OP = 22 << OPRANDE_POSITION,
             /*Member expression*/
             /*
              * | IDX_OP |
              * Code format : ASS_XXX_OP | ADDR_CODE << TYPE_1_POSITION |  INT_CODE
              */
-            IDX_OP  = 22 << OPRAND_POSITION,
+            IDX_OP  = 29 << OPRAND_POSITION,
             /*Assignment expression*/
             /*
              * |ASS_XXX_OP|
@@ -62,35 +62,33 @@ public class CodeTag {
             
             /*
              * | MOV |
-             * Code format : MOV_OP| TAR_REG << (OTHER_POSITION + 4) |SRC_REG <<OTHER_POSITION|YYY_CODE |  YYY_CODE
+             * Code format : MOV_OP| TAR_REG << (OTHER_POSITION + 4) |SRC_REG <<OTHER_POSITION| YYY_CODE <<  TYPE_1_POSITION |  YYY_CODE
              */
-            MOV_OP = 28  << OPRAND_POSITION
+            MOV_OP = 28  << OPRAND_POSITION,
+            MOV_1_TO_0 = MOV_OP | 0 << (OTHER_POSITION + 4) | 1 << OTHER_POSITION ,
+            MOV_0_TO_1 = MOV_OP | 1 << (OTHER_POSITION + 4) | 0 << OTHER_POSITION ,
+            SET_TRUE_IF  = 30 << OPRAND_POSITION,
             ;
     public static final int//Options
+            MEM_VAL      = 0,IMMEDIATE_VAL = 1,
             WITH_INITIAL = 1,WITHOUT_INITIAL = 0,
             LOCAL_CALL   = 0,EXTENDED_CALL =  1,
-            JC_ANY = 0,JC_LS = 1,JC_GT   =  2,
-            JC_LE  = 3,JC_GE = 4,
-            JC_NE  = 5,JC_EQ = 6,
-            JC_NZ  = 7,JC_ZE = 8;
+            C_ANY = 0,C_LS = 1,C_GT   =  2,
+            C_LE  = 3,C_GE = 4,
+            C_NE  = 5,C_EQ = 6,
+            C_NZ  = 7,C_ZE = 8,C_NEVER = 9 ;
 
     public static final int  
            /*Constant load*/
            /*
-            * |GET_SCONST|
-            * |    ID    | Stored string of this file CONSTANT area
+            * |GET_XCONST|
+            * |    ID    | Stored VAL or VAL ID(if string) of this file CONSTANT area
             */
-            GET_SCONST = GET_OP  | STR_CODE,
-            GET_ICONST = GET_OP  | INT_CODE,
-            GET_BCONST = GET_OP  | BOOL_CODE,
-            GET_RCONST = GET_OP  | REAL_CODE,
-            GET_CCONST = GET_OP  | CHAR_CODE,
-           /*
-            * |SET_XV      |//XR[0] will be SET using immediate value
-            * |X_VALUE     |//immediate number
-            */
-            SET_IV  = SET_OP   | INT_CODE, SET_RV  = SET_OP   | REAL_CODE,
-            SET_CV  = SET_OP   | CHAR_CODE, SET_BV  = SET_OP   | BOOL_CODE,//
+            GET_SCONST = GET_OP  | IMMEDIATE_VAL<<OTHER_POSITION | STR_CODE,
+            GET_ICONST = GET_OP  | IMMEDIATE_VAL<<OTHER_POSITION | INT_CODE,
+            GET_BCONST = GET_OP  | IMMEDIATE_VAL<<OTHER_POSITION | BOOL_CODE,
+            GET_RCONST = GET_OP  | IMMEDIATE_VAL<<OTHER_POSITION | REAL_CODE,
+            GET_CCONST = GET_OP  | IMMEDIATE_VAL<<OTHER_POSITION | CHAR_CODE,
            /*Stack operation*/
            /*
             * | DEF_xVAR  |
@@ -103,7 +101,8 @@ public class CodeTag {
             DEF_TVAR   = DEF_OP  | STRUCT_CODE,
             DEF_AVAR   = DEF_OP  | ARRAY_CODE,
            /*
-            * | DEF_xVAR_V |
+            * values (will be)stored in registers
+            * | [UN]DEF_xVAR_V |
             */
             DEF_VAR_V  = DEF_OP | WITH_INITIAL,
             DEF_IVAR_V = DEF_OP | WITH_INITIAL<<OTHER_POSITION | INT_CODE,
@@ -113,6 +112,14 @@ public class CodeTag {
             DEF_SVAR_V = DEF_OP | WITH_INITIAL<<OTHER_POSITION | STR_CODE,
             DEF_TVAR_V = DEF_OP | WITH_INITIAL<<OTHER_POSITION | STRUCT_CODE,
             DEF_AVAR_V = DEF_OP | WITH_INITIAL<<OTHER_POSITION | ARRAY_CODE,
+            UNDEF_VAR_V  = UNDEF_OP ,
+            UNDEF_IVAR_V = UNDEF_OP | INT_CODE,
+            UNDEF_RVAR_V = UNDEF_OP | REAL_CODE,
+            UNDEF_BVAR_V = UNDEF_OP | BOOL_CODE,
+            UNDEF_CVAR_V = UNDEF_OP | CHAR_CODE,
+            UNDEF_SVAR_V = UNDEF_OP | STR_CODE,
+            UNDEF_TVAR_V = UNDEF_OP | STRUCT_CODE,
+            UNDEF_AVAR_V = UNDEF_OP | ARRAY_CODE,
            /*
             * |OPRAND_CODE_|
             */
