@@ -7,6 +7,7 @@ import runtime.LoadFunc;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.*;
 
 public class Parser{
     private Lexer lex;
@@ -23,11 +24,13 @@ public class Parser{
      */
     public int lastFunctionLevel = 0;
     public int nowLevel = 0;
-
+    public HashSet<FunctionBasic> f_used = new HashSet<FunctionBasic>();
+    
+    
     public final boolean ENABLE_EXPR_OPT ;
     public final boolean ENABLE_STMT_OPT ;
     public boolean PRINT_FUNC_TRANSLATE = false;
-    
+
     public  Parser(Lexer l) throws IOException{
         lex = l;
         move();
@@ -41,16 +44,15 @@ public class Parser{
         ENABLE_EXPR_OPT = expr_opt;
         ENABLE_STMT_OPT = stmt_opt;
     }
-    
-    
+
     public void enablePrintFuncTranslate(){
         PRINT_FUNC_TRANSLATE = true;
     }
-    
+
     public void disablePrintFuncTranslate(){
         PRINT_FUNC_TRANSLATE = false;
     }
-    
+
     public void move() throws IOException {
         look = lex.scan();
     }
@@ -68,7 +70,7 @@ public class Parser{
     public void error(String s,int l,String f){
         throw new RuntimeException("Line " + l + " in file `" +  f + "':\n\t" + s);
     }
-    
+
     public void match(int t) throws IOException{
         if(look.tag == t)
             move();
@@ -114,6 +116,12 @@ public class Parser{
     private void checkFunctionCompletion(){
         /*check if some used functions has not been completed*/
         for(FunctionBasic b : table.getAllFunctions()){
+            if(b.used()&&!b.isCompleted()){
+                error("Function `" + b +"' used but not completed " ,b.lexline,b.filename);
+            }
+        }
+        
+        for(FunctionBasic b : f_used){
             if(b.used()&&!b.isCompleted()){
                 error("Function `" + b +"' used but not completed " ,b.lexline,b.filename);
             }
@@ -191,15 +199,18 @@ public class Parser{
                 top.put(Word.This,s);
                 ArrayList<Para> l = arguments();
                 l.add(0,new Para(s,Word.This));
-                Function f = new Function(fname,returnType,l);
+                Function f = new MemberFunction(fname,returnType,l,s);
                 /*member function redefined*/
                 if(s.addFunc(fname,f) != null){
                     error("Member function name `" + fname + "' has been used");
                 }
-                match('{');
-                Stmt stmt = stmts();
-                match('}');
-                f.init(fname,returnType,stmt,l);
+                if(!check(';')){
+                    match('{');
+                    Stmt stmt = stmts();
+                    match('}');
+                    f.init(fname,returnType,stmt,l);
+                }
+
                 top = savedEnv;
                 returnType = savedType;
                 hasDecl = savedHasDecl;
@@ -223,6 +234,20 @@ public class Parser{
         hasDecl = true;
         Type savedType = returnType;
         returnType = type();
+        if(look.tag == Tag.BASIC){
+            Type t = type();
+            if(!(t instanceof Struct)){
+                error("Struct type needed here,but `" + t + "' found");
+            }
+            match('.');
+            Token name = look;
+            match(Tag.ID);
+            defstfunc((Struct) t,name,returnType);
+            top = savedEnv;
+            returnType = savedType;
+            hasDecl = savedHasDecl;
+            return;
+        }
         Token name = look;
         match(Tag.ID);
 
@@ -278,6 +303,34 @@ public class Parser{
         returnType = savedType;
         hasDecl = savedHasDecl;
         return;
+    }
+
+    public void defstfunc(Struct t,Token name,Type returnType) throws IOException{
+        Function f = (Function)t.getFunc(name);
+        if(f == null){
+            error("Member function declaration " +t.lexeme + "." + name + " not found ");
+        }
+        if(f.type != returnType){
+            error("Member function " + t.lexeme + "." + name + " return type doesn't match with former declaration");
+        }
+        if(f.isCompleted()){
+            error("Member function " + t.lexeme + "." + name  + " redefined");
+        }
+        top.put(Word.This,t);
+        ArrayList<Para> l = arguments();
+        l.add(0,new Para(t,Word.This));
+        if(l.size() != f.paralist.size()){
+            error("Parameters number of function `" + t.lexeme + "." + name  + "' doesn't match with its former declaration");
+        }
+        for(int i = 1;i < l.size();i++){
+            if(!l.get(i).type.equals(f.paralist.get(i).type)){
+                error("Function `" + t.lexeme + "." + name  + "' has different arguments["+ (i-1) +"] type `" + l.get(i).type + "' with its former declaration `" + f.paralist.get(i).type + "'");
+            }
+        }
+        match('{');
+        Stmt stmt = stmts();
+        match('}');
+        f.init(name,returnType,stmt,l);
     }
 
     public ArrayList<Para> arguments() throws IOException {
@@ -673,7 +726,9 @@ public class Parser{
             if(!(e.type instanceof Struct))
                 error("Member function is for struct,not for `" + e.type +"'");
             FunctionBasic f = ((Struct)(e.type)).getFunc(mname);
-            
+
+            f_used.add(f);
+
             if(f == null)
                 error("Member function `" + mname + "' not found");
 

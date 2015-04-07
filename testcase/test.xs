@@ -3,6 +3,18 @@ import  "lib/system.xs";
 import  "math/Math.xs";
 
 
+struct llist{
+    int size;
+    def int getSize();
+    def bool isEmpty(){
+        return this.getSize() == 0;
+    }
+}
+
+def int llist.getSize(){
+    return this.size;
+}
+
 
 loadfunc<extension>{
     int openPad(int w,int h);

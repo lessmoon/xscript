@@ -13,6 +13,11 @@ public class Function extends FunctionBasic {
         stmt = null;
     }
 
+    public Function(Token n,Type t,Stmt s,ArrayList<Para> p){
+        super(n,t,p);
+        stmt = s;
+    }
+
     public void init(Token n,Type t,Stmt s,ArrayList<Para> p){
         name = n;
         type = t;
@@ -20,11 +25,6 @@ public class Function extends FunctionBasic {
         paralist = p;
     }
     
-    public Function(Token n,Type t,Stmt s,ArrayList<Para> p){
-        super(n,t,p);
-        stmt = s;
-    }
-
     public void run(){
         stmt.run();
         return;
