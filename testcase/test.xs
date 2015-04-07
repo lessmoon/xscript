@@ -2,6 +2,8 @@ import  "lib/file.xs";
 import  "lib/system.xs";
 import  "math/Math.xs";
 
+
+
 loadfunc<extension>{
     int openPad(int w,int h);
     int drawLine(int x1,int y1,int x2,int y2);
@@ -19,6 +21,27 @@ loadfunc<extension>{
 def void println(string s){
     print(s + "\n");
     return;
+}
+def void f2(int b);
+
+def void f1(int a){
+    println("f1:" + a);
+    if(a > 10){
+        return;
+    }
+    f2(a+1);
+}
+
+def void f2(int b){
+    println("f2:" + b);
+    if(b > 10){
+        return;
+    }
+    f1(b+1);
+}
+
+{
+    f1(0);
 }
 
 import  "container/list.xs";

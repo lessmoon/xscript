@@ -1,0 +1,198 @@
+Decl[int] RAND_SEED=0
+Decl[struct list_node] _LIST_NULL_CONSTANT_
+inter.Set(aVAR[0,1](_LIST_NULL_CONSTANT_),aVAR[0,1](_LIST_NULL_CONSTANT_).prev)
+PushStack
+Decl[int] x=time[]
+println[Random seed: + inter.StrConversion(VAR[0,0](x))]
+srand[VAR[0,0](x)]
+RecoverStack
+print[------------------
+]
+print[+   Test Begin   +
+]
+print[------------------
+]
+println[Test for classic code]
+println[hello world!]
+println[Test for build-in variable]
+println[This code is in file ../testcase/test.xs at 48]
+println[Compiler version is 1.1]
+PushStack
+println[Test for basic painting]
+setBrushColor[25, 25, 255]
+PushStack
+Decl[real] x
+Decl[real] y
+Decl[int] a=20
+Decl[int] b=20
+Decl[real] x_m
+Decl[real] y_m
+PushStack
+inter.For
+RecoverStack
+RecoverStack
+setBrushColor[255, 0, 0]
+PushStack
+inter.For
+RecoverStack
+setBrushColor[0, 255, 0]
+Decl[real] r=100.0
+PushStack
+inter.For
+RecoverStack
+setBrushColor[0, 0, 0]
+addLine[0, 240, 600, 240]
+addLine[300, 0, 300, 480]
+openPad[600, 480]
+paint[]
+getchar[]
+getchar[]
+closePad[]
+RecoverStack
+PushStack
+Decl[struct list] a=create_list[]
+Decl[struct list] b=create_list[]
+Decl[int] size=7
+PushStack
+inter.For
+RecoverStack
+println[Test for struct]
+print[Generating Test Data
+]
+print[a=]
+println[list_toString[VAR[0,0](a)]]
+print[b=]
+println[list_toString[VAR[0,1](b)]]
+print[a U b=]
+println[list_toString[union_list[VAR[0,0](a), VAR[0,1](b)]]]
+print[SORT
+]
+print[sort(a)=
+]
+println[list_toString[qlsort[VAR[0,0](a), 0]]]
+RecoverStack
+PushStack
+println[Test for member functions]
+srand[time[]]
+Decl[struct CORD] o
+inter.Set(VAR[0,0](o).x,inter.IntRealConversion(rand[] % 25))
+inter.Set(VAR[0,0](o).y,inter.IntRealConversion(rand[] % 25))
+println[toString[VAR[0,0](o)]]
+init[VAR[0,0](o), inter.IntRealConversion(rand[] % 25), inter.IntRealConversion(rand[] % 25)]
+println[toString[VAR[0,0](o)]]
+RecoverStack
+PushStack
+println[Test for dynamic array sizeof]
+println[int[244] arr;]
+println[arr = new<int>(25);]
+println[println(sizeof arr);]
+println[println(sizeof new<int>(25));]
+Decl[int[]] arr
+inter.Set(VAR[0,0](arr),new []int[])
+println[inter.StrConversion(sizeof VAR[0,0](arr))]
+println[inter.StrConversion(sizeof new []int[])]
+RecoverStack
+PushStack
+println[Test for dynamic array]
+Decl[int[]] tmp
+Decl[int[][]] x
+Decl[int[][]] b
+inter.Set(VAR[0,1](x),new []int[][])
+inter.Set(VAR[0,2](b),VAR[0,1](x))
+println[b[2] =  + inter.StrConversion(VAR[0,2]([]))]
+println[b[1] =  + inter.StrConversion(VAR[0,2]([]))]
+RecoverStack
+Decl[int[][]] a
+Decl[int] buffer=-1
+inter.Set(VAR[0,2]([]),212)
+Decl[int] c=VAR[0,2]([])
+PushStack
+print[-----------------
+]
+print[+Test For Input +
+]
+print[-----------------
+]
+println[Sample:1+2[ENTER]]
+Decl[int] i=readint[]
+Decl[int] t=bufgetchar[]
+Decl[int] j=readint[]
+print[ + inter.StrConversion(VAR[0,0](i)) +   + inter.StrConversion(inter.IntCharConversion(VAR[0,1](t))) +   + inter.StrConversion(VAR[0,2](j)) + =]
+if(inter.IntRel ){
+print[inter.StrConversion(VAR[0,0](i) + VAR[0,2](j))]
+}else {
+if(inter.IntRel ){
+print[inter.StrConversion(VAR[0,0](i) - VAR[0,2](j))]
+}else {
+if(inter.IntRel ){
+print[inter.StrConversion(VAR[0,0](i) * VAR[0,2](j))]
+}else {
+if(inter.IntRel ){
+print[inter.StrConversion(VAR[0,0](i) / VAR[0,2](j))]
+}else {
+print[error]
+}
+}
+}
+}
+print[
+]
+getchar[]
+getchar[]
+RecoverStack
+Decl[struct tree_node] null
+inter.Set(aVAR[0,5](null),aVAR[0,5](null).left)
+PushStack
+srand[time[]]
+Decl[struct tree_node] tree
+inter.Set(VAR[0,0](tree),randomly_create_tree[])
+prettily_show_tree[VAR[0,0](tree), 0]
+RecoverStack
+PushStack
+Decl[int[]] arr
+Decl[int] i=0
+Decl[int] seed=time[]
+print[seed =  + inter.StrConversion(VAR[0,2](seed)) + 
+]
+srand[VAR[0,2](seed)]
+Decl[int] len=rand[] % 200
+inter.For
+printarray[VAR[0,0](arr), VAR[0,3](len)]
+qsort[VAR[0,0](arr), 0, VAR[0,3](len) - 1]
+printarray[VAR[0,0](arr), VAR[0,3](len)]
+inter.Set(VAR[0,1](i),0)
+Decl[string] test=i am a test value
+Decl[char[]] c_str
+Decl[int[][]] a
+Decl[int[][]] b
+Decl[int[][]] c
+inter.For
+inter.Set(VAR[0,8](c),mult[VAR[0,6](a), VAR[0,7](b)])
+inter.For
+inter.For
+inter.Set(VAR[0,5]([]),0)
+Decl[string[][]] nums
+print[toString[VAR[0,5](c_str)]]
+print[
+]
+inter.For
+inter.For
+print[
+]
+RecoverStack
+println[inter.StrConversion(string2int[2556478])]
+print[ + inter.StrConversion(sqrt[inter.IntRealConversion(3)]) + 
+]
+PushStack
+Decl[string] a=    32145547852248562244    
+print[quicksort(" + VAR[0,0](a) + ") = " + quicksort[VAR[0,0](a)] + "
+]
+print[trim( " + VAR[0,0](a) + ") = " + trim[VAR[0,0](a)] + "
+]
+RecoverStack
+print[-----------------
+]
+print[+   Test End    +
+]
+print[-----------------
+]

@@ -17,12 +17,13 @@ public class FunctionInvoke extends Expr {
      * It may rewrite the args in another calling
      */
     //final Constant[]     args;
-
+    
     public FunctionInvoke(FunctionBasic f,ArrayList<Expr> p){
         super(f.name,f.type);
         func = f;
         para = p;
         check();
+        f.setUsed();
         //args = new Constant[p.size()];
     }
 

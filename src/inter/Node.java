@@ -3,8 +3,8 @@ package inter;
 import lexer.*;
 
 public class Node {
-    int     lexline;
-    String  filename;
+    public final int     lexline;
+    public final String  filename;
     Node() {
         lexline  = Lexer.line;
         filename = Lexer.filename;

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Function extends FunctionBasic {
     public Stmt  stmt;
-
+    
     public Function(Token n,Type t,ArrayList<Para> p){
         super(n,t,p);
         stmt = null;
@@ -29,4 +29,9 @@ public class Function extends FunctionBasic {
         stmt.run();
         return;
     }
+    
+    public boolean isCompleted(){
+        return stmt != null;
+    }
+    
 }

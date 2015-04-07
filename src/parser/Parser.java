@@ -8,7 +8,6 @@ import runtime.LoadFunc;
 import java.io.*;
 import java.util.ArrayList;
 
-
 public class Parser{
     private Lexer lex;
     private Token look;
@@ -63,9 +62,13 @@ public class Parser{
     }
 
     public void error(String s){
-        throw new RuntimeException("Line " + lex.line + " in file `" +  lex.filename + "':\n\t" + s);
+        error(s,lex.line,lex.filename);
     }
 
+    public void error(String s,int l,String f){
+        throw new RuntimeException("Line " + l + " in file `" +  f + "':\n\t" + s);
+    }
+    
     public void match(int t) throws IOException{
         if(look.tag == t)
             move();
@@ -104,9 +107,19 @@ public class Parser{
             }
         }
 
+        checkFunctionCompletion();
         return ENABLE_STMT_OPT?s.optimize():s;
     }
 
+    private void checkFunctionCompletion(){
+        /*check if some used functions has not been completed*/
+        for(FunctionBasic b : table.getAllFunctions()){
+            if(b.used()&&!b.isCompleted()){
+                error("Function `" + b +"' used but not completed " ,b.lexline,b.filename);
+            }
+        }
+    }
+    
     public void importlib() throws IOException {
         match(Tag.IMPORT);
         Token l = look;
@@ -214,23 +227,53 @@ public class Parser{
         match(Tag.ID);
 
         ArrayList<Para> l = arguments();
-        Function f = new Function(name,returnType,l);
-        /*check if its name has been used*/
-        if(!table.addFunc(name,f)){
-            error("Function name has conflict:" + f );
+        Function f = null;
+        if(check(';')){
+            f = new Function(name,returnType,l);
+            /*check if its name has been used*/
+            if(!table.addFunc(name,f)){
+                error("Function name has conflict:" + f );
+            }
+        } else {
+            FunctionBasic fb = table.getFuncType(name);
+            if(fb != null){
+                if(fb.isCompleted()){
+                    error("Function redefined:" + fb );
+                }
+                f = (Function)fb;
+                if(!f.type.equals(returnType)){
+                    error("Function return type doesn't match with its former declaration:" + f + " and " + (new Function(name,returnType,l)).toString() );
+                }
+                if(f.paralist.size() != l.size()){
+                    error("Function parameters numbers doesn't match with its former declaration :" + new Function(name,returnType,l).toString() + " has "  + l.size() +  ",but " + f + " has " + f.paralist.size());
+                }
+                int i = 0;
+                for(Para t : f.paralist){
+                    if(!t.type.equals(l.get(i).type)){
+                        error("Function " + (new Function(name,returnType,l)).toString() + " has different arguments["+ i +"] types with its former declaration " + f);
+                    }
+                    i++;
+                }
+            } else {
+                f = new Function(name,returnType,l);
+                /*check if its name has been used*/
+                if(!table.addFunc(name,f)){
+                    error("Function name has conflict:" + f );
+                }
+            }
+            match('{');
+            Stmt s = stmts();
+            if(ENABLE_STMT_OPT)
+                s = s.optimize();
+            match('}');
+            f.init(name,returnType,s,l);
+            if(PRINT_FUNC_TRANSLATE){
+                System.out.println(f.toString() +"{");
+                System.out.print(s.toString());
+                System.out.println("}" );
+            }
         }
 
-        match('{');
-        Stmt s = stmts();
-        if(ENABLE_STMT_OPT)
-            s = s.optimize();
-        match('}');
-        f.init(name,returnType,s,l);
-        if(PRINT_FUNC_TRANSLATE){
-            System.out.println(f.toString() +"{");
-            System.out.print(s.toString());
-            System.out.println("}" );
-        }
         top = savedEnv;
         returnType = savedType;
         hasDecl = savedHasDecl;
