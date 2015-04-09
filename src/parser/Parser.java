@@ -394,7 +394,7 @@ public class Parser{
             match('(');
             x = expr();
             match(')');
-            s1 = stmt();
+            s1 = closure();
             if(look.tag != Tag.ELSE) 
                 return new If(x,s1);
             match(Tag.ELSE);
@@ -409,7 +409,7 @@ public class Parser{
             match('(');
             x = expr();
             match(')');
-            s1 = stmt();
+            s1 = closure();
             whilenode.init(x,s1);
             Stmt.Enclosing = savedStmt;
             lastIterationLevel = savedLastIterationLevel;
@@ -420,7 +420,7 @@ public class Parser{
             savedStmt = Stmt.Enclosing;
             Stmt.Enclosing = donode;
             match(Tag.DO);
-            s1 = stmt();
+            s1 = closure();
             match(Tag.WHILE);
             match('(');
             x = expr();
@@ -467,6 +467,20 @@ public class Parser{
         }
     }
 
+    public Stmt closure() throws IOException {
+        if(look.tag == '{'){
+            return block();
+        } else {
+            boolean savedHasDecl = hasDecl;
+            hasDecl = false;
+            Stmt s = stmt();
+            if(hasDecl)
+                s = new Seq(Stmt.PushStack,new Seq(s,Stmt.RecoverStack));
+            hasDecl = savedHasDecl;
+            return s;
+        }
+    }
+    
     public Stmt forloop() throws IOException {
         lastIterationLevel = nowLevel;
         For fornode = new For();
@@ -483,6 +497,7 @@ public class Parser{
             hasdecl = true;
             top = new Env(top);
             s1 = fordecl();
+            nowLevel ++;
         } else {
             s1 = new ExprStmt(expr());
         }
@@ -491,7 +506,7 @@ public class Parser{
         match(';');
         Stmt s3 = (look.tag == ')')?Stmt.Null:new ExprStmt(expr());
         match(')');
-        Stmt s = stmt();
+        Stmt s = closure();
         top = savedTop;
         Stmt.Enclosing = savedStmt;
         fornode.init(s1,e2,s3,s);
