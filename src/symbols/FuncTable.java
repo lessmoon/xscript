@@ -6,7 +6,7 @@ import inter.*;
 import java.util.*;
 
 public class FuncTable {
-    HashMap<Token,FunctionBasic> table = new HashMap<Token,FunctionBasic>(); 
+    public HashMap<Token,FunctionBasic> table = new HashMap<Token,FunctionBasic>(); 
 
     public FuncTable(){
         
@@ -18,5 +18,8 @@ public class FuncTable {
     
     public FunctionBasic getFuncType(Token id){
         return table.get(id);
+    }
+    public Collection<FunctionBasic> getAllFunctions(){
+        return table.values();
     }
 }

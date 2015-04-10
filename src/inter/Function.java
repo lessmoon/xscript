@@ -7,10 +7,15 @@ import java.util.ArrayList;
 
 public class Function extends FunctionBasic {
     public Stmt  stmt;
-
+    
     public Function(Token n,Type t,ArrayList<Para> p){
         super(n,t,p);
         stmt = null;
+    }
+
+    public Function(Token n,Type t,Stmt s,ArrayList<Para> p){
+        super(n,t,p);
+        stmt = s;
     }
 
     public void init(Token n,Type t,Stmt s,ArrayList<Para> p){
@@ -20,13 +25,13 @@ public class Function extends FunctionBasic {
         paralist = p;
     }
     
-    public Function(Token n,Type t,Stmt s,ArrayList<Para> p){
-        super(n,t,p);
-        stmt = s;
-    }
-
     public void run(){
         stmt.run();
         return;
     }
+    
+    public boolean isCompleted(){
+        return stmt != null;
+    }
+    
 }

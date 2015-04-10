@@ -7,7 +7,7 @@ import inter.Stmt;
 
 public class Main{
     public static final int     MAJOR_VERSION       = 1;
-    public static final int     MINOR_VERSION       = 1;
+    public static final int     MINOR_VERSION       = 2;
 
     public static void usage(){
         System.out.println(
@@ -53,7 +53,7 @@ public class Main{
                 System.out.println("Version: xxxscript " + MAJOR_VERSION + "." +  MINOR_VERSION + "\n");
                 return;
             default:
-                if(args[i].charAt(i) == '-'){
+                if(args[i].charAt(0) == '-'){
                     System.err.println("Unknown option `" + args[i] + "' found.");
                     return;
                 }
@@ -85,7 +85,7 @@ public class Main{
         try {
             s = parser.program();
         } catch (RuntimeException e){
-            e.printStackTrace();
+            //e.printStackTrace();
             System.err.println("Compile Error:");
             System.err.println(e.getMessage());
             return;

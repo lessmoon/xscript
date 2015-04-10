@@ -19,4 +19,8 @@ public class ExFunction extends FunctionBasic {
     public void run(){
         throw new ReturnResult(func.run(VarTable.getTop()));
     }
+    
+    public boolean isCompleted(){
+        return true;
+    }
 }

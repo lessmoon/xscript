@@ -54,6 +54,12 @@ public class For extends Stmt {
         return this;
     }
 
+    public String toString(){
+        return "for(" + begin + ";" + condition + ";" + end + "){\n"
+                + stmt
+                +"\n}\n";
+    }
+    
     /*
         void emitBinaryCode(BinaryCode x){
             begin.emit(x);
