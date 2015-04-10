@@ -53,7 +53,7 @@ public class Main{
                 System.out.println("Version: xxxscript " + MAJOR_VERSION + "." +  MINOR_VERSION + "\n");
                 return;
             default:
-                if(args[i].charAt(i) == '-'){
+                if(args[i].charAt(0) == '-'){
                     System.err.println("Unknown option `" + args[i] + "' found.");
                     return;
                 }

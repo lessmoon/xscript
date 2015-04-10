@@ -316,6 +316,7 @@ public class Parser{
         if(f.isCompleted()){
             error("Member function " + t.lexeme + "." + name  + " redefined");
         }
+        
         top.put(Word.This,t);
         ArrayList<Para> l = arguments();
         l.add(0,new Para(t,Word.This));
@@ -360,10 +361,8 @@ public class Parser{
         
         Stmt s = stmts();
         match('}');
-        if(hasDecl)
-            s = new Seq(Stmt.PushStack,new Seq(s,Stmt.RecoverStack));
-        
         if(hasDecl){
+            s = new Seq(s,Stmt.RecoverStack);
             nowLevel--;
             top = savedEnv;
         }
@@ -456,8 +455,9 @@ public class Parser{
             if(!hasDecl){
                 top = new Env(top);
                 nowLevel ++;
+                hasDecl = true;
+                return new Seq(Stmt.PushStack,decls());
             }
-            hasDecl = true;
             return decls();
         default:
             /*single expression statement*/
@@ -471,16 +471,20 @@ public class Parser{
         if(look.tag == '{'){
             return block();
         } else {
+            Env savedEnv = top;
             boolean savedHasDecl = hasDecl;
             hasDecl = false;
             Stmt s = stmt();
-            if(hasDecl)
-                s = new Seq(Stmt.PushStack,new Seq(s,Stmt.RecoverStack));
+            if(hasDecl){
+                s = new Seq(s,Stmt.RecoverStack);
+                nowLevel--;
+                top = savedEnv;
+            }
             hasDecl = savedHasDecl;
             return s;
         }
     }
-    
+
     public Stmt forloop() throws IOException {
         lastIterationLevel = nowLevel;
         For fornode = new For();
@@ -497,7 +501,6 @@ public class Parser{
             hasdecl = true;
             top = new Env(top);
             s1 = fordecl();
-            nowLevel ++;
         } else {
             s1 = new ExprStmt(expr());
         }

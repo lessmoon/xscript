@@ -27,6 +27,13 @@ public class If extends Stmt{
         }
         return this;
     }
+    
+    public String toString(){
+        return "if(" + expr + "){\n"
+                + stmt
+                + "\n}\n";
+    }
+    
     /*
         void emitBinaryCode(BinaryCode x){
             expr.emitBinaryCode(x);

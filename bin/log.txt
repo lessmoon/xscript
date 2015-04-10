@@ -1,198 +1,399 @@
-Decl[int] RAND_SEED=0
-Decl[struct list_node] _LIST_NULL_CONSTANT_
-inter.Set(aVAR[0,1](_LIST_NULL_CONSTANT_),aVAR[0,1](_LIST_NULL_CONSTANT_).prev)
-PushStack
-Decl[int] x=time[]
-println[Random seed: + inter.StrConversion(VAR[0,0](x))]
-srand[VAR[0,0](x)]
-RecoverStack
-print[------------------
-]
-print[+   Test Begin   +
-]
-print[------------------
-]
-println[Test for classic code]
-println[hello world!]
-println[Test for build-in variable]
-println[This code is in file ../testcase/test.xs at 48]
-println[Compiler version is 1.1]
-PushStack
-println[Test for basic painting]
-setBrushColor[25, 25, 255]
-PushStack
-Decl[real] x
-Decl[real] y
-Decl[int] a=20
-Decl[int] b=20
-Decl[real] x_m
-Decl[real] y_m
-PushStack
-inter.For
-RecoverStack
-RecoverStack
-setBrushColor[255, 0, 0]
-PushStack
-inter.For
-RecoverStack
-setBrushColor[0, 255, 0]
-Decl[real] r=100.0
-PushStack
-inter.For
-RecoverStack
-setBrushColor[0, 0, 0]
-addLine[0, 240, 600, 240]
-addLine[300, 0, 300, 480]
-openPad[600, 480]
-paint[]
-getchar[]
-getchar[]
-closePad[]
-RecoverStack
-PushStack
-Decl[struct list] a=create_list[]
-Decl[struct list] b=create_list[]
-Decl[int] size=7
-PushStack
-inter.For
-RecoverStack
-println[Test for struct]
-print[Generating Test Data
-]
-print[a=]
-println[list_toString[VAR[0,0](a)]]
-print[b=]
-println[list_toString[VAR[0,1](b)]]
-print[a U b=]
-println[list_toString[union_list[VAR[0,0](a), VAR[0,1](b)]]]
-print[SORT
-]
-print[sort(a)=
-]
-println[list_toString[qlsort[VAR[0,0](a), 0]]]
-RecoverStack
-PushStack
-println[Test for member functions]
-srand[time[]]
-Decl[struct CORD] o
-inter.Set(VAR[0,0](o).x,inter.IntRealConversion(rand[] % 25))
-inter.Set(VAR[0,0](o).y,inter.IntRealConversion(rand[] % 25))
-println[toString[VAR[0,0](o)]]
-init[VAR[0,0](o), inter.IntRealConversion(rand[] % 25), inter.IntRealConversion(rand[] % 25)]
-println[toString[VAR[0,0](o)]]
-RecoverStack
-PushStack
-println[Test for dynamic array sizeof]
-println[int[244] arr;]
-println[arr = new<int>(25);]
-println[println(sizeof arr);]
-println[println(sizeof new<int>(25));]
-Decl[int[]] arr
-inter.Set(VAR[0,0](arr),new []int[])
-println[inter.StrConversion(sizeof VAR[0,0](arr))]
-println[inter.StrConversion(sizeof new []int[])]
-RecoverStack
-PushStack
-println[Test for dynamic array]
-Decl[int[]] tmp
-Decl[int[][]] x
-Decl[int[][]] b
-inter.Set(VAR[0,1](x),new []int[][])
-inter.Set(VAR[0,2](b),VAR[0,1](x))
-println[b[2] =  + inter.StrConversion(VAR[0,2]([]))]
-println[b[1] =  + inter.StrConversion(VAR[0,2]([]))]
-RecoverStack
-Decl[int[][]] a
-Decl[int] buffer=-1
-inter.Set(VAR[0,2]([]),212)
-Decl[int] c=VAR[0,2]([])
-PushStack
-print[-----------------
-]
-print[+Test For Input +
-]
-print[-----------------
-]
-println[Sample:1+2[ENTER]]
-Decl[int] i=readint[]
-Decl[int] t=bufgetchar[]
-Decl[int] j=readint[]
-print[ + inter.StrConversion(VAR[0,0](i)) +   + inter.StrConversion(inter.IntCharConversion(VAR[0,1](t))) +   + inter.StrConversion(VAR[0,2](j)) + =]
-if(inter.IntRel ){
-print[inter.StrConversion(VAR[0,0](i) + VAR[0,2](j))]
-}else {
-if(inter.IntRel ){
-print[inter.StrConversion(VAR[0,0](i) - VAR[0,2](j))]
-}else {
-if(inter.IntRel ){
-print[inter.StrConversion(VAR[0,0](i) * VAR[0,2](j))]
-}else {
-if(inter.IntRel ){
-print[inter.StrConversion(VAR[0,0](i) / VAR[0,2](j))]
-}else {
-print[error]
-}
-}
-}
-}
-print[
-]
-getchar[]
-getchar[]
-RecoverStack
-Decl[struct tree_node] null
-inter.Set(aVAR[0,5](null),aVAR[0,5](null).left)
-PushStack
-srand[time[]]
-Decl[struct tree_node] tree
-inter.Set(VAR[0,0](tree),randomly_create_tree[])
-prettily_show_tree[VAR[0,0](tree), 0]
-RecoverStack
-PushStack
-Decl[int[]] arr
+int repeat_print(string s,int c){
 Decl[int] i=0
-Decl[int] seed=time[]
-print[seed =  + inter.StrConversion(VAR[0,2](seed)) + 
-]
-srand[VAR[0,2](seed)]
-Decl[int] len=rand[] % 200
-inter.For
-printarray[VAR[0,0](arr), VAR[0,3](len)]
-qsort[VAR[0,0](arr), 0, VAR[0,3](len) - 1]
-printarray[VAR[0,0](arr), VAR[0,3](len)]
-inter.Set(VAR[0,1](i),0)
-Decl[string] test=i am a test value
-Decl[char[]] c_str
-Decl[int[][]] a
-Decl[int[][]] b
-Decl[int[][]] c
-inter.For
-inter.Set(VAR[0,8](c),mult[VAR[0,6](a), VAR[0,7](b)])
-inter.For
-inter.For
-inter.Set(VAR[0,5]([]),0)
-Decl[string[][]] nums
-print[toString[VAR[0,5](c_str)]]
-print[
-]
-inter.For
-inter.For
-print[
-]
-RecoverStack
-println[inter.StrConversion(string2int[2556478])]
-print[ + inter.StrConversion(sqrt[inter.IntRealConversion(3)]) + 
-]
+for(inter.Set(VAR[0,2](i),0)
+;inter.IntRel;++ VAR[0,2](i)
+){
+print[VAR[0,0](s)]
+
+}
+Return 0(0)
+inter.Stmt
+}
+int abs(int a){
+Return inter.Condition(0)
+inter.Stmt
+}
+int srand(int v){
+Return inter.Set(aVAR[0,0](RAND_SEED),VAR[0,0](v))(0)
+inter.Stmt
+}
+int rand(){
+Decl[int] r
+Decl[real] i
+inter.IntSet(aVAR[0,0](RAND_SEED),134775813)
+inter.Set(aVAR[0,0](RAND_SEED),aVAR[0,0](RAND_SEED) % 1073676287)
+inter.Set(VAR[0,1](i),inter.IntRealConversion(aVAR[0,0](RAND_SEED)) / inter.IntRealConversion(1073676286))
+inter.Set(VAR[0,0](r),inter.RealIntConversion(VAR[0,1](i) * inter.IntRealConversion(2147483647)))
+Return abs[aVAR[0,0](RAND_SEED)](0)
+inter.Stmt
+}
+int qsort(int[] s,int l,int r){
+if(inter.IntRel){
 PushStack
-Decl[string] a=    32145547852248562244    
-print[quicksort(" + VAR[0,0](a) + ") = " + quicksort[VAR[0,0](a)] + "
-]
-print[trim( " + VAR[0,0](a) + ") = " + trim[VAR[0,0](a)] + "
-]
+Decl[int] i=VAR[1,1](l)
+Decl[int] j=VAR[1,2](r)
+Decl[int] x=VAR[1,0]([])
+inter.While
+inter.Set(VAR[1,0]([]),VAR[0,2](x))
+qsort[VAR[1,0](s), VAR[1,1](l), VAR[0,0](i) - 1]
+qsort[VAR[1,0](s), VAR[0,0](i) + 1, VAR[1,2](r)]
+inter.Stmt
 RecoverStack
-print[-----------------
+
+}
+Return 0(0)
+inter.Stmt
+}
+int bsearch(int[] a,int target){
+Decl[int] n=sizeof VAR[0,0](a)
+if(inter.IntRel){
+Return 0(0)
+
+}
+Decl[int] l=0
+Decl[int] r=VAR[0,2](n) - 1
+inter.While
+inter.Stmt
+}
+void println(string s){
+print[VAR[0,0](s) + 
 ]
-print[+   Test End    +
+Return inter.Expr$1(0)
+inter.Stmt
+}
+void f1(int a){
+println[f1: + inter.StrConversion(VAR[0,0](a))]
+if(inter.IntRel){
+print[ddd]
+Return inter.Expr$1(0)
+inter.Stmt
+
+}
+f2[VAR[0,0](a) + 1]
+inter.Stmt
+}
+void f2(int b){
+println[f2: + inter.StrConversion(VAR[0,0](b))]
+if(inter.IntRel){
+print[ccc]
+Return inter.Expr$1(0)
+inter.Stmt
+
+}
+f1[VAR[0,0](b) + 1]
+inter.Stmt
+}
+string list_toString(struct list l){
+Decl[struct list_node] i=VAR[0,0](l).head
+Decl[string] v=[ 
+inter.While
+inter.StrSet(VAR[0,2](v),])
+Return VAR[0,2](v)(0)
+inter.Stmt
+}
+struct list create_list(){
+Decl[struct list_node] head
+Decl[struct list_node] tail
+Decl[struct list] l
+inter.Set(VAR[0,2](l).head,VAR[0,0](head))
+inter.Set(VAR[0,2](l).tail,VAR[0,1](tail))
+inter.Set(VAR[0,2](l).count,0)
+inter.Set(VAR[0,0](head).next,VAR[0,1](tail))
+inter.Set(VAR[0,0](head).prev,aVAR[0,1](_LIST_NULL_CONSTANT_))
+inter.Set(VAR[0,1](tail).next,aVAR[0,1](_LIST_NULL_CONSTANT_))
+inter.Set(VAR[0,1](tail).prev,VAR[0,0](head))
+Return VAR[0,2](l)(0)
+inter.Stmt
+}
+struct list push_back(struct list l,int value){
+Decl[struct list_node] n
+++ VAR[0,0](l).count
+inter.Set(VAR[0,2](n).value,VAR[0,1](value))
+inter.Set(VAR[0,2](n).prev,VAR[0,0](l).tail.prev)
+inter.Set(VAR[0,2](n).next,VAR[0,0](l).tail)
+inter.Set(VAR[0,2](n).prev.next,VAR[0,2](n))
+inter.Set(VAR[0,0](l).tail.prev,VAR[0,2](n))
+Return VAR[0,0](l)(0)
+inter.Stmt
+}
+bool list_isEmpty(struct list l){
+Return inter.IntRel(0)
+inter.Stmt
+}
+int list_size(struct list l){
+Return VAR[0,0](l).count(0)
+inter.Stmt
+}
+int pop_front(struct list l){
+Decl[struct list_node] n
+if(inter.IntRel){
+inter.Set(VAR[0,1](n),VAR[0,0](l).head.next)
+inter.Set(VAR[0,0](l).head.next,VAR[0,1](n).next)
+inter.Set(VAR[0,1](n).next.prev,VAR[0,1](n).prev)
+-- VAR[0,0](l).count
+Return VAR[0,1](n).value(0)
+inter.Stmt
+
+}
+Return - 1(0)
+inter.Stmt
+}
+int pop_back(struct list l){
+Decl[struct list_node] n
+if(inter.IntRel){
+inter.Set(VAR[0,1](n),VAR[0,0](l).tail.prev)
+inter.Set(VAR[0,0](l).tail.prev,VAR[0,1](n).prev)
+inter.Set(VAR[0,1](n).prev.next,VAR[0,1](n).next)
+-- VAR[0,0](l).count
+Return VAR[0,1](n).value(0)
+inter.Stmt
+
+}
+Return - 1(0)
+inter.Stmt
+}
+struct list union_list(struct list a,struct list b){
+inter.Set(VAR[0,0](a).tail.prev.next,VAR[0,1](b).head.next)
+inter.Set(VAR[0,1](b).head.next.prev,VAR[0,0](a).tail.prev)
+inter.Set(VAR[0,0](a).tail,VAR[0,1](b).tail)
+inter.IntSet(VAR[0,0](a).count,VAR[0,1](b).count)
+inter.Set(VAR[0,1](b),VAR[0,0](a))
+Return VAR[0,0](a)(0)
+inter.Stmt
+}
+struct list lesslist(struct list l,int v){
+Decl[struct list] tmp=create_list[]
+Decl[struct list_node] i=VAR[0,0](l).head
+inter.While
+Return VAR[0,2](tmp)(0)
+inter.Stmt
+}
+struct list greatlist(struct list l,int v){
+Decl[struct list] tmp=create_list[]
+Decl[struct list_node] i=VAR[0,0](l).head
+inter.While
+Return VAR[0,2](tmp)(0)
+inter.Stmt
+}
+void reprint(char c,int v){
+inter.While
+inter.Stmt
+}
+struct list union_listc(struct list a,struct list b,int c){
+inter.Set(VAR[0,0](a).tail.prev.next,VAR[0,1](b).head.next)
+inter.Set(VAR[0,1](b).head.next.prev,VAR[0,0](a).tail.prev)
+inter.Set(VAR[0,0](a).tail,VAR[0,1](b).tail)
+inter.IntSet(VAR[0,0](a).count,VAR[0,1](b).count)
+inter.Set(VAR[0,1](b),VAR[0,0](a))
+Return VAR[0,0](a)(0)
+inter.Stmt
+}
+struct list qlsort(struct list l,int level){
+reprint[ , VAR[0,1](level) * 2]
+println[|s( + list_toString[VAR[0,0](l)] + )]
+if(inter.IntRel ){
+PushStack
+Decl[struct list] x=create_list[]
+Return union_listc[VAR[0,0](x), VAR[1,0](l), VAR[1,1](level)](1)
+inter.Stmt
+RecoverStack
+}else {
+PushStack
+Decl[int] v=pop_front[VAR[1,0](l)]
+Decl[struct list] r=qlsort[lesslist[VAR[1,0](l), VAR[0,0](v)], VAR[1,1](level) + 1]
+push_back[VAR[0,1](r), VAR[0,0](v)]
+Return union_listc[VAR[0,1](r), qlsort[greatlist[VAR[1,0](l), VAR[0,0](v)], VAR[1,1](level) + 1], VAR[1,1](level)](1)
+inter.Stmt
+RecoverStack
+}
+inter.Stmt
+}
+int bufgetchar(){
+if(inter.IntRel ){
+Return getchar[](0)
+inter.Stmt
+}else {
+PushStack
+Decl[int] tmp=aVAR[0,3](buffer)
+inter.Set(aVAR[0,3](buffer),- 1)
+Return VAR[0,0](tmp)(1)
+inter.Stmt
+RecoverStack
+}
+inter.Stmt
+}
+int readint(){
+Decl[int] i=0
+Decl[int] c=bufgetchar[]
+inter.While
+inter.Set(aVAR[0,3](buffer),VAR[0,1](c))
+Return VAR[0,0](i)(0)
+inter.Stmt
+}
+struct tree_node randomly_create_tree(){
+Decl[struct tree_node] t
+if(inter.IntRel){
+inter.Set(VAR[0,0](t).left,randomly_create_tree[])
+
+}
+if(inter.IntRel){
+inter.Set(VAR[0,0](t).right,randomly_create_tree[])
+
+}
+inter.Set(VAR[0,0](t).value,rand[] % 1000)
+Return VAR[0,0](t)(0)
+inter.Stmt
+}
+int prettily_show_tree(struct tree_node tree,int level){
+if(inter.ObjectRel){
+repeat_print[  |, VAR[0,1](level)]
+print[inter.StrConversion(VAR[0,0](tree).value)]
+print[
 ]
-print[-----------------
+prettily_show_tree[VAR[0,0](tree).left, VAR[0,1](level) + 1]
+prettily_show_tree[VAR[0,0](tree).right, VAR[0,1](level) + 1]
+inter.Stmt
+
+}
+Return VAR[0,1](level)(0)
+inter.Stmt
+}
+string toString(char[] c_str){
+Decl[string] r=
+Decl[int] i=0
+inter.While
+Return VAR[0,1](r)(0)
+inter.Stmt
+}
+int[][] mult(int[][] a,int[][] b){
+Decl[string] r=
+Decl[int[][]] res
+Decl[int] i=0
+Decl[int] sum=0
+Decl[int] j=0
+Decl[int] k=0
+for(inter.Set(VAR[0,4](i),0)
+;inter.IntRel;++ VAR[0,4](i)
+){
+for(inter.Set(VAR[0,6](j),0)
+;inter.IntRel;++ VAR[0,6](j)
+){
+inter.Set(VAR[0,5](sum),0)
+for(inter.Set(VAR[0,7](k),0)
+;inter.IntRel;++ VAR[0,7](k)
+){
+inter.IntSet(VAR[0,5](sum),VAR[0,0]([]) * VAR[0,1]([]))
+inter.Stmt
+
+}
+inter.Set(VAR[0,3]([]),VAR[0,5](sum))
+inter.Stmt
+
+}
+inter.Stmt
+
+}
+Return VAR[0,3](res)(0)
+inter.Stmt
+}
+int printarray(int[] arr,int len){
+Decl[int] i=0
+print[[]
+for(VAR[0,2](i)
+;inter.IntRel;++ VAR[0,2](i)
+){
+print[  + inter.StrConversion(VAR[0,0]([]))]
+inter.Stmt
+
+}
+print[ ]
 ]
+Return VAR[0,1](len)(0)
+inter.Stmt
+}
+int max(int a,int b){
+Return inter.Condition(0)
+inter.Stmt
+}
+string trim(string str){
+Decl[string] result=
+Decl[int] len=strlen[VAR[0,0](str)]
+Decl[int] i=0
+Decl[int] j=VAR[0,2](len) - 1
+inter.While
+inter.While
+for(VAR[0,3](i)
+;inter.IntRel;++ VAR[0,3](i)
+){
+inter.StrSet(VAR[0,1](result),inter.StrConversion(VAR[0,0]([])))
+inter.Stmt
+
+}
+Return VAR[0,1](result)(0)
+inter.Stmt
+}
+bool is_prime(int n){
+if(inter.IntRel){
+Return false(0)
+
+}
+Decl[int] i=2
+for(VAR[0,1](i)
+;inter.IntRel;++ VAR[0,1](i)
+){
+if(inter.IntRel){
+Return false(0)
+inter.Stmt
+
+}
+inter.Stmt
+
+}
+Return true(0)
+inter.Stmt
+}
+real sqrt(real n){
+Decl[real] a=VAR[0,0](n) / inter.IntRealConversion(2)
+Decl[int] i=0
+for(VAR[0,2](i)
+;inter.IntRel;++ VAR[0,2](i)
+){
+inter.Set(VAR[0,1](a),VAR[0,0](n) / VAR[0,1](a) + VAR[0,1](a) / inter.IntRealConversion(2))
+inter.Stmt
+
+}
+Return VAR[0,1](a)(0)
+inter.Stmt
+}
+int string2int(string s){
+Decl[int] i=0
+Decl[int] v=0
+Decl[int] len=strlen[VAR[0,0](s)]
+for(VAR[0,1](i)
+;inter.IntRel;++ VAR[0,1](i)
+){
+inter.IntSet(VAR[0,2](v),10)
+inter.IntSet(VAR[0,2](v),inter.CharIntConversion(VAR[0,0]([]) - 0))
+inter.Stmt
+
+}
+Return VAR[0,2](v)(0)
+inter.Stmt
+}
+string gestring(string str,char c,int i){
+Decl[string] result=
+inter.While
+Return VAR[0,3](result)(0)
+inter.Stmt
+}
+string lsstring(string str,char c,int i){
+Decl[int] l=strlen[VAR[0,0](str)]
+Decl[string] result=
+inter.While
+Return VAR[0,4](result)(0)
+inter.Stmt
+}
+string quicksort(string str){
+Return inter.Condition(0)
+inter.Stmt
+}
