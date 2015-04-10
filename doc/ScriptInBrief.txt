@@ -36,10 +36,18 @@
         Basic-Type identifier[,...] (identifier must begin with one of [a-zA-Z_])
         Basic-Type identifier = initial-value[,...](with initial-value)
         Basic-Type [integer constant]... identifier[,...](for array declaration)
-    6.Function Declaration
-        def return-type identifier (para-type para-identifier[,...]){
-            statement
-        }
+    6.Function Defination & Declaration
+        1.Defination
+            1.Normal Function Defination
+                def return-type identifier (para-type para-identifier[,...]){
+                    statement
+                }
+            2.Structure's member function Defination(can use `this' variable in function body)
+                def return-type (Structure Name).identifier (para-type para-identifier[,...]){
+                    statement
+                }
+        2.Pre-declaration(if not used,no need to implement it)
+            def return-type identifier(para-type para-identifier[,...]);
     7.Constant:
         1.integer:just support decimal integer
         2.string:"character"(character includes escape character \n,\t,\r,\',\",\?,\b,\f,\\)
@@ -53,15 +61,26 @@
     9.Import Source File:
         import "file-path";
     10.Structure definition:
-        struct name {
-            type id;[...]
-        }
-      Structure member visit:
-        name.member-name
+        1.Define a struct
+            struct name {
+            1.Member Declaration
+                type id;[...]
+            2.Function Declaration
+                def return-type identifier(para-type para-identifier[,...]);[...]
+            3.Funtion Defination(can use `this' variable in function body)
+                def return-type identifier(para-type para-identifier[,...]){
+                        statement;
+                    }
+            }
+        2.Structure member access:
+            name.member-name
     11.Dynamic array allocation:
         new<Type>(expression);
     12.Array size getter:
         sizeof array-type-expression
+    13.Build-in variable:
+        _line_:  line number of this source file
+        _file_:  file name of this source file
 3.Features In Future
     1.Inline function definition:
         def Type name([Type name,...]) = expression;
