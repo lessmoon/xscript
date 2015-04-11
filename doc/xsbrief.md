@@ -1,7 +1,7 @@
 ## XXXScript in brief ##
 
 ### Keyword List: ###
-><table>
+<table>
 	<tr>
         <td>_file_</td><td>_line_</td>
 		<td>_version_</td><td>bool</td>
@@ -25,10 +25,10 @@
 	<tr>
 		<td>while</td><td>while</td>
 	</tr>
-></table>
+</table>
 
 ### Basic Types: ###
-> <table>
+<table>
 		<tr>
 			<th>name</th>
 			<th>size</th>
@@ -51,7 +51,7 @@
 			<td>bool</td>
 			<td>1</td>
 		<tr>
-></table>
+</table>
 
 ### Grammar ###
 
@@ -68,32 +68,32 @@
 * Function declaration & defination
 	* Defination
 		* Normal dunction defination
-			> 1. `def` return-type func-name ( [para-type para-identifier,...] ){
-			> 2. &emsp;&emsp; funtion-body
-			> 3. }
+			1. `def` return-type func-name ( [para-type para-identifier,...] ){
+			2. &emsp;&emsp; funtion-body
+			3. }
 		* Structure's member function defination(can use `this` variable in function body)
-			> 1. `def` return-type structure-name.func-name ([para-type para-`,...]){
-			> 2. &emsp;&emsp;function-body
- 			> 3. }
+			1. `def` return-type structure-name.func-name ([para-type para-`,...]){
+			2. &emsp;&emsp;function-body
+ 			3. }
 	* Declaration(if not used,no need to implement it)
 		- `def` return-type func-name([para-type para-name,...]);
 * Structure declaration & definition :
 	- Define a structure
-		> 1.  `struct` name {
-		> 2. &emsp;type-name var-name;[...] ***//Member declaration***
-		> 3. &emsp;`def` return-type func-name([para-type para-name,...]);***//Function declaration***
-		> 4. &emsp;`def` return-type func-name([para-type para-name,...]){***//Function defination***
-		> 5. &emsp;&emsp;function-body;
-		> 6. &emsp;}
-		> 7. }
+		1.  `struct` name {
+		2. &emsp;type-name var-name;[...] ***//Member declaration***
+		3. &emsp;`def` return-type func-name([para-type para-name,...]);***//Function declaration***
+		4. &emsp;`def` return-type func-name([para-type para-name,...]){***//Function defination***
+		5. &emsp;&emsp;&emsp;&emsp;function-body;
+		6. &emsp;&nbsp;}
+		7. &nbsp;}
 	- Structure member access:
-		> name.member-name
+		- name.member-name
 * Load extension function:
-	> 1. loadfunc<package-name>{
-	> 2. &emsp;return-type func-name ( [para-type para-name,...] );
-	> 3. }
+	1. loadfunc<package-name>{
+	2. &emsp;return-type func-name ( [para-type para-name,...] );
+	3. }
 * Import source file:
-	> `import` "file-path";
+	- `import` "file-path";
 * Expressions:
 	* variable `+=` expression(variable's type can be `string`)
 	* variable (`=`,`-=`,`*=`,`/=`,`%=`) expression(`%=` only for `int` & `char`)
