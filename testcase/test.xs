@@ -3,6 +3,19 @@ import  "lib/system.xs";
 import  "math/Math.xs";
 
 
+{
+
+    int i = 1;
+    switch(i){
+    case 1:
+        print(2-i);
+        break;
+    case 2:
+        print(i);
+        break;
+    }
+}
+
 struct llist{
     int size;
     def int getSize();

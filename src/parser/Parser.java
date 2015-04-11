@@ -17,6 +17,8 @@ public class Parser{
     Type returnType = Type.Int;
     boolean hasDecl = true;
     /*integer numbers standing for the stack level*/
+    
+    public int lastBreakFatherLevel = -1;
     public int lastIterationLevel = -1;
     /* The variable lastFunctionLevel is for the  
      * local function definition.
@@ -371,7 +373,7 @@ public class Parser{
     }
 
     public Stmt stmts() throws IOException {
-        if(look.tag == '}') {
+        if(look.tag == '}' ) {
             return Stmt.Null;
         } else {
             return new Seq(stmt(),stmts());
@@ -381,43 +383,48 @@ public class Parser{
     public Stmt stmt() throws IOException {
         Expr x;
         Stmt s,s1,s2;
-        Stmt savedStmt;
-        int savedLastIterationLevel = lastIterationLevel;
-
+        Stmt savedStmt = Stmt.Enclosing,savedBreak = Stmt.BreakEnclosing;
+        int savedLastIterationLevel = lastIterationLevel,
+            savedlastBreakFatherLevel = lastBreakFatherLevel;
         switch(look.tag){
         case ';':
             move();
-            return Stmt.Null;
+            s = Stmt.Null;
+            break;
         case Tag.IF:
             match(Tag.IF);
             match('(');
             x = expr();
             match(')');
             s1 = closure();
-            if(look.tag != Tag.ELSE) 
-                return new If(x,s1);
-            match(Tag.ELSE);
-            s2 = stmt();
-            return new Else(x,s1,s2);
+            if(look.tag == Tag.ELSE){
+                match(Tag.ELSE);
+                s2 = stmt();
+                s = new Else(x,s1,s2);
+            } else {
+                s = new If(x,s1);
+            }
+            break;
         case Tag.WHILE:
             lastIterationLevel = nowLevel;
+            lastBreakFatherLevel = nowLevel;
             While whilenode = new While();
-            savedStmt = Stmt.Enclosing;
             Stmt.Enclosing = whilenode;
+            Stmt.BreakEnclosing = whilenode;
             match(Tag.WHILE);
             match('(');
             x = expr();
             match(')');
             s1 = closure();
             whilenode.init(x,s1);
-            Stmt.Enclosing = savedStmt;
-            lastIterationLevel = savedLastIterationLevel;
-            return whilenode;
+            s =  whilenode;
+            break;
         case Tag.DO:
             lastIterationLevel = nowLevel;
+            lastBreakFatherLevel = nowLevel;
             Do donode = new Do();
-            savedStmt = Stmt.Enclosing;
             Stmt.Enclosing = donode;
+            Stmt.BreakEnclosing = donode;
             match(Tag.DO);
             s1 = closure();
             match(Tag.WHILE);
@@ -426,47 +433,113 @@ public class Parser{
             match(')');
             match(';');
             donode.init(s1,x);
-            Stmt.Enclosing = savedStmt;
-            lastIterationLevel = savedLastIterationLevel;
-            return donode;
+            s =  donode;
+            break;
         case Tag.FOR:
-            lastIterationLevel = nowLevel;
-            Stmt fornode = forloop();
-            lastIterationLevel = savedLastIterationLevel;
-            return fornode;
+            s = forloop();
+            break;
         case Tag.BREAK:
             match(Tag.BREAK);
             match(';');
-            return new Break(nowLevel - lastIterationLevel);
+            s = new Break(nowLevel - lastBreakFatherLevel);
+            break;
         case Tag.CONTINUE:
             match(Tag.CONTINUE);
             match(';');
-            return new Continue(nowLevel - lastIterationLevel);
+            s = new Continue(nowLevel - lastIterationLevel);
+            break;
         case Tag.RETURN:
             match(Tag.RETURN);
             Expr e = Expr.VoidExpr;
             if(returnType != Type.Void)
                 e = expr();
             match(';');
-            return new Return(e,returnType,nowLevel - lastFunctionLevel);
+            s = new Return(e,returnType,nowLevel - lastFunctionLevel);
+            break;
         case '{':
-            return block();
+            s = block();
+            break;
         case Tag.BASIC:
-            if(!hasDecl){
+            if(hasDecl){
+                s = decls();
+            } else {
                 top = new Env(top);
                 nowLevel ++;
                 hasDecl = true;
-                return new Seq(Stmt.PushStack,decls());
+                s = new Seq(Stmt.PushStack,decls());
             }
-            return decls();
+            break;
+        case Tag.SWITCH:
+            s = switchstmt();
+            break;
+        case Tag.CASE:/*CASE*/
+            if(!(Stmt.BreakEnclosing instanceof Switch)){
+                error("`case' should be used in switch statement");
+            }
+            s = Stmt.Null;
+            break;
         default:
             /*single expression statement*/
             s = new ExprStmt(expr());
             match(';');
-            return s;
+        }
+        Stmt.BreakEnclosing = savedBreak;
+        Stmt.Enclosing = savedStmt;
+        lastIterationLevel = savedLastIterationLevel;
+        lastBreakFatherLevel = savedlastBreakFatherLevel;
+        return s;
+    }
+
+    public Stmt casestmts() throws IOException {
+        if(look.tag == Tag.CASE || look.tag == '}' ){
+            return Stmt.Null;
+        } else {
+            return new Seq(stmt(),casestmts());
         }
     }
 
+    public Stmt switchstmt() throws IOException {
+        match(Tag.SWITCH);
+        match('(');
+        //Available types for switch
+        //string,int,char
+        Expr condition = expr();
+        Switch sw = Switch.getSwitch(condition);
+        lastBreakFatherLevel = nowLevel;
+        Stmt.BreakEnclosing = sw;
+        match(')');
+        match('{');
+        while(look.tag != '}'){
+            if(check(Tag.CASE)) {
+                Expr c = expr().optimize();
+                if(!( c instanceof Constant ) ){
+                    error("Case expression `" + c + "' is not constant");
+                }
+
+                Constant val = (Constant) c;
+
+                if(sw.isCaseSet(val)){
+                    error("Case `" + c + "' has been handled before");
+                }
+ 
+                match(':');
+                sw.appendCase(val,casestmts());
+            } else if (check(Tag.DEFAULT)) {
+                match(':');
+                if(sw.isDefaultSet()){
+                    error("Default case reoccurs");
+                }
+                /*stmts should be different from the normal stmts*/
+                sw.setDefault(casestmts());
+            } else {
+                error("Wrong symbol found in switch:`"+ look + "'");
+            }
+        }
+        match('}');
+
+        return sw;
+    }
+    
     public Stmt closure() throws IOException {
         if(look.tag == '{'){
             return block();
@@ -487,8 +560,8 @@ public class Parser{
 
     public Stmt forloop() throws IOException {
         lastIterationLevel = nowLevel;
+        lastBreakFatherLevel = nowLevel;
         For fornode = new For();
-        Stmt savedStmt = Stmt.Enclosing;
         Stmt.Enclosing = fornode;
         move();
         match('(');
@@ -511,7 +584,6 @@ public class Parser{
         match(')');
         Stmt s = closure();
         top = savedTop;
-        Stmt.Enclosing = savedStmt;
         fornode.init(s1,e2,s3,s);
         s = hasdecl?new Seq(Stmt.PushStack,new Seq(fornode,Stmt.RecoverStack)):fornode;
         return s;

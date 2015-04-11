@@ -7,9 +7,9 @@ public class Break extends Stmt {
     Stmt stmt;
     public final int sizeOfStack;
     public Break(int s){
-        if( Stmt.Enclosing == Stmt.Null )
+        if( Stmt.BreakEnclosing == Stmt.Null )
             error("unenclosed break");
-        stmt = Stmt.Enclosing;
+        stmt = Stmt.BreakEnclosing;
         sizeOfStack = s;
     }
 

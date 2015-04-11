@@ -9,5 +9,6 @@ public class Tag {
         FOR     = 276 , INC     = 278 , DEC     = 279 , ADDASS  = 280 ,
         MINASS  = 281 , MULTASS = 282 , DIVASS  = 283 , MODASS  = 284 ,
         ARRAY   = 285 , DEF     = 286 , RETURN  = 287 , LDFUNC  = 288 , STRUCT  = 289 , 
-        IMPORT  = 290 , CONTINUE= 291 , NEW     = 292 , SIZEOF  = 293;
+        IMPORT  = 290 , CONTINUE= 291 , NEW     = 292 , SIZEOF  = 293 , SWITCH  = 294 , 
+        CASE    = 295 , DEFAULT = 296;
 }
