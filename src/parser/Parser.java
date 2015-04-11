@@ -472,9 +472,10 @@ public class Parser{
         case Tag.SWITCH:
             s = switchstmt();
             break;
+        case Tag.DEFAULT:
         case Tag.CASE:/*CASE*/
             if(!(Stmt.BreakEnclosing instanceof Switch)){
-                error("`case' should be used in switch statement");
+                error("`" + look + "' should be used in switch statement");
             }
             s = Stmt.Null;
             break;
@@ -491,7 +492,7 @@ public class Parser{
     }
 
     public Stmt casestmts() throws IOException {
-        if(look.tag == Tag.CASE || look.tag == '}' ){
+        if(look.tag == Tag.CASE || look.tag == '}' || look.tag == Tag.DEFAULT){
             return Stmt.Null;
         } else {
             return new Seq(stmt(),casestmts());

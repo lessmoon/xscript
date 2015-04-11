@@ -5,7 +5,7 @@ import  "math/Math.xs";
 
 {
 
-    int i = 1;
+    int i = 3;
     switch(i){
     case 1:
         print(2-i);
@@ -13,6 +13,8 @@ import  "math/Math.xs";
     case 2:
         print(i);
         break;
+    default:
+        print("default!!!\n");
     }
 }
 

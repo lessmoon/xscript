@@ -63,7 +63,7 @@ public class Lexer {
         reserve( new Word("switch",Tag.SWITCH));
         reserve( new Word("case",Tag.CASE));
         reserve( new Word("default",Tag.DEFAULT));
-        
+
         reserve( Word.True );
         reserve( Word.False );
         reserve( Word.This );
