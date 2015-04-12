@@ -69,6 +69,7 @@ def int llist.getSize(){
 
 
 {
+
     string x = "DEF";
     println("Test for switch code");
     println("switch string");
