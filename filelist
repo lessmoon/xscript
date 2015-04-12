@@ -16,6 +16,8 @@ src\extension\print.java
 src\extension\PutChar.java 
 src\extension\readch.java 
 src\extension\setBrushColor.java 
+src\extension\sin.java 
+src\extension\sleep.java 
 src\extension\strlen.java 
 src\extension\time.java 
 src\extension\writech.java 

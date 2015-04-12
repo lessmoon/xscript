@@ -13,6 +13,8 @@ loadfunc<extension>{
     int paint();
     int closePad();
     int clearPad();
+    void sleep(int duration);
+    real sin(real theta);
 }
 
 def void println(string s){
@@ -66,7 +68,6 @@ def int llist.getSize(){
     print("+   Test Begin   +\n");
     print("------------------\n");
 }
-
 
 {
 
@@ -128,6 +129,24 @@ def int llist.getSize(){
     println("Test for build-in variable");
     println("This code is in file " + _file_ + " at " + _line_ );
     println("Compiler version is " + _version_/100 + "." + _version_%100);
+}
+
+{
+    println("Test for animated painting");
+    openPad(600,480);
+    setBrushColor(255,0,0);
+    int x,y;
+    for(real off = 0;off < 1;off += 0.01 ){
+        for(real theta = 0; theta <= 3.14 * 2 + 0.01;theta += 0.01){
+            x = theta * 100 + (-314 + 300);
+            y =  - sin(theta + off) * 100 + 240;
+            addPoint(x,y);
+        }
+        paint();
+        sleep(56);
+        clearPad();
+    }
+    closePad();
 }
 
 {

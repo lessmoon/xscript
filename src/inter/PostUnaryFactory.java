@@ -80,6 +80,8 @@ public class PostUnaryFactory {
                 return new IntPostUnary(tok,e);
             } else if( Type.Char == e.type ){
                 return new CharPostUnary(tok,e);
+            } else {
+                e.error("Operand:`" + tok + "' is not permitted here");
             }
         }
         return null;
