@@ -499,6 +499,20 @@ public class Parser{
         }
     }
 
+    public Stmt casestmt() throws IOException {
+        Env savedEnv = top;
+        boolean savedHasDecl = hasDecl;
+        hasDecl = false;                
+        Stmt s = casestmts();
+        if(hasDecl){
+            s = new Seq(s,Stmt.RecoverStack);
+            nowLevel --;
+            top = savedEnv;
+        }
+        hasDecl = savedHasDecl;
+        return ENABLE_STMT_OPT?s.optimize():s;
+    }
+    
     public Stmt switchstmt() throws IOException {
         match(Tag.SWITCH);
         match('(');
@@ -524,7 +538,8 @@ public class Parser{
                 }
  
                 match(':');
-                sw.appendCase(val,casestmts());
+
+                sw.appendCase(val,casestmt());
             } else if (check(Tag.DEFAULT)) {
                 match(':');
                 if(sw.isDefaultSet()){
@@ -537,7 +552,6 @@ public class Parser{
             }
         }
         match('}');
-
         return sw;
     }
     
@@ -613,6 +627,7 @@ public class Parser{
             }
             s.addDecl(Decl.getDecl(tok,p,e));
         } while(check(','));
+        
         return s;
     }
 

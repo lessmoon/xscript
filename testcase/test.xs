@@ -3,34 +3,7 @@ import  "lib/system.xs";
 import  "math/Math.xs";
 
 
-{
-
-    int i = 3;
     switch(i){
-    case 1:
-        print(2-i);
-        break;
-    case 2:
-        print(i);
-        break;
-    default:
-        print("default!!!\n");
-    }
-}
-
-struct llist{
-    int size;
-    def int getSize();
-    def bool isEmpty(){
-        return this.getSize() == 0;
-    }
-}
-
-def int llist.getSize(){
-    return this.size;
-}
-
-
 loadfunc<extension>{
     int openPad(int w,int h);
     int drawLine(int x1,int y1,int x2,int y2);
@@ -43,12 +16,13 @@ loadfunc<extension>{
     int clearPad();
 }
 
-
-
 def void println(string s){
     print(s + "\n");
     return;
 }
+
+import  "container/list.xs";
+
 def void f2(int b);
 
 def void f1(int a){
@@ -67,11 +41,19 @@ def void f2(int b){
     f1(b+1);
 }
 
-{
-    f1(0);
+
+struct llist{
+    int size;
+    def int getSize();
+    def bool isEmpty(){
+        return this.getSize() == 0;
+    }
 }
 
-import  "container/list.xs";
+def int llist.getSize(){
+    return this.size;
+}
+
 
 {
     int x = time();
@@ -84,6 +66,55 @@ import  "container/list.xs";
     print("------------------\n");
     print("+   Test Begin   +\n");
     print("------------------\n");
+}
+
+
+{
+    string x = "DEF";
+    println("Test for switch code");
+    println("switch string");
+    switch(x){
+    case "def":
+        println("Wrong!");
+        break;
+    case "DEF":
+        println("Correct!");
+        break;
+    default:
+        println("Wrong!");
+    }
+    println("switch int");
+    int i = 23;
+    switch(i){
+    case 1:
+    case 2:
+        println("Wrong!");
+        break;
+    case 23:
+        println("Correct!");
+        break;
+    default:
+        println("Wrong!");
+    }
+    println("switch char");
+    char c = 'a';
+    switch(c){
+    case 1:
+    case 2:
+        println("Wrong!");
+        break;
+    case 'a':
+        println("Correct!");
+        break;
+    default:
+        println("Wrong!");
+    }
+}
+
+
+{
+    println("Test for pre-declaration code");
+    f1(0);
 }
 
 {

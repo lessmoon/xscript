@@ -1,29 +1,21 @@
 ## XXXScript in brief ##
 
 ### Keyword List: ###
-<table>
+<table >
 	<tr>
-        <td>_file_</td><td>_line_</td>
-		<td>_version_</td><td>bool</td>
-		<td>break</td><td>char</td>
+		<td>_file_</td><td>_line_</td><td>_version_</td><td>bool</td><td>break</td><td>case</td>
 	</tr>
 	<tr>
-		<td>continue</td><td>def</td>
-		<td>do</td><td>else</td>
-		<td>false</td><td>for</td>
+		<td>char</td><td>continue</td><td>def</td><td>default</td><td>do</td><td>else</td>
 	</tr>
 	<tr>
-		<td>if</td><td>import</td>
-		<td>int</td><td>loadfunc</td>
-		<td>new</td><td>real</td>
+		<td>false</td><td>for</td><td>if</td><td>import</td><td>int</td><td>loadfunc</td>
 	</tr>
 	<tr>
-		<td>return</td><td>sizeof</td>
-		<td>string</td><td>struct</td>
-		<td>this</td><td>true</td>
+		<td>new</td><td>real</td><td>return</td><td>sizeof</td><td>string</td><td>struct</td>
 	</tr>
 	<tr>
-		<td>while</td><td>while</td>
+		<td>switch</td><td>this</td><td>true</td><td>while</td>
 	</tr>
 </table>
 
@@ -62,8 +54,17 @@
 * Condition statement
 	* `if`(bool-type expression) statement
 	* `if`(bool-type expression) `else` statement
+	*  switch statement
+		1. `switch`(expression){**//expression should be int,char or string**
+		2. &emsp;`case` constant-expression:**//expression should be constant**
+		3. &emsp;&emsp;case-body;**//use `break` if jumping out is needed**
+		3. &emsp;`default`:**//default case**
+		4. &emsp;&emsp;case-body;
+		4. }
+	  
 * Jump statement
-	* `break`(or `continue`);(in loops)
+	* `break`;(in loops or switch)
+	* `continue`;(in loops)
 	* `return` expression;(in functions)
 * Function declaration & defination
 	* Defination
