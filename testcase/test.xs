@@ -3,19 +3,6 @@ import  "lib/system.xs";
 import  "math/Math.xs";
 
 
-struct llist{
-    int size;
-    def int getSize();
-    def bool isEmpty(){
-        return this.getSize() == 0;
-    }
-}
-
-def int llist.getSize(){
-    return this.size;
-}
-
-
 loadfunc<extension>{
     int openPad(int w,int h);
     int drawLine(int x1,int y1,int x2,int y2);
@@ -26,14 +13,17 @@ loadfunc<extension>{
     int paint();
     int closePad();
     int clearPad();
+    void sleep(int duration);
+    real sin(real theta);
 }
-
-
 
 def void println(string s){
     print(s + "\n");
     return;
 }
+
+import  "container/list.xs";
+
 def void f2(int b);
 
 def void f1(int a){
@@ -52,11 +42,19 @@ def void f2(int b){
     f1(b+1);
 }
 
-{
-    f1(0);
+
+struct llist{
+    int size;
+    def int getSize();
+    def bool isEmpty(){
+        return this.getSize() == 0;
+    }
 }
 
-import  "container/list.xs";
+def int llist.getSize(){
+    return this.size;
+}
+
 
 {
     int x = time();
@@ -72,6 +70,55 @@ import  "container/list.xs";
 }
 
 {
+
+    string x = "DEF";
+    println("Test for switch code");
+    println("switch string");
+    switch(x){
+    case "def":
+        println("Wrong!");
+        break;
+    case "DEF":
+        println("Correct!");
+        break;
+    default:
+        println("Wrong!");
+    }
+    println("switch int");
+    int i = 23;
+    switch(i){
+    case 1:
+    case 2:
+        println("Wrong!");
+        break;
+    case 23:
+        println("Correct!");
+        break;
+    default:
+        println("Wrong!");
+    }
+    println("switch char");
+    char c = 'a';
+    switch(c){
+    case 1:
+    case 2:
+        println("Wrong!");
+        break;
+    case 'a':
+        println("Correct!");
+        break;
+    default:
+        println("Wrong!");
+    }
+}
+
+
+{
+    println("Test for pre-declaration code");
+    f1(0);
+}
+
+{
     /*test for classic code*/
     println("Test for classic code");
     println("hello world!");
@@ -82,6 +129,24 @@ import  "container/list.xs";
     println("Test for build-in variable");
     println("This code is in file " + _file_ + " at " + _line_ );
     println("Compiler version is " + _version_/100 + "." + _version_%100);
+}
+
+{
+    println("Test for animated painting");
+    openPad(600,480);
+    setBrushColor(255,0,0);
+    int x,y;
+    for(real off = 0;off < 1;off += 0.01 ){
+        for(real theta = 0; theta <= 3.14 * 2 + 0.01;theta += 0.01){
+            x = theta * 100 + (-314 + 300);
+            y =  - sin(theta + off) * 100 + 240;
+            addPoint(x,y);
+        }
+        paint();
+        sleep(56);
+        clearPad();
+    }
+    closePad();
 }
 
 {

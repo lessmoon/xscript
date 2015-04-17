@@ -60,7 +60,10 @@ public class Lexer {
         reserve( new Word("loadfunc",Tag.LDFUNC));
         reserve( new Word("import",Tag.IMPORT));
         reserve( new Word("struct",Tag.STRUCT));
-        
+        reserve( new Word("switch",Tag.SWITCH));
+        reserve( new Word("case",Tag.CASE));
+        reserve( new Word("default",Tag.DEFAULT));
+
         reserve( Word.True );
         reserve( Word.False );
         reserve( Word.This );

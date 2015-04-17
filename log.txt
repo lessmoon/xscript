@@ -1,0 +1,7 @@
+
+C:\Users\lessmoon\Documents\GitHub\script>SET BIN_PATH=bin/ 
+
+C:\Users\lessmoon\Documents\GitHub\script>SET SRC_PATH=src/ 
+
+C:\Users\lessmoon\Documents\GitHub\script>javac @filelist -d "bin/" 
+^C

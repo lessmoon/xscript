@@ -46,5 +46,6 @@ public class Stmt extends Node{
         return this;
     }
 
-    public static Stmt Enclosing = Null;
+    public static Stmt Enclosing        = Null;
+    public static Stmt BreakEnclosing   = Null; 
 }
