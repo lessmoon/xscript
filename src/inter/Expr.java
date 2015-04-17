@@ -22,7 +22,12 @@ public abstract class Expr extends Node {
 
     abstract boolean isChangeable();
     public abstract Constant getValue();
+    public abstract Expr clone();
     
+    public Expr reduce(){
+        return this;
+    }
+
     public Expr optimize() {
         return this;
     }
@@ -30,4 +35,5 @@ public abstract class Expr extends Node {
     public String toString(){
         return getClass().getName();
     }
+
 }
