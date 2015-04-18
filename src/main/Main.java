@@ -7,7 +7,7 @@ import inter.stmt.Stmt;
 
 public class Main{
     public static final int     MAJOR_VERSION       = 1;
-    public static final int     MINOR_VERSION       = 3;
+    public static final int     MINOR_VERSION       = 4;
 
     public static void usage(){
         System.out.println(
