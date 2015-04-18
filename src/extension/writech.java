@@ -2,7 +2,8 @@ package extension;
 
 import lexer.Num;
 import lexer.Char;
-import inter.Constant;
+import inter.expr.Constant;
+
 import java.util.ArrayList;
 
 public class writech extends Function {

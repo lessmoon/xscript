@@ -3,7 +3,7 @@ package main;
 import java.io.*;
 import lexer.*; 
 import parser.*;
-import inter.Stmt;
+import inter.stmt.Stmt;
 
 public class Main{
     public static final int     MAJOR_VERSION       = 1;

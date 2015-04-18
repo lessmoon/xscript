@@ -1,4 +1,6 @@
-package inter;
+package inter.stmt;
+
+import inter.expr.Expr;
 
 public class ExprStmt extends Stmt {
     Expr e;

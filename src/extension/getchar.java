@@ -1,6 +1,6 @@
 package extension;
 
-import inter.Constant;
+import inter.expr.Constant;
 import java.util.ArrayList;
 import java.io.IOException;
 

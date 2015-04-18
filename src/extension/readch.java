@@ -1,7 +1,7 @@
 package extension;
 
 import lexer.Num;
-import inter.Constant;
+import inter.expr.Constant;
 import java.util.ArrayList;
 
 public class readch extends Function {

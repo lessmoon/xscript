@@ -1,7 +1,9 @@
-package inter;
+package inter.stmt;
 
 import lexer.*;
 import symbols.*;
+import inter.expr.Expr;
+import inter.expr.Constant;
 
 public class For extends Stmt {
     public Stmt begin = null;

@@ -1,4 +1,4 @@
-package inter;
+package inter.expr;
 
 import lexer.*;
 import symbols.*;

@@ -3,8 +3,8 @@ package runtime;
 import lexer.*;
 import symbols.*;
 import extension.Function;
-import inter.ExFunction;
-import inter.Para;
+import inter.stmt.ExFunction;
+import inter.util.Para;
 
 import java.util.ArrayList;
 

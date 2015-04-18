@@ -1,8 +1,11 @@
-package inter;
+package inter.stmt;
 
 import lexer.*;
 import symbols.*;
 import runtime.*;
+import inter.expr.Constant;
+import inter.expr.Expr;
+import inter.expr.ConversionFactory;
 
 public class Decl extends Stmt {
     Token id;

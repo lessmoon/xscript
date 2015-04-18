@@ -1,8 +1,10 @@
-package inter;
+package inter.expr;
 
 import lexer.*;
 import symbols.*;
 import runtime.*;
+import inter.stmt.FunctionBasic;
+import inter.stmt.ReturnResult;
 
 import java.util.ArrayList;
 

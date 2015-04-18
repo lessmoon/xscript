@@ -1,7 +1,7 @@
 package symbols;
 
 import lexer.*;
-import inter.*;
+import inter.stmt.FunctionBasic;
 
 import java.util.*;
 

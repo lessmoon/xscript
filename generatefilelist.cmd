@@ -1,2 +1,4 @@
-if exist filelist del filelist 
-for /F %%i in ('dir src /A /B') do for /F %%v in ('dir src\%%i /A /B *.java') do echo src\%%i\%%v >> filelist
+SET BIN_PATH=bin/
+javac tool/ListFile.java -d "%BIN_PATH%"
+java -classpath "%BIN_PATH%" tool.ListFile .java src > filelist
+pause

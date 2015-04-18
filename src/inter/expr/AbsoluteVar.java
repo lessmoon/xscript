@@ -1,4 +1,4 @@
-package inter;
+package inter.expr;
 
 import runtime.*;
 import lexer.*;

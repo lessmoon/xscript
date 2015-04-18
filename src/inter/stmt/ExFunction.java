@@ -1,10 +1,8 @@
-package inter;
+package inter.stmt;
 
 import lexer.*;
 import symbols.*;
-import inter.Constant;
-import inter.FunctionBasic;
-import inter.Para;
+import inter.util.Para;
 import runtime.VarTable;
 
 import java.util.ArrayList;

@@ -1,8 +1,10 @@
-package inter;
+package inter.stmt;
 
 import lexer.*;
 import symbols.*;
 import runtime.*;
+import inter.expr.Expr;
+import inter.expr.StructConst;
 
 public class StructDecl extends Decl {
 

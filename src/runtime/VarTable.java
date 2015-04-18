@@ -1,8 +1,8 @@
 package runtime;
 
-import inter.*;
 import lexer.*;
 import symbols.*;
+import inter.expr.Constant;
 
 import java.util.*;
 
@@ -19,7 +19,7 @@ public class VarTable {
     static {
         pushTop();
     }
-    
+
     static private int levels(VarTable r){
         return 1;//r.prev==null?1:levels(r.prev) + 1;
     }

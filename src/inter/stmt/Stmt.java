@@ -1,6 +1,7 @@
-package inter;
+package inter.stmt;
 
 import runtime.*;
+import inter.util.Node;
 
 public class Stmt extends Node{
     public Stmt()

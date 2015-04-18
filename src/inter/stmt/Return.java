@@ -1,14 +1,10 @@
-package inter;
+package inter.stmt;
 
 import symbols.*;
 import runtime.*;
-
-class ReturnResult extends RuntimeException {
-    public final Constant value;
-    ReturnResult(Constant v){
-        value = v;
-    }
-}
+import inter.expr.Constant;
+import inter.expr.Expr;
+import inter.expr.ConversionFactory;
 
 public class Return extends Stmt {
     public Expr expr;

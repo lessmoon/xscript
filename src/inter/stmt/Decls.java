@@ -1,4 +1,4 @@
-package inter;
+package inter.stmt;
 
 import lexer.*;
 import symbols.*;

@@ -2,7 +2,9 @@ package parser;
 
 import lexer.*;
 import symbols.*;
-import inter.*;
+import inter.util.*;
+import inter.expr.*;
+import inter.stmt.*;
 import runtime.LoadFunc;
 
 import java.io.*;

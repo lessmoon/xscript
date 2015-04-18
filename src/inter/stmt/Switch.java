@@ -1,7 +1,8 @@
-package inter;
+package inter.stmt;
 
 import lexer.*;
 import symbols.*;
+import inter.expr.*;
 
 import java.util.Map.Entry;
 import java.util.Iterator;

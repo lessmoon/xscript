@@ -1,6 +1,8 @@
-package inter;
+package inter.stmt;
 
 import symbols.*;
+import inter.expr.Constant;
+import inter.expr.Expr;
 
 public class Else extends Stmt {
     Expr expr;

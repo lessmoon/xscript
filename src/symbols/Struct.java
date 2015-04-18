@@ -1,7 +1,7 @@
 package symbols;
 
 import lexer.*;
-import inter.FunctionBasic;
+import inter.stmt.FunctionBasic;
 
 import java.util.HashMap;
 import java.util.Iterator;
