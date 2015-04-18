@@ -77,9 +77,9 @@ src/inter/util/Para.java
 src/lexer/BigFloat.java
 src/lexer/BigNum.java
 src/lexer/Char.java
+src/lexer/Float.java
 src/lexer/Lexer.java
 src/lexer/Num.java
-src/lexer/Real.java
 src/lexer/Str.java
 src/lexer/Tag.java
 src/lexer/Token.java

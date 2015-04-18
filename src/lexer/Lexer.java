@@ -259,7 +259,7 @@ public class Lexer {
                 x = x + Character.digit(peek,10)/d;
                 d = d*10;
             }
-            return new Real(x);
+            return new lexer.Float(x);
         }
 
         if(Character.isLetter(peek)||peek == '_'){

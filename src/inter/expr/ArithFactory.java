@@ -103,8 +103,8 @@ class RealArith extends Arith {
     }
     
     public Constant getValue(){
-        float lv = ((Real)(expr1.getValue().op)).value;
-        float rv = ((Real)(expr2.getValue().op)).value;
+        float lv = ((lexer.Float)(expr1.getValue().op)).value;
+        float rv = ((lexer.Float)(expr2.getValue().op)).value;
 
         Constant v = null;
         switch(op.tag){

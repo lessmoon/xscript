@@ -59,7 +59,7 @@ class RealUnary extends Unary {
     public Constant getValue(){
         if(op.tag == '-'){
             Constant c = expr.getValue();
-            return new Constant(-((Real)(c.op)).value);
+            return new Constant(-((lexer.Float)(c.op)).value);
         } else {
             error("Unknown operand:`" + op + "'");
             return null;

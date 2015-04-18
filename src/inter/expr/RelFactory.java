@@ -80,8 +80,8 @@ class RealRel extends Rel {
     }
     
     public Constant getValue(){
-        float l = ((Real)(expr1.getValue().op)).value;
-        float r = ((Real)(expr2.getValue().op)).value;
+        float l = ((lexer.Float)(expr1.getValue().op)).value;
+        float r = ((lexer.Float)(expr2.getValue().op)).value;
 
         switch(op.tag){
         case '>':

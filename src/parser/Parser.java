@@ -906,10 +906,14 @@ public class Parser{
             return new Constant(copymove(),Type.Int);
         case Tag.STR:
             return new Constant(copymove(),Type.Str);
-        case Tag.REAL:
+        case Tag.FLOAT:
             return new Constant(copymove(),Type.Real);
         case Tag.CHAR:
             return new Constant(copymove(),Type.Char);
+        case Tag.BIGNUM:
+            return new Constant(copymove(),Type.BigInt);
+        case Tag.BIGFLOAT:
+            return new Constant(copymove(),Type.BigReal);
         case '(':
             return cast();
         default:

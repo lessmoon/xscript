@@ -63,8 +63,8 @@ class RealSet extends Set {
     }
     
     public Constant getValue(){
-        float r = ((Real)(expr.getValue().op)).value;
-        float l = ((Real)(id.getValue().op)).value;
+        float r = ((lexer.Float)(expr.getValue().op)).value;
+        float l = ((lexer.Float)(id.getValue().op)).value;
         
         switch(op.tag){
         case Tag.ADDASS:

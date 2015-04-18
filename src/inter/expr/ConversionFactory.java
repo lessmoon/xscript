@@ -112,7 +112,7 @@ class RealBigRealConversion extends Conversion{
     @Override
     public Constant getValue(){
         Constant v = e.getValue();
-        return new Constant(BigDecimal.valueOf((double)((Real)(v.op)).value));
+        return new Constant(BigDecimal.valueOf((double)((lexer.Float)(v.op)).value));
     }
 }
 
@@ -139,7 +139,7 @@ class RealIntConversion extends Conversion{
 
     public Constant getValue(){
         Constant v = e.getValue();
-        return new Constant((int)((Real)(v.op)).value);
+        return new Constant((int)((lexer.Float)(v.op)).value);
     }
 }
 

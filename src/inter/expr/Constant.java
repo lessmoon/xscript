@@ -24,7 +24,7 @@ public class Constant extends Expr{
     }
 
     public Constant(float r){
-        super(new Real(r),Type.Real);
+        super(new lexer.Float(r),Type.Real);
     }
 
     public Constant(BigInteger bi){
