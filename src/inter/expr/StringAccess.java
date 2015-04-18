@@ -20,23 +20,28 @@ public class StringAccess extends Expr {
         if( Type.max(Type.Int,index.type) != Type.Int ){
             error("type " + index.type + " is not valid for array");
         }
-        index = ConversionFactory.getConversion(index,Type.Int);
+
+        if(index.type != Type.Int)
+            index = ConversionFactory.getConversion(index,Type.Int);
     }
-    
+
+    @Override
     boolean isChangeable(){
         return index.isChangeable() || array.isChangeable();
     }
-    
+
+    @Override
     public Expr optimize(){
+        index = index.optimize();
+        array = array.optimize();
         if(isChangeable()){
-            index = index.optimize();
-            array = array.optimize();
             return this;
         } else {
             return getValue();
         }
     }
 
+    @Override
     public Constant getValue(){
         int i = ((Num)(index.getValue().op)).value;
         String str = ((Str)(array.getValue().op)).value;

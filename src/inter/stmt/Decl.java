@@ -32,9 +32,17 @@ public class Decl extends Stmt {
         return true;
     }
 
+    @Override
     public void run(){
         Constant v = (value == null)?null:value.getValue();
         VarTable.pushVar(v);
+    }
+    
+    @Override
+    public Stmt optimize(){
+        if(value != null)
+            value = value.optimize();
+        return this;
     }
     
     public static Decl getDecl(Token i,Type t,Expr v){
@@ -47,6 +55,7 @@ public class Decl extends Stmt {
         }
     }
     
+    @Override
     public String toString(){
         String res = "Decl[" + type + "] " + id ;
         if(value != null){

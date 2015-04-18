@@ -44,18 +44,27 @@ public class FunctionInvoke extends Expr {
         }
     }
 
+    @Override
     boolean isChangeable(){
         return true;
     }
 
+    @Override
     public Expr optimize(){
+        
+        /*may have conversion*/
+        for(int i = 0 ; i < para.size();i++){
+            para.set(i,para.get(i).optimize());
+        }
         return this;
     }
 
+    @Override
     public String toString(){
         return op.toString() + para.toString() ;
     }
 
+    @Override
     public Constant getValue(){
         Constant result = null;
         final Constant[] args = new Constant[para.size()];

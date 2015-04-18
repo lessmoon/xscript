@@ -9,6 +9,7 @@ public class Seq extends Stmt{
         stmt2 = s2;
     }
     
+    @Override
     public void run(){
         if(stmt1 != Stmt.Null){
             stmt1.run();
@@ -18,6 +19,7 @@ public class Seq extends Stmt{
         }
     }
     
+    @Override
     public Stmt optimize(){
         stmt1 = stmt1.optimize();
         if(stmt1 == Stmt.Null)
@@ -32,6 +34,7 @@ public class Seq extends Stmt{
         return this;
     }
 
+    @Override
     public String toString(){
         return stmt1.toString() + stmt2.toString();
     }

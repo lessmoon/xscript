@@ -68,6 +68,7 @@ public abstract class Switch extends Stmt {
         return stmts;
     }
 
+    @Override
     public String toString(){
         return "switch(" + condition + ")\n";
     }
@@ -80,6 +81,7 @@ class IntSwitch extends Switch {
             super(e);
         }
 
+        @Override
         public boolean appendCase(Constant c,Stmt s){
             c = ConversionFactory.getConversion(c,Type.Int).getValue();
             int i = ((Num)c.op).value;
@@ -89,7 +91,8 @@ class IntSwitch extends Switch {
             }
             return false;
         }
-        
+
+        @Override
         public boolean isCaseSet(Constant c){
             if( Type.max(Type.Int,c.type) != Type.Int){
                 c.error("case type should be `" + Type.Int + 
@@ -100,6 +103,7 @@ class IntSwitch extends Switch {
             return map.get(i) != null;
         }
 
+        @Override
         public void run(){
             Constant v = condition.getValue();
             int i = ((Num)v.op).value;
@@ -116,6 +120,7 @@ class CharSwitch extends Switch {
             super(e);
         }
         
+        @Override
         public boolean appendCase(Constant c,Stmt s){
             c = ConversionFactory.getConversion(c,Type.Char).getValue();
             char i = ((Char)c.op).value;
@@ -126,6 +131,7 @@ class CharSwitch extends Switch {
             return false;
         }
         
+        @Override
         public boolean isCaseSet(Constant c){
             if( Type.max(Type.Int,c.type) != Type.Int){
                 c.error("case type should be `" + Type.Char +
@@ -145,6 +151,7 @@ class CharSwitch extends Switch {
             return map.get(i) != null;
         }
 
+        @Override
         public void run(){
             Constant v = condition.getValue();
             char i = ((Char)v.op).value;
@@ -161,6 +168,7 @@ class StrSwitch extends Switch {
             super(e);
         }
         
+        @Override
         public boolean appendCase(Constant c,Stmt s){
             String i = ((Str)c.op).value;
             map.put(i,push(s));
@@ -170,6 +178,7 @@ class StrSwitch extends Switch {
             return false;
         }
         
+        @Override
         public boolean isCaseSet(Constant c){
             if( c.type != Type.Str ){
                 c.error("case type should be `" + Type.Str +
@@ -179,6 +188,7 @@ class StrSwitch extends Switch {
             return map.get(i) != null;
         }
         
+        @Override
         public void run(){
             Constant v = condition.getValue();
             String i = ((Str)v.op).value;

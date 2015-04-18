@@ -14,10 +14,12 @@ public abstract class Logical extends Expr {
             error("type error");
     }
 
+    @Override
     boolean isChangeable(){
         return expr1.isChangeable() || expr1.isChangeable();
     }
 
+    @Override
     public Expr optimize(){
         if(isChangeable()){
             expr1 = expr1.optimize();

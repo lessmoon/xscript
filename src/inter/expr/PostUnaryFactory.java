@@ -3,6 +3,8 @@ package inter.expr;
 import lexer.*;
 import symbols.*;
 
+import java.math.BigInteger;
+
 class IntPostUnary extends Unary {
     public IntPostUnary(Token tok,Expr x){
         super(tok,x);
@@ -30,6 +32,28 @@ class IntPostUnary extends Unary {
             return c;
         case Tag.DEC:
             ((Var)expr).setValue(new Constant(((Num)(c.op)).value - 1));
+            return c;
+        default:
+            error("Unknown operand:`" + op + "'");
+            return null;
+        }
+    }
+}
+
+class BigIntPostUnary extends IntUnary {
+    public BigIntPostUnary(Token tok,Expr x){
+        super(tok,x);
+    }
+
+    @Override
+    public Constant getValue(){
+        Constant c = expr.getValue();
+        switch(op.tag){
+        case Tag.INC:
+             ((Var)expr).setValue(new Constant(((BigNum)(c.op)).value.add(BigInteger.ONE)));
+             return c;
+        case Tag.DEC:
+            ((Var)expr).setValue(new Constant(((BigNum)(c.op)).value.subtract(BigInteger.ONE)));
             return c;
         default:
             error("Unknown operand:`" + op + "'");
@@ -80,6 +104,8 @@ public class PostUnaryFactory {
                 return new IntPostUnary(tok,e);
             } else if( Type.Char == e.type ){
                 return new CharPostUnary(tok,e);
+            } else if( Type.BigInt == e.type ){
+                return new BigIntPostUnary(tok,e);
             } else {
                 e.error("Operand:`" + tok + "' is not permitted here");
             }

@@ -10,19 +10,22 @@ public abstract class Conversion extends Expr {
         this.e = e;
     }
 
+    @Override
     boolean isChangeable(){
         return e.isChangeable();
     }
 
+    @Override
     public Expr optimize(){
+        e = e.optimize();
         if(isChangeable()){
-            e = e.optimize();
             return this;
         } else {
             return getValue();
         }
     }
 
+    @Override
     public String toString(){
         return getClass().getName() + "(" + e + ")";
     }

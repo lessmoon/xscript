@@ -19,6 +19,7 @@ public class ArrayDecl extends Decl {
         return type instanceof Array ;
     }
 
+    @Override
     public void run(){
         VarTable.pushVar((value != null)?value.getValue():new ArrayConst((Array)type));
     }

@@ -3,6 +3,9 @@ package inter.expr;
 import lexer.*;
 import symbols.*;
 
+import java.math.BigInteger;
+import java.math.BigDecimal;
+
 class IntRel extends Rel {
     public IntRel(Token tok,Expr x1,Expr x2){
         super(tok,x1,x2);
@@ -25,6 +28,35 @@ class IntRel extends Rel {
             return  l >= r?Constant.True :Constant.False;
         case Tag.LE:
             return  l <= r?Constant.True :Constant.False;
+        default:
+            /*error*/
+            return null;
+        }
+    }
+}
+
+class BigIntRel extends Rel {
+    public BigIntRel(Token tok,Expr x1,Expr x2){
+        super(tok,x1,x2);
+    }
+    
+    public Constant getValue(){
+        BigInteger l = ((BigNum)(expr1.getValue().op)).value;
+        BigInteger r = ((BigNum)(expr2.getValue().op)).value;
+        int d = l.compareTo(r);
+        switch(op.tag){
+        case '>':
+            return  d > 0?Constant.True :Constant.False;
+        case '<':
+            return  d < 0?Constant.True :Constant.False;
+        case Tag.EQ:
+            return  d == 0?Constant.True :Constant.False;
+        case Tag.NE:
+            return  d != 0?Constant.True :Constant.False;
+        case Tag.GE:
+            return  d >= 0?Constant.True :Constant.False;
+        case Tag.LE:
+            return  d <= 0?Constant.True :Constant.False;
         default:
             /*error*/
             return null;
@@ -64,12 +96,15 @@ class CharRel extends Rel {
 class BoolRel extends Rel {
     public BoolRel(Token tok,Expr x1,Expr x2){
         super(tok,x1,x2);
-        if(tok.tag != Tag.EQ)
+        if(tok.tag != Tag.EQ && tok.tag != Tag.NE)
             error("Operand "+ tok + " forbidden:" + x1.type);
     }
     
     public Constant getValue(){
-        return expr1.getValue() == expr2.getValue()? Constant.True :Constant.False;
+        if(op.tag == Tag.EQ)
+            return expr1.getValue() == expr2.getValue()? Constant.True :Constant.False;
+        else //Tag.NE
+            return expr1.getValue() != expr2.getValue()? Constant.True :Constant.False; 
     }
 
 }
@@ -96,6 +131,35 @@ class RealRel extends Rel {
             return  l >= r?Constant.True :Constant.False;
         case Tag.LE:
             return  l <= r?Constant.True :Constant.False;
+        default:
+            /*error*/
+            return null;
+        }
+    }
+}
+
+class BigRealRel extends Rel {
+    public BigRealRel(Token tok,Expr x1,Expr x2){
+        super(tok,x1,x2);
+    }
+    
+    public Constant getValue(){
+        BigDecimal l = ((BigFloat)(expr1.getValue().op)).value;
+        BigDecimal r = ((BigFloat)(expr2.getValue().op)).value;
+        int d = l.compareTo(r);
+        switch(op.tag){
+        case '>':
+            return  d > 0?Constant.True :Constant.False;
+        case '<':
+            return  d < 0?Constant.True :Constant.False;
+        case Tag.EQ:
+            return  d == 0?Constant.True :Constant.False;
+        case Tag.NE:
+            return  d != 0?Constant.True :Constant.False;
+        case Tag.GE:
+            return  d >= 0?Constant.True :Constant.False;
+        case Tag.LE:
+            return  d <= 0?Constant.True :Constant.False;
         default:
             /*error*/
             return null;
@@ -179,6 +243,10 @@ public class RelFactory {
                     r = new CharRel(tok,x1,x2);
                 else if(t == Type.Real)
                     r = new RealRel(tok,x1,x2);
+                else if(t == Type.BigInt)
+                    r = new BigIntRel(tok,x1,x2);
+                else if(t == Type.BigReal)
+                    r = new BigRealRel(tok,x1,x2);
             }
         }
         if(r == null)

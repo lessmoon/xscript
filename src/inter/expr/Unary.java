@@ -6,18 +6,19 @@ import symbols.*;
 public abstract class Unary extends Op{
     public Expr expr;
     public Unary(Token tok,Expr x){
-        super(tok,null);
+        super(tok,x.type);
         expr = x;
-        type = Type.max(Type.Int,expr.type);
+        //type = Type.max(Type.Int,expr.type);
     }
 
     boolean isChangeable(){
         return expr.isChangeable();
     }
 
+    @Override
     public Expr optimize(){
+        expr = expr.optimize();
         if(isChangeable()){
-            expr = expr.optimize();
             return this;
         } else {
             return getValue();

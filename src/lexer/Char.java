@@ -7,7 +7,7 @@ public class Char extends Token{
         value = v;
     }
 
-    
+    @Override
     public String toString(){
         return String.valueOf(value);
     }

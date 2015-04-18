@@ -3,6 +3,9 @@ package inter.expr;
 import lexer.*;
 import symbols.*;
 
+import java.math.BigInteger;
+import java.math.BigDecimal;
+
 class IntUnary extends Unary {
     public IntUnary(Token tok,Expr x){
         super(tok,x);
@@ -24,6 +27,7 @@ class IntUnary extends Unary {
         }
     }
 
+    @Override
     public Constant getValue(){
         Constant c = expr.getValue();
         switch(op.tag){
@@ -33,6 +37,28 @@ class IntUnary extends Unary {
             return ((Var)expr).setValue(new Constant(((Num)(c.op)).value - 1));
         case '-':
             return new Constant(-((Num)(c.op)).value);
+        default:
+            error("Unknown operand:`" + op + "'");
+            return null;
+        }
+    }
+}
+
+class BigIntUnary extends IntUnary {
+    public BigIntUnary(Token tok,Expr x){
+        super(tok,x);
+    }
+
+    @Override
+    public Constant getValue(){
+        Constant c = expr.getValue();
+        switch(op.tag){
+        case Tag.INC:
+            return ((Var)expr).setValue(new Constant(((BigNum)(c.op)).value.add(BigInteger.ONE)));
+        case Tag.DEC:
+            return ((Var)expr).setValue(new Constant(((BigNum)(c.op)).value.subtract(BigInteger.ONE)));
+        case '-':
+            return new Constant(((BigNum)(c.op)).value.negate());
         default:
             error("Unknown operand:`" + op + "'");
             return null;
@@ -56,6 +82,7 @@ class RealUnary extends Unary {
         }
     }
     
+    @Override
     public Constant getValue(){
         if(op.tag == '-'){
             Constant c = expr.getValue();
@@ -65,6 +92,23 @@ class RealUnary extends Unary {
             return null;
         }
     }
+}
+
+class BigRealUnary extends RealUnary {
+    public BigRealUnary(Token tok,Expr x){
+        super(tok,x);
+    }
+
+    @Override
+    public Constant getValue(){
+        if(op.tag == '-'){
+            Constant c = expr.getValue();
+            return new Constant(((BigFloat)(c.op)).value.negate());
+        } else {
+            error("Unknown operand:`" + op + "'");
+            return null;
+        }
+    } 
 }
 
 class CharUnary extends Unary {
@@ -87,12 +131,19 @@ class CharUnary extends Unary {
             return;
         }
     }
-    
+
     public Constant getValue(){
-        if(op.tag == '-'){
-            Constant c = expr.getValue();
+        Constant c = expr.getValue();
+        switch(op.tag){
+        case Tag.INC:
+            c = ((Var)expr).setValue(new Constant((char)(((Char)(c.op)).value + 1)));
+            return c;
+        case Tag.DEC:
+            c = ((Var)expr).setValue(new Constant((char)(((Char)(c.op)).value - 1)));
+            return c;
+        case '-':
             return new Constant((char)(-((Char)(c.op)).value));
-        } else {
+        default:
             error("Unknown operand:`" + op + "'");
             return null;
         }
@@ -108,6 +159,10 @@ public class UnaryFactory {
                 return new RealUnary(tok,e);
             } else if( Type.Char == e.type ){
                 return new CharUnary(tok,e);
+            } else if( Type.BigInt == e.type ){
+                return new BigIntUnary(tok,e);
+            } else if( Type.BigReal == e.type ){
+                return new BigRealUnary(tok,e);
             } else {
                 e.error("Operand:`" + tok + "' is not permitted here");
             }

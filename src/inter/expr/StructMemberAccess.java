@@ -24,21 +24,25 @@ public class StructMemberAccess extends Var {
             error("Can't find member `" + member + "' in " + value.type);
         }
     }
-    
+
+    @Override
     boolean isChangeable(){
         return true;
     }
     
+    @Override
     public Expr optimize(){
         value = value.optimize();
         return this;
     }
 
+    @Override
     public Constant getValue(){
         StructConst s = (StructConst)value.getValue();
         return s.getElement(member);
     }
 
+    @Override
     public Constant setValue(Constant c){
         StructConst s = (StructConst)value.getValue();
         return s.setElement(member,c);

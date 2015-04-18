@@ -19,6 +19,7 @@ public class Do extends Stmt{
             expr.error("boolean required in do");
     }
 
+    @Override
     public Stmt optimize(){
         stmt = stmt.optimize();
         /*
@@ -31,6 +32,7 @@ public class Do extends Stmt{
         return this;
     }
 
+    @Override
     public void run(){
         do{
             try{

@@ -312,22 +312,22 @@ class ConversionFactoryFactory {
     static Factory getConversionFactory(Expr src){
         Type t = src.type;
         if(t == Type.Int)
-                return intf;
-            else if(t == Type.Char)
-                return charf;
-            else if(t == Type.Real)
-                return realf;
-            else if(t == Type.Str)
-                return strf;
-            else if(t == Type.Bool)
-                return boolf;
-            else if(t == Type.BigInt)
-                return bintf;
-            else if(t == Type.BigReal)
-                return brealf;
-            else
-                return otherf;
-        }
+            return intf;
+        else if(t == Type.Char)
+            return charf;
+        else if(t == Type.Real)
+            return realf;
+        else if(t == Type.Str)
+            return strf;
+        else if(t == Type.Bool)
+            return boolf;
+        else if(t == Type.BigInt)
+            return bintf;
+        else if(t == Type.BigReal)
+            return brealf;
+        else
+            return otherf;
+    }
 }
 
 public class ConversionFactory {

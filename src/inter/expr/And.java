@@ -8,6 +8,7 @@ public class And extends Logical {
         super(tok,x1,x2);
     }
     
+    @Override
     public Constant getValue(){
         return expr1.getValue() != Constant.False?expr2.getValue():Constant.False;
     }

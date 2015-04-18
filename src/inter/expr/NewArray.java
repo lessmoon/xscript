@@ -19,10 +19,12 @@ public class NewArray extends Op {
         size = ConversionFactory.getConversion(size,Type.Int);
     }
 
+    @Override
     boolean isChangeable(){
         return true;
     }
 
+    @Override
     public Expr optimize(){
         if(isChangeable()){
             size = size.optimize();
@@ -32,11 +34,13 @@ public class NewArray extends Op {
         }
     }
 
+    @Override
     public Constant getValue(){
         Constant v = size.getValue();
         return new ArrayConst((Array)type,((Num)(v.op)).value);
     }
 
+    @Override
     public String toString(){
         return "new []" + type.toString();
     }

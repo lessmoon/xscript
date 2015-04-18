@@ -35,10 +35,12 @@ public class Constant extends Expr{
         super(new BigFloat(bd),Type.BigReal);
     }
     
+    @Override
     public Constant getValue(){
         return this;
     }
 
+    @Override
     boolean isChangeable(){
         return false;
     }
@@ -47,6 +49,7 @@ public class Constant extends Expr{
         True = new Constant(Word.True,Type.Bool),
         False = new Constant(Word.False,Type.Bool);
 
+    @Override
     public String toString(){
         return op.toString();
     }

@@ -22,8 +22,7 @@ public class Type extends Word {
 
     public static final Type 
         Int     =   new Type( "int" , Tag.BASIC),
-        /*TODO: rename Float to Real*/
-        Real   =   new Type( "real" , Tag.BASIC),
+        Real    =   new Type( "real" , Tag.BASIC),
         Str     =   new Type( "string" , Tag.BASIC),
         Char    =   new Type( "char" , Tag.BASIC),
         Bool    =   new Type( "bool" , Tag.BASIC),
@@ -37,17 +36,26 @@ public class Type extends Word {
     }
     
     public static Type max(Type p1,Type p2){
-        if( p1 == Type.Str )
+        //(int,int)>int
+        //(int,(big)float)>(big)float
+        //(bigint,(big)float)>bigfloat
+        
+        if( p1 == Type.Str ){
             return Type.Str;
-        else if( !numeric(p1) || !numeric(p2))
+        } else if( !numeric(p1) || !numeric(p2)){
             return null;
-        else if(p1 == Type.BigReal || p2 == Type.BigReal)
+        } else if(p1 == Type.BigReal || p2 == Type.BigReal){
             return Type.BigReal;
-        else if(p1 == Type.Real || p2 == Type.Real)
-            return Type.Real;
-        else if(p1 == Type.Int || p2 == Type.Int)
+        } else if( p1 == Type.Real ){
+            return p2 == Type.BigInt?Type.BigReal:Type.Real;
+        } else if( p2 == Type.Real ){
+            return p1 == Type.BigInt?Type.BigReal:Type.Real;
+        } else if(p1 == Type.BigInt || p2 == Type.BigInt){
+            return Type.BigInt;
+        } else if(p1 == Type.Int || p2 == Type.Int){
             return Type.Int;
-        else
+        } else {
             return Type.Char;
+        }
     }
 }

@@ -39,6 +39,7 @@ public abstract class FunctionBasic extends Stmt {
         hasused = true;
     }
     
+    @Override
     public String toString(){
         StringBuffer sb = new StringBuffer(type.toString());
         sb.append(" " + name + "(");

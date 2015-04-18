@@ -85,7 +85,7 @@ public class Main{
         try {
             s = parser.program();
         } catch (RuntimeException e){
-            //e.printStackTrace();
+            e.printStackTrace();
             System.err.println("Compile Error:");
             System.err.println(e.getMessage());
             return;

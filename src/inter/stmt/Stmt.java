@@ -13,9 +13,12 @@ public class Stmt extends Node{
 
     public static final Stmt Null = new Stmt();
     public static final Stmt RecoverStack = new Stmt(){
+        @Override
         public void run(){
             VarTable.popTop();
         }
+
+        @Override
         public String toString(){
             return "RecoverStack\n";
         }
@@ -26,9 +29,11 @@ public class Stmt extends Node{
         */
     };
     public static final Stmt PushStack = new Stmt(){
+        @Override
         public void run(){
             VarTable.pushTop();
         }
+        @Override
         public String toString(){
             return "PushStack\n";
         }
@@ -38,7 +43,8 @@ public class Stmt extends Node{
             }
         */
     };
-
+    
+    @Override
     public String toString(){
         return this.getClass().getName() + "\n";
     }

@@ -26,11 +26,13 @@ public class Function extends FunctionBasic {
         paralist = p;
     }
     
+    @Override
     public void run(){
         stmt.run();
         return;
     }
     
+    @Override
     public boolean isCompleted(){
         return stmt != null;
     }

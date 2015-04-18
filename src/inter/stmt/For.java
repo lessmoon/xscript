@@ -26,6 +26,7 @@ public class For extends Stmt {
         return c != Type.Bool?null:c;
     }
 
+    @Override
     public void run(){
         for(begin.run();
         condition.getValue() != Constant.False;
@@ -43,6 +44,7 @@ public class For extends Stmt {
         }
     }
 
+    @Override
     public Stmt optimize(){
         begin = begin.optimize();
         if(condition == Constant.False){
@@ -56,6 +58,7 @@ public class For extends Stmt {
         return this;
     }
 
+    @Override
     public String toString(){
         return "for(" + begin + ";" + condition + ";" + end + "){\n"
                 + stmt

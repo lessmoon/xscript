@@ -24,19 +24,21 @@ public class Set extends Expr {
     
     Type check(){
         if( op.tag == Tag.MODASS ){
-            if(Type.max(id.type,expr.type) == Type.Int){
+            Type mt = Type.max(id.type,expr.type);
+            if( mt == Type.BigInt||mt == Type.Int||mt == Type.Char)
                 return id.type;
-            } else if( Type.max(id.type,expr.type) == Type.Char ) {
-                return Type.Char;
-            } else
+            else
                 return null;
         } else if( id.type == Type.Str ){
             if(expr.type == Type.Str)
                 return Type.Str;
             else if(op.tag != Tag.ADDASS)
                 return null;
+            else 
+                return Type.Str;
+        } else {
+            return id.type;
         }
-        return id.type;
     }
 
     boolean isChangeable(){

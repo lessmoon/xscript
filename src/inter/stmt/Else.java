@@ -15,6 +15,7 @@ public class Else extends Stmt {
             expr.error("boolean required in if");
     }
     
+    @Override
     public void run(){
         if(expr.getValue() != Constant.False){
             stmt1.run();
@@ -23,6 +24,7 @@ public class Else extends Stmt {
         }
     }
 
+    @Override
     public Stmt optimize(){
         
         stmt2 = stmt2.optimize();
@@ -36,6 +38,7 @@ public class Else extends Stmt {
         return this;
     }
     
+    @Override
     public String toString(){
         return "if(" + expr.toString() + " ){\n"
         + stmt1

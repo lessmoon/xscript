@@ -8,10 +8,12 @@ public class ExprStmt extends Stmt {
         this.e = e;
     }
     
+    @Override
     public void run(){
         e.getValue();
     }
     
+    @Override
     public String toString(){
         return e.toString() + "\n";
     }

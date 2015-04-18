@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.Stack;
 import java.io.*; 
 
-import main.*;
+import java.math.BigInteger;
+import java.math.BigDecimal;
+import main.Main;
 
 class Info {
     InputStreamReader in;
@@ -72,6 +74,8 @@ public class Lexer {
         reserve( Type.Bool );
         reserve( Type.Real );
         reserve( Type.Str );
+        reserve( Type.BigInt );
+        reserve( Type.BigReal );
         reserve( Type.Void );
     }
 
@@ -170,8 +174,11 @@ public class Lexer {
                 } else if( peek == '/' ){
                     while(!readch('\n'));
                     line++;
+                } else if( peek == '=' ){
+                    peek = ' ';
+                    return Word.divass;
                 } else {
-                    return new Token('/');
+                    return Word.div;
                 }
             } else {
                 break;
@@ -230,10 +237,10 @@ public class Lexer {
                     return Word.multass;
                 else
                     return Word.mult;
-            case '/':
-                if(readch('='))
+            case '/'://won't happen
+                if(readch('=')){
                     return Word.divass;
-                else
+                }else
                     return Word.div;
             case '%':
                 if(readch('='))
@@ -243,23 +250,59 @@ public class Lexer {
         }
 
         if(Character.isDigit(peek)){
-            int v = 0;
+            BigInteger v = BigInteger.ZERO;
+            //int v = 0;
             do{
-                v = 10 * v + Character.digit(peek,10);
+                //v = 10 * v + Character.digit(peek,10);
+                v = v.multiply(BigInteger.TEN).add(BigInteger.valueOf(Character.digit(peek,10)));
                 readch();
             }while(Character.isDigit(peek));
-            if(peek != '.')
-                return new Num(v);
-            float x = v;
-            float d = 10;
-            for(;;){
+            if(peek != '.'){
+                switch(peek){
+                case 'R':
+                    peek = ' ';
+                    return new BigFloat(new BigDecimal(v));
+                case 'r':
+                    peek = ' ';
+                    return new lexer.Float(v.floatValue());
+                case 'i':
+                    peek = ' ';
+                    return new Num(v.intValue());
+                case 'I':
+                    peek = ' ';
+                    return new BigNum(v);
+                default:
+                    if(v.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) < 0)
+                        return new Num(v.intValue());
+                    else
+                        return new BigNum(v);
+                }
+            }
+
+            BigDecimal x = new BigDecimal(v);
+            //float x = v;
+            v = BigInteger.ZERO;
+            int scale = 0;
+            for(;;scale++){
                 readch();
                 if(! Character.isDigit(peek))
                     break;
-                x = x + Character.digit(peek,10)/d;
-                d = d*10;
+                v = v.multiply(BigInteger.TEN).add(BigInteger.valueOf(Character.digit(peek,10)));
             }
-            return new lexer.Float(x);
+            x = x.add(new BigDecimal(v,scale));
+            switch(peek){
+            case 'R':
+                peek = ' ';
+                return new BigFloat(x);
+            case 'r':
+                peek = ' ';
+                return new lexer.Float(x.floatValue());
+            default:
+                if(x.compareTo(BigDecimal.valueOf(java.lang.Float.MAX_VALUE)) < 0)
+                    return new lexer.Float(x.floatValue());
+                else
+                    return new BigFloat(x);
+            }
         }
 
         if(Character.isLetter(peek)||peek == '_'){
@@ -275,7 +318,7 @@ public class Lexer {
                 return new Num(line);
             } else if(s.equals("_file_")){/*file name*/
                 return new Str(filename);
-            } else if(s.equals("_version_")){
+            } else if(s.equals("_version_")){/*version*/
                 return new Num(Main.MAJOR_VERSION*100 + Main.MINOR_VERSION);
             }
             Word w = (Word)words.get(s);

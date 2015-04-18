@@ -14,12 +14,14 @@ public class If extends Stmt{
             expr.error("boolean requried in if");
     }
 
+    @Override
     public void run(){
         if(expr.getValue() != Constant.False){
             stmt.run();
         }
     }
 
+    @Override
     public Stmt optimize(){
         stmt = stmt.optimize();
         if(expr == Constant.False){/*constant False,it will never happen to run the stmt*/

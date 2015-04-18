@@ -25,6 +25,13 @@ public class Return extends Stmt {
         }
     }
     
+    @Override
+    public Stmt optimize(){
+        expr = expr.optimize();
+        return this;
+    }
+    
+    @Override
     public void run(){
         /*
          * I *KNOW* it is wrong use of exception
@@ -52,6 +59,7 @@ public class Return extends Stmt {
         }
     */
 
+    @Override
     public String toString(){
         return "Return " + expr.toString() + "(" + sizeOfStack +")\n";
     }

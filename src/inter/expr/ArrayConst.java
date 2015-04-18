@@ -26,6 +26,7 @@ public class ArrayConst extends Constant {
         arr = new Constant[size];
     }
 
+    @Override
     public Constant getValue(){
         return this;
     }
@@ -46,11 +47,13 @@ public class ArrayConst extends Constant {
         return size;
     }
 
+    @Override
     boolean isChangeable(){
         /*array reference is not changeable*/
         return true;
     }
 
+    @Override
     public String toString(){
         StringBuffer sb = new StringBuffer("[");
         for(Constant c : arr){

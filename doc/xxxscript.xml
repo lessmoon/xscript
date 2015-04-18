@@ -1,5 +1,5 @@
 <NotepadPlus>
-    <UserLang name="xxxscript" ext="xs" udlVersion="2.1">
+    <UserLang name="xscript" ext="xs" udlVersion="2.1">
         <Settings>
             <Global caseIgnored="no" allowFoldOfComments="yes" foldCompact="no" forcePureLC="0" decimalSeparator="0" />
             <Prefix Keywords1="no" Keywords2="no" Keywords3="no" Keywords4="no" Keywords5="no" Keywords6="yes" Keywords7="no" Keywords8="no" />
@@ -10,7 +10,7 @@
             <Keywords name="Numbers, prefix2"></Keywords>
             <Keywords name="Numbers, extras1"></Keywords>
             <Keywords name="Numbers, extras2"></Keywords>
-            <Keywords name="Numbers, suffix1"></Keywords>
+            <Keywords name="Numbers, suffix1">I i R r</Keywords>
             <Keywords name="Numbers, suffix2"></Keywords>
             <Keywords name="Numbers, range"></Keywords>
             <Keywords name="Operators1">+ - * / ++ -- = == &gt; &lt; == != ! , &gt;= &lt;= ( ) % %= . ? : &amp;&amp; || ; [ ]</Keywords>
@@ -27,7 +27,7 @@
             <Keywords name="Keywords1">while&#x000D;&#x000A;for&#x000D;&#x000A;do&#x000D;&#x000A;break&#x000D;&#x000A;continue&#x000D;&#x000A;return&#x000D;&#x000A;if&#x000D;&#x000A;else&#x000D;&#x000A;this&#x000D;&#x000A;switch&#x000D;&#x000A;default&#x000D;&#x000A;case</Keywords>
             <Keywords name="Keywords2">true&#x000D;&#x000A;false</Keywords>
             <Keywords name="Keywords3">loadfunc&#x000D;&#x000A;import&#x000D;&#x000A;def</Keywords>
-            <Keywords name="Keywords4">string&#x000D;&#x000A;struct&#x000D;&#x000A;bool&#x000D;&#x000A;int&#x000D;&#x000A;real&#x000D;&#x000A;char&#x000D;&#x000A;void</Keywords>
+            <Keywords name="Keywords4">string&#x000D;&#x000A;struct&#x000D;&#x000A;bool&#x000D;&#x000A;int&#x000D;&#x000A;bigint&#x000D;&#x000A;bigreal&#x000D;&#x000A;real&#x000D;&#x000A;char&#x000D;&#x000A;void</Keywords>
             <Keywords name="Keywords5">sizeof new&#x000D;&#x000A;</Keywords>
             <Keywords name="Keywords6">a b c d e f g h i j k l m n o p q r s t u v w x y z&#x000D;&#x000A;A B C D E F G H I J K L M N O P Q R S T U V W X Y Z&#x000D;&#x000A;_</Keywords>
             <Keywords name="Keywords7"></Keywords>

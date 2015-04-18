@@ -25,6 +25,7 @@ public class StructConst extends Constant {
         }
     }
 
+    @Override
     public Constant getValue(){
         return this;
     }
@@ -44,6 +45,7 @@ public class StructConst extends Constant {
         return table.size();
     }
 
+    @Override
     boolean isChangeable(){
         return true;
     }
@@ -78,6 +80,7 @@ public class StructConst extends Constant {
         return sb.toString();
     }
     
+    @Override
     public String toString(){
         return "Struct";
     }

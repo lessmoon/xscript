@@ -1,21 +1,22 @@
 ## XXXScript in brief ##
 
 ### Keyword List: ###
+
 <table >
 	<tr>
-		<td>_file_</td><td>_line_</td><td>_version_</td><td>bool</td><td>break</td><td>case</td>
+		<td>_file_</td><td>_line_</td><td>_version_</td><td>bigint</td><td>bigreal</td><td>bool</td>
 	</tr>
 	<tr>
-		<td>char</td><td>continue</td><td>def</td><td>default</td><td>do</td><td>else</td>
+		<td>break</td><td>case</td><td>char</td><td>continue</td><td>def</td><td>default</td>
 	</tr>
 	<tr>
-		<td>false</td><td>for</td><td>if</td><td>import</td><td>int</td><td>loadfunc</td>
+		<td>do</td><td>else</td><td>false</td><td>for</td><td>if</td><td>import</td>
 	</tr>
 	<tr>
-		<td>new</td><td>real</td><td>return</td><td>sizeof</td><td>string</td><td>struct</td>
+		<td>int</td><td>loadfunc</td><td>new</td><td>real</td><td>return</td><td>sizeof</td>
 	</tr>
 	<tr>
-		<td>switch</td><td>this</td><td>true</td><td>while</td>
+		<td>string</td><td>struct</td><td>switch</td><td>this</td><td>true</td><td>while</td>
 	</tr>
 </table>
 
@@ -30,13 +31,19 @@
 		<tr>
 			<td>char</td>
 			<td>2</td>
+			<td>string</td>
+			<td>x</td>
+		</tr>
+		<tr>
 			<td>int</td>
+			<td>4</td>
+			<td>real</td>
 			<td>4</td>
 		</tr>
 		<tr>
-			<td>real</td>
-			<td>4</td>
-			<td>string</td>
+			<td>bigint</td>
+			<td>x</td>
+			<td>bigreal</td>
 			<td>x</td>
 		</tr>
 		<tr>
@@ -113,11 +120,13 @@
 		- Basic-type var-name = initial-value[,...](with initial-value)
 		- Basic-type [integer constant]... var-name[,...](for array declaration)
 	* Constant:
-		- `int`:only decimal integer is supported
+		- `int`:only decimal integer is supported(ends with '*i*' or less than IntMax)
 		- `char`:'character'(character includes escape character `\n`,`\t`,`\r`,`\'`,`\"`,`\?`,`\b`,`\f`,`\\`)
 		- `string`:"characters"
-		- `real`:just support decimal real number
+		- `real`:just support decimal real number(ends with '*r*' or less than RealMax)
 		- `bool`:`true`,`false`
+		- `bigint`:integer larger than IntMax(or ends with '*I*')
+		- `bigreal`:real larger than RealMax(or ends with '*R*') 
 	* Dynamic array allocation:
 		- `new` < type > (expression);
 	* Array size getter:

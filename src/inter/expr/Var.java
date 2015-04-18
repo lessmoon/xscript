@@ -13,18 +13,21 @@ public class Var extends Expr {
         offset = o;
     }
 
+    @Override
     boolean isChangeable(){
         return true;
     }
 
+    @Override
     public Constant getValue(){
         return VarTable.getVar(stacklevel,offset);
     }
-
+    
     public Constant setValue(Constant v){
         return  VarTable.setVar(stacklevel,offset,v);
     }
-    
+
+    @Override
     public String toString(){
         return "VAR["+stacklevel+","+offset+"](" + op + ")"; 
     }

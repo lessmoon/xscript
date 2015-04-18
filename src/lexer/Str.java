@@ -7,6 +7,7 @@ public class Str extends Token {
         value = v;
     }
 
+    @Override
     public String toString(){
         return value;
     }

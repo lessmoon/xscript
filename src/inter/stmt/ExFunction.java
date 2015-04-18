@@ -14,10 +14,12 @@ public class ExFunction extends FunctionBasic {
         func = f;
     }
 
+    @Override
     public void run(){
         throw new ReturnResult(func.run(VarTable.getTop()));
     }
     
+    @Override
     public boolean isCompleted(){
         return true;
     }

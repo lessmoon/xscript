@@ -25,6 +25,7 @@ public class Condition extends Expr {
             iffalse = ConversionFactory.getConversion(f,type);
     }
     
+    @Override
     boolean isChangeable(){
         if(cond.isChangeable())
             return true;
@@ -34,17 +35,19 @@ public class Condition extends Expr {
         }
     }
 
+    @Override
     public Expr optimize(){
+        cond = cond.optimize();
+        iftrue = iftrue.optimize();
+        iffalse = iffalse.optimize();
         if(isChangeable()){
-            cond = cond.optimize();
-            iftrue = iftrue.optimize();
-            iffalse = iffalse.optimize();
             return this;
         } else {
             return getValue();
         }
     } 
 
+    @Override
     public Constant getValue(){
         return cond.getValue() != Constant.False?iftrue.getValue():iffalse.getValue();
     }

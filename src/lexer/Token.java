@@ -5,6 +5,8 @@ public class Token {
     public Token(int t) {
         tag = t; 
     }
+
+    @Override
     public String toString() {
         return String.valueOf((char)tag);
     }

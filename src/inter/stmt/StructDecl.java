@@ -22,6 +22,7 @@ public class StructDecl extends Decl {
             return type.equals(value.type);
     }
 
+    @Override
     public void run(){
         VarTable.pushVar(value != null ? value.getValue():new StructConst((Struct)type));
     }

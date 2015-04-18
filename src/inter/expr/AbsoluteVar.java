@@ -9,20 +9,24 @@ public class AbsoluteVar extends Var {
         super(w,t,l,o);
     }
 
+    @Override
     boolean isChangeable(){
         return true;
     }
 
+    @Override
     public Constant getValue(){
         /*stack order:top to down*/
         return VarTable.getVarAbsolutely(stacklevel,offset);
     }
 
+    @Override
     public Constant setValue(Constant v){
         /*stack order:top to down*/
         return  VarTable.setVarAbsolutely(stacklevel,offset,v);
     }
     
+    @Override
     public String toString(){
         return "aVAR["+stacklevel+","+offset+"](" + op + ")"; 
     }

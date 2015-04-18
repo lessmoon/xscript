@@ -60,7 +60,6 @@ def int llist.getSize(){
     int x = time();
     println("Random seed:" + x);
     srand(x);
-    
 }
 
 {
@@ -70,7 +69,21 @@ def int llist.getSize(){
 }
 
 {
+    println("Test for big int");
+    bigint x = 225I;
+    bigint y = 226I;
+    println("x = " + x + ",y= " + y + " ");
+    x = x*x*x*x*x*x*x*x*x*y;
+    println( "x*x*x*x*x*x*x*x*x*y = " + x );
+    println("Test for big real");
+    bigreal Rx = 225R;
+    bigreal Ry = 226R;
+    println("x = " + Rx + ",y= " + Ry + " ");
+    Rx = Rx*Rx*Rx*Rx*Rx*Rx*Rx*Rx*Rx*Ry;
+    println( "x*x*x*x*x*x*x*x*x*y = " + Rx );
+}
 
+{
     string x = "DEF";
     println("Test for switch code");
     println("switch string");

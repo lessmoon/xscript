@@ -17,13 +17,15 @@ public class SizeOf extends Op{
         }
     }
     
+    @Override
     boolean isChangeable(){
         return expr.isChangeable();
     }
 
+    @Override
     public Expr optimize(){
+        expr = expr.optimize();
         if(isChangeable()){
-            expr = expr.optimize();
             return this;
         } else {
             return getValue();

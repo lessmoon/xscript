@@ -24,12 +24,21 @@ public class Decls extends Stmt {
         decls.add(c);
     }
 
+    @Override
     public void run(){
         for(Decl d : decls){
             d.run();
         }
     }
+    @Override
+    public Stmt optimize(){
+        for(Decl d : decls){
+            d.optimize();
+        }
+        return this;
+    }
     
+    @Override
     public String toString(){
         StringBuffer sb = new StringBuffer();
         for(Decl d : decls){
