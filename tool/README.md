@@ -11,4 +11,4 @@ Input file is the first argument,and output file is the second argument.
 Generate tables.use file `keyword` for input,and file `skt` for output.
 
 ## ListFile.java ##
-List all files path ending with arg[0] in path arg[1] (default is `./`) recursively 
+List all files path ending with arg[0] in path arg[1] \(default is `./`\) recursively 
