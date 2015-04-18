@@ -104,7 +104,7 @@ public class UnaryFactory {
         if( Type.numeric(e.type) ){
             if( Type.Int == e.type ){
                 return new IntUnary(tok,e);
-            } else if( Type.Float == e.type ){
+            } else if( Type.Real == e.type ){
                 return new RealUnary(tok,e);
             } else if( Type.Char == e.type ){
                 return new CharUnary(tok,e);

@@ -74,6 +74,8 @@ src/inter/stmt/Switch.java
 src/inter/stmt/While.java
 src/inter/util/Node.java
 src/inter/util/Para.java
+src/lexer/BigFloat.java
+src/lexer/BigNum.java
 src/lexer/Char.java
 src/lexer/Lexer.java
 src/lexer/Num.java

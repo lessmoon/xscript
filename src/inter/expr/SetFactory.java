@@ -106,7 +106,7 @@ public class SetFactory {
             return new Set(tok,i,x);
         } else if( i.type == Type.Int ){
             return new IntSet(tok,i,x);
-        } else if( i.type == Type.Float){
+        } else if( i.type == Type.Real){
             return new RealSet(tok,i,x);
         } else if( i.type == Type.Str){
             return new StrSet(tok,i,x);

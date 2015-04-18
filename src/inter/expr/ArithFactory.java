@@ -3,6 +3,9 @@ package inter.expr;
 import lexer.*;
 import symbols.*;
 
+import java.math.BigInteger;
+import java.math.BigDecimal;
+
 class IntArith extends Arith {
     public IntArith(Token tok,Expr x1,Expr x2){
         super(tok,x1,x2);
@@ -43,6 +46,45 @@ class IntArith extends Arith {
     }
 }
 
+class BigIntArith extends Arith{
+    public BigIntArith(Token tok,Expr x1,Expr x2){
+        super(tok,x1,x2);
+    }
+
+    public boolean check(){
+        switch(op.tag){
+        case '+':
+        case '-':
+        case '*':
+        case '/':
+        case '%':
+            return true;
+        default:/*error*/
+            return false;
+        }
+    }
+    
+    public Constant getValue(){
+        BigInteger lv = ((BigNum)(expr1.getValue().op)).value;
+        BigInteger rv = ((BigNum)(expr2.getValue().op)).value;
+        Constant v = null;
+        switch(op.tag){
+        case '+':
+            return new Constant(lv.add(rv));
+        case '-':
+            return new Constant(lv.subtract(rv));
+        case '*':
+            return new Constant(lv.multiply(rv));
+        case '/':
+            return new Constant(lv.divide(rv));
+        case '%':
+            return new Constant(lv.mod(rv));
+        default:/*error*/
+            return null;
+        }
+    }
+}
+
 class RealArith extends Arith {
     public RealArith(Token tok,Expr x1,Expr x2){
         super(tok,x1,x2);
@@ -74,6 +116,42 @@ class RealArith extends Arith {
             return new Constant(lv * rv);
         case '/':
             return new Constant(lv / rv);
+        default:/*error*/
+            return null;
+        }
+    }
+}
+
+class BigRealArith extends Arith{
+    public BigRealArith(Token tok,Expr x1,Expr x2){
+        super(tok,x1,x2);
+    }
+
+    public boolean check(){
+        switch(op.tag){
+        case '+':
+        case '-':
+        case '*':
+        case '/':
+            return true;
+        default:/*error*/
+            return false;
+        }
+    }
+    
+    public Constant getValue(){
+        BigDecimal lv = ((BigFloat)(expr1.getValue().op)).value;
+        BigDecimal rv = ((BigFloat)(expr2.getValue().op)).value;
+        Constant v = null;
+        switch(op.tag){
+        case '+':
+            return new Constant(lv.add(rv));
+        case '-':
+            return new Constant(lv.subtract(rv));
+        case '*':
+            return new Constant(lv.multiply(rv));
+        case '/':
+            return new Constant(lv.divide(rv));
         default:/*error*/
             return null;
         }
@@ -156,7 +234,7 @@ public class ArithFactory {
             }
             if(t == Type.Int){
                 return new IntArith(tok,e1,e2);
-            } else if(t == Type.Float){
+            } else if(t == Type.Real){
                 return new RealArith(tok,e1,e2);
             } else if(t == Type.Char){
                 return new CharArith(tok,e1,e2);
@@ -164,6 +242,10 @@ public class ArithFactory {
                 if(tok.tag == '+'){
                     return new StringCat(tok,e1,e2);
                 }
+            } else if(t == Type.BigInt){
+                return new BigIntArith(tok,e1,e2);
+            } else if(t == Type.BigReal){
+                return new BigRealArith(tok,e1,e2);
             }
         }
         e1.error("Operand `" + tok + "' can't be used between `" + e1.type + "' and `" + e2.type + "'");

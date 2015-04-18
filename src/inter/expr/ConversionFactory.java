@@ -3,6 +3,9 @@ package inter.expr;
 import lexer.*;
 import symbols.*;
 
+import java.math.BigInteger;
+import java.math.BigDecimal;
+
 class NoConversion extends Conversion{
     NoConversion(Expr e){
         super(e,null,e.type);
@@ -18,14 +21,109 @@ class StrConversion extends Conversion{
         super(e,Type.Str,Type.Str);
     }
 
+    @Override
     public Constant getValue(){
         return new Constant("" + e.getValue());
     }
 }
 
+/*
+ * The conversion from Real to BigInt is equal to  
+ * Real -> BigReal -> BigInt
+ */
+
+class BigIntIntConversion extends Conversion{
+    BigIntIntConversion(Expr e){
+        super(e,Type.Int,Type.Int);
+    }
+
+    @Override
+    public Constant getValue(){
+        Constant v = e.getValue();
+        return new Constant(((BigNum)(v.op)).value.intValue());
+    }
+}
+
+class IntBigIntConversion extends Conversion{
+    IntBigIntConversion(Expr e){
+        super(e,Type.BigInt,Type.BigInt);
+    }
+
+    @Override
+    public Constant getValue(){
+        Constant v = e.getValue();
+        return new Constant(BigInteger.valueOf((long)((Num)(v.op)).value));
+    }
+}
+
+class BigIntRealConversion extends Conversion{
+    BigIntRealConversion(Expr e){
+        super(e,Type.Real,Type.Real);
+    }
+
+    @Override
+    public Constant getValue(){
+        Constant v = e.getValue();
+        return new Constant(((BigNum)(v.op)).value.floatValue());
+    }
+}
+
+class BigIntBigRealConversion extends Conversion{
+    BigIntBigRealConversion(Expr e){
+        super(e,Type.BigReal,Type.BigReal);
+    }
+
+    @Override
+    public Constant getValue(){
+        Constant v = e.getValue();
+        return new Constant(new BigDecimal(((BigNum)(v.op)).value));
+    }
+}
+
+class BigRealBigIntConversion extends Conversion{
+    BigRealBigIntConversion(Expr e){
+        super(e,Type.BigInt,Type.BigInt);
+    }
+
+    @Override
+    public Constant getValue(){
+        Constant v = e.getValue();
+        return new Constant((((BigFloat)(v.op)).value).toBigInteger());
+    }
+}
+
+class BigRealRealConversion extends Conversion{
+    BigRealRealConversion(Expr e){
+        super(e,Type.Real,Type.Real);
+    }
+
+    @Override
+    public Constant getValue(){
+        Constant v = e.getValue();
+        return new Constant((((BigFloat)(v.op)).value).floatValue());
+    }
+}
+
+class RealBigRealConversion extends Conversion{
+    RealBigRealConversion(Expr e){
+        super(e,Type.BigReal,Type.BigReal);
+    }
+    
+    @Override
+    public Constant getValue(){
+        Constant v = e.getValue();
+        return new Constant(BigDecimal.valueOf((double)((Real)(v.op)).value));
+    }
+}
+
+/*
+ * The conversion from BigReal to Int/Char is equal to  
+ * BigReal -> BigInt -> Int/Char
+ */
+
 class IntRealConversion extends Conversion{
     IntRealConversion(Expr e){
-        super(e,Type.Float,Type.Float);
+        super(e,Type.Real,Type.Real);
     }
 
     public Constant getValue(){
@@ -71,13 +169,38 @@ abstract class Factory {
     public abstract Conversion getConversion(Expr src,Type t);
 }
 
-class IntConversionFactory extends Factory {
+class BigIntConversionFactory extends Factory {
+    @Override
     public  Conversion getConversion(Expr src,Type t){
-        if(t == Type.Int)
+        if(t == Type.BigInt)
+            return new NoConversion(src);
+        else if(t == Type.Int)
+            return new BigIntIntConversion(src);
+        else if(t == Type.Char)
+            return new IntCharConversion(new BigIntIntConversion(src));
+        else if(t == Type.BigReal)
+            return new BigIntBigRealConversion(src);
+        else if(t == Type.Real)
+            return new BigIntRealConversion(src);
+        else if(t == Type.Str)
+            return new StrConversion(src);
+        else
+            return null;
+    }
+}
+
+class IntConversionFactory extends Factory {
+    @Override
+    public  Conversion getConversion(Expr src,Type t){
+        if(t == Type.BigInt)
+            return new IntBigIntConversion(src);
+        else if(t == Type.Int)
             return new NoConversion(src);
         else if(t == Type.Char)
             return new IntCharConversion(src);
-        else if(t == Type.Float)
+        else if(t == Type.BigReal)
+            return new BigIntBigRealConversion(new IntBigIntConversion(src));
+        else if(t == Type.Real)
             return new IntRealConversion(src);
         else if(t == Type.Str)
             return new StrConversion(src);
@@ -87,12 +210,17 @@ class IntConversionFactory extends Factory {
 }
 
 class RealConversionFactory extends Factory {
+    @Override
     public  Conversion getConversion(Expr src,Type t){
-        if(t == Type.Int)
+        if(t == Type.BigInt)
+            return new BigRealBigIntConversion(new RealBigRealConversion(src));
+        else if(t == Type.Int)
             return new RealIntConversion(src);
         else if(t == Type.Char)
-            return new IntRealConversion(new CharIntConversion(src));
-        else if(t == Type.Float)
+            return new IntCharConversion(new RealIntConversion(src));
+        else if(t == Type.BigReal)
+            return new RealBigRealConversion(src);
+        else if(t == Type.Real)
             return new NoConversion(src);
         else if(t == Type.Str)
             return new StrConversion(src);
@@ -101,13 +229,38 @@ class RealConversionFactory extends Factory {
     }
 }
 
-class CharConversionFactory extends Factory {
+class BigRealConversionFactory extends Factory{
+    @Override
     public  Conversion getConversion(Expr src,Type t){
-        if(t == Type.Int)
+        if(t == Type.BigInt)
+            return new BigRealBigIntConversion(src);
+        else if(t == Type.Int)
+            return new BigIntIntConversion(new BigRealBigIntConversion(src));
+        else if(t == Type.Char)
+            return new IntCharConversion(new BigIntIntConversion(new BigRealBigIntConversion(src)));
+        else if(t == Type.BigReal)
+            return new NoConversion(src);
+        else if(t == Type.Real)
+            return new BigRealRealConversion(src);
+        else if(t == Type.Str)
+            return new StrConversion(src);
+        else
+            return null;
+    }
+}
+
+class CharConversionFactory extends Factory {
+    @Override
+    public  Conversion getConversion(Expr src,Type t){
+        if(t == Type.BigInt)
+            return new IntBigIntConversion(new CharIntConversion(src));
+        else if(t == Type.Int)
             return new CharIntConversion(src);
         else if(t == Type.Char)
             return new NoConversion(src);
-        else if(t == Type.Float)
+        else if(t == Type.BigReal)
+            return new BigIntBigRealConversion(new IntBigIntConversion(new CharIntConversion(src)));
+        else if(t == Type.Real)
             return new IntRealConversion(new CharIntConversion(src));
         else if(t == Type.Str)
             return new StrConversion(src);
@@ -117,6 +270,7 @@ class CharConversionFactory extends Factory {
 }
 
 class BoolConversionFactory extends Factory {
+    @Override
     public  Conversion getConversion(Expr src,Type t){
         if(t == Type.Str)
             return new StrConversion(src);
@@ -126,6 +280,7 @@ class BoolConversionFactory extends Factory {
 }
 
 class StrConversionFactory extends Factory {
+    @Override
     public  Conversion getConversion(Expr src,Type t){
         if(t == Type.Str)
             return new NoConversion(src);
@@ -135,6 +290,7 @@ class StrConversionFactory extends Factory {
 }
 
 class OtherConversionFactory extends Factory {
+    @Override
     public  Conversion getConversion(Expr src,Type t){
         if(t == Type.Str)
             return new StrConversion(src);
@@ -144,7 +300,9 @@ class OtherConversionFactory extends Factory {
 }
 
 class ConversionFactoryFactory {
+    static final BigIntConversionFactory bintf = new BigIntConversionFactory();
     static final IntConversionFactory intf = new IntConversionFactory();
+    static final BigRealConversionFactory brealf = new BigRealConversionFactory();
     static final RealConversionFactory realf = new RealConversionFactory();
     static final CharConversionFactory charf = new CharConversionFactory();
     static final StrConversionFactory strf = new StrConversionFactory();
@@ -154,18 +312,22 @@ class ConversionFactoryFactory {
     static Factory getConversionFactory(Expr src){
         Type t = src.type;
         if(t == Type.Int)
-            return intf;
-        else if(t == Type.Char)
-            return charf;
-        else if(t == Type.Float)
-            return realf;
-        else if(t == Type.Str)
-            return strf;
-        else if(t == Type.Bool)
-            return boolf;
-        else
-            return otherf;
-    }
+                return intf;
+            else if(t == Type.Char)
+                return charf;
+            else if(t == Type.Real)
+                return realf;
+            else if(t == Type.Str)
+                return strf;
+            else if(t == Type.Bool)
+                return boolf;
+            else if(t == Type.BigInt)
+                return bintf;
+            else if(t == Type.BigReal)
+                return brealf;
+            else
+                return otherf;
+        }
 }
 
 public class ConversionFactory {

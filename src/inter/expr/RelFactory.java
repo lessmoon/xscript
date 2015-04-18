@@ -177,7 +177,7 @@ public class RelFactory {
                     r = new BoolRel(tok,x1,x2);
                 else if(t == Type.Char)
                     r = new CharRel(tok,x1,x2);
-                else if(t == Type.Float)
+                else if(t == Type.Real)
                     r = new RealRel(tok,x1,x2);
             }
         }

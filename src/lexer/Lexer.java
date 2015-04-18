@@ -70,7 +70,7 @@ public class Lexer {
         reserve( Type.Int );
         reserve( Type.Char );
         reserve( Type.Bool );
-        reserve( Type.Float );
+        reserve( Type.Real );
         reserve( Type.Str );
         reserve( Type.Void );
     }

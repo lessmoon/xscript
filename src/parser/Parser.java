@@ -907,7 +907,7 @@ public class Parser{
         case Tag.STR:
             return new Constant(copymove(),Type.Str);
         case Tag.REAL:
-            return new Constant(copymove(),Type.Float);
+            return new Constant(copymove(),Type.Real);
         case Tag.CHAR:
             return new Constant(copymove(),Type.Char);
         case '(':

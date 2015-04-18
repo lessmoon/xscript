@@ -22,14 +22,18 @@ public class Type extends Word {
 
     public static final Type 
         Int     =   new Type( "int" , Tag.BASIC),
-        Float   =   new Type( "real" , Tag.BASIC),
+        /*TODO: rename Float to Real*/
+        Real   =   new Type( "real" , Tag.BASIC),
         Str     =   new Type( "string" , Tag.BASIC),
         Char    =   new Type( "char" , Tag.BASIC),
         Bool    =   new Type( "bool" , Tag.BASIC),
-        Void    =   new Type( "void" , Tag.BASIC);
+        Void    =   new Type( "void" , Tag.BASIC),
+        BigInt  =   new Type( "bigint",Tag.BASIC),
+        BigReal =   new Type( "bigreal",Tag.BASIC);
 
     public static boolean numeric(Type p){
-        return (p == Type.Int || p == Type.Float || p == Type.Char);
+        return (p == Type.Int || p == Type.Real || p == Type.Char
+                || p == Type.BigInt || p == Type.BigReal);
     }
     
     public static Type max(Type p1,Type p2){
@@ -37,8 +41,10 @@ public class Type extends Word {
             return Type.Str;
         else if( !numeric(p1) || !numeric(p2))
             return null;
-        else if(p1 == Type.Float || p2 == Type.Float)
-            return Type.Float;
+        else if(p1 == Type.BigReal || p2 == Type.BigReal)
+            return Type.BigReal;
+        else if(p1 == Type.Real || p2 == Type.Real)
+            return Type.Real;
         else if(p1 == Type.Int || p2 == Type.Int)
             return Type.Int;
         else

@@ -3,6 +3,9 @@ package inter.expr;
 import lexer.*;
 import symbols.*;
 
+import java.math.BigInteger;
+import java.math.BigDecimal;
+
 public class Constant extends Expr{
     public Constant(Token tok,Type p){
         super(tok,p);
@@ -21,9 +24,17 @@ public class Constant extends Expr{
     }
 
     public Constant(float r){
-        super(new Real(r),Type.Float);
+        super(new Real(r),Type.Real);
     }
 
+    public Constant(BigInteger bi){
+        super(new BigNum(bi),Type.BigInt);
+    }
+    
+    public Constant(BigDecimal bd){
+        super(new BigFloat(bd),Type.BigReal);
+    }
+    
     public Constant getValue(){
         return this;
     }
@@ -35,7 +46,7 @@ public class Constant extends Expr{
     public static final Constant
         True = new Constant(Word.True,Type.Bool),
         False = new Constant(Word.False,Type.Bool);
-    
+
     public String toString(){
         return op.toString();
     }
