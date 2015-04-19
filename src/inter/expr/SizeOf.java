@@ -16,7 +16,7 @@ public class SizeOf extends Op{
             error("Operand `" + op + "' can't be used for `" + expr.type + "',array type wanted" );
         }
     }
-    
+
     @Override
     boolean isChangeable(){
         return expr.isChangeable();

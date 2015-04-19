@@ -574,9 +574,18 @@ public class Parser{
         }
     }
 
+    /*
+     * We put for-loop is like:
+     * 1.PushStack ;
+     * 2.For-decl;
+     * 3.condition;
+     * 4.for-body
+     * 5.end;
+     * 6.RecoverStack;
+     * if it breaks,it will go to 6
+     * if it continues,it will goto 5
+     */
     public Stmt forloop() throws IOException {
-        lastIterationLevel = nowLevel;
-        lastBreakFatherLevel = nowLevel;
         For fornode = new For();
         Stmt.Enclosing = fornode;
         move();
@@ -590,9 +599,12 @@ public class Parser{
             hasdecl = true;
             top = new Env(top);
             s1 = fordecl();
+            nowLevel++;
         } else {
             s1 = new ExprStmt(expr());
         }
+        lastIterationLevel = nowLevel;
+        lastBreakFatherLevel = nowLevel;
         match(';');
         Expr e2 = (look.tag == ';')?Constant.True:expr();
         match(';');
@@ -601,6 +613,8 @@ public class Parser{
         Stmt s = closure();
         top = savedTop;
         fornode.init(s1,e2,s3,s);
+        if(hasdecl)
+            nowLevel--;
         s = hasdecl?new Seq(Stmt.PushStack,new Seq(fornode,Stmt.RecoverStack)):fornode;
         return s;
     }
@@ -931,7 +945,7 @@ public class Parser{
             Expr f = unary();
             assert(f != null);
             e = f;
-            if(f.type != t)
+            if(!f.type.equals(t))
                 e = ConversionFactory.getConversion(f,t);
             if(e == null)
                 error("Can't convert " + f.type + " to " + t);

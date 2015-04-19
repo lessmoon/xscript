@@ -32,10 +32,11 @@ public class If extends Stmt{
         return this;
     }
     
+    @Override
     public String toString(){
         return "if(" + expr + "){\n"
                 + stmt
-                + "\n}\n";
+                + "}\n";
     }
     
     /*

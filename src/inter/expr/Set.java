@@ -41,21 +41,25 @@ public class Set extends Expr {
         }
     }
 
+    @Override
     boolean isChangeable(){
         return true;
     }
 
+    @Override
     public Expr optimize(){
         expr = expr.optimize();
         return this;
     }
 
+    @Override
     public Constant getValue(){
         Constant v = expr.getValue();
         return id.setValue(v);
     }
     
+    @Override
     public String toString(){
-        return this.getClass().getName() + "(" + id.toString() +"," + expr +")";
+        return this.getClass().getName() + "(" + id.toString() + op + expr +")";
     }
 }

@@ -40,7 +40,7 @@ class IntSet extends Set {
     public Constant getValue(){
         int r = ((Num)(expr.getValue().op)).value;
         int l = ((Num)(id.getValue().op)).value;
-        
+
         switch(op.tag){
         case Tag.ADDASS:
             return id.setValue( new Constant(l + r));

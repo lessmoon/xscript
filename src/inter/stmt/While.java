@@ -20,6 +20,7 @@ public class While extends Stmt{
             expr.error("boolean required in while");
     }
 
+    @Override
     public void run(){
         while(expr.getValue() != Constant.False){
             try{
@@ -35,11 +36,19 @@ public class While extends Stmt{
         }
     }
 
+    @Override
     public Stmt optimize(){
         stmt = stmt.optimize();
         if(expr == Constant.False){/*constant False,it will never happen to run the stmt*/
             return Stmt.Null;
         }
         return this;
+    }
+    
+    @Override
+    public String toString(){
+        return "while(" + expr + "){\n"
+                +stmt
+                +"}\n";
     }
 }
