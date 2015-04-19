@@ -139,6 +139,9 @@ public class Lexer {
         while(p < 0){
             in.close();
             if(!recover()){
+                /*end of all files*/
+                in.close();
+                in = null;
                 break;
             }
             p = in.read();

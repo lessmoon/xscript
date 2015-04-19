@@ -476,9 +476,7 @@ public class Parser{
             break;
         case Tag.DEFAULT:
         case Tag.CASE:/*CASE*/
-            if(!(Stmt.BreakEnclosing instanceof Switch)){
-                error("`" + look + "' should be used in switch statement");
-            }
+             error("`" + look + "' should be used in switch statement");
             s = Stmt.Null;
             break;
         default:
@@ -494,11 +492,12 @@ public class Parser{
     }
 
     public Stmt casestmts() throws IOException {
-        if(look.tag == Tag.CASE || look.tag == '}' || look.tag == Tag.DEFAULT){
-            return Stmt.Null;
-        } else {
-            return new Seq(stmt(),casestmts());
+        Stmt s = Stmt.Null;
+        
+        while(look.tag != Tag.CASE && look.tag != '}' && look.tag != Tag.DEFAULT){
+            s = new Seq(s,stmt());
         }
+        return s;
     }
 
     public Stmt casestmt() throws IOException {
@@ -514,7 +513,7 @@ public class Parser{
         hasDecl = savedHasDecl;
         return ENABLE_STMT_OPT?s.optimize():s;
     }
-    
+
     public Stmt switchstmt() throws IOException {
         match(Tag.SWITCH);
         match('(');
