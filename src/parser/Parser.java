@@ -784,7 +784,7 @@ public class Parser{
        case '!':
             return new Not(copymove(),unary());
        case Tag.SIZEOF:
-            return new SizeOf(copymove(),assign());
+            return new SizeOf(copymove(),unary());
        case Tag.NEW:
             Token l = copymove();
             match('<');
