@@ -135,6 +135,7 @@
 		- `_line_`:  line number of the source file
 		- `_file_`:  file name of the source file
 		- `_version_`: compiler version(major-version * 100 + minor-version)
+		- `_args_`: command line arguments(runtime variable)
 * Features in future
 	* Inline function definition:
 		- `def` return-type func-name([para-type para-name,...]) = expression;

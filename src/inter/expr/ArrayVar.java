@@ -45,4 +45,10 @@ public class ArrayVar extends Var {
         var.setElement(l,v);
         return  v;
     }
+
+    @Override
+    public String toString(){
+        return array.toString() + "[" + loc.toString() + "]";
+    }
+    
 }

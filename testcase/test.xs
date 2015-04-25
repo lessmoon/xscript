@@ -248,7 +248,7 @@ def int llist.getSize(){
     print("a U b=");println(list_toString(union_list(a,b)));
     print("SORT\n");
     print("sort(a)=\n");
-    
+
     println(list_toString(qlsort(a,0)));
 }
 
