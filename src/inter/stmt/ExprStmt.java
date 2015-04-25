@@ -1,6 +1,9 @@
 package inter.stmt;
 
 import inter.expr.Expr;
+import inter.code.*;
+
+import java.util.ArrayList;
 
 public class ExprStmt extends Stmt {
     Expr e;
@@ -14,7 +17,14 @@ public class ExprStmt extends Stmt {
     }
     
     @Override
+    public void emitCode(ArrayList<SerialCode> i){
+        i.add(new ExprCode(e));
+    }
+    
+    @Override
     public String toString(){
         return e.toString() + "\n";
     }
+    
+    
 }

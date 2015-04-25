@@ -12,14 +12,14 @@ public class FunctionInvoke extends Expr {
     static final boolean IS_DEBUG = false;
     FunctionBasic        func;
     ArrayList<Expr>      para;
-    
+
     /*
      * NOTE:(fixed)
      * Wrong when recursively call itself
      * It may rewrite the args in another calling
      */
     //final Constant[]     args;
-    
+
     public FunctionInvoke(FunctionBasic f,ArrayList<Expr> p){
         super(f.name,f.type);
         func = f;
@@ -58,7 +58,7 @@ public class FunctionInvoke extends Expr {
         }
         return this;
     }
-
+    
     @Override
     public String toString(){
         return op.toString() + para.toString() ;
@@ -98,5 +98,26 @@ public class FunctionInvoke extends Expr {
         }
         VarTable.popTop();
         return result;
+    }
+
+    @Override
+    public Constant getValue(RunEnv r){
+        final Constant[] args = new Constant[para.size()];
+        for(int i = 0 ; i < args.length;i++){
+            args[i] = para.get(i).getValue();
+        }
+        VarTable.pushTop();
+        for(Constant c : args){
+            VarTable.pushVar(c);
+        }
+        r.functionCall(func.getBody());
+        r.setEnvFunction(func);
+        r.incPC();
+        while(r.getCode() != null){
+            r.incPC();
+            r.getCode().serially_run(r);
+        }
+        VarTable.popTop();
+        return r.getResult();
     }
 }

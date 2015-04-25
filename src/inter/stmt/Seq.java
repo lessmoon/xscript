@@ -1,5 +1,9 @@
 package inter.stmt;
 
+import inter.code.*;
+
+import java.util.ArrayList;
+
 public class Seq extends Stmt{
     Stmt stmt1;
     Stmt stmt2;
@@ -32,6 +36,12 @@ public class Seq extends Stmt{
         if(stmt2 == Stmt.Null)
             return stmt1;
         return this;
+    }
+
+    @Override
+    public void emitCode(ArrayList<SerialCode> i){
+        stmt1.emitCode(i);
+        stmt2.emitCode(i);
     }
 
     @Override

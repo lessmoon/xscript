@@ -3,6 +3,9 @@ package inter.stmt;
 import symbols.*;
 import inter.expr.Expr;
 import inter.expr.Constant;
+import inter.code.*;
+
+import java.util.ArrayList;
 
 public class While extends Stmt{
     Expr expr;
@@ -50,5 +53,15 @@ public class While extends Stmt{
         return "while(" + expr + "){\n"
                 +stmt
                 +"}\n";
+    }
+
+    @Override
+    public void emitCode(ArrayList<SerialCode> i){
+        headaddr.setValue(i.size());
+        i.add(new ExprCode(expr));
+        i.add(new JumpFalseCode(tailaddr));
+        stmt.emitCode(i);
+        i.add(new JumpCode(headaddr));
+        tailaddr.setValue(i.size());
     }
 }

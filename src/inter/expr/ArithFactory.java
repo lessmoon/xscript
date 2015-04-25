@@ -23,7 +23,8 @@ class IntArith extends Arith {
             return false;
         }
     }
-    
+
+    @Override
     public Constant getValue(){
         int lv = ((Num)(expr1.getValue().op)).value;
         int rv = ((Num)(expr2.getValue().op)).value;
@@ -44,6 +45,7 @@ class IntArith extends Arith {
         }
 
     }
+
 }
 
 class BigIntArith extends Arith{
@@ -64,6 +66,7 @@ class BigIntArith extends Arith{
         }
     }
     
+    @Override
     public Constant getValue(){
         BigInteger lv = ((BigNum)(expr1.getValue().op)).value;
         BigInteger rv = ((BigNum)(expr2.getValue().op)).value;

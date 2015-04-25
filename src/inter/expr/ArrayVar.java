@@ -14,16 +14,33 @@ public class ArrayVar extends Var {
     }
 
     @Override
+    public void emitCode(ArrayList<SerialCode> i){
+        loc.emitCode(i);
+        i.add(SerialCode.PushCode);
+        array.emitCode(i);
+        i.add(SerialCode.ArrayAccess);
+    }
+
+    @Override
+    public void emitLeftCode(ArrayList<SerialCode> i){
+        loc.emitCode(i);
+        i.add(SerialCode.PushCode);
+        array.emitCode(i);
+        i.add(SerialCode.ArrayAccess);
+    }
+
+    
+    @Override
     boolean isChangeable(){
         return true;
     }
-    
+
     @Override
     public Expr optimize(){
         loc = loc.optimize();
         return this;
     }
-    
+
     @Override
     public Constant getValue(){
         ArrayConst v = (ArrayConst)array.getValue();
@@ -34,7 +51,6 @@ public class ArrayVar extends Var {
         return v.getElement(l);
     }
 
-    
     @Override
     public Constant setValue(Constant v){
         int l = ((Num)(loc.getValue()).op).value;

@@ -30,7 +30,6 @@ public class Parser{
     public int nowLevel = 0;
     public HashSet<FunctionBasic> f_used = new HashSet<FunctionBasic>();
     
-    
     public final boolean ENABLE_EXPR_OPT ;
     public final boolean ENABLE_STMT_OPT ;
     public boolean PRINT_FUNC_TRANSLATE = false;

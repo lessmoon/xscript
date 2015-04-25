@@ -4,6 +4,10 @@ import java.io.*;
 import lexer.*; 
 import parser.*;
 import inter.stmt.Stmt;
+import inter.stmt.Stmt;
+import inter.code.SerialCode;
+
+import java.util.ArrayList;
 
 public class Main{
     public static final int     MAJOR_VERSION       = 1;
@@ -99,7 +103,17 @@ public class Main{
                 System.out.print(s.toString());
                 return; 
             } else if(!print_func_translate) {
-                s.run();
+                ArrayList<SerialCode> i = new ArrayList<SerialCode>();
+                s.emitCode(i);
+                runtime.RunEnv re = new runtime.RunEnv(i);
+                while(re.getCode() != null){
+                    
+                    System.out.print(re.getCode());
+                    re.getCode().serially_run(re);
+                    re.incPC();
+                    //re.printStackInfo();
+                }
+                //s.run();
             } else {
                 return;
             }

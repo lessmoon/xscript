@@ -5,7 +5,8 @@ import lexer.*;
 public class Type extends Word {
 
     public Type(String s,int tag){
-        super(s,tag);
+        super(s,tag)
+        ;
     }
 
     public int getSize(){

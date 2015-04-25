@@ -21,7 +21,7 @@ public class Set extends Expr {
             expr = ConversionFactory.getConversion(expr,type);
         }
     }
-    
+
     Type check(){
         if( op.tag == Tag.MODASS ){
             Type mt = Type.max(id.type,expr.type);
@@ -57,7 +57,7 @@ public class Set extends Expr {
         Constant v = expr.getValue();
         return id.setValue(v);
     }
-    
+
     @Override
     public String toString(){
         return this.getClass().getName() + "(" + id.toString() + op + expr +")";

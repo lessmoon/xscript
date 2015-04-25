@@ -3,6 +3,9 @@ package inter.stmt;
 import symbols.*;
 import inter.expr.Constant;
 import inter.expr.Expr;
+import inter.code.*;
+
+import java.util.ArrayList;
 
 public class If extends Stmt{
     Expr expr;
@@ -39,14 +42,11 @@ public class If extends Stmt{
                 + "}\n";
     }
     
-    /*
-        void emitBinaryCode(BinaryCode x){
-            expr.emitBinaryCode(x);
-            x.emit(J_OFF);
-            int x = x.getCurrentAddress();
-            x.emitIntegerOffsetReference(after,x);
-            stmt.emitBinaryCode(x);
-            int after = x.getCurrentAddress();
-         }
-    */ 
+    @Override
+    public void emitCode(ArrayList<SerialCode> i){
+        i.add(new ExprCode(expr));
+        i.add(new JumpFalseCode(tailaddr));
+        stmt.emitCode(i);
+        this.setTailAddr(i.size());
+    }
 }

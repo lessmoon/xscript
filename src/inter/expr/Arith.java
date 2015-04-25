@@ -17,7 +17,7 @@ public abstract class Arith extends Op {
     }
 
     public abstract boolean check();
-    
+
     @Override
     public Expr optimize(){
         if(isChangeable()){
@@ -33,9 +33,10 @@ public abstract class Arith extends Op {
     boolean isChangeable(){
         return expr1.isChangeable() || expr2.isChangeable();
     }
-    
+
     @Override
     public String toString(){
         return expr1.toString() + " " + op.toString() + " " + expr2.toString(); 
     }
+
 }

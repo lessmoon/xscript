@@ -4,6 +4,9 @@ import lexer.*;
 import symbols.*;
 import inter.expr.Expr;
 import inter.expr.Constant;
+import inter.code.*;
+
+import java.util.ArrayList;
 
 public class For extends Stmt {
     public Stmt begin = null;
@@ -58,6 +61,19 @@ public class For extends Stmt {
         return this;
     }
 
+    
+    @Override
+    public void emitCode(ArrayList<SerialCode> i){
+        begin.emitCode(i);
+        setHeadAddr(i.size());
+        i.add(new ExprCode(condition));
+        i.add(new JumpFalseCode(tailaddr));
+        stmt.emitCode(i);
+        end.emitCode(i);
+        i.add(new JumpCode(headaddr));
+        setTailAddr(i.size());
+    }
+    
     @Override
     public String toString(){
         return "for(" + begin + ";" + condition + ";" + end + "){\n"

@@ -3,15 +3,16 @@ package inter.stmt;
 import lexer.*;
 import symbols.*;
 import runtime.*;
+import inter.code.SerialCode;
 
 import java.util.*;
 
 public class Decls extends Stmt {
     ArrayList<Decl> decls = new ArrayList<Decl>();
-    
+
     public Decls(){
     }
-    
+
     public ArrayList<Decl> getDecls(){
         return decls;
     }
@@ -30,6 +31,7 @@ public class Decls extends Stmt {
             d.run();
         }
     }
+
     @Override
     public Stmt optimize(){
         for(Decl d : decls){
@@ -37,7 +39,14 @@ public class Decls extends Stmt {
         }
         return this;
     }
-    
+
+    @Override
+    public void emitCode(ArrayList<SerialCode> i){
+        for(Decl d : decls){
+            d.emitCode(i);
+        }
+    }
+
     @Override
     public String toString(){
         StringBuffer sb = new StringBuffer();

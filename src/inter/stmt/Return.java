@@ -5,8 +5,11 @@ import runtime.*;
 import inter.expr.Constant;
 import inter.expr.Expr;
 import inter.expr.ConversionFactory;
+import inter.code.*;
 
-public class Return extends Stmt {
+import java.util.ArrayList;
+
+public class Return extends Stmt implements SerialCode{
     public Expr expr;
     final int sizeOfStack;
     public Return(Expr e,Type t,int s){
@@ -30,7 +33,7 @@ public class Return extends Stmt {
         expr = expr.optimize();
         return this;
     }
-    
+
     @Override
     public void run(){
         /*
@@ -41,23 +44,22 @@ public class Return extends Stmt {
         ReturnResult r = new ReturnResult(expr.getValue());
         for(int i = 0 ; i < sizeOfStack;i++)
             VarTable.popTop();
-        
+
         throw r;
     }
-    
-    /*
-        void emitBinaryCode(BinaryCode x){
-            if(Expr.VoidExpr != expr){
-                expr.emit(x,eax);
-            }
-            if(sizeOfStack == 0){
-                x.emit(SRET_CALL);
-            } else {
-                x.emit(RET_CALL);
-                x.emit(sizeOfStack);
-            }
-        }
-    */
+
+    @Override
+    public void serially_run(RunEnv r){
+        r.functionReturn();
+        for(int i = 0 ; i < sizeOfStack;i++)
+            VarTable.popTop();
+    }
+
+    @Override
+    public void emitCode(ArrayList<SerialCode> i){
+        i.add(new ExprCode(expr));
+        i.add(this);
+    }
 
     @Override
     public String toString(){

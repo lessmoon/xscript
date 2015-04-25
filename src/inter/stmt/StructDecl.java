@@ -26,4 +26,5 @@ public class StructDecl extends Decl {
     public void run(){
         VarTable.pushVar(value != null ? value.getValue():new StructConst((Struct)type));
     }
+
 }

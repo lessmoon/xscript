@@ -3,6 +3,10 @@ package inter.stmt;
 import symbols.*;
 import inter.expr.Constant;
 import inter.expr.Expr;
+import inter.code.*;
+
+import java.util.ArrayList;
+
 
 public class Do extends Stmt{
     Expr expr;
@@ -46,5 +50,14 @@ public class Do extends Stmt{
                     throw e;
             }
         }while(expr.getValue() != Constant.False);
+    }
+    
+    @Override
+    public void emitCode(ArrayList<SerialCode> i){
+        headaddr.setValue(i.size());
+        stmt.emitCode(i);
+        i.add(new ExprCode(expr));
+        i.add(new JumpTrueCode(headaddr));
+        tailaddr.setValue(i.size());
     }
 }

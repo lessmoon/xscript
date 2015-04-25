@@ -17,4 +17,10 @@ public class Not extends Logical{
     public String toString(){
         return op.toString() + " " + expr2.toString();
     }
+
+    @Override
+    public void emitCode(ArrayList<SerialCode> i){
+        expr1.emitCode(i);
+        i.add( SerialCode.NotCode );
+    }
 }

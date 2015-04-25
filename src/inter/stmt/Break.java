@@ -1,8 +1,11 @@
 package inter.stmt;
 
 import runtime.*;
+import inter.code.*;
 
-public class Break extends Stmt {
+import java.util.ArrayList;
+
+public class Break extends Stmt implements SerialCode{
     static public  final Throwable BreakCause = new Throwable();
     Stmt stmt;
     public final int sizeOfStack;
@@ -26,13 +29,15 @@ public class Break extends Stmt {
         throw new RuntimeException(BreakCause);
     }
     
-    /*
-        void emitBinaryCode(BinaryCode x){
-            x.emit(POPN_STACK);
-            x.emit(sizeOfStack);
-            Reference<Integer> i  = new Reference<Integer>(x.getCurrentAddress());
-            x.emit(JUMPOFF_TO);
-            x.emitIntegerOffsetReference(i,stmt.after);//stmt.after should be reference
-        }
-    */
+    @Override
+    public void serially_run(RunEnv r){
+        for(int i = 0 ; i < sizeOfStack;i++)
+            VarTable.popTop();
+        r.jumpTo(stmt.getTailAddr());
+    }
+
+    @Override
+    public void emitCode(ArrayList<SerialCode> i){
+        i.add(this);
+    }
 }

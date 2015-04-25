@@ -56,7 +56,7 @@ public class PaintPad extends JFrame{
         pp.setLocationRelativeTo(null);
         return 1;
     }
-    
+
     static int setBrushColor(int r,int g,int b){
         bc = new Color(r,g,b);
         return 1;

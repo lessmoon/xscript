@@ -163,7 +163,7 @@ class CharSwitch extends Switch {
 
 class StrSwitch extends Switch {
         HashMap<String,Stmt> map = new HashMap<String,Stmt>();
-        
+
         public StrSwitch(Expr e){
             super(e);
         }
@@ -187,7 +187,7 @@ class StrSwitch extends Switch {
             String i = ((Str)c.op).value;
             return map.get(i) != null;
         }
-        
+
         @Override
         public void run(){
             Constant v = condition.getValue();

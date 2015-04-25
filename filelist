@@ -21,6 +21,14 @@ src/extension/sleep.java
 src/extension/strlen.java
 src/extension/time.java
 src/extension/writech.java
+src/inter/code/ExprCode.java
+src/inter/code/IntReference.java
+src/inter/code/JumpCode.java
+src/inter/code/JumpFalseCode.java
+src/inter/code/JumpOffCode.java
+src/inter/code/JumpTrueCode.java
+src/inter/code/SerialCode.java
+src/inter/code/StatementCode.java
 src/inter/expr/AbsoluteVar.java
 src/inter/expr/And.java
 src/inter/expr/Arith.java
@@ -87,6 +95,8 @@ src/lexer/Word.java
 src/main/Main.java
 src/parser/Parser.java
 src/runtime/LoadFunc.java
+src/runtime/RunEnv.java
+src/runtime/StackInfo.java
 src/runtime/VarTable.java
 src/symbols/Array.java
 src/symbols/Env.java

@@ -3,6 +3,7 @@ package inter.stmt;
 import lexer.*;
 import symbols.*;
 import inter.util.Para;
+import inter.code.SerialCode;
 
 import java.util.ArrayList;
 
@@ -11,7 +12,7 @@ public abstract class FunctionBasic extends Stmt {
     public Token name;
     public ArrayList<Para> paralist;
     private boolean hasused = false;
-    
+
     public FunctionBasic(Token name,Type t,ArrayList<Para> p){
         init(name,t,p);    
     }
@@ -29,7 +30,7 @@ public abstract class FunctionBasic extends Stmt {
     public int getParaNumber(){
         return paralist.size();
     }
-    
+
     public abstract void run();
     public abstract boolean isCompleted();
     public boolean used(){
@@ -38,7 +39,9 @@ public abstract class FunctionBasic extends Stmt {
     public void setUsed(){
         hasused = true;
     }
-    
+
+    public abstract ArrayList<SerialCode> getBody();
+
     @Override
     public String toString(){
         StringBuffer sb = new StringBuffer(type.toString());
@@ -54,6 +57,5 @@ public abstract class FunctionBasic extends Stmt {
         sb.append(")");
         return sb.toString();
     }
-
 
 }

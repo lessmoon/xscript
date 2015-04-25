@@ -31,4 +31,11 @@ public abstract class Conversion extends Expr {
     }
     
     public abstract Constant getValue();
+
+    @Override
+    public void emitCode(ArrayList<SerialCode> i){
+        e.emitCode(i);
+        SerialCode sc = SerialCode.getCoversionCode(op.tag,src,tar);
+        i.add(sc);
+    }
 }

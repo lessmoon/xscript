@@ -1,8 +1,11 @@
 package inter.stmt;
 
 import runtime.*;
+import inter.code.*;
 
-public class Continue extends Stmt {
+import java.util.ArrayList;
+
+public class Continue extends Stmt implements SerialCode {
     static public  final Throwable ContinueCause = new Throwable();
     Stmt stmt;
     public final int sizeOfStack;
@@ -24,5 +27,17 @@ public class Continue extends Stmt {
             VarTable.popTop();
 
         throw new RuntimeException(ContinueCause);
+    }
+
+    @Override
+    public void serially_run(RunEnv r){
+        for(int i = 0 ; i < sizeOfStack;i++)
+            VarTable.popTop();
+        r.jumpTo(stmt.getHeadAddr());
+    }
+    
+    @Override
+    public void emitCode(ArrayList<SerialCode> i){
+        i.add(this);
     }
 }

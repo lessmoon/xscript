@@ -1,5 +1,15 @@
-import  "lib/file.xs";
 import  "lib/system.xs";
+
+{
+    for(int i = 0 ; i < 100;i++){
+        print(i);
+        print("\n");
+    }
+}
+
+
+import  "lib/file.xs";
+
 import  "math/Math.xs";
 
 loadfunc<extension>{

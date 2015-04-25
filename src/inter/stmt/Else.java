@@ -3,6 +3,9 @@ package inter.stmt;
 import symbols.*;
 import inter.expr.Constant;
 import inter.expr.Expr;
+import inter.code.*;
+
+import java.util.ArrayList;
 
 public class Else extends Stmt {
     Expr expr;
@@ -37,6 +40,18 @@ public class Else extends Stmt {
         }
         return this;
     }
+
+    @Override
+    public void emitCode(ArrayList<SerialCode> i){
+        IntReference a = new IntReference();
+        i.add(new ExprCode(expr));
+        i.add(new JumpFalseCode(a));
+        stmt1.emitCode(i);
+        a.setValue(i.size());
+        i.add(new JumpCode(tailaddr));
+        stmt2.emitCode(i);
+    }
+
     
     @Override
     public String toString(){

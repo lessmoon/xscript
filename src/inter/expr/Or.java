@@ -12,4 +12,13 @@ public class Or extends Logical{
     public Constant getValue(){
         return expr1.getValue() != Constant.False?Constant.True:expr2.getValue();
     }
+    
+    @Override
+    public void emitCode(ArrayList<SerialCode> i){
+        IntReference addr = new IntReference();
+        expr1.emitCode(i);
+        i.add(new JumpTrueCode(addr));
+        expr2.emitCode(i);
+        addr.setValue(i.size());
+    }
 }

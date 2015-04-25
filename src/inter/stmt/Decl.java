@@ -6,8 +6,11 @@ import runtime.*;
 import inter.expr.Constant;
 import inter.expr.Expr;
 import inter.expr.ConversionFactory;
+import inter.code.SerialCode;
 
-public class Decl extends Stmt {
+import java.util.ArrayList;
+
+public class Decl extends Stmt implements SerialCode {
     Token id;
     Type  type;
     Expr  value;
@@ -39,22 +42,32 @@ public class Decl extends Stmt {
     }
     
     @Override
+    public void serially_run(RunEnv r){
+        this.run();
+    }
+
+    @Override
     public Stmt optimize(){
         if(value != null)
             value = value.optimize();
         return this;
     }
-    
+
     public static Decl getDecl(Token i,Type t,Expr v){
         if(t instanceof Struct){
             return new StructDecl(i,t,v);
-        } if (t instanceof Array){
+        } else if (t instanceof Array){
             return new ArrayDecl(i,t,v);
         } else {
             return new Decl(i,t,v);
         }
     }
-    
+
+    @Override
+    public void emitCode(ArrayList<SerialCode> i){
+        i.add(this);
+    }
+
     @Override
     public String toString(){
         String res = "Decl[" + type + "] " + id ;
