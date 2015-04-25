@@ -223,15 +223,17 @@ class StringCat extends Arith {
             if(((Str)r.op).value.isEmpty()){
                 return expr2;
             }
+            if(!expr2.isChangeable())
+                return this.getValue();
         } else if(!expr2.isChangeable()){
             Constant r = expr2.getValue();
             if(((Str)r.op).value.isEmpty()){
                 return expr1;
             }
-        }
+        } 
         return this;
     }
-    
+
     @Override
     public Constant getValue(){
         Constant str1 = expr1.getValue();

@@ -82,8 +82,8 @@ def int llist.getSize(){
     x = x*x*x*x*x*x*x*x*x*y;
     println( "x*x*x*x*x*x*x*x*x*y = " + x );
     println("Test for big real");
-    bigreal Rx = 225R;
-    bigreal Ry = 226R;
+    bigreal Rx = 0.225R;
+    bigreal Ry = 0.226R;
     println("x = " + Rx + ",y= " + Ry + " ");
     Rx = Rx*Rx*Rx*Rx*Rx*Rx*Rx*Rx*Rx*Ry;
     println( "x*x*x*x*x*x*x*x*x*y = " + Rx );

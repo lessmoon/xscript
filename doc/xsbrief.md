@@ -116,9 +116,9 @@
 		- expression (`==`,`!=`,`>`,`>=`,`<`,`<=`) expression
 		- bool-type expression (`&&`,`||`) bool-type  expression
 	* Variable declaration
-		- Basic-type var-name[,...] (var-name must begin with one of [a-zA-Z_])
-		- Basic-type var-name = initial-value[,...](with initial-value)
-		- Basic-type [integer constant]... var-name[,...](for array declaration)
+		- Basic-type var-name\[,...] (var-name must begin with one of [a-zA-Z_])
+		- Basic-type var-name = initial-value\[,...](with initial-value)
+		- Basic-type [integer constant]... var-name\[,...](for array declaration)
 	* Constant:
 		- `int`:only decimal integer is supported(ends with '*i*' or less than IntMax)
 		- `char`:'character'(character includes escape character `\n`,`\t`,`\r`,`\'`,`\"`,`\?`,`\b`,`\f`,`\\`)

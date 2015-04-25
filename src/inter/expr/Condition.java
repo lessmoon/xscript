@@ -31,7 +31,7 @@ public class Condition extends Expr {
             return true;
         else {
             cond = cond.getValue();/*don't calculate twice*/
-            return cond != Constant.False?iftrue.isChangeable():iffalse.isChangeable();       
+            return cond != Constant.False?iftrue.isChangeable():iffalse.isChangeable();
         }
     }
 
