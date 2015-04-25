@@ -77,6 +77,8 @@ public class Lexer {
         reserve( Type.BigInt );
         reserve( Type.BigReal );
         reserve( Type.Void );
+
+        reserve( Word.args);
     }
 
     void save(String path){

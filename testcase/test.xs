@@ -68,6 +68,13 @@ def int llist.getSize(){
 }
 
 {
+    println("Test for build-in variable _args_");
+    int h;
+    for(int i =0 ; i < sizeof _args_ ; i++)
+        println("_args_[" + i + "]:" + _args_[i]);
+}
+
+{
     println("Test for big int");
     bigint x = 225I;
     bigint y = 226I;
@@ -244,7 +251,7 @@ def int llist.getSize(){
     
     println(list_toString(qlsort(a,0)));
 }
-//return 0;
+
 
 struct CORD{
     real x;
@@ -253,6 +260,7 @@ struct CORD{
         this.x = x;
         this.y = y;
     }
+
     def string toString(){
         return "("+this.x+","+this.y+")";
     }

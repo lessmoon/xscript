@@ -36,15 +36,13 @@ public class Parser{
     public boolean PRINT_FUNC_TRANSLATE = false;
 
     public  Parser(Lexer l) throws IOException{
-        lex = l;
-        move();
-        ENABLE_EXPR_OPT = false;
-        ENABLE_STMT_OPT = false;
+        this(l,false,false);
     }
 
     public  Parser(Lexer l,boolean expr_opt,boolean stmt_opt) throws IOException{
         lex = l;
         move();
+        top.put(Word.args,new Array(Type.Str,0));
         ENABLE_EXPR_OPT = expr_opt;
         ENABLE_STMT_OPT = stmt_opt;
     }

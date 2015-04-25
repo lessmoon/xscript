@@ -20,9 +20,9 @@ public abstract class Arith extends Op {
     
     @Override
     public Expr optimize(){
+        expr1 = expr1.optimize();
+        expr2 = expr2.optimize();
         if(isChangeable()){
-            expr1 = expr1.optimize();
-            expr2 = expr2.optimize();
             return this;
         } else {
             return getValue();

@@ -1,9 +1,14 @@
 package main;
 
 import java.io.*;
+
 import lexer.*; 
 import parser.*;
+import symbols.*;
+import inter.expr.Constant;
+import inter.expr.ArrayConst;
 import inter.stmt.Stmt;
+import runtime.VarTable;
 
 public class Main{
     public static final int     MAJOR_VERSION       = 1;
@@ -30,39 +35,37 @@ public class Main{
         boolean stmt_opt  = false;
         boolean print_code_translate = false;
         boolean print_func_translate = false;
-
-        for(int i = 0 ; i < args.length ;i++){
-            switch(args[i]){
-            case "-pc":
-                print_code_translate = true;
-                break;
-            case "-pf":
-                print_func_translate = true;
-                break;
-            case "-eo":
-                expr_opt = true;
-                break;
-            case "-so":
-                stmt_opt = true;
-                break;
-            case "-h":
-            case "--help":
-                usage();
-                return;
-            case "-v":
-                System.out.println("Version: xxxscript " + MAJOR_VERSION + "." +  MINOR_VERSION + "\n");
-                return;
-            default:
-                if(args[i].charAt(0) == '-'){
-                    System.err.println("Unknown option `" + args[i] + "' found.");
+        int index = 0 ;
+        outer:{
+            for(; index < args.length ;index++){
+                switch(args[index]){
+                case "-pc":
+                    print_code_translate = true;
+                    break;
+                case "-pf":
+                    print_func_translate = true;
+                    break;
+                case "-eo":
+                    expr_opt = true;
+                    break;
+                case "-so":
+                    stmt_opt = true;
+                    break;
+                case "-h":
+                case "--help":
+                    usage();
                     return;
-                }
-                if(filepath != null){
-                    System.err.println("Multiple file-names found.");
+                case "-v":
+                    System.out.println("Version: xxxscript " + MAJOR_VERSION + "." +  MINOR_VERSION + "\n");
                     return;
+                default:
+                    if(args[index].charAt(0) == '-'){
+                        System.err.println("Unknown option `" + args[index] + "' found.");
+                        return;
+                    }
+                    filepath = args[index];
+                    break outer;
                 }
-                filepath = args[i];
-                break;
             }
         }
         Lexer lex = new Lexer();
@@ -99,6 +102,14 @@ public class Main{
                 System.out.print(s.toString());
                 return; 
             } else if(!print_func_translate) {
+                /* push arguments */
+                ArrayConst a = new ArrayConst(new Array(Type.Str,args.length - index));
+
+                for(int i = 0;i + index < args.length;i++){
+                    a.setElement(i,new Constant(args[i + index]));
+                }
+                VarTable.pushVar(a);
+
                 s.run();
             } else {
                 return;

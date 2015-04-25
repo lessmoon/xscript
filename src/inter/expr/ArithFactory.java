@@ -204,6 +204,7 @@ class StringCat extends Arith {
         if(expr1.type != Type.Str || expr2.type != Type.Str)
             error("String can't cat");
     }
+
     public boolean check(){
         switch(op.tag){
         case '+':
@@ -213,6 +214,25 @@ class StringCat extends Arith {
         }
     }
 
+    @Override
+    public Expr optimize(){
+        expr1 = expr1.optimize();
+        expr2 = expr2.optimize();
+        if(!expr1.isChangeable()){
+            Constant r = expr1.getValue();
+            if(((Str)r.op).value.isEmpty()){
+                return expr2;
+            }
+        } else if(!expr2.isChangeable()){
+            Constant r = expr2.getValue();
+            if(((Str)r.op).value.isEmpty()){
+                return expr1;
+            }
+        }
+        return this;
+    }
+    
+    @Override
     public Constant getValue(){
         Constant str1 = expr1.getValue();
         Constant str2 = expr2.getValue();
