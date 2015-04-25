@@ -1,6 +1,7 @@
 import  "lib/file.xs";
 import  "lib/system.xs";
 import  "math/Math.xs";
+import  "math/Ratio.xs";
 
 loadfunc<extension>{
     int openPad(int w,int h);
@@ -53,7 +54,6 @@ struct llist{
 def int llist.getSize(){
     return this.size;
 }
-
 
 {
     int x = time();
@@ -131,6 +131,16 @@ def int llist.getSize(){
     }
 }
 
+{
+    println("test for ratio");
+    Ratio x,d;
+    x.init(52,564);
+    d.init(25,55);
+    println(x.toString() + "+" + d.toString() + "=" + x.add(d).toString() );
+    println(x.toString() + "-" + d.toString() + "=" + x.sub(d).toString() );
+    println(x.toString() + "*" + d.toString() + "=" + x.mult(d).toString() );
+    println(x.toString() + "/" + d.toString() + "=" + x.div(d).toString() );
+}
 
 {
     println("Test for pre-declaration code");
