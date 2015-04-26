@@ -18,6 +18,7 @@ public class MemberFunction extends Function {
         stct = sn;
     }
 
+    @Override
     public String toString(){
         StringBuffer sb = new StringBuffer(type.toString());
         sb.append( stct.lexeme + "." + name + "(");

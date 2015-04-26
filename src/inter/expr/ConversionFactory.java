@@ -2,9 +2,11 @@ package inter.expr;
 
 import lexer.*;
 import symbols.*;
+import inter.stmt.FunctionBasic;
 
 import java.math.BigInteger;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 class NoConversion extends Conversion{
     NoConversion(Expr e){
@@ -331,9 +333,22 @@ class ConversionFactoryFactory {
 }
 
 public class ConversionFactory {
-    static public Conversion getConversion(Expr src,Type t){
-       Factory f = ConversionFactoryFactory.getConversionFactory(src);
-       Conversion c = f.getConversion(src,t);
+    static public Expr getConversion(Expr src,Type t){
+       /*
+        * if it is struct may have conversion override
+        */
+       Expr c = null;
+       if(src.type instanceof Struct){
+            FunctionBasic f = ((Struct)(src.type)).getOverloading(t);
+            if(f != null){
+                ArrayList<Expr> p = new ArrayList<Expr>();
+                p.add(src);
+                c = new FunctionInvoke(f,p);
+            }
+       } else {
+            Factory f = ConversionFactoryFactory.getConversionFactory(src);
+            c = f.getConversion(src,t);
+       }
        if(c == null){
             src.error("Can't convert `" + src.type + "' to `" + t.toString() +"'");
        }

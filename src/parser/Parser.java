@@ -187,6 +187,10 @@ public class Parser{
         lex.defType(s);
         match('{');
         do{
+            Token op = null;
+            if(check('@')){
+                op = copymove();
+            }
             /*Function definition*/
             if(check(Tag.DEF)){
                 Env savedEnv = top;
@@ -206,6 +210,13 @@ public class Parser{
                 if(s.addFunc(fname,f) != null){
                     error("Member function name `" + fname + "' has been used");
                 }
+                
+                if(op != null){
+                    if(!s.addOverloading(op,f)){
+                        error("Operand `" + op + "' overloading is redefined");
+                    }
+                }
+                
                 if(!check(';')){
                     match('{');
                     Stmt stmt = stmts();
@@ -217,6 +228,9 @@ public class Parser{
                 returnType = savedType;
                 hasDecl = savedHasDecl;
             } else {
+                if(op != null){
+                    error("Overloading for `" + op + "' found but no function definition found");
+                }
                 Type t = type();
                 Token m = look;
                 match(Tag.ID);

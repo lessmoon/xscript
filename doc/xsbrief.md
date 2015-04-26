@@ -73,13 +73,13 @@
 	* `break`;(in loops or switch)
 	* `continue`;(in loops)
 	* `return` expression;(in functions)
-* Function declaration & defination
-	* Defination
-		* Normal dunction defination
+* Function declaration & definition
+	* Definition
+		* Normal dunction definition
 			1. `def` return-type func-name ( [para-type para-identifier,...] ){
 			2. &emsp;&emsp; funtion-body
 			3. }
-		* Structure's member function defination(can use `this` variable in function body)
+		* Structure's member function definition(can use `this` variable in function body)
 			1. `def` return-type structure-name.func-name ([para-type para-`,...]){
 			2. &emsp;&emsp;function-body
  			3. }
@@ -90,10 +90,22 @@
 		1.  `struct` name {
 		2. &emsp;type-name var-name;[...] ***//Member declaration***
 		3. &emsp;`def` return-type func-name([para-type para-name,...]);***//Function declaration***
-		4. &emsp;`def` return-type func-name([para-type para-name,...]){***//Function defination***
+		4. &emsp;`def` return-type func-name([para-type para-name,...]){***//Function definition***
 		5. &emsp;&emsp;&emsp;&emsp;function-body;
 		6. &emsp;&nbsp;}
 		7. &nbsp;}
+	- Operand overloading
+		- Definition grammar
+			1.  `struct` name {
+			2.  &emsp;@operand-name
+			3.  &emsp;`def` return-type func-name([para-type para-name,...]);***//Function declaration or definition***
+			4.  &nbsp;}
+		- Constraint
+			1. available operands have `+`,`-`,`*`,`/`,`%`,`>`,`<`,`<=`,`>=`, and types(except the self-type and array)
+			2. operands `+`,`-`,`*`,`*` overloading functions should have&only have one parameter whose type is the same as the struct,and they returns the same type as the struct
+			3. operands `<`,`>`,`<=`,`>=` overloading functions should have&only have one parameter whose type is the same as the struct,but the return-type should be `bool`
+			4. the operands `==`,`!=` is built-in operation,they compared by the struct address,so we disabled their overloading to avoid confusion
+			5. type-conversion function should have no parameter ant its return-type should be the same as the operand
 	- Structure member access:
 		- name.member-name
 * Load extension function:
@@ -120,18 +132,18 @@
 		- Basic-type var-name = initial-value\[,...](with initial-value)
 		- Basic-type [integer constant]... var-name\[,...](for array declaration)
 	* Constant:
-		- `int`:only decimal integer is supported(ends with '*i*' or less than IntMax)
+		- `int`:only decimal integer is supported(ends with '**i**' or less than IntMax)
 		- `char`:'character'(character includes escape character `\n`,`\t`,`\r`,`\'`,`\"`,`\?`,`\b`,`\f`,`\\`)
 		- `string`:"characters"
-		- `real`:just support decimal real number(ends with '*r*' or less than RealMax)
+		- `real`:just support decimal real number(ends with '**r**' or less than RealMax)
 		- `bool`:`true`,`false`
-		- `bigint`:integer larger than IntMax(or ends with '*I*')
-		- `bigreal`:real larger than RealMax(or ends with '*R*') 
+		- `bigint`:integer larger than IntMax(or ends with '**I**')
+		- `bigreal`:real larger than RealMax(or ends with '**R**') 
 	* Dynamic array allocation:
 		- `new` < type > (expression);
 	* Array size getter:
 		- `sizeof` array-type-expression
-	* Build-in variable:
+	* Built-in variable:
 		- `_line_`:  line number of the source file
 		- `_file_`:  file name of the source file
 		- `_version_`: compiler version(major-version * 100 + minor-version)

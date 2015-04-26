@@ -2,9 +2,11 @@ package inter.expr;
 
 import lexer.*;
 import symbols.*;
+import inter.stmt.FunctionBasic;
 
 import java.math.BigInteger;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 class IntArith extends Arith {
     public IntArith(Token tok,Expr x1,Expr x2){
@@ -244,7 +246,26 @@ class StringCat extends Arith {
 }
 
 public class ArithFactory {
-    public static Arith getArith(Token tok,Expr e1,Expr e2){
+    public static Expr getArith(Token tok,Expr e1,Expr e2){
+
+        if(e1.type instanceof Struct){
+            FunctionBasic f = ((Struct)(e1.type)).getOverloading(tok);
+            if(f != null){
+                if(e2.type != e1.type){
+                    e2 = ConversionFactory.getConversion(e2,e1.type);
+                }
+                
+                if(e2 != null){
+                    ArrayList<Expr> p = new ArrayList<Expr>();
+                    p.add(e1);
+                    p.add(e2);
+                    return new FunctionInvoke(f,p);
+                }
+            }
+            e1.error("Operand `" + tok + "' can't be used between `" + e1.type + "' and `" + e2.type + "'");
+            return null;
+        }
+
         Type t = Type.max(e1.type,e2.type);
 
         if(Type.numeric(t) || t == Type.Str){

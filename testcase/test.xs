@@ -55,6 +55,7 @@ def int llist.getSize(){
     return this.size;
 }
 
+
 {
     int x = time();
     println("Random seed:" + x);
@@ -67,8 +68,45 @@ def int llist.getSize(){
     print("------------------\n");
 }
 
+struct complex{
+    real r;
+    real img;
+    @+def complex add(complex x){
+        complex res;
+        res.r = x.r + this.r;
+        res.img = x.img + this.r;
+        return res;
+    }
+    
+    @>def bool isGreatThan(complex c){
+        if(this.r > c.r)
+            return true;
+        else
+            return this.r == c.r && this.img > c.img;
+    }
+
+    @string def string toString(){
+        return "" + this.r + "+" + this.img + "*i";
+    }
+}
+
 {
-    println("Test for build-in variable _args_");
+    println("Test for operand overloading");
+    complex c1,c2;
+    c1.r = 2;
+    c1.img = 3;
+    c2.r = 5;
+    c2.img = 6;
+    print("c1=");
+    println((string)c1);
+    print("c2=");
+    println((string)c2);
+    println("c1+c2 = " + (c1+c2));
+    println("c1>c2 = " + (c1>c2));
+}
+
+{
+    println("Test for built-in variable _args_");
     int h;
     for(int i =0 ; i < sizeof _args_ ; i++)
         println("_args_[" + i + "]:" + _args_[i]);
@@ -155,7 +193,7 @@ def int llist.getSize(){
 
 
 {
-    println("Test for build-in variable");
+    println("Test for built-in variable");
     println("This code is in file " + _file_ + " at " + _line_ );
     println("Compiler version is " + _version_/100 + "." + _version_%100);
 }
@@ -244,7 +282,7 @@ def int llist.getSize(){
     list a = create_list() ;
     //a.init();
     list b = create_list() ;
-    //b.init();
+    /*b.init();*/
     int size = 7;
     for(int i = 0;i < size ;i++){
         push_back(a,rand()%31);

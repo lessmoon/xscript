@@ -4,6 +4,7 @@ import lexer.*;
 import symbols.*;
 import runtime.*;
 import inter.stmt.FunctionBasic;
+import inter.stmt.MemberFunction;
 import inter.stmt.ReturnResult;
 
 import java.util.ArrayList;
@@ -61,7 +62,23 @@ public class FunctionInvoke extends Expr {
 
     @Override
     public String toString(){
-        return op.toString() + para.toString() ;
+        int i = 0;
+        StringBuffer sb = new StringBuffer();
+        if(func instanceof MemberFunction){
+            sb.append(para.get(i++).toString());
+            sb.append(".");
+        }
+        sb.append(op);
+        sb.append( "(");
+        if(i < para.size()){
+            sb.append(para.get(i++).toString());
+            while(i < para.size() ){
+                sb.append(",");
+                sb.append(para.get(i++).toString());
+            }
+        }
+        sb.append(")");
+        return sb.toString();
     }
 
     @Override

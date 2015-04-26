@@ -2,9 +2,11 @@ package inter.expr;
 
 import lexer.*;
 import symbols.*;
+import inter.stmt.FunctionBasic;
 
 import java.math.BigInteger;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 class IntRel extends Rel {
     public IntRel(Token tok,Expr x1,Expr x2){
@@ -200,6 +202,9 @@ class StrRel extends Rel {
 class ObjectRel extends Rel {
     public ObjectRel(Token tok,Expr x1,Expr x2){
         super(tok,x1,x2);
+        if(op.tag != Tag.EQ && op.tag != Tag.NE ){
+            error("Operand `" + op + "' can't used between `" + x1.type + "' and `" + x2.type + "'");
+        }
     }
     
     public Constant getValue(){
@@ -219,8 +224,23 @@ class ObjectRel extends Rel {
 }
 
 public class RelFactory {
-    public static Rel getRel(Token tok,Expr x1,Expr x2){
-        Rel r = null;
+    public static Expr getRel(Token tok,Expr x1,Expr x2){
+        Expr r = null;
+        if(x1.type instanceof Struct){
+            FunctionBasic f = ((Struct)(x1.type)).getOverloading(tok);
+            if(f != null){
+                if(x2.type != x1.type){
+                    x2 = ConversionFactory.getConversion(x2,x1.type);
+                }
+                if(x2 != null){
+                    ArrayList<Expr> p = new ArrayList<Expr>();
+                    p.add(x1);
+                    p.add(x2);
+                    return new FunctionInvoke(f,p);
+                }
+            }
+        }
+
         if( x1.type instanceof Array || x1.type instanceof Struct ){
             if(x1.type.equals(x2.type))
                 r = new ObjectRel(tok,x1,x2);

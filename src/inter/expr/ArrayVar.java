@@ -17,13 +17,13 @@ public class ArrayVar extends Var {
     boolean isChangeable(){
         return true;
     }
-    
+
     @Override
     public Expr optimize(){
         loc = loc.optimize();
         return this;
     }
-    
+
     @Override
     public Constant getValue(){
         ArrayConst v = (ArrayConst)array.getValue();
@@ -34,7 +34,6 @@ public class ArrayVar extends Var {
         return v.getElement(l);
     }
 
-    
     @Override
     public Constant setValue(Constant v){
         int l = ((Num)(loc.getValue()).op).value;
