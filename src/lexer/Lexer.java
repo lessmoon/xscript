@@ -42,7 +42,7 @@ public class Lexer {
     public void error(String s){
         throw new RuntimeException("Line " + line + " in file `" +  filename + "':\n\t" + s);
     }
-    
+
     public Token defType(Type t) {
         return words.put(t.lexeme,t);
     }

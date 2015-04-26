@@ -1,7 +1,9 @@
-package extension;
+package extension.math;
 
 import lexer.Float;
 import inter.expr.Constant;
+import extension.Function;
+
 import java.util.ArrayList;
 
 public class sin extends Function {

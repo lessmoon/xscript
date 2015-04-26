@@ -50,13 +50,14 @@ public class Struct extends Type {
                 f.error("Operand `" + op + "' overloading' return type should be `"+ this + "',but found `" + f.type + "'");
             }
             break;
-        //logical operand
+        
         /*
          * NOTE:
          * recursively calling risk:
          * it will call itself while do this(maybe you don't know)
          * so we just disable =='s and !='s overloading
-         *  @== or(!=)
+         * e.g.:
+         *   @== or(!=)
          *   def bool isequal(list s){
          *      if(s == this){//at here
          *          return true;
@@ -65,7 +66,7 @@ public class Struct extends Type {
          *          ......
          *   }
          */
-        
+        //relational operand
         //case Tag.NE://!=
         //case Tag.EQ://==
         case Tag.GE://>=

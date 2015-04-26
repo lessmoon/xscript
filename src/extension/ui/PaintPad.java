@@ -1,4 +1,4 @@
-package extension;
+package extension.ui;
 
 import java.util.ArrayList;
 import javax.swing.*;

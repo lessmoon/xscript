@@ -1,7 +1,9 @@
-package extension;
+package extension.system;
 
 import inter.expr.Constant;
 import java.util.ArrayList;
+import extension.Function;
+
 import java.io.IOException;
 
 public class getchar extends Function {

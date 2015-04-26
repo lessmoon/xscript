@@ -12,7 +12,7 @@ import runtime.VarTable;
 
 public class Main{
     public static final int     MAJOR_VERSION       = 1;
-    public static final int     MINOR_VERSION       = 4;
+    public static final int     MINOR_VERSION       = 5;
 
     public static void usage(){
         System.out.println(
@@ -29,7 +29,6 @@ public class Main{
     }
     
     public static void main(String[] args)throws IOException{
-        
         String filepath = null;
         boolean expr_opt = false;
         boolean stmt_opt  = false;

@@ -25,7 +25,7 @@ struct Ratio{
         this.reduce();
     }
 
-    //@+
+    @+
     def Ratio add(Ratio r){
         Ratio tmp;
         tmp.num = r.den * this.num +  this.den* r.num;
@@ -33,7 +33,7 @@ struct Ratio{
         return tmp.reduce();
     }
 
-    //@/
+    @-
     def Ratio sub(Ratio r){
         Ratio tmp;
         tmp.num = r.den * this.num -  this.den* r.num;
@@ -41,7 +41,7 @@ struct Ratio{
         return tmp.reduce();
     }
 
-    //@*
+    @*
     def Ratio mult(Ratio r){
         Ratio tmp;
         tmp.num = r.num * this.num ;
@@ -49,7 +49,7 @@ struct Ratio{
         return tmp.reduce();
     }
 
-    //@+
+    @/
     def Ratio div(Ratio r){
         Ratio tmp;
         tmp.num = this.num * r.den;
@@ -64,7 +64,7 @@ struct Ratio{
         return this.num == r.num && this.den == r.den;
     }    
     
-    //@toString
+    @string
     def string toString(){
         return "" + this.num + "/" + this.den;
     }

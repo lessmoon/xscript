@@ -143,9 +143,17 @@ public class Parser{
     public void loadfunc() throws IOException {
         ArrayList<Para> pl  = null;
         match(Tag.LDFUNC);
+        StringBuffer sb = new StringBuffer();
         match('<');
         Token pkg = look;
         match(Tag.ID);
+        sb.append(pkg.toString());
+        while(check('.')){
+            sb.append(".");
+            pkg = look;
+            match(Tag.ID);
+            sb.append(pkg.toString());
+        }
         match('>');
         match('{');
         while(!check('}')){
@@ -164,7 +172,7 @@ public class Parser{
                 match(')');
             }
             match(';');
-            table.addFunc(name,LoadFunc.loadFunc(t,pkg,name,pl));
+            table.addFunc(name,LoadFunc.loadFunc(t,sb.toString(),name,pl));
         }
     }
 

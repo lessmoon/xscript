@@ -3,7 +3,7 @@ import  "lib/system.xs";
 import  "math/Math.xs";
 import  "math/Ratio.xs";
 
-loadfunc<extension>{
+loadfunc<extension.ui>{
     int openPad(int w,int h);
     int drawLine(int x1,int y1,int x2,int y2);
     int drawPoint(int x,int y);
@@ -13,7 +13,13 @@ loadfunc<extension>{
     int paint();
     int closePad();
     int clearPad();
+}
+
+loadfunc<extension.system>{
     void sleep(int duration);
+}
+
+loadfunc<extension.math>{
     real sin(real theta);
 }
 
@@ -71,21 +77,24 @@ def int llist.getSize(){
 struct complex{
     real r;
     real img;
-    @+def complex add(complex x){
+    @+
+    def complex add(complex x){
         complex res;
         res.r = x.r + this.r;
         res.img = x.img + this.r;
         return res;
     }
-    
-    @>def bool isGreatThan(complex c){
+
+    @>
+    def bool isGreaterThan(complex c){
         if(this.r > c.r)
             return true;
         else
             return this.r == c.r && this.img > c.img;
     }
 
-    @string def string toString(){
+    @string
+    def string toString(){
         return "" + this.r + "+" + this.img + "*i";
     }
 }
@@ -174,10 +183,10 @@ struct complex{
     Ratio x,d;
     x.init(52,564);
     d.init(25,55);
-    println(x.toString() + "+" + d.toString() + "=" + x.add(d).toString() );
-    println(x.toString() + "-" + d.toString() + "=" + x.sub(d).toString() );
-    println(x.toString() + "*" + d.toString() + "=" + x.mult(d).toString() );
-    println(x.toString() + "/" + d.toString() + "=" + x.div(d).toString() );
+    println(x.toString() + "+" + d.toString() + "=" + (x+d) );
+    println(x.toString() + "-" + d.toString() + "=" + (x-d) );
+    println(x.toString() + "*" + d.toString() + "=" + (x*d) );
+    println(x.toString() + "/" + d.toString() + "=" + (x/d) );
 }
 
 {

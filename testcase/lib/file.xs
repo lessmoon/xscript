@@ -1,4 +1,4 @@
-loadfunc<extension>{
+loadfunc<extension.system>{
     int open(string fname);
     int close(int fid);
     int readch(int fid);
