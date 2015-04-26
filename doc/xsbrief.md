@@ -76,11 +76,11 @@
 * Function declaration & definition
 	* Definition
 		* Normal dunction definition
-			1. `def` return-type func-name ( [para-type para-identifier,...] ){
+			1. `def` return-type func-name ( [para-type para-name,...] ){
 			2. &emsp;&emsp; funtion-body
 			3. }
 		* Structure's member function definition(can use `this` variable in function body)
-			1. `def` return-type structure-name.func-name ([para-type para-`,...]){
+			1. `def` return-type structure-name.func-name ([para-type para-name,...]){
 			2. &emsp;&emsp;function-body
  			3. }
 	* Declaration(if not used,no need to implement it)
