@@ -61,7 +61,6 @@ def int llist.getSize(){
     return this.size;
 }
 
-
 {
     int x = time();
     println("Random seed:" + x);
@@ -254,23 +253,51 @@ struct complex{
     /*draw a red heart*/
     setBrushColor(255,0,0);
     for (real y = 1.5; y > -1.5; y -= 0.01) {
+        real min = 1.5;
+        real max = -1.5;
         for (real x = -1.5; x < 1.5; x += 0.005) {
             real a = x * x + y * y - 1;
             if(a * a * a - x * x * y * y * y <= 0.0){
-                addPoint(x*100 + 300  - 100,-y*100 + 240 - 80);
+                if(min > x)
+                    min = x;
+                if(max < x)
+                    max = x;
+            } else {
+                if(min <= max){
+                    addLine(min*100 + 300  - 100,-y*100 + 240 - 80,max*100 + 300  - 100,-y*100 + 240 - 80);
+                    min = 1.5;
+                    max = -15;
+                }
             }
+        }
+        if(min <= max){
+            addLine(min*100 + 300  - 100,-y*100 + 240 - 80,max*100 + 300  - 100,-y*100 + 240 - 80);
         }
     }
     
     /*draw a green round*/
     setBrushColor(0,255,0);
     real r = 100.0;
-    for (int y = r; y > -r; y -= 1) {
-        for (int x = -r; x < 100; x += 1) {
+    for (int y = -r; y < r; y ++ ) {
+        int min = r;
+        int max = -r;
+        for (int x = -r; x < r; x ++) {
             int a = x * x + y * y ;
             if(a <= r * r ){
-                addPoint(x + 300 + 100 ,-y + 240 + 100);
+                if(min > x)
+                    min = x;
+                if(max < x)
+                    max = x;
+            } else {
+                if(min <= max){
+                    addLine(min + 300 + 100 ,-y + 240 + 100,max + 300 + 100,-y + 240 + 100);
+                    min = r;
+                    max = -r;
+                }
             }
+        }
+        if(min <= max){
+            addLine(min + 300 + 100 ,-y + 240 + 100,max + 300 + 100,-y + 240 + 100);
         }
     }
     
@@ -308,7 +335,6 @@ struct complex{
 
     println(list_toString(qlsort(a,0)));
 }
-
 
 struct CORD{
     real x;
@@ -364,8 +390,6 @@ struct CORD{
 }
 
 
-
-/*FIXME*/
 int[22][23] a;
 int buffer = -1;
 a[21][0] = 212;
@@ -582,21 +606,24 @@ def int printarray(int[2] arr,int len){
     print("\n");
   }
   print("\n");
-  /*
-  int fid= open("t.txt");
-   
-  real y = 1.5;
-  for (y; y > -1.5; y -= 0.1) {
-    real x = -1.5;
-    for (x; x < 1.5; x += 0.05) {
-        real a = x * x + y * y - 1;
-        writech(fid,a * a * a - x * x * y * y * y <= 0.0 ? '*' : ' ');
+}
+
+{
+    println("Test for file write");
+    int fid= open("t.txt");
+    println("write to file " + "t.txt");
+    
+    for (char y = 'a'; y < 'z'; y++) {
+        writech(fid,y);
+        int i = y;
+        string x = ((string)i);
+        writech(fid,':');
+        for(int i = 0 ; i < strlen(x);i++)
+            writech(fid,x[i]);
+        writech(fid,'\r');
+        writech(fid,'\n');
     }
-    writech(fid,'\r');
-    writech(fid,'\n');
-  }
-   close(fid);
-  */
+    close(fid);
 }
 
 def int max(int a,int b){
@@ -648,8 +675,9 @@ def int string2int(string s){
 }
 
 {
+    println("Test for user-define function string2int and sqrt");
     println((string)string2int("2556478"));
-    print("" + sqrt(3) + "\n");
+    print("sqrt(3)=" + sqrt(3) + "\n");
 }
 
 def string gestring(string str,char c,int i){
@@ -678,6 +706,7 @@ def string quicksort(string str){
 }
 
 {
+    println("Test for string quicksort and trim function");
     string a = "    32145547852248562244    ";
     print("quicksort(\"" + a + "\") = \""+ quicksort(a) + "\"\n");
     print("trim( \"" + a +"\") = \"" + trim(a) + "\"\n");

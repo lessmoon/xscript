@@ -11,7 +11,7 @@ public class FuncTable {
     public FuncTable(){
         
     }
-    
+
     public boolean addFunc(Token id,FunctionBasic f){
         return table.put(id,f) == null;
     }

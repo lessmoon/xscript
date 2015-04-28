@@ -15,9 +15,11 @@ public class Parser{
     private Lexer lex;
     private Token look;
     Env top = new Env();
+    HashMap<Token,Type> typetable = new HashMap<Token,Type>();
     FuncTable table = new FuncTable();
     Type returnType = Type.Int;
     boolean hasDecl = true;
+    boolean enableWarning = false;
     /*integer numbers standing for the stack level*/
     
     public int lastBreakFatherLevel = -1;
@@ -29,7 +31,6 @@ public class Parser{
     public int lastFunctionLevel = 0;
     public int nowLevel = 0;
     public HashSet<FunctionBasic> f_used = new HashSet<FunctionBasic>();
-    
     
     public final boolean ENABLE_EXPR_OPT ;
     public final boolean ENABLE_STMT_OPT ;
@@ -55,6 +56,16 @@ public class Parser{
         PRINT_FUNC_TRANSLATE = false;
     }
 
+    public void checkNamespace(Token name,String info){
+        if( top.get(name) != null ){
+            error(info + " `" + name + "' has a same name with a variable");
+        }
+
+        if( getType(name) != null ){
+            error(info + " `" + name + "' has a same name with a struct");
+        }
+    }
+
     public void move() throws IOException {
         look = lex.scan();
     }
@@ -68,16 +79,51 @@ public class Parser{
     public void error(String s){
         error(s,lex.line,lex.filename);
     }
-
+    
     public void error(String s,int l,String f){
-        throw new RuntimeException("Line " + l + " in file `" +  f + "':\n\t" + s);
+        throw new RuntimeException("line " + l + " in file `" +  f + "':\n\t" + s);
+    }
+    
+    public void warning(String s){
+        warning(s,lex.line,lex.filename);
     }
 
+    public void warning(String s,int l,String f){
+        if(enableWarning)
+            System.err.println("line " + l + " in file `" +  f + "':\n\t" + s);
+    }
+
+    public void match(char t) throws IOException{
+        if(look.tag == t)
+            move();
+        else {
+            if(look.tag == -1){
+                error("unexpected end of file");
+            }
+            error("syntax error:expect `" + t +"',but found `" + look + "'");
+        }
+    }
+        
     public void match(int t) throws IOException{
         if(look.tag == t)
             move();
-        else 
-            error("syntax error");
+        else {
+            if(look.tag == -1){
+                error("unexpected end of file");
+            }
+            String expect ;
+            switch(t){
+            case Tag.ID:
+                expect = " identifier";
+                break;
+            case Tag.BASIC:
+                expect = " basic type(includes (big)int,(big)real,char and string)";
+                break;
+            default:
+                expect = "";
+            }
+            error("syntax error:expect " + expect + ",but found `" + look + "'");
+        }
     }
 
     public boolean check(int t) throws IOException{
@@ -119,23 +165,23 @@ public class Parser{
         /*check if some used functions has not been completed*/
         for(FunctionBasic b : table.getAllFunctions()){
             if(b.used()&&!b.isCompleted()){
-                error("Function `" + b +"' used but not completed " ,b.lexline,b.filename);
+                error("function `" + b +"' used but not completed " ,b.lexline,b.filename);
             }
         }
         
         for(FunctionBasic b : f_used){
             if(b.used()&&!b.isCompleted()){
-                error("Function `" + b +"' used but not completed " ,b.lexline,b.filename);
+                error("function `" + b +"' used but not completed " ,b.lexline,b.filename);
             }
         }
     }
-    
+
     public void importlib() throws IOException {
         match(Tag.IMPORT);
         Token l = look;
         match(Tag.STR);
         if( look.tag != ';'){
-            error("Want ';'");
+            error("want ';'");
         }
         lex.open(((Str)l).value);
     }
@@ -176,6 +222,14 @@ public class Parser{
         }
     }
 
+    public Type defType(Token tok,Type t) {
+        return typetable.put(tok,t);
+    }
+    
+    public Type getType(Token tok){
+        return typetable.get(tok);
+    }
+    
     public void defstruct() throws IOException {
         match(Tag.STRUCT);
 
@@ -189,12 +243,11 @@ public class Parser{
         Token name = look;
         match(Tag.ID);
         Struct s = new Struct(name);
-        if( top.get(name) != null ){
-            error("Struct `" + name + "' has a same name with a variable");
-        }
-        lex.defType(s);
+        checkNamespace(name,"struct");
+        defType(name,s);
+        
         match('{');
-        do{
+        while(!check('}')){
             Token op = null;
             if(check('@')){
                 op = copymove();
@@ -216,12 +269,12 @@ public class Parser{
                 Function f = new MemberFunction(fname,returnType,l,s);
                 /*member function redefined*/
                 if(s.addFunc(fname,f) != null){
-                    error("Member function name `" + fname + "' has been used");
+                    error("member function name `" + fname + "' has been used");
                 }
                 
                 if(op != null){
                     if(!s.addOverloading(op,f)){
-                        error("Operand `" + op + "' overloading is redefined");
+                        error("operand `" + op + "' overloading is redefined");
                     }
                 }
                 
@@ -237,17 +290,17 @@ public class Parser{
                 hasDecl = savedHasDecl;
             } else {
                 if(op != null){
-                    error("Overloading for `" + op + "' found but no function definition found");
+                    error("overloading for `" + op + "' found but no function definition found");
                 }
                 Type t = type();
                 Token m = look;
                 match(Tag.ID);
                 if(s.addEntry(m,t) != null){
-                    error("Member `" + m.toString() + "' defined previously ");
+                    error("member `" + m.toString() + "' defined previously ");
                 }
                 match(';');
             }
-        }while(!check('}'));
+        }
     }
 
     public void deffunc() throws IOException {
@@ -258,13 +311,19 @@ public class Parser{
         hasDecl = true;
         Type savedType = returnType;
         returnType = type();
-        if(look.tag == Tag.BASIC){
-            Type t = type();
-            if(!(t instanceof Struct)){
-                error("Struct type needed here,but `" + t + "' found");
+        Token name = look;
+        match(Tag.ID);
+
+        if(check('.')){
+            Type t = getType(name);
+            if(t == null){
+                error("struct `" + name + "' not found");
             }
-            match('.');
-            Token name = look;
+
+            if(!(t instanceof Struct)){
+                error("struct type needed here,but `" + t + "' found");
+            }
+            name = look;
             match(Tag.ID);
             defstfunc((Struct) t,name,returnType);
             top = savedEnv;
@@ -272,8 +331,6 @@ public class Parser{
             hasDecl = savedHasDecl;
             return;
         }
-        Token name = look;
-        match(Tag.ID);
 
         ArrayList<Para> l = arguments();
         Function f = null;
@@ -281,25 +338,25 @@ public class Parser{
             f = new Function(name,returnType,l);
             /*check if its name has been used*/
             if(!table.addFunc(name,f)){
-                error("Function name has conflict:" + f );
+                error("function name has conflict:" + f );
             }
         } else {
             FunctionBasic fb = table.getFuncType(name);
             if(fb != null){
                 if(fb.isCompleted()){
-                    error("Function redefined:" + fb );
+                    error("function redefined:" + fb );
                 }
                 f = (Function)fb;
                 if(!f.type.equals(returnType)){
-                    error("Function return type doesn't match with its former declaration:" + f + " and " + (new Function(name,returnType,l)).toString() );
+                    error("function return type doesn't match with its former declaration:" + f + "\nnote: " + returnType);
                 }
                 if(f.paralist.size() != l.size()){
-                    error("Function parameters numbers doesn't match with its former declaration :" + new Function(name,returnType,l).toString() + " has "  + l.size() +  ",but " + f + " has " + f.paralist.size());
+                    error("function parameters number doesn't match with its former declaration :" + new Function(name,returnType,l).toString() + " has "  + l.size() +  ",but " + f + " has " + f.paralist.size());
                 }
                 int i = 0;
                 for(Para t : f.paralist){
                     if(!t.type.equals(l.get(i).type)){
-                        error("Function " + (new Function(name,returnType,l)).toString() + " has different arguments["+ i +"] types with its former declaration " + f);
+                        error("function " + (new Function(name,returnType,l)).toString() + " has different arguments["+ i +"] types with its former declaration " + f);
                     }
                     i++;
                 }
@@ -332,24 +389,24 @@ public class Parser{
     public void defstfunc(Struct t,Token name,Type returnType) throws IOException{
         Function f = (Function)t.getFunc(name);
         if(f == null){
-            error("Member function declaration " +t.lexeme + "." + name + " not found ");
+            error("member function declaration " +t.lexeme + "." + name + " not found ");
         }
         if(f.type != returnType){
-            error("Member function " + t.lexeme + "." + name + " return type doesn't match with former declaration");
+            error("member function " + t.lexeme + "." + name + " return type doesn't match with former declaration");
         }
         if(f.isCompleted()){
-            error("Member function " + t.lexeme + "." + name  + " redefined");
+            error("member function " + t.lexeme + "." + name  + " redefined");
         }
-        
+
         top.put(Word.This,t);
         ArrayList<Para> l = arguments();
         l.add(0,new Para(t,Word.This));
         if(l.size() != f.paralist.size()){
-            error("Parameters number of function `" + t.lexeme + "." + name  + "' doesn't match with its former declaration");
+            error("parameters number of function `" + t.lexeme + "." + name  + "' doesn't match with its former declaration");
         }
         for(int i = 1;i < l.size();i++){
             if(!l.get(i).type.equals(f.paralist.get(i).type)){
-                error("Function `" + t.lexeme + "." + name  + "' has different arguments["+ (i-1) +"] type `" + l.get(i).type + "' with its former declaration `" + f.paralist.get(i).type + "'");
+                error("function `" + t.lexeme + "." + name  + "' has different arguments["+ (i-1) +"] type `" + l.get(i).type + "' with its former declaration `" + f.paralist.get(i).type + "'");
             }
         }
         match('{');
@@ -366,9 +423,12 @@ public class Parser{
                 Type t = type();
                 Token name = look;
                 match(Tag.ID);
+                if( getType(name) != null ){
+                    error("argument `" + name + "' shadows a struct type");
+                }
                 pl.add(new Para(t , name));
                 if( top.put( name , t ) != null ){
-                    error("Function parameters names have conflict:`"+ name.toString() + "'" );
+                    error("function parameters names have conflict:`"+ name.toString() + "'" );
                 }
             }while(check(','));
             match(')');
@@ -401,7 +461,7 @@ public class Parser{
             return new Seq(stmt(),stmts());
         }
     }
-
+    
     public Stmt stmt() throws IOException {
         Expr x;
         Stmt s,s1,s2;
@@ -481,6 +541,16 @@ public class Parser{
         case '{':
             s = block();
             break;
+        case Tag.ID:
+            Type t = getType(look);
+            /*check if it is just a variable*/
+            if(t == null){
+                s = new ExprStmt(expr());
+                match(';');
+                break;
+            }
+            /*It should be variable definition*/
+            look = t;
         case Tag.BASIC:
             if(hasDecl){
                 s = decls();
@@ -549,13 +619,13 @@ public class Parser{
             if(check(Tag.CASE)) {
                 Expr c = expr().optimize();
                 if(!( c instanceof Constant ) ){
-                    error("Case expression `" + c + "' is not constant");
+                    error("case expression `" + c + "' is not constant");
                 }
 
                 Constant val = (Constant) c;
 
                 if(sw.isCaseSet(val)){
-                    error("Case `" + c + "' has been handled before");
+                    error("case `" + c + "' has been handled before");
                 }
  
                 match(':');
@@ -564,12 +634,12 @@ public class Parser{
             } else if (check(Tag.DEFAULT)) {
                 match(':');
                 if(sw.isDefaultSet()){
-                    error("Default case reoccurs");
+                    error("default case reoccurs");
                 }
                 /*stmts should be different from the normal stmts*/
                 sw.setDefault(casestmts());
             } else {
-                error("Wrong symbol found in switch:`"+ look + "'");
+                error("wrong symbol found in switch:`"+ look + "'");
             }
         }
         match('}');
@@ -647,7 +717,7 @@ public class Parser{
         Type p = type();
         Token tok;
         if(p == Type.Void){
-            error("Can't declare " + p.toString() + " type variable");
+            error("can't declare " + p.toString() + " type variable");
         }
         do{
             Expr e = null;
@@ -655,6 +725,9 @@ public class Parser{
             match(Tag.ID);
             if(top.containsVar(tok)){
                 error("variable `" + tok.toString() + "' redefined here");
+            }
+            if( getType(tok) != null ){
+                error("variable `" + tok + "' shadows a struct type");
             }
             top.put(tok,p);
             if(check('=')){
@@ -672,7 +745,7 @@ public class Parser{
         while( look.tag == Tag.BASIC){
             Type p = type();
             if(p == Type.Void){
-                error("Can't declare " + p.toString() + " type variable");
+                error("can't declare " + p.toString() + " type variable");
             }
             Token tok;
             do{
@@ -681,6 +754,10 @@ public class Parser{
                 match(Tag.ID);
                 if(top.containsVar(tok)){
                     error("variable `" + tok.toString() + "' redefined here");
+                }
+
+                if( getType(tok) != null ){
+                    error("variable `" + tok + "' shadows a struct type");
                 }
                 top.put(tok,p);
                 if(check('=')){
@@ -694,6 +771,14 @@ public class Parser{
     }    
 
     public Type type() throws IOException {
+        if(look.tag == Tag.ID){
+            Token t = getType(look);
+            if(t == null){
+                error("type `" + look + "' not found");
+            }
+            look = t;
+        }
+
         Type p = (Type)look;
         match(Tag.BASIC);
         //[4][3][2] = array of [3][]int
@@ -702,7 +787,7 @@ public class Parser{
         //row-wize
         if( look.tag == '[' ){
             if(p == Type.Void){
-                error("Type `" + p.toString() + "' can't be element type of array");
+                error("type `" + p.toString() + "' can't be element type of array");
             }
             return arrtype(p);
         }
@@ -723,7 +808,7 @@ public class Parser{
         }
         return new Array(of,size);
     }
-    
+
     public Expr expr() throws IOException {
         Expr e = assign();
         return ENABLE_EXPR_OPT?e.optimize():e;
@@ -810,7 +895,7 @@ public class Parser{
             match('<');
             Type  t = type();
             if(t == Type.Void){
-                error("Can't use type `" + t +"'");
+                error("can't use type `" + t +"'");
             }
             match('>');
             match('(');
@@ -865,13 +950,13 @@ public class Parser{
         if(look.tag == '('){
            ArrayList<Expr>  p = parameters();
             if(!(e.type instanceof Struct))
-                error("Member function is for struct,not for `" + e.type +"'");
+                error("member function is for struct,not for `" + e.type +"'");
             FunctionBasic f = ((Struct)(e.type)).getFunc(mname);
 
             f_used.add(f);
 
             if(f == null)
-                error("Member function `" + mname + "' not found");
+                error("member function `" + mname + "' not found");
 
             /*Pass `this' reference as the first argument*/
             p.add(0,e);
@@ -897,7 +982,7 @@ public class Parser{
         }
 
         if(!(e instanceof Var && e.type instanceof Array)){
-            error("Operand `[]` should be used for array variable or string,not for " + e.type);
+            error("operand `[]` should be used for array variable or string,not for " + e.type);
         }
 
         Type t = ((Array)(e.type)).of;/*element type*/
@@ -919,7 +1004,7 @@ public class Parser{
             }
             EnvEntry ee = top.get(tmp);
             if(ee == null){
-                error("Variable `" + tmp + "' not declared.");
+                error("variable `" + tmp + "' not declared.");
             }
             /*
              * Level 0 is for the global variables
@@ -950,7 +1035,7 @@ public class Parser{
         case '(':
             return cast();
         default:
-            error("Unknown token found:" + copymove().tag);
+            error("unexpected token found:" + look );
             return null;
         }
     }
@@ -959,6 +1044,15 @@ public class Parser{
         Expr e = null;
         match('(');
         switch(look.tag){
+        case Tag.ID:
+            Type t1 = getType(look);
+            /*check if it is just a variable*/
+            if(t1 == null){
+                e = assign();
+                match(')');
+                break;
+            }
+            look = t1;
         case Tag.BASIC:
             Type t = (Type) copymove();
             match(')');
@@ -968,7 +1062,7 @@ public class Parser{
             if(!f.type.equals(t))
                 e = ConversionFactory.getConversion(f,t);
             if(e == null)
-                error("Can't convert " + f.type + " to " + t);
+                error("can't convert " + f.type + " to " + t);
             break;
         default:
             e = assign();
@@ -982,7 +1076,7 @@ public class Parser{
         FunctionBasic f = table.getFuncType(id);
 
         if(f == null) {
-            error("Function `" + id + "' not found.");
+            error("function `" + id + "' not found.");
         }
         ArrayList<Expr> p = parameters();
         return new FunctionInvoke(f,p);
