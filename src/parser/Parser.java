@@ -217,8 +217,18 @@ public class Parser{
                 }while(check(','));
                 match(')');
             }
+            
+            FunctionBasic f = null;
+            try{
+                f = LoadFunc.loadFunc(t,sb.toString(),name,pl);
+            } catch (Exception e){
+                error("failed to load extension function `" + sb.toString()  + "." + name + "'");
+            }
+            if(!table.addFunc(name,f)){
+                error("function name has conflict:" + name);
+            }
+
             match(';');
-            table.addFunc(name,LoadFunc.loadFunc(t,sb.toString(),name,pl));
         }
     }
 
