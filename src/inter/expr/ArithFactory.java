@@ -249,17 +249,25 @@ public class ArithFactory {
     public static Expr getArith(Token tok,Expr e1,Expr e2){
 
         if(e1.type instanceof Struct){
-            FunctionBasic f = ((Struct)(e1.type)).getOverloading(tok);
-            if(f != null){
+            Token fname = ((Struct)(e1.type)).getOverloading(tok);
+            if(fname != null){
                 if(e2.type != e1.type){
                     e2 = ConversionFactory.getConversion(e2,e1.type);
                 }
                 
                 if(e2 != null){
                     ArrayList<Expr> p = new ArrayList<Expr>();
-                    p.add(e1);
-                    p.add(e2);
-                    return new FunctionInvoke(f,p);
+                    FunctionBasic f = ((Struct)(e1.type)).getNormalFunction(fname);
+                    if(f != null){
+                        p.add(e1);
+                        p.add(e2);
+                        return new FunctionInvoke(f,p);
+                    }
+                    f = ((Struct)(e1.type)).getVirtualFunction(fname);
+                    if(f != null){
+                        p.add(e2);
+                        return new VirtualFunctionInvoke(e1,f,p);
+                    }
                 }
             }
             e1.error("Operand `" + tok + "' can't be used between `" + e1.type + "' and `" + e2.type + "'");

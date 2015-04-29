@@ -19,7 +19,7 @@ public class StructDecl extends Decl {
         if( value == null )
             return type instanceof Struct;
         else
-            return type.equals(value.type);
+            return type.equals(value.type) || ((Struct) value.type).isChildOf((Struct)type);
     }
 
     @Override

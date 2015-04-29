@@ -339,11 +339,27 @@ public class ConversionFactory {
         */
        Expr c = null;
        if(src.type instanceof Struct){
-            FunctionBasic f = ((Struct)(src.type)).getOverloading(t);
-            if(f != null){
+           
+            /*
+             * inherited struct judge
+             */
+            if(t instanceof Struct){
+                if(((Struct)src.type).isChildOf((Struct)t))
+                    return src;
+            }
+
+            Token fname = ((Struct)(src.type)).getOverloading(t);
+            if(fname != null){
                 ArrayList<Expr> p = new ArrayList<Expr>();
-                p.add(src);
-                c = new FunctionInvoke(f,p);
+                FunctionBasic f = ((Struct)(src.type)).getNormalFunction(fname);
+                if(f != null){
+                    p.add(src);
+                    c = new FunctionInvoke(f,p);
+                }
+                f = ((Struct)(src.type)).getVirtualFunction(fname);
+                if(f != null){
+                    c =  new VirtualFunctionInvoke(src,f,p);
+                }
             }
        } else {
             Factory f = ConversionFactoryFactory.getConversionFactory(src);

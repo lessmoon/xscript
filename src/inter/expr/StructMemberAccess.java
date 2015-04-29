@@ -19,7 +19,7 @@ public class StructMemberAccess extends Var {
         if( ! (value.type instanceof Struct) ){
             error("struct access can't be used for " + value.type );
         }
-        type = ((Struct)(value.type)).getType(member);
+        type = ((Struct)(value.type)).getMemberVariableType(member);
         if( type == null ){
             error("Can't find member `" + member + "' in " + value.type);
         }

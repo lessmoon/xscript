@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 public class StructConst extends Constant {
     public  int size;
     HashMap<Token,Constant> table = new HashMap<Token,Constant>();
-
+    
     public StructConst( Struct t ){
         super(Word.struct,t);
         /*Initial every member*/
@@ -23,6 +23,7 @@ public class StructConst extends Constant {
             }
             table.put(info.getKey(),c);
         }
+        
     }
 
     @Override
@@ -40,9 +41,13 @@ public class StructConst extends Constant {
         assert(table.containsKey(i));
         return table.get(i);
     }
-    
+
     public int getSize(){
         return table.size();
+    }
+    
+    public VirtualTable getVirtualTable(){
+        return ((Struct)type).getVirtualTable();
     }
 
     @Override
@@ -79,7 +84,7 @@ public class StructConst extends Constant {
         sb.append("}");
         return sb.toString();
     }
-    
+
     @Override
     public String toString(){
         return "Struct";

@@ -18,9 +18,13 @@ public class MemberFunction extends Function {
         stct = sn;
     }
 
+    public Struct getStruct(){
+        return stct;
+    }
+    
     @Override
     public String toString(){
-        StringBuffer sb = new StringBuffer(type.toString());
+        StringBuffer sb = new StringBuffer(type.toString() + " " );
         sb.append( stct.lexeme + "." + name + "(");
         int i = 1;
         if(i < paralist.size()){

@@ -7,7 +7,7 @@ public class Array extends Type {
     public final int  size;
 
     public Array(Type t,int sz){
-        super("[" + sz + "]",Tag.ARRAY);
+        super("[" + sz + "]",Tag.BASIC);
         of = t;
         size =  sz;
     }
@@ -15,7 +15,8 @@ public class Array extends Type {
     public int getSize() {
         return size * of.getSize();
     }
-    
+
+    @Override
     public boolean equals( Type t ){
         if(this == t)
             return true;
@@ -29,8 +30,6 @@ public class Array extends Type {
             if(!(t2.of instanceof Array)){
                 return false;
             }
-            //if(t1.size != t2.size)
-                //return false;
         }
         
         return t2.of == t1.of;
@@ -40,6 +39,7 @@ public class Array extends Type {
         return size;
     }
     
+    @Override
     public String toString(){
         return  of.toString() + "[]" ;
     }

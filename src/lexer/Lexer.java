@@ -61,7 +61,9 @@ public class Lexer {
         reserve( new Word("switch",Tag.SWITCH));
         reserve( new Word("case",Tag.CASE));
         reserve( new Word("default",Tag.DEFAULT));
-
+        reserve( new Word("virtual",Tag.VIRTUAL));
+        reserve( new Word("override",Tag.OVERRIDE));
+        
         reserve( Word.True );
         reserve( Word.False );
         reserve( Word.This );

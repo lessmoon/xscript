@@ -21,7 +21,7 @@ public class Parser{
     boolean hasDecl = true;
     boolean enableWarning = false;
     /*integer numbers standing for the stack level*/
-    
+
     public int lastBreakFatherLevel = -1;
     public int lastIterationLevel = -1;
     /* The variable lastFunctionLevel is for the  
@@ -114,15 +114,15 @@ public class Parser{
             String expect ;
             switch(t){
             case Tag.ID:
-                expect = " identifier";
+                expect = "identifier";
                 break;
             case Tag.BASIC:
-                expect = " basic type(includes (big)int,(big)real,char and string)";
+                expect = "basic type(includes (big)int,(big)real,char and string)";
                 break;
             default:
                 expect = "";
             }
-            error("syntax error:expect " + expect + ",but found `" + look + "'");
+            error("syntax error: expect " + expect + ",but found `" + look + "'");
         }
     }
 
@@ -140,16 +140,16 @@ public class Parser{
         while(look.tag != -1){
             switch(look.tag){
             case Tag.DEF:
-                deffunc();
+                defFunction();
                 break;
             case Tag.STRUCT:
-                defstruct();
+                defStruct();
                 break;
             case Tag.LDFUNC:
-                loadfunc();
+                loadFunction();
                 break;
             case Tag.IMPORT:
-                importlib();
+                importLib();
                 break;
             default:
                 s = new Seq(s,stmt());
@@ -176,7 +176,7 @@ public class Parser{
         }
     }
 
-    public void importlib() throws IOException {
+    public void importLib() throws IOException {
         match(Tag.IMPORT);
         Token l = look;
         match(Tag.STR);
@@ -186,7 +186,7 @@ public class Parser{
         lex.open(((Str)l).value);
     }
 
-    public void loadfunc() throws IOException {
+    public void loadFunction() throws IOException {
         ArrayList<Para> pl  = null;
         match(Tag.LDFUNC);
         StringBuffer sb = new StringBuffer();
@@ -240,7 +240,7 @@ public class Parser{
         return typetable.get(tok);
     }
     
-    public void defstruct() throws IOException {
+    public void defStruct() throws IOException {
         match(Tag.STRUCT);
 
         /*
@@ -252,52 +252,43 @@ public class Parser{
         
         Token name = look;
         match(Tag.ID);
-        Struct s = new Struct(name);
+        Struct s;
+        if(check(':')){
+            Token base = look;
+            match(Tag.ID);
+            Type b = typetable.get(base);
+            if(b == null){
+                error("base struct `" + base + "' not found");
+            }
+            s = new Struct(name,(Struct)b);
+        } else {
+            s = new Struct(name);
+        }
+        
         checkNamespace(name,"struct");
         defType(name,s);
-        
         match('{');
         while(!check('}')){
             Token op = null;
             if(check('@')){
-                op = copymove();
+                Token tmp = look;
+                if( look.tag == Tag.ID ){
+                    op = getType(look);
+                    if(op == null){
+                        error("type `" + look + "' not found" );
+                    }
+                }  else {
+                    op = copymove();
+                }
+
+                if(op.tag == Tag.BASIC && look.tag == '['){
+                    Type t = arrtype((Type)op);
+                    error("can't overloading array type `" + t + "' castint operand");
+                }
             }
             /*Function definition*/
             if(check(Tag.DEF)){
-                Env savedEnv = top;
-                top = new Env(top);
-                boolean savedHasDecl = hasDecl;
-                hasDecl = true;
-                Type savedType = returnType;
-                returnType = type();
-                Token fname = look;
-                match(Tag.ID);
-                /*pass `this' reference as the first argument*/
-                top.put(Word.This,s);
-                ArrayList<Para> l = arguments();
-                l.add(0,new Para(s,Word.This));
-                Function f = new MemberFunction(fname,returnType,l,s);
-                /*member function redefined*/
-                if(s.addFunc(fname,f) != null){
-                    error("member function name `" + fname + "' has been used");
-                }
-                
-                if(op != null){
-                    if(!s.addOverloading(op,f)){
-                        error("operand `" + op + "' overloading is redefined");
-                    }
-                }
-                
-                if(!check(';')){
-                    match('{');
-                    Stmt stmt = stmts();
-                    match('}');
-                    f.init(fname,returnType,stmt,l);
-                }
-
-                top = savedEnv;
-                returnType = savedType;
-                hasDecl = savedHasDecl;
+                defInnerStructFunction(s,op);
             } else {
                 if(op != null){
                     error("overloading for `" + op + "' found but no function definition found");
@@ -305,15 +296,67 @@ public class Parser{
                 Type t = type();
                 Token m = look;
                 match(Tag.ID);
-                if(s.addEntry(m,t) != null){
+                if(s.addMemberVariable(m,t) != null){
                     error("member `" + m.toString() + "' defined previously ");
                 }
                 match(';');
             }
         }
     }
+    
+    /*
+     * def a function in struct
+     * s is the struct,op is the operand to overload(null for non-overloading)
+     */
+    public void defInnerStructFunction(Struct s,Token op) throws IOException{
+        int flag = 0;
+        
+        if(check(Tag.VIRTUAL)){
+            flag = Tag.VIRTUAL;
+        } else if(check(Tag.OVERRIDE)){
+            flag = Tag.OVERRIDE;
+        } 
 
-    public void deffunc() throws IOException {
+        Env savedEnv = top;
+        top = new Env(top);
+        boolean savedHasDecl = hasDecl;
+        hasDecl = true;
+        Type savedType = returnType;
+        returnType = type();
+        Token fname = look;
+        match(Tag.ID);
+
+        /*pass `this' reference as the first argument*/
+        top.put(Word.This,s);
+        ArrayList<Para> l = arguments();
+        l.add(0,new Para(s,Word.This));
+        Function f = new MemberFunction(fname,returnType,l,s);
+        if(flag == Tag.VIRTUAL ){
+            s.defineVirtualFunction(fname,f);
+        } else if(flag == Tag.OVERRIDE){
+            s.overrideVirtualFunction(fname,f);
+        } else {
+            s.addNormalFunction(fname,f);
+        }
+        if(op != null){
+            if(!s.addOverloading(op,f)){
+                error("operand `" + op + "' overloading is redefined");
+            }
+        }
+
+        if(!check(';')){
+            match('{');
+            Stmt stmt = stmts();
+            match('}');
+            f.init(fname,returnType,stmt,l);
+        }
+
+        top = savedEnv;
+        returnType = savedType;
+        hasDecl = savedHasDecl;
+    }
+
+    public void defFunction() throws IOException {
         match(Tag.DEF);
         Env savedEnv = top;
         top = new Env(top);
@@ -335,7 +378,7 @@ public class Parser{
             }
             name = look;
             match(Tag.ID);
-            defstfunc((Struct) t,name,returnType);
+            defOutterStructFunction((Struct) t,name,returnType);
             top = savedEnv;
             returnType = savedType;
             hasDecl = savedHasDecl;
@@ -396,16 +439,22 @@ public class Parser{
         return;
     }
 
-    public void defstfunc(Struct t,Token name,Type returnType) throws IOException{
-        Function f = (Function)t.getFunc(name);
+    public void defOutterStructFunction(Struct t,Token name,Type returnType) throws IOException{
+        //TODO:check if it is normal or virtual function
+        
+        Function f = (Function)t.getDeclaredFunction(name);
         if(f == null){
-            error("member function declaration " +t.lexeme + "." + name + " not found ");
+            error("member function declaration `" +t.lexeme + "." + name + "' not found ");
         }
-        if(f.type != returnType){
-            error("member function " + t.lexeme + "." + name + " return type doesn't match with former declaration");
+        /*
+         * NOTE:type.equals doesn't conclude 
+         * that father struct and child struct is the same
+         */
+        if(!f.type.equals(returnType)){
+            error("member function `" + t.lexeme + "." + name + "' return type doesn't match with the former declaration");
         }
         if(f.isCompleted()){
-            error("member function " + t.lexeme + "." + name  + " redefined");
+            error("member function `" + t.lexeme + "." + name  + "' redefined");
         }
 
         top.put(Word.This,t);
@@ -961,17 +1010,21 @@ public class Parser{
            ArrayList<Expr>  p = parameters();
             if(!(e.type instanceof Struct))
                 error("member function is for struct,not for `" + e.type +"'");
-            FunctionBasic f = ((Struct)(e.type)).getFunc(mname);
-
-            f_used.add(f);
-
-            if(f == null)
-                error("member function `" + mname + "' not found");
-
-            /*Pass `this' reference as the first argument*/
-            p.add(0,e);
-
-            return new FunctionInvoke(f,p);
+            Struct s = (Struct)(e.type);
+            FunctionBasic f = s.getNormalFunction(mname);
+            if(f == null){
+                f = s.getVirtualFunction(mname);
+                if(f == null)
+                    error("member function `" + mname + "' not found");
+                f_used.add(f);
+                /*Pass `this' reference as the first argument*/
+                return new VirtualFunctionInvoke(e,f,p);
+            } else {
+                f_used.add(f);
+                /*Pass `this' reference as the first argument*/
+                p.add(0,e);
+                return new FunctionInvoke(f,p);
+            } 
         }
         return new StructMemberAccess(e,mname);
     }
@@ -1064,7 +1117,7 @@ public class Parser{
             }
             look = t1;
         case Tag.BASIC:
-            Type t = (Type) copymove();
+            Type t = type();
             match(')');
             Expr f = unary();
             assert(f != null);
@@ -1103,7 +1156,7 @@ public class Parser{
         }
         return p;
     }
-    
+
     public static void main(String[] args) throws Exception {
         Lexer l = new Lexer();
         l.open("test.txt");

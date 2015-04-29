@@ -51,6 +51,7 @@ src/inter/expr/StructMemberAccess.java
 src/inter/expr/Unary.java
 src/inter/expr/UnaryFactory.java
 src/inter/expr/Var.java
+src/inter/expr/VirtualFunctionInvoke.java
 src/inter/stmt/ArrayDecl.java
 src/inter/stmt/Break.java
 src/inter/stmt/Continue.java
@@ -92,5 +93,7 @@ src/symbols/Array.java
 src/symbols/Env.java
 src/symbols/EnvEntry.java
 src/symbols/FuncTable.java
+src/symbols/Position.java
 src/symbols/Struct.java
 src/symbols/Type.java
+src/symbols/VirtualTable.java
