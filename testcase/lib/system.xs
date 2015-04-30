@@ -15,3 +15,8 @@ def int repeat_print(string s,int c){
         print(s);
     return 0;
 }
+
+def void println(string s){
+    print(s + "\n");
+    return;
+}

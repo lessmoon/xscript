@@ -117,8 +117,11 @@ public class Parser{
                 expect = "identifier";
                 break;
             case Tag.BASIC:
-                expect = "basic type(includes (big)int,(big)real,char and string)";
+                expect = "basic type(includes (big)int,(big)real,char,bool and string)";
                 break;
+            case Tag.STR:
+                 expect = "string constant";
+                 break;
             default:
                 expect = "";
             }
@@ -192,10 +195,14 @@ public class Parser{
         match(Tag.IMPORT);
         Token l = look;
         match(Tag.STR);
-        if( look.tag != ';'){
-            error("want ';'");
+        if(look.tag != ';'){
+            error("syntax error: expect `;',but found `" + look + "'");
         }
         lex.open(((Str)l).value);
+        /*
+         * ignore the `;'
+         */
+        move();
     }
 
     public void loadFunction() throws IOException {
@@ -1153,7 +1160,7 @@ public class Parser{
             assert(f != null);
             e = f;
             if(!f.type.equals(t))
-                e = ConversionFactory.getConversion(f,t);
+                e = ConversionFactory.getAutoDownCastConversion(f,t);
             if(e == null)
                 error("can't convert " + f.type + " to " + t);
             break;

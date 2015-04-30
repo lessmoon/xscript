@@ -2,6 +2,7 @@ import  "lib/file.xs";
 import  "lib/system.xs";
 import  "math/Math.xs";
 import  "math/Ratio.xs";
+import  "parser/parser.xs";
 
 loadfunc<extension.ui>{
     int openPad(int w,int h);
@@ -21,11 +22,6 @@ loadfunc<extension.system>{
 
 loadfunc<extension.math>{
     real sin(real theta);
-}
-
-def void println(string s){
-    print(s + "\n");
-    return;
 }
 
 import  "container/list.xs";
@@ -143,6 +139,18 @@ struct rectangle : square {
         println("" + h[i] + " is a rectangle:"  + ( h[i] instanceof rectangle ));
     }
 }
+
+
+{
+    println("Test for parser");
+    parser p;
+    lexer l;
+    string s = "1+5*6-(9-90)";
+    l.init(s);
+    p.init(l);
+    println(s + "=" + p.expr().getValue());
+}
+
 
 struct complex{
     real r;

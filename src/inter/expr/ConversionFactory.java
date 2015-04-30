@@ -354,6 +354,21 @@ class DownCastConversion extends Conversion {
 }
 
 public class ConversionFactory {
+    static public Expr getAutoDownCastConversion(Expr src,Type t){
+       Expr c = null;
+       if(src.type instanceof Struct){
+            /*
+             * inherited struct judge
+             */
+            if(t instanceof Struct){
+                if(((Struct)t).isChildOf((Struct)src.type)){//down-cast
+                    return new DownCastConversion(src,(Struct)t);
+                }
+            }
+       }
+       return getConversion(src,t);
+    }
+    
     static public Expr getConversion(Expr src,Type t){
        /*
         * if it is struct may have conversion override
@@ -367,8 +382,6 @@ public class ConversionFactory {
             if(t instanceof Struct){
                 if(((Struct)src.type).isChildOf((Struct)t)){//up-cast
                     return src;
-                } else if(((Struct)t).isChildOf((Struct)src.type)){//down-cast
-                    return new DownCastConversion(src,(Struct)t);
                 }
             }
 
