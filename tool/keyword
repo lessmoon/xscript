@@ -28,3 +28,6 @@ new
 switch
 case
 default
+instanceof
+virtual
+override

@@ -1,7 +1,6 @@
 ## XXXScript in brief ##
 
 ### Keyword List: ###
-
 <table >
 	<tr>
 		<td>_file_</td><td>_line_</td><td>_version_</td><td>bigint</td><td>bigreal</td><td>bool</td>
@@ -13,10 +12,13 @@
 		<td>do</td><td>else</td><td>false</td><td>for</td><td>if</td><td>import</td>
 	</tr>
 	<tr>
-		<td>int</td><td>loadfunc</td><td>new</td><td>real</td><td>return</td><td>sizeof</td>
+		<td>instanceof</td><td>int</td><td>loadfunc</td><td>new</td><td>override</td><td>real</td>
 	</tr>
 	<tr>
-		<td>string</td><td>struct</td><td>switch</td><td>this</td><td>true</td><td>while</td>
+		<td>return</td><td>sizeof</td><td>string</td><td>struct</td><td>switch</td><td>this</td>
+	</tr>
+	<tr>
+		<td>true</td><td>virtual</td><td>while</td>
 	</tr>
 </table>
 
@@ -75,7 +77,7 @@
 	* `return` expression;(in functions)
 * Function declaration & definition
 	* Definition
-		* Normal dunction definition
+		* Normal function definition
 			1. `def` return-type func-name ( [para-type para-name,...] ){
 			2. &emsp;&emsp; funtion-body
 			3. }
@@ -94,6 +96,16 @@
 		5. &emsp;&emsp;&emsp;&emsp;function-body;
 		6. &emsp;&nbsp;}
 		7. &nbsp;}
+	- Inheriting and overriding
+		1. Inherite a base structure
+			- `struct` **derive-name**`:`**base-name**
+		2. Virtual function
+			- `def` `virtual` return-type func-name([para-type para-name,...]) 
+		3. Override function
+			- `def` `override` return-type func-name([para-type para-name,...]) 
+		4. Override function must be virtual function in base struct
+		5. If a struct(or its father) define a pure virtual function(declared but no definition),it can't be instantial
+		6. 
 	- Operand overloading
 		- Definition grammar
 			1.  `struct` name {
@@ -141,8 +153,10 @@
 		- `bigreal`:real larger than RealMax(or ends with '**R**') 
 	* Dynamic array allocation:
 		- `new` < type > (expression);
-	* Array size getter:
+	* Array size getter:(return a integer)
 		- `sizeof` array-type-expression
+	* Instance check:(return `true` or `false`)
+		- expression `instanceof` basic-type
 	* Built-in variable:
 		- `_line_`:  line number of the source file
 		- `_file_`:  file name of the source file
