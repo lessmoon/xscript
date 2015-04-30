@@ -153,7 +153,7 @@
 		- `bigreal`:real larger than RealMax(or ends with '**R**') 
 	* Dynamic array allocation:
 		- `new` < type > (expression);
-	* Array size getter:(return a integer)
+	* Array size getter:(return an integer)
 		- `sizeof` array-type-expression
 	* Instance check:(return `true` or `false`)
 		- expression `instanceof` basic-type
