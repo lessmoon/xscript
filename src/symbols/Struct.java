@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 public class Struct extends Type {
-    public final HashMap<Token,Type> table = new HashMap<Token,Type>();
+    public final HashMap<Token,StructVariable> table = new HashMap<Token,StructVariable>();
     /*store normal functions*/
     final HashMap<Token,FunctionBasic> funcs = new HashMap<Token,FunctionBasic>();
     /*<k,v> => <operand,func_name>*/
@@ -19,13 +19,18 @@ public class Struct extends Type {
     final VirtualTable vtable;
     boolean hasDefinedVirtualFunction = false;
     final Struct father;
-
+    final int    father_size;/*avoid replicated calculating*/
+    boolean has_used = false;
+    int  first_used_line = -1;
+    String first_used_file = "";
+    
     public Struct(Token name){
         super(name.toString(),Tag.BASIC);
         father = null;
         vtable = new VirtualTable();
         vfunc_map = new HashMap<Token,Position>();
         overload_funcs = new HashMap<Token,Token>();
+        father_size = 0;
     }
 
     public Struct(Token name,Struct father){
@@ -34,6 +39,7 @@ public class Struct extends Type {
         vtable = (VirtualTable)father.getVirtualTable().clone();
         vfunc_map = new HashMap<Token,Position>(father.vfunc_map);
         overload_funcs = new HashMap<Token,Token>(father.overload_funcs);
+        father_size = father.getVariableNumber();
     }
 
     public boolean isCompleted(){
@@ -56,29 +62,29 @@ public class Struct extends Type {
     public Position getVirtualFunctionPosition(Token vfname){
         return vfunc_map.get(vfname);
     }
-    
+
     /*
      * return the type of the member named mname
      * return null if it doesn't exist
      */
-    public Type getMemberVariableType(Token mname){
-        Type t = table.get(mname);
-        return (t==null||father==null)?t:father.getMemberVariableType(mname);
+    public StructVariable getMemberVariableType(Token mname){
+        StructVariable t = table.get(mname);
+        return (t != null || father==null)?t:father.getMemberVariableType(mname);
     }
-    
+
     /*
      * Return not-null if it has conflict definition  
      * caller should handle those situations
      */
-    public Type addMemberVariable(Token mname,Type t){
-        Type x  ;
+    public StructVariable addMemberVariable(Token mname,Type t){
+        StructVariable x  ;
         if(father != null){
            x = father.getMemberVariableType(mname);
            if(x != null){
                 return x;
            }
         }
-        x = table.put(mname,t);
+        x = table.put(mname,new StructVariable(t,getVariableNumber()));
         return x;
     }
 
@@ -265,6 +271,34 @@ public class Struct extends Type {
 
     public VirtualTable getVirtualTable(){
         return vtable;
+    }
+
+    public Struct getFather(){
+        return father;
+    }
+
+    public int getVariableNumber(){
+        return father_size + table.size();
+    }
+
+    public void setUsed(int ful,String fuf){
+        if(!has_used){
+            has_used = true;
+            first_used_file = fuf;
+            first_used_line = ful;
+        }
+    }
+    
+    public boolean used(){
+        return has_used;
+    }
+    
+    public int getFirstUsedLine(){
+        return first_used_line;
+    }
+    
+    public String getFirstUsedFile(){
+        return first_used_file;
     }
     
     @Override

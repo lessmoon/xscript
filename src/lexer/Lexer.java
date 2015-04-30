@@ -63,6 +63,7 @@ public class Lexer {
         reserve( new Word("default",Tag.DEFAULT));
         reserve( new Word("virtual",Tag.VIRTUAL));
         reserve( new Word("override",Tag.OVERRIDE));
+        reserve( new Word("instanceof",Tag.INSTOF));
         
         reserve( Word.True );
         reserve( Word.False );

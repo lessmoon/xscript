@@ -73,6 +73,77 @@ def int llist.getSize(){
     print("------------------\n");
 }
 
+struct shape{
+    string name;
+    def void init(string name){
+        this.name = name;
+    }
+
+    @string
+    def string toString(){
+        return this.name;
+    }
+    
+    def virtual void draw();
+}
+
+struct square : shape{
+    int width;
+    def void setWidth(int w){
+        this.width = w;
+    }
+ 
+    def override void draw(){
+        int w = this.width;
+        for(int i = 0 ; i < w ;i++){
+            for(int j = 0 ; j < w;j++){
+                print("* ");
+            }
+            print("\n");
+        }
+    }
+}
+
+struct rectangle : square {
+    int length;
+    def void setLength(int l){
+        this.length = l;
+    }
+    
+    def override void draw(){
+        int w = this.width;
+        int l = this.length;
+        for(int i = 0 ; i < w ;i++){
+            for(int j = 0 ; j < l;j++){
+                print("* ");
+            }
+            print("\n");
+        }
+    }
+}
+
+{
+    println("Test for inheriting");
+    square dd;
+    dd.init("square");
+    rectangle hh;
+    hh.init("rectangle");
+    shape[2] h;
+    h[0] = dd;
+    h[1] = hh;
+    dd.setWidth(10);
+    hh.setWidth(4);
+    hh.setLength(15);
+    
+    for(int i = 0 ; i < sizeof h;i++){
+        println("draw a " + h[i]);
+        h[i].draw();
+        println("" + h[i] + " is a shape:"  + ( h[i] instanceof shape ));
+        println("" + h[i] + " is a square:"  + ( h[i] instanceof square ));
+        println("" + h[i] + " is a rectangle:"  + ( h[i] instanceof rectangle ));
+    }
+}
+
 struct complex{
     real r;
     real img;

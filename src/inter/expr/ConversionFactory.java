@@ -332,6 +332,27 @@ class ConversionFactoryFactory {
     }
 }
 
+class DownCastConversion extends Conversion {
+    final Struct tar;
+
+    DownCastConversion(Expr e,Struct tar){
+        super(e,tar,tar);
+        assert(e.type instanceof Struct);
+        this.tar = tar;
+    }
+
+    @Override
+    public Constant getValue(){
+        Constant v = e.getValue();
+        assert(v.type instanceof Struct);
+        /*runtime check if it is ok to downcast*/
+        if(!tar.equals(v.type) && !((Struct)(v.type)).isChildOf(tar)){
+            error("can't cast from `" + v.type + "' to `" + tar + "'");
+        }
+        return v;
+    }
+}
+
 public class ConversionFactory {
     static public Expr getConversion(Expr src,Type t){
        /*
@@ -344,8 +365,11 @@ public class ConversionFactory {
              * inherited struct judge
              */
             if(t instanceof Struct){
-                if(((Struct)src.type).isChildOf((Struct)t))
+                if(((Struct)src.type).isChildOf((Struct)t)){//up-cast
                     return src;
+                } else if(((Struct)t).isChildOf((Struct)src.type)){//down-cast
+                    return new DownCastConversion(src,(Struct)t);
+                }
             }
 
             Token fname = ((Struct)(src.type)).getOverloading(t);

@@ -80,6 +80,7 @@ public class VirtualFunctionInvoke extends Expr {
         final Constant[] args = new Constant[para.size() + 1];
         args[0] = expr.getValue();
         assert(args[0] instanceof StructConst);
+
         VirtualTable vtable = ((StructConst)(args[0])).getVirtualTable();
         FunctionBasic f = vtable.getVirtualFunction(position);
 

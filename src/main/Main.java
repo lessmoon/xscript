@@ -115,7 +115,7 @@ public class Main{
             }
            
         } catch (RuntimeException e){
-            e.printStackTrace();
+            //e.printStackTrace();
             System.err.println("Runtime Error:");
             System.err.println(e.getMessage());
             return;

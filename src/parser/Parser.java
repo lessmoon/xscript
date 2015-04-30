@@ -8,8 +8,8 @@ import inter.stmt.*;
 import runtime.LoadFunc;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.*;
+import java.util.Map.Entry;
 
 public class Parser{
     private Lexer lex;
@@ -172,6 +172,18 @@ public class Parser{
         for(FunctionBasic b : f_used){
             if(b.used()&&!b.isCompleted()){
                 error("function `" + b +"' used but not completed " ,b.lexline,b.filename);
+            }
+        }
+        
+        /*
+         * check if there is a struct is pure virtual but declared
+         */
+        Iterator<Entry<Token,Type>> iter = typetable.entrySet().iterator();
+        while(iter.hasNext()){
+            Entry<Token,Type> info = iter.next();
+            Struct st = (Struct)(info.getValue());
+            if(st.used() && !st.isCompleted()){
+                error("struct `" + info.getValue() +"' used but not completed " ,st.getFirstUsedLine(),st.getFirstUsedFile());
             }
         }
     }
@@ -791,6 +803,10 @@ public class Parser{
             top.put(tok,p);
             if(check('=')){
                 e = expr();
+            } else {
+                if(p instanceof Struct){
+                    ((Struct)p).setUsed(lex.line,lex.filename);
+                }
             }
             s.addDecl(Decl.getDecl(tok,p,e));
         } while(check(','));
@@ -821,6 +837,10 @@ public class Parser{
                 top.put(tok,p);
                 if(check('=')){
                     e = expr();
+                } else {
+                    if(p instanceof Struct){
+                        ((Struct)p).setUsed(lex.line,lex.filename);
+                    }
                 }
                 s.addDecl(Decl.getDecl(tok,p,e));
             } while(check(','));
@@ -869,10 +889,20 @@ public class Parser{
     }
 
     public Expr expr() throws IOException {
-        Expr e = assign();
+        Expr e = typecheck();
         return ENABLE_EXPR_OPT?e.optimize():e;
     }
 
+    public Expr typecheck() throws IOException {
+        Expr e = assign();
+        while(look.tag == Tag.INSTOF){
+            Token tok = copymove();
+            Type t = type();
+            e = new IsInstanceOf(tok,e,t);
+        }
+        return e;
+    }
+    
     public Expr assign() throws IOException {
         Expr l =  condition();
         while(look.tag == '=' || look.tag == Tag.ADDASS || look.tag == Tag.MINASS 
@@ -886,7 +916,7 @@ public class Parser{
         Expr e = bool();
         Token t = look;
         if(check('?')){
-            Expr iftrue = assign();
+            Expr iftrue = typecheck();
             match(':');
             Expr iffalse = condition();
             e = new Condition(t,e,iftrue,iffalse);
@@ -958,7 +988,7 @@ public class Parser{
             }
             match('>');
             match('(');
-            Expr e = assign();
+            Expr e = typecheck();
             match(')');
             return new NewArray(l,t,e);
        case '-':
@@ -1111,7 +1141,7 @@ public class Parser{
             Type t1 = getType(look);
             /*check if it is just a variable*/
             if(t1 == null){
-                e = assign();
+                e = typecheck();
                 match(')');
                 break;
             }
@@ -1128,7 +1158,7 @@ public class Parser{
                 error("can't convert " + f.type + " to " + t);
             break;
         default:
-            e = assign();
+            e = typecheck();
             match(')');
             break;
         }

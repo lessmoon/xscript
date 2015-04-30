@@ -33,6 +33,7 @@ src/inter/expr/Conversion.java
 src/inter/expr/ConversionFactory.java
 src/inter/expr/Expr.java
 src/inter/expr/FunctionInvoke.java
+src/inter/expr/IsInstanceOf.java
 src/inter/expr/Logical.java
 src/inter/expr/NewArray.java
 src/inter/expr/Not.java
@@ -95,5 +96,6 @@ src/symbols/EnvEntry.java
 src/symbols/FuncTable.java
 src/symbols/Position.java
 src/symbols/Struct.java
+src/symbols/StructVariable.java
 src/symbols/Type.java
 src/symbols/VirtualTable.java

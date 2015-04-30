@@ -28,7 +28,7 @@
             <Keywords name="Keywords2">true&#x000D;&#x000A;false</Keywords>
             <Keywords name="Keywords3">loadfunc&#x000D;&#x000A;import&#x000D;&#x000A;def</Keywords>
             <Keywords name="Keywords4">string&#x000D;&#x000A;struct&#x000D;&#x000A;bool&#x000D;&#x000A;int&#x000D;&#x000A;bigint&#x000D;&#x000A;bigreal&#x000D;&#x000A;real&#x000D;&#x000A;char&#x000D;&#x000A;void</Keywords>
-            <Keywords name="Keywords5">sizeof new&#x000D;&#x000A;</Keywords>
+            <Keywords name="Keywords5">sizeof new instanceof&#x000D;&#x000A;</Keywords>
             <Keywords name="Keywords6">a b c d e f g h i j k l m n o p q r s t u v w x y z&#x000D;&#x000A;A B C D E F G H I J K L M N O P Q R S T U V W X Y Z&#x000D;&#x000A;_</Keywords>
             <Keywords name="Keywords7"></Keywords>
             <Keywords name="Keywords8"></Keywords>
