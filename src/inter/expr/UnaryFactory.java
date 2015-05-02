@@ -163,10 +163,9 @@ public class UnaryFactory {
                 return new BigIntUnary(tok,e);
             } else if( Type.BigReal == e.type ){
                 return new BigRealUnary(tok,e);
-            } else {
-                e.error("Operand:`" + tok + "' is not permitted here");
             }
         }
+        e.error("Operand:`" + tok + "' is not permitted here");
         return null;
     }
 }

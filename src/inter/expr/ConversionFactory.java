@@ -332,6 +332,26 @@ class ConversionFactoryFactory {
     }
 }
 
+class UpperCastConversion extends Conversion{
+    UpperCastConversion(Expr e,Struct tar){
+        super(e,tar,tar);
+        assert(e.type instanceof Struct);
+    }
+
+    @Override
+    public Constant getValue(){
+        Constant v = e.getValue();
+        assert(v.type instanceof Struct);
+        return v;
+    }
+    
+    @Override
+    public Expr optimize(){
+        e = e.optimize();
+        return e;
+    }
+}
+
 class DownCastConversion extends Conversion {
     final Struct tar;
 
@@ -373,15 +393,16 @@ public class ConversionFactory {
        /*
         * if it is struct may have conversion override
         */
-       Expr c = null;
-       if(src.type instanceof Struct){
-           
+
+        Expr c = null;
+
+        if(src.type instanceof Struct){
             /*
              * inherited struct judge
              */
             if(t instanceof Struct){
                 if(((Struct)src.type).isChildOf((Struct)t)){//up-cast
-                    return src;
+                    return new UpperCastConversion(src,(Struct)t);
                 }
             }
 
