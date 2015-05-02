@@ -12,13 +12,13 @@
 		<td>do</td><td>else</td><td>false</td><td>for</td><td>if</td><td>import</td>
 	</tr>
 	<tr>
-		<td>instanceof</td><td>int</td><td>loadfunc</td><td>new</td><td>override</td><td>real</td>
+		<td>instanceof</td><td>int</td><td>loadfunc</td><td>new</td><td>null</td><td>override</td>
 	</tr>
 	<tr>
-		<td>return</td><td>sizeof</td><td>string</td><td>struct</td><td>switch</td><td>this</td>
+		<td>real</td><td>return</td><td>sizeof</td><td>string</td><td>struct</td><td>switch</td>
 	</tr>
 	<tr>
-		<td>true</td><td>virtual</td><td>while</td>
+		<td>this</td><td>true</td><td>virtual</td><td>while</td>
 	</tr>
 </table>
 
@@ -27,31 +27,51 @@
 		<tr>
 			<th>name</th>
 			<th>size</th>
+			<th>init</th>
 			<th>name</th>
 			<th>size</th>
+			<th>init</th>
 		</tr>
 		<tr>
 			<td>char</td>
 			<td>2</td>
+			<td>'\0'</td>
 			<td>string</td>
 			<td>x</td>
+			<td>""</td>
 		</tr>
 		<tr>
 			<td>int</td>
 			<td>4</td>
+			<td>0i</td>
 			<td>real</td>
 			<td>4</td>
+			<td>0.0r</td>
 		</tr>
 		<tr>
 			<td>bigint</td>
 			<td>x</td>
+			<td>0I</td>
 			<td>bigreal</td>
 			<td>x</td>
+			<td>0.0R</td>
 		</tr>
 		<tr>
 			<td>bool</td>
 			<td>1</td>
+			<td>false</td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
 		<tr>
+			<td>struct</td>
+			<td>x</td>
+			<td>null</td>
+			<td>array</td>
+			<td>x</td>
+			<td>null</td>
+		</tr>
 </table>
 
 ### Grammar ###
@@ -142,7 +162,7 @@
 	* Variable declaration
 		- Basic-type var-name\[,...] (var-name must begin with one of [a-zA-Z_])
 		- Basic-type var-name = initial-value\[,...](with initial-value)
-		- Basic-type [integer constant]... var-name\[,...](for array declaration)
+		- Basic-type []... var-name\[,...](for array declaration)
 	* Constant:
 		- `int`:only decimal integer is supported(ends with '**i**' or less than IntMax)
 		- `char`:'character'(character includes escape character `\n`,`\t`,`\r`,`\'`,`\"`,`\?`,`\b`,`\f`,`\\`)
@@ -151,8 +171,10 @@
 		- `bool`:`true`,`false`
 		- `bigint`:integer larger than IntMax(or ends with '**I**')
 		- `bigreal`:real larger than RealMax(or ends with '**R**') 
+		- `null`:used for array and struct
 	* Dynamic array allocation:
 		- `new` < type > (expression);
+		- `new` <struct-type>;
 	* Array size getter:(return a integer)
 		- `sizeof` array-type-expression
 	* Instance check:(return `true` or `false`)

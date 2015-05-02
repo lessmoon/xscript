@@ -13,7 +13,7 @@ import runtime.RunStack;
 
 public class Main{
     public static final int     MAJOR_VERSION       = 1;
-    public static final int     MINOR_VERSION       = 5;
+    public static final int     MINOR_VERSION       = 6;
 
     public static void usage(){
         System.out.println(
