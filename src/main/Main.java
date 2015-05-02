@@ -9,6 +9,7 @@ import inter.expr.Constant;
 import inter.expr.ArrayConst;
 import inter.stmt.Stmt;
 import runtime.VarTable;
+import runtime.RunStack;
 
 public class Main{
     public static final int     MAJOR_VERSION       = 1;
@@ -89,6 +90,7 @@ public class Main{
         } catch (RuntimeException e){
             //e.printStackTrace();
             System.err.println("Compile Error:");
+            System.out.println("" + lex.line + lex.filename);
             System.err.println(e.getMessage());
             return;
         } catch( IOException e){
@@ -102,7 +104,7 @@ public class Main{
                 return; 
             } else if(!print_func_translate) {
                 /* push arguments */
-                ArrayConst a = new ArrayConst(new Array(Type.Str,args.length - index));
+                ArrayConst a = new ArrayConst(new Array(Type.Str),args.length - index);
 
                 for(int i = 0;i + index < args.length;i++){
                     a.setElement(i,new Constant(args[i + index]));
@@ -117,7 +119,7 @@ public class Main{
         } catch (RuntimeException e){
             //e.printStackTrace();
             System.err.println("Runtime Error:");
-            System.err.println(e.getMessage());
+            RunStack.printStackTrace(e.getMessage());
             return;
         }
         System.exit(0);

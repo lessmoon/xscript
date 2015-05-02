@@ -8,7 +8,8 @@ public class NewArray extends Op {
     public NewArray(Token tok,Type of,Expr sz){
         super(tok,null);
         size = sz;
-        type = new Array(of,0);
+        type = new Array(of);
+        check();
     }
 
     void check(){
@@ -37,11 +38,15 @@ public class NewArray extends Op {
     @Override
     public Constant getValue(){
         Constant v = size.getValue();
-        return new ArrayConst((Array)type,((Num)(v.op)).value);
+        int sz = ((Num)(v.op)).value;
+        if(sz < 0){
+            error("try to allocate `" + type +"' array with negative number:" + sz);
+        }
+        return new ArrayConst((Array)type,sz);
     }
 
     @Override
     public String toString(){
-        return "new []" + type.toString();
+        return "new [" + size + "]" + type.toString();
     }
 }

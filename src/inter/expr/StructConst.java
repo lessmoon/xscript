@@ -20,14 +20,10 @@ public class StructConst extends Constant {
             Iterator<Entry<Token,StructVariable>> iter = t.table.entrySet().iterator();
             while(iter.hasNext()){
                 Entry<Token,StructVariable> info = iter.next();
-                Constant c = null;
                 Type vt = info.getValue().type;
                 int i = info.getValue().index;
                 /*just initialize array*/
-                if(vt instanceof Array){
-                    c = new ArrayConst((Array)vt);
-                }
-                table[i] = c;
+                table[i] = vt.getInitialValue();
             }
             t = t.getFather();
         }while(t != null);

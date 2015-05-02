@@ -79,6 +79,10 @@ public class VirtualFunctionInvoke extends Expr {
         Constant result = null;
         final Constant[] args = new Constant[para.size() + 1];
         args[0] = expr.getValue();
+        if(args[0] == Constant.Null){
+            error("null pointer error:try to invoke virtual function `" + func + "' of a null pointer");
+        }
+
         assert(args[0] instanceof StructConst);
 
         VirtualTable vtable = ((StructConst)(args[0])).getVirtualTable();
@@ -99,6 +103,7 @@ public class VirtualFunctionInvoke extends Expr {
         if(IS_DEBUG){
             System.out.println("\nVirtualInvoke " + func.toString() + "{");
         }
+        RunStack.invokeFunction(lexline,filename,f);
         try {
             f.run();
             if(IS_DEBUG){
@@ -110,6 +115,7 @@ public class VirtualFunctionInvoke extends Expr {
             }
             result =  e.value;
         }
+        RunStack.endInvokeFunction();
         VarTable.popTop();
         return result;
     }

@@ -1,19 +1,19 @@
 package symbols;
 
 import lexer.*;
+import inter.expr.Constant;
 
 public class Array extends Type {
     public final Type of;
-    public final int  size;
 
-    public Array(Type t,int sz){
-        super("[" + sz + "]",Tag.BASIC);
+    public Array(Type t){
+        super("[]",Tag.BASIC,Constant.Null);
         of = t;
-        size =  sz;
     }
 
-    public int getSize() {
-        return size * of.getSize();
+    @Override
+    public boolean isBuiltInType(){
+        return false;
     }
 
     @Override
@@ -31,14 +31,10 @@ public class Array extends Type {
                 return false;
             }
         }
-        
+
         return t2.of == t1.of;
     }
 
-    public int getElementNumber(){
-        return size;
-    }
-    
     @Override
     public String toString(){
         return  of.toString() + "[]" ;

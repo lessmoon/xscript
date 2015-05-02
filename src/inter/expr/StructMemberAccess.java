@@ -41,14 +41,22 @@ public class StructMemberAccess extends Var {
 
     @Override
     public Constant getValue(){
-        StructConst s = (StructConst)value.getValue();
+        Constant c = value.getValue();
+        if(c == Constant.Null){
+            error("null pointer error:try to get a member of a null struct");
+        }
+        StructConst s = (StructConst)c;
         return s.getElement(index);
     }
 
     @Override
-    public Constant setValue(Constant c){
-        StructConst s = (StructConst)value.getValue();
-        return s.setElement(index,c);
+    public Constant setValue(Constant v){
+        Constant c = value.getValue();
+        if(c == Constant.Null){
+            error("null pointer error:try to set a member of a null struct ");
+        }
+        StructConst s = (StructConst)c;
+        return s.setElement(index,v);
     }
     
     public String toString(){

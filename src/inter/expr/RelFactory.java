@@ -226,6 +226,21 @@ class ObjectRel extends Rel {
 public class RelFactory {
     public static Expr getRel(Token tok,Expr x1,Expr x2){
         Expr r = null;
+        
+        if(x1 == Constant.Null){
+            if( !x2.type.isBuiltInType() ){
+                if(x1.type != x2.type){
+                    x1 = ConversionFactory.getConversion(x1,x2.type);
+                    return new ObjectRel(tok,x1,x2);
+                }
+            }
+        } else if( x2 == Constant.Null ){
+            if( !x1.type.isBuiltInType() ){
+                x2 = ConversionFactory.getConversion(x2,x1.type);
+                return new ObjectRel(tok,x1,x2);
+            }
+        }
+        
         if(x1.type instanceof Struct){
             Token fname = ((Struct)(x1.type)).getOverloading(tok);
             if(fname != null){
@@ -247,7 +262,6 @@ public class RelFactory {
                 }
             }
         }
-
         if( x1.type instanceof Array || x1.type instanceof Struct ){
             if(x1.type.equals(x2.type))
                 r = new ObjectRel(tok,x1,x2);

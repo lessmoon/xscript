@@ -27,7 +27,7 @@ struct Ratio{
 
     @+
     def Ratio add(Ratio r){
-        Ratio tmp;
+        Ratio tmp = new<Ratio>;
         tmp.num = r.den * this.num +  this.den* r.num;
         tmp.den = r.den * this.den;
         return tmp.reduce();
@@ -35,7 +35,7 @@ struct Ratio{
 
     @-
     def Ratio sub(Ratio r){
-        Ratio tmp;
+        Ratio tmp= new<Ratio>;
         tmp.num = r.den * this.num -  this.den* r.num;
         tmp.den = r.den * this.den;
         return tmp.reduce();
@@ -43,7 +43,7 @@ struct Ratio{
 
     @*
     def Ratio mult(Ratio r){
-        Ratio tmp;
+        Ratio tmp = new<Ratio>;
         tmp.num = r.num * this.num ;
         tmp.den = r.den * this.den;
         return tmp.reduce();
@@ -51,7 +51,7 @@ struct Ratio{
 
     @/
     def Ratio div(Ratio r){
-        Ratio tmp;
+        Ratio tmp = new<Ratio>;
         tmp.num = this.num * r.den;
         tmp.den = r.num * this.den;
         return tmp.reduce();

@@ -32,11 +32,17 @@ public class SizeOf extends Op{
         }
     }
 
+    @Override
     public Constant getValue(){
-        ArrayConst c = (ArrayConst)expr.getValue();
-        return new Constant(c.size);
+        Constant c = expr.getValue();
+        if(c == Constant.Null){
+            error("null pointer error:try to get a null array size");
+        }
+        ArrayConst ac = (ArrayConst)c;
+        return new Constant(ac.size);
     }
 
+    @Override
     public String toString(){
         return op.toString() + " " + expr.toString();
     }

@@ -25,5 +25,6 @@ public class Word extends  Token {
         multass =   new Word("*=",Tag.MULTASS), divass  = new Word("/=",Tag.DIVASS),
         modass  =   new Word("%=",Tag.MODASS),  inc     = new Word("++",Tag.INC),
         dec     =   new Word("--",Tag.DEC),     True    = new Word("true",Tag.TRUE),
-        False   =   new Word("false",Tag.FALSE),args    = new Word("_args_",Tag.ID);
+        False   =   new Word("false",Tag.FALSE),args    = new Word("_args_",Tag.ID),
+        Null    =   new Word("null",Tag.NULL);
 }

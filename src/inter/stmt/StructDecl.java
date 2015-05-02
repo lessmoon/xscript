@@ -5,6 +5,7 @@ import symbols.*;
 import runtime.*;
 import inter.expr.Expr;
 import inter.expr.StructConst;
+import inter.expr.Constant;
 
 public class StructDecl extends Decl {
 
@@ -15,8 +16,11 @@ public class StructDecl extends Decl {
         };
     }
 
+    /*
+     * TODO:May be optimized
+     */
     public boolean check(int i){
-        if( value == null )
+        if( value == Constant.Null )
             return type instanceof Struct;
         else
             return type.equals(value.type) || ((Struct) value.type).isChildOf((Struct)type);
@@ -24,6 +28,6 @@ public class StructDecl extends Decl {
 
     @Override
     public void run(){
-        VarTable.pushVar(value != null ? value.getValue():new StructConst((Struct)type));
+        VarTable.pushVar(value.getValue());
     }
 }

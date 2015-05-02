@@ -1,6 +1,7 @@
 package symbols;
 
 import lexer.*;
+import inter.expr.Constant;
 import inter.stmt.FunctionBasic;
 import inter.stmt.MemberFunction;
 
@@ -25,7 +26,7 @@ public class Struct extends Type {
     String first_used_file = "";
     
     public Struct(Token name){
-        super(name.toString(),Tag.BASIC);
+        super(name.toString(),Tag.BASIC,Constant.Null);
         father = null;
         vtable = new VirtualTable();
         vfunc_map = new HashMap<Token,Position>();
@@ -34,7 +35,7 @@ public class Struct extends Type {
     }
 
     public Struct(Token name,Struct father){
-        super(name.toString(),Tag.BASIC);
+        super(name.toString(),Tag.BASIC,Constant.Null);
         this.father = father;
         vtable = (VirtualTable)father.getVirtualTable().clone();
         vfunc_map = new HashMap<Token,Position>(father.vfunc_map);
@@ -48,6 +49,11 @@ public class Struct extends Type {
 
     public boolean isChildOf(Struct t){
         return t == this.father || (father != null && father.isChildOf(t));
+    }
+
+    @Override
+    public boolean isBuiltInType(){
+        return false;
     }
 
     @Override

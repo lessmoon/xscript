@@ -341,7 +341,9 @@ class UpperCastConversion extends Conversion{
     @Override
     public Constant getValue(){
         Constant v = e.getValue();
-        assert(v.type instanceof Struct);
+        if(v != Constant.Null){
+            assert(v.type instanceof Struct);
+        }
         return v;
     }
     
@@ -373,6 +375,29 @@ class DownCastConversion extends Conversion {
     }
 }
 
+class NullConversion extends Conversion {
+    NullConversion(Expr e,Type tar){
+        super(e,tar,tar);
+        assert(tar instanceof Array || tar instanceof Struct);
+    }
+
+    @Override
+    boolean isChangeable(){
+        return false;
+    }
+
+    @Override
+    public Expr optimize(){
+        return e;
+    }
+
+    @Override
+    public Constant getValue(){
+        assert(e == Constant.Null);
+        return e.getValue();
+    }
+}
+
 public class ConversionFactory {
     static public Expr getAutoDownCastConversion(Expr src,Type t){
        Expr c = null;
@@ -396,7 +421,10 @@ public class ConversionFactory {
 
         Expr c = null;
 
-        if(src.type instanceof Struct){
+        if(src == Constant.Null){
+            if(t instanceof Array || t instanceof Struct)
+                return new NullConversion(src,t);
+        } else if(src.type instanceof Struct){
             /*
              * inherited struct judge
              */

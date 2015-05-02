@@ -86,7 +86,7 @@ public class FunctionInvoke extends Expr {
         for(int i = 0 ; i < args.length;i++){
             args[i] = para.get(i).getValue();
         }
-
+        
         VarTable.pushTop();
         int i = 0;
         for(Constant c : args){
@@ -100,6 +100,7 @@ public class FunctionInvoke extends Expr {
         if(IS_DEBUG){
             System.out.println("\nInvoke " + func.toString() + "{");
         }
+        RunStack.invokeFunction(lexline,filename,func);
         try {
             func.run();
             if(IS_DEBUG){
@@ -111,6 +112,7 @@ public class FunctionInvoke extends Expr {
             }
             result =  e.value;
         }
+        RunStack.endInvokeFunction();
         VarTable.popTop();
         return result;
     }

@@ -43,7 +43,7 @@ public class Parser{
     public  Parser(Lexer l,boolean expr_opt,boolean stmt_opt) throws IOException{
         lex = l;
         move();
-        top.put(Word.args,new Array(Type.Str,0));
+        top.put(Word.args,new Array(Type.Str));
         ENABLE_EXPR_OPT = expr_opt;
         ENABLE_STMT_OPT = stmt_opt;
     }
@@ -881,18 +881,12 @@ public class Parser{
     }
 
     public Array arrtype(Type of) throws IOException {
-        int size = 0;
         match('[');
-        if(look.tag != ']'){
-            Token sz = look;
-            match(Tag.NUM);
-            size = ((Num)sz).value;
-        }
         match(']');
         if( look.tag == '[' ){
             of = arrtype(of);
         }
-        return new Array(of,size);
+        return new Array(of);
     }
 
     public Expr expr() throws IOException {
@@ -994,10 +988,18 @@ public class Parser{
                 error("can't use type `" + t +"'");
             }
             match('>');
-            match('(');
-            Expr e = typecheck();
-            match(')');
-            return new NewArray(l,t,e);
+            if(check('(')){
+                Expr e = typecheck();
+                match(')');
+                return new NewArray(l,t,e);
+            } else {
+                if(t instanceof Struct){
+                    return new New(l,(Struct)t);
+                } else {
+                    error("new<" + t + "> is not permitted:`" + t + "' is not a struct type");
+                    return null;
+                }
+            }
        case '-':
        case Tag.INC:
        case Tag.DEC:
@@ -1114,6 +1116,9 @@ public class Parser{
              * exactly in functions.So we use the AbsoluteVar<stackbackoffset,varoffset>.
              */
             return ee.stacklevel == 0? new AbsoluteVar(tmp,ee.type,0,ee.offset) : new Var(tmp,ee.type,top.level - ee.stacklevel,ee.offset);
+        case Tag.NULL:
+            move();
+            return Constant.Null;
         case Tag.TRUE:
             move();
             return Constant.True;

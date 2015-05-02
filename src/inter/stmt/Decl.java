@@ -24,6 +24,7 @@ public class Decl extends Stmt {
 
     public boolean check(){
         if(value == null){
+            value = type.getInitialValue();
             return true;
         } else if( !type.equals(value.type) ) {
             value = ConversionFactory.getConversion(value,type);

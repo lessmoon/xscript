@@ -35,6 +35,7 @@ src/inter/expr/Expr.java
 src/inter/expr/FunctionInvoke.java
 src/inter/expr/IsInstanceOf.java
 src/inter/expr/Logical.java
+src/inter/expr/New.java
 src/inter/expr/NewArray.java
 src/inter/expr/Not.java
 src/inter/expr/Op.java
@@ -89,6 +90,7 @@ src/lexer/Word.java
 src/main/Main.java
 src/parser/Parser.java
 src/runtime/LoadFunc.java
+src/runtime/RunStack.java
 src/runtime/VarTable.java
 src/symbols/Array.java
 src/symbols/Env.java
