@@ -44,7 +44,6 @@ def void f2(int b){
     f1(b+1);
 }
 
-
 struct llist{
     int size;
     def int getSize();

@@ -81,7 +81,7 @@ public class FunctionInvoke extends Expr {
 
     @Override
     public Constant getValue(){
-        Constant result = null;
+        Constant result = type.getInitialValue();
         final Constant[] args = new Constant[para.size()];
         for(int i = 0 ; i < args.length;i++){
             args[i] = para.get(i).getValue();

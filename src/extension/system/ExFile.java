@@ -52,7 +52,7 @@ public class ExFile {
             if(n == null){
                 return -2;/*file not open*/
             }
-            n.fos.write((""+c).toString().getBytes());
+            n.fos.write((int)c);
             return fid;
         } catch (Exception e){
             return -1;
