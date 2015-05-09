@@ -24,7 +24,8 @@ public class Parser{
 
     public int lastBreakFatherLevel = -1;
     public int lastIterationLevel = -1;
-    /* The variable lastFunctionLevel is for the  
+    /* 
+     * The variable lastFunctionLevel is for the  
      * local function definition.
      * For now,it is just 0(which means global level).
      */
@@ -867,10 +868,7 @@ public class Parser{
 
         Type p = (Type)look;
         match(Tag.BASIC);
-        //[4][3][2] = array of [3][]int
-        //[3][]int = array of []int
-        //[]int   = array of int
-        //row-wize
+
         if( look.tag == '[' ){
             if(p == Type.Void){
                 error("type `" + p.toString() + "' can't be element type of array");
@@ -883,10 +881,11 @@ public class Parser{
     public Array arrtype(Type of) throws IOException {
         match('[');
         match(']');
-        if( look.tag == '[' ){
-            of = arrtype(of);
+        Array a = new Array(of);
+        while(check('[')){
+            match(']');
         }
-        return new Array(of);
+        return a;
     }
 
     public Expr expr() throws IOException {

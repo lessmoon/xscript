@@ -48,7 +48,13 @@ public class Struct extends Type {
     }
 
     public boolean isChildOf(Struct t){
-        return t == this.father || (father != null && father.isChildOf(t));
+        Struct f = this.father;
+        while(f != null){
+            if(f == this.father)
+                return true;
+            f = f.father;
+        }
+        return false;
     }
 
     @Override
