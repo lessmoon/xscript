@@ -332,6 +332,28 @@ class ConversionFactoryFactory {
     }
 }
 
+class UpperCastConversion extends Conversion{
+    UpperCastConversion(Expr e,Struct tar){
+        super(e,tar,tar);
+        assert(e.type instanceof Struct);
+    }
+
+    @Override
+    public Constant getValue(){
+        Constant v = e.getValue();
+        if(v != Constant.Null){
+            assert(v.type instanceof Struct);
+        }
+        return v;
+    }
+    
+    @Override
+    public Expr optimize(){
+        e = e.optimize();
+        return e;
+    }
+}
+
 class DownCastConversion extends Conversion {
     final Struct tar;
 
@@ -350,6 +372,29 @@ class DownCastConversion extends Conversion {
             error("can't cast from `" + v.type + "' to `" + tar + "'");
         }
         return v;
+    }
+}
+
+class NullConversion extends Conversion {
+    NullConversion(Expr e,Type tar){
+        super(e,tar,tar);
+        assert(tar instanceof Array || tar instanceof Struct);
+    }
+
+    @Override
+    boolean isChangeable(){
+        return false;
+    }
+
+    @Override
+    public Expr optimize(){
+        return e;
+    }
+
+    @Override
+    public Constant getValue(){
+        assert(e == Constant.Null);
+        return e.getValue();
     }
 }
 
@@ -373,15 +418,19 @@ public class ConversionFactory {
        /*
         * if it is struct may have conversion override
         */
-       Expr c = null;
-       if(src.type instanceof Struct){
-           
+
+        Expr c = null;
+
+        if(src == Constant.Null){
+            if(t instanceof Array || t instanceof Struct)
+                return new NullConversion(src,t);
+        } else if(src.type instanceof Struct){
             /*
              * inherited struct judge
              */
             if(t instanceof Struct){
                 if(((Struct)src.type).isChildOf((Struct)t)){//up-cast
-                    return src;
+                    return new UpperCastConversion(src,(Struct)t);
                 }
             }
 

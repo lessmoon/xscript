@@ -106,10 +106,10 @@ public class PostUnaryFactory {
                 return new CharPostUnary(tok,e);
             } else if( Type.BigInt == e.type ){
                 return new BigIntPostUnary(tok,e);
-            } else {
-                e.error("Operand:`" + tok + "' is not permitted here");
             }
         }
+
+        e.error("Operand:`" + tok + "' is not permitted here");
         return null;
     }
 }

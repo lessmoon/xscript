@@ -26,7 +26,12 @@ public class ArrayVar extends Var {
 
     @Override
     public Constant getValue(){
-        ArrayConst v = (ArrayConst)array.getValue();
+        Constant c = array.getValue();
+        if(c == Constant.Null){
+            error("null pointer error:try to set member of a null struct");
+        }
+        
+        ArrayConst v = (ArrayConst)c;
         int l = ((Num)(loc.getValue()).op).value;
         if(l >= v.size || l < 0){
             error("Index " + l + " out of range( 0 ~ " + (v.size - 1) + " )");
@@ -36,8 +41,12 @@ public class ArrayVar extends Var {
 
     @Override
     public Constant setValue(Constant v){
+        Constant c = array.getValue();
+        if(c == Constant.Null){
+            error("null pointer error:try to set member of a null struct");
+        }
         int l = ((Num)(loc.getValue()).op).value;
-        ArrayConst var = (ArrayConst)array.getValue();
+        ArrayConst var = (ArrayConst)c;
         if(l >= var.size || l < 0){
             error("Index " + l + " out of range( 0 ~ " + (var.size - 1) + " )");
         }

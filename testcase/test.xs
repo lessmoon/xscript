@@ -44,7 +44,6 @@ def void f2(int b){
     f1(b+1);
 }
 
-
 struct llist{
     int size;
     def int getSize();
@@ -120,11 +119,11 @@ struct rectangle : square {
 
 {
     println("Test for inheriting");
-    square dd;
+    square dd = new<square>;
     dd.init("square");
-    rectangle hh;
+    rectangle hh = new<rectangle>;
     hh.init("rectangle");
-    shape[2] h;
+    shape[] h = new<shape>(2);
     h[0] = dd;
     h[1] = hh;
     dd.setWidth(10);
@@ -143,8 +142,8 @@ struct rectangle : square {
 
 {
     println("Test for parser");
-    parser p;
-    lexer l;
+    parser p = new<parser>;
+    lexer l = new<lexer>;
     string s = "1+5*6-(9-90)";
     l.init(s);
     p.init(l);
@@ -157,7 +156,7 @@ struct complex{
     real img;
     @+
     def complex add(complex x){
-        complex res;
+        complex res = new<complex>;
         res.r = x.r + this.r;
         res.img = x.img + this.r;
         return res;
@@ -179,7 +178,7 @@ struct complex{
 
 {
     println("Test for operand overloading");
-    complex c1,c2;
+    complex c1 = new<complex>,c2= new<complex>;
     c1.r = 2;
     c1.img = 3;
     c2.r = 5;
@@ -258,7 +257,7 @@ struct complex{
 
 {
     println("test for ratio");
-    Ratio x,d;
+    Ratio x = new<Ratio>,d = new<Ratio>;
     x.init(52,564);
     d.init(25,55);
     println(x.toString() + "+" + d.toString() + "=" + (x+d) );
@@ -328,7 +327,7 @@ struct complex{
             }
         }
     }
-    
+   
     /*draw a red heart*/
     setBrushColor(255,0,0);
     for (real y = 1.5; y > -1.5; y -= 0.01) {
@@ -433,7 +432,7 @@ struct CORD{
 {
     println("Test for member functions");
     srand(time());
-    CORD o;
+    CORD o = new<CORD>;
     o.x = rand()%25;
     o.y = rand()%25;
     println(o.toString());
@@ -450,7 +449,7 @@ struct CORD{
     println("arr = new<int>(25);");
     println("println(sizeof arr);");
     println("println(sizeof new<int>(25));");
-    int[244] arr;
+    int[] arr;
     arr = new<int>(25);
     println(sizeof arr);
     println(sizeof new<int>(25));
@@ -469,10 +468,14 @@ struct CORD{
 }
 
 
-int[22][23] a;
+int[][] a;
 int buffer = -1;
-a[21][0] = 212;
-int c = a[21][0];
+a = new<int[]>(100);
+for(int i = 0;i< sizeof a;i++){
+    a[i] =  new<int>(100); 
+}
+a[21][25] = 212;
+int c = a[24][25];
 
 def int bufgetchar(){
     if( buffer < 0 ){
@@ -550,11 +553,8 @@ struct tree_node{
     int value;
 }
 
-tree_node null;
-null = null.left;
-
 def tree_node randomly_create_tree(){
-    tree_node t;
+    tree_node t = new<tree_node>;
     if(rand()%10 > 5)
         t.left  = randomly_create_tree();
     if(rand()%10 < 5)
@@ -582,7 +582,7 @@ def int prettily_show_tree(tree_node tree,int level){
 }
 
 
-def string toString( char[80] c_str ){
+def string toString( char[] c_str ){
     string r = "";
     int i = 0;
     while(c_str[i] != '\0'){
@@ -591,14 +591,16 @@ def string toString( char[80] c_str ){
     return r;
 }
 
-def int[10][10] mult( int[10][10] a,int[10][10] b){
+def int[][] mult( int[][] a,int[][] b){
     string r = "";
-    int[10][10] res;
+    int[][] res = new <int[]>(10);
+    
     int i = 0;
     int sum = 0;
     int j = 0;
     int k = 0;
-    for(i = 0 ; i < 10 ;i++){        
+    for(i = 0 ; i < 10 ;i++){    
+        res[i] = new<int>(10);
         for(j = 0 ; j < 10;j++){
             sum = 0;
             for(k = 0;k<10;k++){
@@ -611,7 +613,7 @@ def int[10][10] mult( int[10][10] a,int[10][10] b){
 }
 
 
-def int printarray(int[2] arr,int len){
+def int printarray(int[] arr,int len){
     int i = 0;
     print("[");
     for(i;i < len;i++){
@@ -622,12 +624,13 @@ def int printarray(int[2] arr,int len){
 }
 
 {
-  int[1000] arr;
+  int[] arr ;
   int i = 0;
   int seed = time();
   print("seed = " + seed + "\n");
   srand( seed );
   int len = rand()%200;
+  arr = new<int>(len);
   for(i = 0 ; i < len;i++){
     arr[i] = rand()%len;
   }
@@ -638,12 +641,15 @@ def int printarray(int[2] arr,int len){
 
   i = 0;
   string test = "i am a test value";
-  char[80] c_str;
+  char[] c_str = new<char>(100);
 
-  int[10][10] a;
-  int[10][10] b;
-  int[10][10] c;
+  int[][] a = new<int[]>(10);
+  int[][] b = new<int[]>(10);
+  int[][] c;
+  
   for(i ;i < 10;i++){
+    a[i] = new<int>(10);
+    b[i] = new<int>(10);
     int j = 0;
     for(i ;j < 10;j++){
       a[i][j] = i;
@@ -666,11 +672,12 @@ def int printarray(int[2] arr,int len){
     c_str[i] = test[i];
   }
   c_str[i] = '\0';
-  string[10][20] nums;
+  string[][] nums = new<string[]>(10);
   print(toString(c_str));
   print("\n");
   
   for(i = 0 ;i < 10;i++){
+    nums[i] = new<string>(20);
     for(int j = 0 ;j < 20;j++){
       nums[i][j] = (string)i + "," + j;
     }

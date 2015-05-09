@@ -49,6 +49,9 @@ public class Constant extends Expr{
         True = new Constant(Word.True,Type.Bool),
         False = new Constant(Word.False,Type.Bool);
 
+    public static final Constant
+        Null = new Constant(Word.Null,Type.Null);
+        
     @Override
     public String toString(){
         return op.toString();

@@ -16,15 +16,14 @@ public class Return extends Stmt {
     }
 
     public void check(Type t){
+
         if(t.equals(expr.type)){
             return;
         } else {
             expr = ConversionFactory.getConversion(expr,t);
-            if(expr == null)
-                error("return wrong type(need " + t +")");
         }
     }
-    
+
     @Override
     public Stmt optimize(){
         expr = expr.optimize();

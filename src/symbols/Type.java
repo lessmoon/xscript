@@ -1,11 +1,22 @@
 package symbols;
 
 import lexer.*;
+import inter.expr.Constant;
+
+import java.math.BigInteger;
+import java.math.BigDecimal;
 
 public class Type extends Word {
+    protected Constant initialValue ;
 
     public Type(String s,int tag){
         super(s,tag);
+        initialValue = null;
+    }
+
+    protected Type(String s,int tag,Constant val){
+        super(s,tag);
+        initialValue = val;
     }
 
     public int getSize(){
@@ -19,7 +30,19 @@ public class Type extends Word {
     public boolean equals( Type t ){
         return this == t;
     }
-
+    
+    public boolean isBuiltInType(){
+        return true;
+    }
+    
+    public Constant getInitialValue(){
+        return initialValue;
+    }
+    
+    protected void setInitialValue(Constant c){
+        initialValue = c;
+    }
+    
     public static final Type 
         Int     =   new Type( "int" , Tag.BASIC),
         Real    =   new Type( "real" , Tag.BASIC),
@@ -28,8 +51,25 @@ public class Type extends Word {
         Bool    =   new Type( "bool" , Tag.BASIC),
         Void    =   new Type( "void" , Tag.BASIC),
         BigInt  =   new Type( "bigint",Tag.BASIC),
-        BigReal =   new Type( "bigreal",Tag.BASIC);
+        BigReal =   new Type( "bigreal",Tag.BASIC),
+        Null    =   new Type( "null" , Tag.BASIC ){
+            @Override
+            public boolean isBuiltInType(){
+                return false;
+            }
+        };
+    
 
+    static {
+        Int.setInitialValue(new Constant(0));
+        Real.setInitialValue(new Constant(0.0f));
+        Str.setInitialValue(new Constant(""));
+        Char.setInitialValue(new Constant('\0'));
+        Bool.setInitialValue(Constant.False);
+        BigInt.setInitialValue(new Constant(BigInteger.ZERO));
+        BigReal.setInitialValue(new Constant(BigDecimal.ZERO));
+    }
+        
     public static boolean numeric(Type p){
         return (p == Type.Int || p == Type.Real || p == Type.Char
                 || p == Type.BigInt || p == Type.BigReal);

@@ -24,25 +24,22 @@ def string list_toString(list l){
 }
 
 
-list_node _LIST_NULL_CONSTANT_;
-_LIST_NULL_CONSTANT_ = _LIST_NULL_CONSTANT_.prev;
-
 def list create_list(){
-    list_node head;
-    list_node tail;
-    list l ;
+    list_node head = new<list_node>;
+    list_node tail = new<list_node>;
+    list l  = new<list> ;
     l.head = head;
     l.tail  = tail;
     l.count = 0;
     head.next = tail;
-    head.prev = _LIST_NULL_CONSTANT_;
-    tail.next  = _LIST_NULL_CONSTANT_;
+    head.prev = null;
+    tail.next  = null;
     tail.prev  = head;
     return l;
 }
 
 def list push_back(list l,int value){
-    list_node n;
+    list_node n  = new<list_node>;
     l.count++;
     n.value = value;
     n.prev = l.tail.prev;
@@ -61,7 +58,7 @@ def int list_size(list l){
 }
 
 def int pop_front(list l){
-    list_node n;
+    list_node n = new<list_node>;
     if(l.count > 0){
         n = l.head.next;
         l.head.next = n.next;
@@ -73,7 +70,7 @@ def int pop_front(list l){
 }
 
 def int pop_back(list l){
-    list_node n;
+    list_node n = new<list_node>;
     if(l.count > 0){
         n = l.tail.prev;
         l.tail.prev = n.prev;

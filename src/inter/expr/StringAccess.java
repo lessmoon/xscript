@@ -16,7 +16,7 @@ public class StringAccess extends Expr {
     
     void check(){
         if(array.type != Type.Str)
-            error("array access is only for " + Type.Str + " now");
+            error("array access is only for " + Type.Str + "");
         if( Type.max(Type.Int,index.type) != Type.Int ){
             error("type " + index.type + " is not valid for array");
         }

@@ -68,6 +68,8 @@ public class Lexer {
         reserve( Word.True );
         reserve( Word.False );
         reserve( Word.This );
+        reserve( Word.Null );
+
         reserve( Type.Int );
         reserve( Type.Char );
         reserve( Type.Bool );
@@ -136,6 +138,7 @@ public class Lexer {
     }
     
     void readch() throws IOException {
+        
         int p = in.read();
         while(p < 0){
             in.close();
@@ -157,6 +160,7 @@ public class Lexer {
         peek = ' ';
         return true;
     }
+
 
     public Token scan() throws IOException {
         for(;;readch()){

@@ -22,7 +22,7 @@ public class StructMemberAccess extends Var {
         }
         StructVariable variable = ((Struct)(value.type)).getMemberVariableType(member);
         if( variable == null ){
-            error("Can't find member `" + member + "' in " + value.type);
+            error("can't find member `" + member + "' in " + value.type);
         }
         type = variable.type;
         return variable.index;
@@ -41,14 +41,22 @@ public class StructMemberAccess extends Var {
 
     @Override
     public Constant getValue(){
-        StructConst s = (StructConst)value.getValue();
+        Constant c = value.getValue();
+        if(c == Constant.Null){
+            error("null pointer error:try to get member `" + member + "' of a null struct");
+        }
+        StructConst s = (StructConst)c;
         return s.getElement(index);
     }
 
     @Override
-    public Constant setValue(Constant c){
-        StructConst s = (StructConst)value.getValue();
-        return s.setElement(index,c);
+    public Constant setValue(Constant v){
+        Constant c = value.getValue();
+        if(c == Constant.Null){
+            error("null pointer error:try to set member `" + member + "' of a null struct ");
+        }
+        StructConst s = (StructConst)c;
+        return s.setElement(index,v);
     }
     
     public String toString(){

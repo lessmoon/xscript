@@ -21,6 +21,6 @@ public class ArrayDecl extends Decl {
 
     @Override
     public void run(){
-        VarTable.pushVar((value != null)?value.getValue():new ArrayConst((Array)type));
+        VarTable.pushVar(value.getValue());
     }
 }
