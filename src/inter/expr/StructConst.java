@@ -22,7 +22,6 @@ public class StructConst extends Constant {
                 Entry<Token,StructVariable> info = iter.next();
                 Type vt = info.getValue().type;
                 int i = info.getValue().index;
-                /*just initialize array*/
                 table[i] = vt.getInitialValue();
             }
             t = t.getFather();

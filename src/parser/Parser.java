@@ -811,10 +811,6 @@ public class Parser{
             top.put(tok,p);
             if(check('=')){
                 e = expr();
-            } else {
-                if(p instanceof Struct){
-                    ((Struct)p).setUsed(lex.line,lex.filename);
-                }
             }
             s.addDecl(Decl.getDecl(tok,p,e));
         } while(check(','));
@@ -845,10 +841,6 @@ public class Parser{
                 top.put(tok,p);
                 if(check('=')){
                     e = expr();
-                } else {
-                    if(p instanceof Struct){
-                        ((Struct)p).setUsed(lex.line,lex.filename);
-                    }
                 }
                 s.addDecl(Decl.getDecl(tok,p,e));
             } while(check(','));
@@ -884,6 +876,7 @@ public class Parser{
         Array a = new Array(of);
         while(check('[')){
             match(']');
+            a = new Array(a);
         }
         return a;
     }
@@ -993,6 +986,7 @@ public class Parser{
                 return new NewArray(l,t,e);
             } else {
                 if(t instanceof Struct){
+                    ((Struct)t).setUsed(lex.line,lex.filename);
                     return new New(l,(Struct)t);
                 } else {
                     error("new<" + t + "> is not permitted:`" + t + "' is not a struct type");
