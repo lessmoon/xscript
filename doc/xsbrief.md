@@ -174,7 +174,7 @@
 		- `null`:used for array and struct
 	* Dynamic array allocation:
 		- `new` < type > (expression);
-		- `new` <struct-type>;
+		- `new` < struct-type >;
 	* Array size getter:(return an integer)
 		- `sizeof` array-type-expression
 	* Instance check:(return `true` or `false`)
