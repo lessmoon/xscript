@@ -27,10 +27,11 @@ public class IsInstanceOf extends Op {
                     precal = true;
                 } else if(((Struct)expr.type).isChildOf((Struct)cmptype)){
                     precal = true;
-                } else if(!((Struct)cmptype).isChildOf((Struct)expr.type)){
+                } else if(((Struct)cmptype).isChildOf((Struct)expr.type)){
                     precal = false;
-                } else {
                     haveto = true;
+                } else {
+                    precal = false;
                 }
             } else {
                 precal = false;

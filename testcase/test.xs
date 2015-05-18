@@ -139,15 +139,50 @@ struct rectangle : square {
     }
 }
 
+def string readLine(){
+    string l = "";
+    char c;
+    while((c = getchar()) != '\n' ){
+        l+=c;
+    }
+    return l;
+}
 
 {
     println("Test for parser");
     parser p = new<parser>;
     lexer l = new<lexer>;
-    string s = "1+5*6-(9-90)";
+    //print("Enter the function you want to draw:f(x)=");
+    string s = "(x/10-10)*(x/10-20)";
     l.init(s);
     p.init(l);
-    println(s + "=" + p.expr().getValue());
+    Var v = p.getVar();
+    Expr e = p.expr();
+
+    /*draw a red line*/
+    int last_x = -10000;
+    int last_y = -10000;
+    setBrushColor(255,0,0);
+    for (real x = 300; x > -300; x -= 1) {
+        v.setValue(x);
+        int y = e.getValue();
+        addPoint(x + 300 ,-y + 240);
+        if(last_x > -10000){
+            addLine(last_x,last_y,x+300,-y+240);
+        }
+        last_x = x+300;
+        last_y = -y+240;
+    }
+    println("drawing function line of f(x)=" + s);
+    setBrushColor(0,0,0);
+    addLine(0,240,600,240);
+    addLine(300,0,300,480);
+    openPad(600,480);
+    paint();
+    getchar();
+    getchar();
+    closePad();
+    
 }
 
 
@@ -699,15 +734,17 @@ def int printarray(int[] arr,int len){
     int fid= open("t.txt");
     println("write to file " + "t.txt");
     
-    for (char y = 'a'; y < 'z'; y++) {
+    for (char y = 'a'; y <= 'z'; y++) {
         writech(fid,y);
         int i = y;
         string x = ((string)i);
         writech(fid,':');
         for(int i = 0 ; i < strlen(x);i++)
             writech(fid,x[i]);
-        writech(fid,'\r');
-        writech(fid,'\n');
+        if( y != 'z'){
+            writech(fid,'\r');
+            writech(fid,'\n');
+        }
     }
     close(fid);
 }

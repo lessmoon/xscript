@@ -50,7 +50,7 @@ public class Struct extends Type {
     public boolean isChildOf(Struct t){
         Struct f = this.father;
         while(f != null){
-            if(f == this.father)
+            if(t == f)
                 return true;
             f = f.father;
         }

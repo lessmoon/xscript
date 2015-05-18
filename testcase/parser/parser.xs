@@ -1,7 +1,7 @@
 
 struct Expr {
-    @int
-    def virtual int getValue();
+    @real
+    def virtual real getValue();
 }
 
 struct Arith:Expr{
@@ -14,39 +14,41 @@ struct Arith:Expr{
 }
 
 struct Add:Arith{
-    def override int getValue(){
+    def override real getValue(){
         return this.e1.getValue()+this.e2.getValue();
     }
 }
 
 struct Sub:Arith{
-    def override int getValue(){
+    def override real getValue(){
         return this.e1.getValue()-this.e2.getValue();
     } 
 }
 
 struct Mult:Arith{
-    def override int getValue(){
+    def override real getValue(){
         return this.e1.getValue()*this.e2.getValue();
     } 
 }
 
 struct Div:Arith{
-    def override int getValue(){
+    def override real getValue(){
         return this.e1.getValue()/this.e2.getValue();
     } 
 }
 
 struct Const:Expr{
-    int value;
+    real value;
     def void setValue(int v){
         this.value = v;
     }
 
-    def override int getValue(){
+    def override real getValue(){
         return this.value;
     }
 }
+
+struct Var:Const{}
 
 struct Token{
     int tag;
@@ -62,13 +64,13 @@ struct Token{
 }
 
 struct Num:Token{
-    int value;
+    real value;
 
     def override string toString(){
         return (string)this.value;
     }
 
-    def void init(int value){
+    def void init(real value){
         this.value = value;
         this.setTag(256);
     }
@@ -127,11 +129,17 @@ struct lexer{
 struct parser{
     lexer lex;
     Token look;
+    Var  xVar;
 
     def void init(lexer l){
         this.lex = l;
+        this.xVar = new <Var>;
     }
 
+    def Var getVar(){
+        return this. xVar;
+    }
+    
     def void next(){
         this.look = this.lex.scan();
     }
@@ -155,15 +163,17 @@ def Expr parser.term(){
         } else {
             this.next();
         }
-        
         return e;
     case 256:
         Const e = new<Const>;
         e.setValue(((Num)this.look).value);
         this.next();
         return e;
+    case 'x':case 'X':
+        this.next();
+        return this.getVar();
     default:
-        println("Unknown token `" + this.look + "' not found");
+        println("Unknown token `" + this.look + "' found");
     }
 }
 

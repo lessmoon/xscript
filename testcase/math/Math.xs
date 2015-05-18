@@ -13,17 +13,14 @@ def int srand(int v){
 }
 
 def int rand(){
-    int r ;
-    real i;
     RAND_SEED *= 134775813;
-    RAND_SEED = RAND_SEED % 1073676287;
-    i = (real)RAND_SEED / 1073676286;
-    r =  i * 2147483647;
+    RAND_SEED += 1073676287;
+    RAND_SEED %= 2147483647;
     return abs(RAND_SEED);
 }
 
 def int qsort(int[] s,int l,int r){
-    if (l < r){        
+    if (l < r){
         int i = l, j = r, x = s[l];  
         while (i < j)  
         {  

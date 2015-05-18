@@ -90,7 +90,6 @@ public class Main{
         } catch (RuntimeException e){
             //e.printStackTrace();
             System.err.println("Compile Error:");
-            System.out.println("" + lex.line + lex.filename);
             System.err.println(e.getMessage());
             return;
         } catch( IOException e){

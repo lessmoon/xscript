@@ -96,9 +96,9 @@ public class VirtualFunctionInvoke extends Expr {
         for(Constant c : args){
             if(IS_DEBUG){
                 System.out.println("\narg[" + i + "]{" + para.get(i) + "} = " + c + "<->" + c.hashCode());
+                i++;
             }
             VarTable.pushVar(c);
-            i++;
         }
         if(IS_DEBUG){
             System.out.println("\nVirtualInvoke " + func.toString() + "{");
