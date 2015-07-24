@@ -20,7 +20,7 @@ def int rand(){
 }
 
 def int qsort(int[] s,int l,int r){
-    if (l < r){
+    while (l < r){
         int i = l, j = r, x = s[l];  
         while (i < j)  
         {  
@@ -31,7 +31,7 @@ def int qsort(int[] s,int l,int r){
         }
         s[i] = x;  
         qsort(s, l, i - 1);
-        qsort(s, i + 1, r);
+        l++;
     }
     return 0;
 }

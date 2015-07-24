@@ -100,7 +100,7 @@ public class VarTable {
             for(int i = 0 ; i < sl ; i++)
                 System.out.print("  |");
             System.out.println("set " + offset + " = " );
-        }    //*/
+        }//*/
         ArrayList<ConstantReference> c = table.get(sl);
         c.get(offset).v = v;
         return v;

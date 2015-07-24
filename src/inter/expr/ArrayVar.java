@@ -28,7 +28,7 @@ public class ArrayVar extends Var {
     public Constant getValue(){
         Constant c = array.getValue();
         if(c == Constant.Null){
-            error("null pointer error:try to set member of a null struct");
+            error("null pointer error:try to set member of a null array");
         }
         
         ArrayConst v = (ArrayConst)c;
@@ -43,7 +43,7 @@ public class ArrayVar extends Var {
     public Constant setValue(Constant v){
         Constant c = array.getValue();
         if(c == Constant.Null){
-            error("null pointer error:try to set member of a null struct");
+            error("null pointer error:try to set member of a null array");
         }
         int l = ((Num)(loc.getValue()).op).value;
         ArrayConst var = (ArrayConst)c;

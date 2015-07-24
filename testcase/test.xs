@@ -17,7 +17,7 @@ loadfunc<extension.ui>{
 }
 
 loadfunc<extension.system>{
-    void sleep(int duration);
+    "sleep":void sleep(int duration);
 }
 
 loadfunc<extension.math>{
@@ -25,6 +25,99 @@ loadfunc<extension.math>{
 }
 
 import  "container/list.xs";
+
+struct Point{
+    int x;
+    int y;
+    def void init(int x,int y){
+        this.x = x;
+        this.y = y;
+    }
+    
+    @+
+    def Point add(Point p){
+        Point t = new<Point>;
+        t.x = this.x + p.x;
+        t.y = this.y + p.x;
+        return t;
+    }
+
+    @-
+    def Point sub(Point p){
+        Point t = new<Point>;
+        t.x = this.x - p.x;
+        t.y = this.y - p.x;
+        return t;
+    }
+}
+
+struct Color{
+    int r,g,b;
+}
+
+struct Graphics {
+    int width,height;
+    Point center;
+    Color brushcolor;
+    
+    def void init(int width,int height){
+        this.width = width;
+        this.height = height;
+        this.center = new<Point>;
+        this.center.init(0,0);
+        openPad(width,height);
+        paint();
+        this.brushcolor = new<Color>;
+    }
+
+    def virtual void drawPoint(Point p){
+        Point real_p = p + this.center;
+        if(this.width > real_p.x && real_p.x >= 0
+            && this.height > real_p.y && real_p.y >= 0){
+            addPoint(real_p.x,real_p.y);
+            paint();
+        }
+    }
+    
+    def void transite(Point offset){
+        this.center = this.center + offset;
+    }
+    
+    def Point getCenter(){
+        return this.center;
+    }
+
+    def void setBrushColor(Color c){
+        this.brushcolor = c;
+    }
+
+    def Color getBrushColor(){
+        return this.brushcolor;
+    }
+}
+
+struct Brush {
+    def virtual void draw(Point p); 
+    //def virtual void setColor(Color c);
+}
+
+struct PaintPotBrush : Brush{
+    int radio;
+    int density;
+    
+    def override void draw(Point p){
+        
+    }
+    
+    def void setRadio(int r){
+        
+    }
+    
+    def void setDensity(int d){
+        
+    }
+
+}
 
 def void f2(int b);
 

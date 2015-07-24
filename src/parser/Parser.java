@@ -224,9 +224,19 @@ public class Parser{
         match('{');
         while(!check('}')){
             pl = new ArrayList<Para>();
+            String clazzname = null;
+            if(look.tag == Tag.STR){
+                clazzname = look.toString();
+                move();
+                match(':');
+            }
+
             Type t = type();
             Token name = look;
             match(Tag.ID);
+            if(clazzname == null){
+                clazzname = name.toString();
+            }
             match('(');
             if(!check(')')){
                 do{
@@ -240,9 +250,9 @@ public class Parser{
             
             FunctionBasic f = null;
             try{
-                f = LoadFunc.loadFunc(t,sb.toString(),name,pl);
+                f = LoadFunc.loadFunc(t,sb.toString(),clazzname,name,pl);
             } catch (Exception e){
-                error("failed to load extension function `" + sb.toString()  + "." + name + "'");
+                error("failed to load extension function `" + sb.toString()  + "." + clazzname + "'");
             }
             if(!table.addFunc(name,f)){
                 error("function name has conflict:" + name);
@@ -314,11 +324,14 @@ public class Parser{
                     error("overloading for `" + op + "' found but no function definition found");
                 }
                 Type t = type();
-                Token m = look;
-                match(Tag.ID);
-                if(s.addMemberVariable(m,t) != null){
-                    error("member `" + m.toString() + "' defined previously ");
-                }
+                Token m;
+                do {
+                    m = look;
+                    match(Tag.ID);
+                    if(s.addMemberVariable(m,t) != null){
+                        error("member `" + m.toString() + "' defined previously ");
+                    }
+                }while(check(','));
                 match(';');
             }
         }
@@ -857,10 +870,13 @@ public class Parser{
             }
             look = t;
         }
-
-        Type p = (Type)look;
-        match(Tag.BASIC);
-
+        Type p = null;
+        //System.err.println("LOOK " + look);
+        if(look.tag == Tag.BASIC){
+            p = (Type)copymove();
+        } else {
+            error("type name wanted here,but found `" + look +"' ");
+        }
         if( look.tag == '[' ){
             if(p == Type.Void){
                 error("type `" + p.toString() + "' can't be element type of array");

@@ -20,3 +20,45 @@ def void println(string s){
     print(s + "\n");
     return;
 }
+
+struct Timer{
+    def void start();
+    def void pause();
+    def void resume();
+    def int  getDuration();
+    def void clear();
+
+    int duration;
+    int start;
+}
+
+def void Timer.start(){
+    this.clear();
+    this.start = time();
+}
+
+def void Timer.pause(){
+    if(this.start != 0){
+        this.duration += time() - this.start;
+        this.start = 0;
+    }
+}
+
+def void Timer.resume(){
+    if(this.start == 0){
+        this.start = time();
+    }
+}
+
+def int Timer.getDuration(){
+    if(this.start == 0){
+        return this.duration;
+    } else {
+        return time() - this.start;
+    }
+}
+
+def void Timer.clear(){
+    this.start    = 0;
+    this.duration = 0;
+}

@@ -9,10 +9,10 @@ import inter.util.Para;
 import java.util.ArrayList;
 
 public class LoadFunc {
-    public static ExFunction loadFunc(Type t,String pkg,Token fn,ArrayList<Para> pl){
+    public static ExFunction loadFunc(Type t,String pkg,String clazzname,Token fn,ArrayList<Para> pl){
         try{
             ClassLoader loader = ClassLoader.getSystemClassLoader();
-            Class clazz = loader.loadClass(pkg + "." + fn.toString());
+            Class clazz = loader.loadClass(pkg + "." + clazzname);
             Function f = (Function)clazz.newInstance();
             return new ExFunction(t,fn,pl,f);
         } catch(Exception e) {
