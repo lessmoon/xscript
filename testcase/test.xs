@@ -5,7 +5,7 @@ import  "math/Ratio.xs";
 import  "parser/parser.xs";
 
 loadfunc<extension.ui>{
-    int openPad(int w,int h);
+    "openPad":int openPadWithName(int w,int h,string name);
     int drawLine(int x1,int y1,int x2,int y2);
     int drawPoint(int x,int y);
     int addLine(int x1,int y1,int x2,int y2);
@@ -22,6 +22,12 @@ loadfunc<extension.system>{
 
 loadfunc<extension.math>{
     real sin(real theta);
+    "SetSeed":void srand(int seed);
+    "Random":int rand();
+}
+
+def int openPad(int w,int h){
+    return openPadWithName(w,h,"Script");
 }
 
 import  "container/list.xs";
@@ -241,6 +247,199 @@ def string readLine(){
     return l;
 }
 
+def void drawRectangle(int x,int y,int w,int h){
+    addLine(x,y,x+w,y);
+    addLine(x,y,x,y+h);
+    addLine(x,y+h,x+w,y+h);
+    addLine(x+w,y,x+w,y+h);
+    
+}
+    int WIDTH = 50;
+    int HEIGHT = 50;
+    int TILE_WIDTH = 10;
+    int CHESS_WIDTH = 8;
+/*CHESS PLAYING*/
+def void drawChessPad(int x,int y)
+{
+    clearPad();
+    setBrushColor(0,0,0);
+    for(int i = 0;i <= WIDTH;i++){
+        //println("x " + i + ":" + TILE_WIDTH*i+","+HEIGHT*TILE_WIDTH);
+        addLine(TILE_WIDTH*i,0,TILE_WIDTH*i,HEIGHT*TILE_WIDTH);
+    }
+    for(int i = 0;i <= HEIGHT;i++){
+        //println("y " + i + ":" + TILE_WIDTH*i+","+WIDTH*TILE_WIDTH);
+        addLine(0,TILE_WIDTH*i,WIDTH*TILE_WIDTH,TILE_WIDTH*i);
+    }
+    setBrushColor(255,0,0);
+    int co = (TILE_WIDTH - CHESS_WIDTH)/2;
+    drawRectangle(x*TILE_WIDTH+co,y*TILE_WIDTH+co,CHESS_WIDTH,CHESS_WIDTH);
+
+    paint();
+}
+
+{
+    println("Test for chess pad");
+    openPadWithName(WIDTH*TILE_WIDTH+1,HEIGHT*TILE_WIDTH+1,"Chess");
+    int c;
+    int x = WIDTH/2,y = HEIGHT/2;
+    drawChessPad(x,y);
+    while( (c=(rand()%102 + 1)) != 101){
+        switch(c%4){
+        case 0:
+            if(y>0)
+                y--;
+            break;
+        case 1:
+            if(y<HEIGHT-1)
+                y++;
+            break;
+        case 2:
+            if(x>0)
+                x--;
+            break;
+        case 3:
+            if(x<WIDTH-1)
+                x++;
+            break;
+        default:
+            continue;
+        }
+        drawChessPad(x,y);
+        sleep(200);
+    }
+    clearPad();
+    closePad();
+}
+
+/*CELL SIMULATION*/
+def void drawWorld(bool[][] worldmap)
+{
+    clearPad();
+    setBrushColor(0,0,0);
+    //println("Line " + _line_ + ":" + TILE_WIDTH);
+    for(int i = 0;i <= WIDTH;i++){
+        //println("x " + i + ":" + TILE_WIDTH*i+","+HEIGHT*TILE_WIDTH);
+        addLine(TILE_WIDTH*i,0,TILE_WIDTH*i,HEIGHT*TILE_WIDTH);
+    }
+    for(int i = 0;i <= HEIGHT;i++){
+        //println("y " + i + ":" + TILE_WIDTH*i+","+WIDTH*TILE_WIDTH);
+        addLine(0,TILE_WIDTH*i,WIDTH*TILE_WIDTH,TILE_WIDTH*i);
+    }
+    setBrushColor(255,0,0);
+    int co = (TILE_WIDTH - CHESS_WIDTH)/2;
+    for(int x = 0;x < WIDTH;x++){
+        for(int y = 0;y < HEIGHT;y++){
+            if(worldmap[x][y])
+                drawRectangle(x*TILE_WIDTH+co,y*TILE_WIDTH+co,CHESS_WIDTH,CHESS_WIDTH);
+        }
+    }
+    paint();
+}
+
+def bool isAlive(bool[][] src,int x,int y){
+    int counter = 0;
+    if(x > 0){
+        if(src[x-1][y]){
+            counter++;
+        }
+        if(y < HEIGHT - 1){
+            if(src[x-1][y+1]){
+                counter++;
+            }
+        }
+    }
+    if(x < WIDTH - 1){
+        if(src[x+1][y]){
+            counter++;
+        }
+        if(y > 0){
+            if(src[x+1][y-1]){
+                counter++;
+            }
+        }
+    }
+    if(y > 0){
+        if(src[x][y-1]){
+            counter++;
+        }
+        if(x > 0){
+            if(src[x-1][y-1]){
+                counter++;
+            }
+        }
+    }
+    if(y < HEIGHT - 1){
+        if(src[x][y+1]){
+            counter++;
+        }
+        if(x < WIDTH - 1){
+            if(src[x+1][y+1]){
+                counter++;
+            }
+        }
+    }
+    
+    switch(counter){
+    case 2:
+        return src[x][y];
+    case 3:
+        return true;
+    default:
+        return false;
+    }
+}
+
+def void calMap(bool[][] src,bool[][] tar){
+    for(int x = 0;x < WIDTH;x++){
+        for(int y = 0;y < HEIGHT;y++){
+            tar[x][y] = isAlive(src,x,y);
+        }
+    }
+}
+
+def void GameOfLife(int max)
+{
+    //println("Line " + _line_ + ":" + TILE_WIDTH);
+    openPadWithName(WIDTH*TILE_WIDTH+1,HEIGHT*TILE_WIDTH+1,"GameOfLife");
+    //println("Line " + _line_ + ":" + TILE_WIDTH);
+    bool[][] world,world1 = new<bool[]>(WIDTH),
+             world2 = new<bool[]>(WIDTH);
+    for(int i = 0 ; i < WIDTH;i++){
+        world1[i] = new<bool>(HEIGHT);
+        world2[i] = new<bool>(HEIGHT);
+    }
+    srand(time());
+    int sum = rand()%(WIDTH*HEIGHT);
+    
+    for(int i = 0;i<sum;i++){
+        int x,y;
+        do{
+            x = rand()%WIDTH;
+            y = rand()%HEIGHT;
+        }while(world1[x][y]);
+        world1[x][y] = true;
+    }
+    drawWorld(world1);
+    sleep(200);
+    //println("Line " + _line_ + ":" + TILE_WIDTH);
+    while(max-- > 0){
+        calMap(world1,world2);
+        world = world2;
+        world2 = world1;
+        world1 = world;
+        drawWorld(world);
+        sleep(200);
+    }
+    clearPad();
+    closePad();
+}
+
+{
+    println("Test for Game of Life");
+    GameOfLife(10);
+}
+
 {
     println("Test for parser");
     parser p = new<parser>;
@@ -275,8 +474,8 @@ def string readLine(){
     getchar();
     getchar();
     closePad();
-    
 }
+
 
 
 struct complex{

@@ -1,4 +1,6 @@
 src/extension/Function.java
+src/extension/math/Random.java
+src/extension/math/SetSeed.java
 src/extension/math/sin.java
 src/extension/system/close.java
 src/extension/system/ExFile.java

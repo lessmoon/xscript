@@ -28,32 +28,38 @@ public class PaintPad extends JFrame{
     static Color                    bc  = Color.BLACK;
     static final ArrayList<item>    ilist = new ArrayList<item>();
 
-    public PaintPad(String name){
+    public PaintPad(String name,int width,int height){
         super(name);
-    }
-    
-    public void paint(Graphics g){
-        super.paint(g);
-        synchronized(ilist){
-            for(item i : ilist){
-                g.setColor(i.color);
-                g.drawLine(i.x1,i.y1,i.x2,i.y2);
+        JPanel jp = new JPanel(){
+            public void paint(Graphics g){
+                synchronized(this){
+                    super.paint(g);
+                    synchronized(PaintPad.this.ilist){
+                        for(item i : ilist){
+                            g.setColor(i.color);
+                            g.drawLine(i.x1,i.y1,i.x2,i.y2);
+                        }
+                    }
+                }
             }
-        }
+        };
+        jp.setPreferredSize(new Dimension(width,height));
+        add(jp,BorderLayout.CENTER);
     }
 
-    static int openPad(int w,int h){
+    static int openPad(int w,int h,String name){
         if(pp != null){
             clearPad();
             closePad();
         }
-        pp = new PaintPad("Script");
-        pp.setSize(w,h);
-        pp.setLayout(null);
-        pp.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE );
-        pp.setResizable(false);
+        pp = new PaintPad(name,w,h);
+        
+        pp.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        pp.pack();
+        //pp.setResizable(false);
         pp.setVisible(true);
         pp.setLocationRelativeTo(null);
+        //System.out.println("pp " + pp.getHeight() + "," + pp.getWidth());
         return 1;
     }
     
@@ -70,7 +76,9 @@ public class PaintPad extends JFrame{
     }
 
     static int addLine(int x1,int y1,int x2,int y2){
-        ilist.add(new item(x1,y1,x2,y2,bc));          
+        synchronized(ilist){
+            ilist.add(new item(x1,y1,x2,y2,bc));
+        }
         return 1;
     }
     
@@ -80,19 +88,25 @@ public class PaintPad extends JFrame{
     }
     
     static int drawPoint(int x,int y){
-        ilist.add(new item(x,y,x,y,bc));
+        synchronized(ilist){
+            ilist.add(new item(x,y,x,y,bc));
+        }
         pp.repaint();
         return 1;
     }
 
     static int drawLine(int x1,int y1,int x2,int y2){
-        ilist.add(new item(x1,y1,x2,y2,bc));
+        synchronized(ilist){
+            ilist.add(new item(x1,y1,x2,y2,bc));
+        }
         pp.repaint();
         return 1;
     }
     
     static int clearPad(){
-        ilist.clear();
+        synchronized(ilist){
+            ilist.clear();
+        }
         pp.repaint();
         return 1;
     }
@@ -105,7 +119,7 @@ public class PaintPad extends JFrame{
     }
 
     public static void main(String[] args) throws Exception {
-        openPad(600,500);
+        openPad(600,500,"Test");
         drawLine(100,100,400,450);
     }
 }

@@ -3,21 +3,21 @@ struct point{
     int y;
 }
 
-int RAND_SEED = 0;
+//int RAND_SEED = 0;
 def int abs(int a){
     return a > 0? a : -a;
 }
 
-def int srand(int v){
-    return RAND_SEED = v;
-}
+//def int srand(int v){
+//    return RAND_SEED = v;
+//}
 
-def int rand(){
-    RAND_SEED *= 134775813;
-    RAND_SEED += 1073676287;
-    RAND_SEED %= 2147483647;
-    return abs(RAND_SEED);
-}
+//def int rand(){
+//    RAND_SEED *= 134775813;
+//    RAND_SEED += 1073676287;
+//    RAND_SEED %= 2147483647;
+//    return abs(RAND_SEED);
+//}
 
 def int qsort(int[] s,int l,int r){
     while (l < r){

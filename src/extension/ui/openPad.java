@@ -1,6 +1,7 @@
 package extension.ui;
 
 import lexer.Num;
+import lexer.Str;
 import inter.expr.Constant;
 import extension.Function;
 
@@ -10,8 +11,10 @@ public class openPad extends Function {
     public Constant run(ArrayList<Constant> paras){
         Constant w = paras.get(0);
         Constant h = paras.get(1);
+        Constant name = paras.get(2);
         int iw = ((Num)(w.op)).value;
         int ih = ((Num)(h.op)).value;
-        return new Constant(PaintPad.openPad(iw,ih));
+        String sn = ((Str)(name.op)).value;
+        return new Constant(PaintPad.openPad(iw,ih,sn));
     }
 }
