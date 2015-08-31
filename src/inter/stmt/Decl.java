@@ -8,8 +8,8 @@ import inter.expr.Expr;
 import inter.expr.ConversionFactory;
 
 public class Decl extends Stmt {
-    Token id;
-    Type  type;
+    final Token id;
+    final Type  type;
     Expr  value;
 
     public Decl(Token i,Type t,Expr v){

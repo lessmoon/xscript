@@ -4,7 +4,40 @@ import  "math/Math.xs";
 import  "math/Ratio.xs";
 import  "parser/parser.xs";
 
-loadfunc<extension.ui>{
+native<extension.predefined>{
+    "TestStruct":struct NTVSTRT{
+        string id;
+        def virtual string getId();
+    };
+    
+    struct EventCallback{
+        def virtual bool callback(int id);
+    };
+
+    struct MouseEventCallback{
+        def virtual bool callback(int x,int y);
+    };
+
+    //void setCallback(EventCallback ec);
+}
+
+native<extension.ui>{
+    "EventLoop":bool loopForKeyboard(EventCallback f);
+    "MouseEventLoop":bool loopForMouse(MouseEventCallback f);
+}
+
+
+struct MyStruct : NTVSTRT{
+    def override string getId(){
+        return "hello," + this.id ;
+    }
+ 
+    def virtual void setId(string id){
+        this.id = id;
+    }
+}
+
+native<extension.ui>{
     "openPad":int openPadWithName(int w,int h,string name);
     int drawLine(int x1,int y1,int x2,int y2);
     int drawPoint(int x,int y);
@@ -16,11 +49,11 @@ loadfunc<extension.ui>{
     int clearPad();
 }
 
-loadfunc<extension.system>{
+native<extension.system>{
     "sleep":void sleep(int duration);
 }
 
-loadfunc<extension.math>{
+native<extension.math>{
     real sin(real theta);
     "SetSeed":void srand(int seed);
     "Random":int rand();
@@ -42,7 +75,7 @@ struct Point{
     
     @+
     def Point add(Point p){
-        Point t = new<Point>;
+        Point t = new Point;
         t.x = this.x + p.x;
         t.y = this.y + p.x;
         return t;
@@ -50,7 +83,7 @@ struct Point{
 
     @-
     def Point sub(Point p){
-        Point t = new<Point>;
+        Point t = new Point;
         t.x = this.x - p.x;
         t.y = this.y - p.x;
         return t;
@@ -69,11 +102,11 @@ struct Graphics {
     def void init(int width,int height){
         this.width = width;
         this.height = height;
-        this.center = new<Point>;
+        this.center = new Point;
         this.center.init(0,0);
         openPad(width,height);
         paint();
-        this.brushcolor = new<Color>;
+        this.brushcolor = new Color;
     }
 
     def virtual void drawPoint(Point p){
@@ -106,6 +139,8 @@ struct Brush {
     def virtual void draw(Point p); 
     //def virtual void setColor(Color c);
 }
+
+
 
 struct PaintPotBrush : Brush{
     int radio;
@@ -167,6 +202,14 @@ def int llist.getSize(){
     print("------------------\n");
 }
 
+{
+    println("Test for predefined struct");
+    MyStruct s = new MyStruct;
+    s.setId(25);
+    println(s.getId());
+}
+
+
 struct shape{
     string name;
     def void init(string name){
@@ -218,11 +261,11 @@ struct rectangle : square {
 
 {
     println("Test for inheriting");
-    square dd = new<square>;
+    square dd = new square;
     dd.init("square");
-    rectangle hh = new<rectangle>;
+    rectangle hh = new rectangle;
     hh.init("rectangle");
-    shape[] h = new<shape>(2);
+    shape[] h = new shape[2];
     h[0] = dd;
     h[1] = hh;
     dd.setWidth(10);
@@ -278,36 +321,60 @@ def void drawChessPad(int x,int y)
     paint();
 }
 
+struct KeyboardAdapter: EventCallback{
+    int x;
+    int y;
+    def override bool callback(int id){
+        switch(id){
+        case 'W':case 'w':
+            this.y--;
+            break;
+        case 'S':case 's':
+            this.y++;
+            break;
+        case 'A':case 'a':
+            this.x--;
+            break;
+        case 'D':case 'd':
+            this.x++;
+            break;
+        case ' ':case 'e':
+            return false;
+        }
+        drawChessPad(this.x,this.y);
+        return true;
+    }
+}
+
+struct MouseAdapter:MouseEventCallback{
+    int count;
+    def override bool callback(int x,int y){
+        println("" + x + "," + y);
+        int newX = x/TILE_WIDTH;
+        int newY = y/TILE_WIDTH;
+        drawChessPad(newX,newY);
+        return --this.count != 0;
+    }
+} 
+
 {
     println("Test for chess pad");
     openPadWithName(WIDTH*TILE_WIDTH+1,HEIGHT*TILE_WIDTH+1,"Chess");
-    int c;
-    int x = WIDTH/2,y = HEIGHT/2;
-    drawChessPad(x,y);
-    while( (c=(rand()%102 + 1)) != 101){
-        switch(c%4){
-        case 0:
-            if(y>0)
-                y--;
-            break;
-        case 1:
-            if(y<HEIGHT-1)
-                y++;
-            break;
-        case 2:
-            if(x>0)
-                x--;
-            break;
-        case 3:
-            if(x<WIDTH-1)
-                x++;
-            break;
-        default:
-            continue;
-        }
-        drawChessPad(x,y);
-        sleep(200);
+    KeyboardAdapter kba = new KeyboardAdapter;
+    kba.x = WIDTH/2;
+    kba.y = HEIGHT/2;
+    drawChessPad(kba.x,kba.y);
+    if(!loopForKeyboard(kba)){
+        println("error occurred");
     }
+    println("End test for the keyboard");
+    println("Test for mouse adapter");
+    MouseAdapter ma = new MouseAdapter;
+    ma.count = 100;
+    if(!loopForMouse(ma)){
+        println("err occured");
+    }
+    println("end for the mouse");
     clearPad();
     closePad();
 }
@@ -403,11 +470,11 @@ def void GameOfLife(int max)
     //println("Line " + _line_ + ":" + TILE_WIDTH);
     openPadWithName(WIDTH*TILE_WIDTH+1,HEIGHT*TILE_WIDTH+1,"GameOfLife");
     //println("Line " + _line_ + ":" + TILE_WIDTH);
-    bool[][] world,world1 = new<bool[]>(WIDTH),
-             world2 = new<bool[]>(WIDTH);
+    bool[][] world,world1 = new bool[][WIDTH],
+             world2 = new bool[][WIDTH];
     for(int i = 0 ; i < WIDTH;i++){
-        world1[i] = new<bool>(HEIGHT);
-        world2[i] = new<bool>(HEIGHT);
+        world1[i] = new bool[HEIGHT];
+        world2[i] = new bool[HEIGHT];
     }
     srand(time());
     int sum = rand()%(WIDTH*HEIGHT);
@@ -442,8 +509,8 @@ def void GameOfLife(int max)
 
 {
     println("Test for parser");
-    parser p = new<parser>;
-    lexer l = new<lexer>;
+    parser p = new parser;
+    lexer l = new lexer;
     //print("Enter the function you want to draw:f(x)=");
     string s = "(x/10-10)*(x/10-20)";
     l.init(s);
@@ -483,7 +550,7 @@ struct complex{
     real img;
     @+
     def complex add(complex x){
-        complex res = new<complex>;
+        complex res = new complex;
         res.r = x.r + this.r;
         res.img = x.img + this.r;
         return res;
@@ -505,7 +572,7 @@ struct complex{
 
 {
     println("Test for operand overloading");
-    complex c1 = new<complex>,c2= new<complex>;
+    complex c1 = new complex,c2= new complex;
     c1.r = 2;
     c1.img = 3;
     c2.r = 5;
@@ -584,7 +651,7 @@ struct complex{
 
 {
     println("test for ratio");
-    Ratio x = new<Ratio>,d = new<Ratio>;
+    Ratio x = new Ratio,d = new Ratio;
     x.init(52,564);
     d.init(25,55);
     println(x.toString() + "+" + d.toString() + "=" + (x+d) );
@@ -759,7 +826,7 @@ struct CORD{
 {
     println("Test for member functions");
     srand(time());
-    CORD o = new<CORD>;
+    CORD o = new CORD;
     o.x = rand()%25;
     o.y = rand()%25;
     println(o.toString());
@@ -772,14 +839,14 @@ struct CORD{
 
 {
     println("Test for dynamic array sizeof");
-    println("int[244] arr;");
-    println("arr = new<int>(25);");
+    println("int[] arr;");
+    println("arr = new int[25];");
     println("println(sizeof arr);");
     println("println(sizeof new<int>(25));");
     int[] arr;
-    arr = new<int>(25);
+    arr = new int[25];
     println(sizeof arr);
-    println(sizeof new<int>(25));
+    println(sizeof new int[25]);
 }
 
 {
@@ -787,7 +854,7 @@ struct CORD{
     int[] tmp;
     int[][] x;
     int[][] b;
-    x = new<int[]>(30);
+    x = new int[][30];
     b = x;
     //x[1] = tmp;
     println("b[2] = " + b[2]);
@@ -797,9 +864,9 @@ struct CORD{
 
 int[][] a;
 int buffer = -1;
-a = new<int[]>(100);
+a = new int[][100];
 for(int i = 0;i< sizeof a;i++){
-    a[i] =  new<int>(100); 
+    a[i] =  new int[100]; 
 }
 a[21][25] = 212;
 int c = a[24][25];
@@ -881,7 +948,7 @@ struct tree_node{
 }
 
 def tree_node randomly_create_tree(){
-    tree_node t = new<tree_node>;
+    tree_node t = new tree_node;
     if(rand()%10 > 5)
         t.left  = randomly_create_tree();
     if(rand()%10 < 5)
@@ -920,14 +987,14 @@ def string toString( char[] c_str ){
 
 def int[][] mult( int[][] a,int[][] b){
     string r = "";
-    int[][] res = new <int[]>(10);
+    int[][] res = new int[][10];
     
     int i = 0;
     int sum = 0;
     int j = 0;
     int k = 0;
     for(i = 0 ; i < 10 ;i++){    
-        res[i] = new<int>(10);
+        res[i] = new int[10];
         for(j = 0 ; j < 10;j++){
             sum = 0;
             for(k = 0;k<10;k++){
@@ -957,7 +1024,7 @@ def int printarray(int[] arr,int len){
   print("seed = " + seed + "\n");
   srand( seed );
   int len = rand()%200;
-  arr = new<int>(len);
+  arr = new int[len];
   for(i = 0 ; i < len;i++){
     arr[i] = rand()%len;
   }
@@ -965,18 +1032,18 @@ def int printarray(int[] arr,int len){
   qsort(arr,0,len-1);
   printarray(arr,len);
 
-
+  
   i = 0;
   string test = "i am a test value";
-  char[] c_str = new<char>(100);
+  char[] c_str = new char[100];
 
-  int[][] a = new<int[]>(10);
-  int[][] b = new<int[]>(10);
+  int[][] a = new int[][10];
+  int[][] b = new int[][10];
   int[][] c;
   
   for(i ;i < 10;i++){
-    a[i] = new<int>(10);
-    b[i] = new<int>(10);
+    a[i] = new int[10];
+    b[i] = new int[10];
     int j = 0;
     for(i ;j < 10;j++){
       a[i][j] = i;
@@ -999,12 +1066,12 @@ def int printarray(int[] arr,int len){
     c_str[i] = test[i];
   }
   c_str[i] = '\0';
-  string[][] nums = new<string[]>(10);
+  string[][] nums = new string[][10];
   print(toString(c_str));
   print("\n");
   
   for(i = 0 ;i < 10;i++){
-    nums[i] = new<string>(20);
+    nums[i] = new string [20];
     for(int j = 0 ;j < 20;j++){
       nums[i][j] = (string)i + "," + j;
     }

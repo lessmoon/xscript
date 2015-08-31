@@ -1,11 +1,11 @@
-loadfunc<extension.system>{
+native<extension.system>{
     bool PutChar(char c);
     bool print(string str);
     int  time();
     int  getchar();
 }
 
-loadfunc<extension.util>{
+native<extension.util>{
     int  strlen(string len);
 }
 

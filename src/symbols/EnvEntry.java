@@ -9,7 +9,7 @@ public class EnvEntry {
     public final int   stacklevel;
     public final int   offset;
 
-    EnvEntry(Type t,int sl,int o){
+    public EnvEntry(Type t,int sl,int o){
         type = t;
         stacklevel = sl;
         offset = o;

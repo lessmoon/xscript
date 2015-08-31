@@ -2,13 +2,14 @@ package lexer;
 
 
 import symbols.*;
+import runtime.Dictionary;
 
 import java.util.HashMap;
 import java.util.Stack;
 import java.io.*; 
-
 import java.math.BigInteger;
 import java.math.BigDecimal;
+
 import main.Main;
 
 class Info {
@@ -27,7 +28,7 @@ class Info {
     }
 }
 
-public class Lexer {
+public class Lexer implements Dictionary {
     public static int line = 1;
     public static String filename = "";
     int peek = ' ';
@@ -39,6 +40,17 @@ public class Lexer {
         words.put(w.lexeme,w);
     }
 
+    @Override
+    public Token getOrreserve(String name){
+        Token s = words.get(name);
+        if(s == null){
+            Word tmp = new Word(name,Tag.ID);
+            reserve(tmp);
+            s = tmp;
+        }
+        return s;
+    }
+    
     public void error(String s){
         throw new RuntimeException("Line " + line + " in file `" +  filename + "':\n\t" + s);
     }
@@ -55,7 +67,7 @@ public class Lexer {
         reserve( new Word("new",Tag.NEW));
         reserve( new Word("return",Tag.RETURN) );
         reserve( new Word("sizeof",Tag.SIZEOF));
-        reserve( new Word("loadfunc",Tag.LDFUNC));
+        reserve( new Word("native",Tag.NATIVE));
         reserve( new Word("import",Tag.IMPORT));
         reserve( new Word("struct",Tag.STRUCT));
         reserve( new Word("switch",Tag.SWITCH));
@@ -68,6 +80,7 @@ public class Lexer {
         reserve( Word.True );
         reserve( Word.False );
         reserve( Word.This );
+        reserve( Word.Super );
         reserve( Word.Null );
 
         reserve( Type.Int );

@@ -76,7 +76,7 @@ public class VirtualFunctionInvoke extends Expr {
 
     @Override
     public Constant getValue(){
-        Constant result =  type.getInitialValue();
+        
         final Constant[] args = new Constant[para.size() + 1];
         args[0] = expr.getValue();
         if(args[0] == Constant.Null){
@@ -104,6 +104,8 @@ public class VirtualFunctionInvoke extends Expr {
             System.out.println("\nVirtualInvoke " + func.toString() + "{");
         }
         RunStack.invokeFunction(lexline,filename,f);
+        Constant result =  type.getInitialValue();
+
         try {
             f.run();
             if(IS_DEBUG){

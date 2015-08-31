@@ -5,6 +5,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.event.*;
+import java.util.concurrent.*;
+
+import lexer.Token;
+import inter.expr.Constant;
+import inter.expr.StructConst;
+import inter.stmt.FunctionBasic;
+import symbols.Struct;
+import symbols.Position;
 
 class item {
     int x1;
@@ -23,13 +31,64 @@ class item {
     }
 }
 
-public class PaintPad extends JFrame{
-    static PaintPad                 pp  ;
-    static Color                    bc  = Color.BLACK;
-    static final ArrayList<item>    ilist = new ArrayList<item>();
+class Point{
+    final int x;
+    final int y;
+    public Point(int x,int y){
+        this.x = x;
+        this.y = y;
+    }
+}
 
+public class PaintPad extends JFrame{
+    static PaintPad                     pp  ;
+    static Color                        bc  = Color.BLACK;
+    static final ArrayList<item>        ilist = new ArrayList<item>();
+    static final BlockingQueue<Integer> KBQueue = new LinkedBlockingQueue<Integer>();
+    static final BlockingQueue<Point> MCQueue = new LinkedBlockingQueue<Point>();
+    
     public PaintPad(String name,int width,int height){
         super(name);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try{
+                    KBQueue.put((int)' ');
+                }catch(Exception err){
+                    err.printStackTrace();
+                }
+            }
+        });
+
+        KBQueue.clear();
+        addKeyListener(new KeyAdapter(){
+            public void keyReleased(KeyEvent e) {
+                try{
+                    switch(e.getKeyCode()){
+                    case KeyEvent.VK_LEFT:  case KeyEvent.VK_A:
+                        KBQueue.put((int)'a');
+                        break;
+                    case  KeyEvent.VK_RIGHT:case KeyEvent.VK_D:
+                        KBQueue.put((int)'d');
+                        break;
+                    case KeyEvent.VK_UP:    case KeyEvent.VK_W:
+                        KBQueue.put((int)'w');
+                        break;
+                    case KeyEvent.VK_DOWN:  case KeyEvent.VK_S:
+                        KBQueue.put((int)'s');
+                        break;
+                    case KeyEvent.VK_SPACE:case KeyEvent.VK_ESCAPE:
+                        KBQueue.put((int)' ');
+                        return;
+                    default:
+                        return;
+                    }
+                } catch(Exception errx  ){
+                    return ;
+                }
+            }
+        });
+        
         JPanel jp = new JPanel(){
             public void paint(Graphics g){
                 synchronized(this){
@@ -43,6 +102,19 @@ public class PaintPad extends JFrame{
                 }
             }
         };
+        
+        jp.addMouseListener(
+            new MouseAdapter(){
+                @Override
+                public void mouseClicked(MouseEvent e) { 
+                    try{
+                        MCQueue.put(new Point(e.getX(),e.getY()));
+                    }catch(Exception errx){
+                        return;
+                    }
+                }
+            }
+        );
         jp.setPreferredSize(new Dimension(width,height));
         add(jp,BorderLayout.CENTER);
     }
@@ -118,6 +190,48 @@ public class PaintPad extends JFrame{
         return 1;
     }
 
+    static boolean KeyBoardEvent(StructConst el,Token fname){
+        KBQueue.clear();
+        Position pos = ((Struct)el.type).getVirtualFunctionPosition(fname);
+        Constant res = null;
+        ArrayList<Constant> p = new ArrayList<Constant>();
+        p.add(null);
+        do{
+            Integer c ;
+            try {
+                c = KBQueue.take();
+            }catch(Exception e){
+                continue;
+            }
+            p.set(0,new Constant(c.intValue()));
+            res = runtime.Interface.invokeVirualFunctionOfStruct(el,pos,p);
+        }while(res == Constant.True);
+        return true;
+    }
+
+    static boolean SimpleMouseEvent(StructConst el,Token fname){
+        MCQueue.clear();
+        Position pos = ((Struct)el.type).getVirtualFunctionPosition(fname);
+        Constant res = null;
+        ArrayList<Constant> p = new ArrayList<Constant>();
+        p.add(null);
+        p.add(null);
+        do{
+            Point co ;
+            try {
+                co = MCQueue.take();
+            }catch(Exception e){
+                continue;
+            }
+            p.set(0,new Constant(co.x));
+            p.set(1,new Constant(co.y));
+            res = runtime.Interface.invokeVirualFunctionOfStruct(el,pos,p);
+        }while(res == Constant.True);
+        return true;
+        
+        
+    }
+    
     public static void main(String[] args) throws Exception {
         openPad(600,500,"Test");
         drawLine(100,100,400,450);

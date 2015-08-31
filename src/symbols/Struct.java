@@ -14,19 +14,23 @@ public class Struct extends Type {
     /*store normal functions*/
     final HashMap<Token,FunctionBasic> funcs = new HashMap<Token,FunctionBasic>();
     /*<k,v> => <operand,func_name>*/
+    final Token name;
     final HashMap<Token,Token> overload_funcs;
     /*store virtual functions*/
     final HashMap<Token,Position> vfunc_map;
     final VirtualTable vtable;
+    FunctionBasic initfunc = null;
+
     boolean hasDefinedVirtualFunction = false;
     final Struct father;
     final int    father_size;/*avoid replicated calculating*/
     boolean has_used = false;
     int  first_used_line = -1;
     String first_used_file = "";
-    
+
     public Struct(Token name){
         super(name.toString(),Tag.BASIC,Constant.Null);
+        this.name = name;
         father = null;
         vtable = new VirtualTable();
         vfunc_map = new HashMap<Token,Position>();
@@ -36,6 +40,7 @@ public class Struct extends Type {
 
     public Struct(Token name,Struct father){
         super(name.toString(),Tag.BASIC,Constant.Null);
+        this.name = name;
         this.father = father;
         vtable = (VirtualTable)father.getVirtualTable().clone();
         vfunc_map = new HashMap<Token,Position>(father.vfunc_map);
@@ -44,9 +49,9 @@ public class Struct extends Type {
     }
 
     public boolean isCompleted(){
-        return vtable.isCompleted();
+        return (initfunc == null || initfunc.isCompleted())&&vtable.isCompleted();
     }
-
+    
     public boolean isChildOf(Struct t){
         Struct f = this.father;
         while(f != null){
@@ -55,6 +60,10 @@ public class Struct extends Type {
             f = f.father;
         }
         return false;
+    }
+
+    public final Token getName(){
+        return name;
     }
 
     @Override
@@ -67,6 +76,17 @@ public class Struct extends Type {
         return t == this ;
     }
 
+    public FunctionBasic getInitialFunction(){
+        return initfunc;
+    }
+    
+    public void defineInitialFunction(FunctionBasic f){
+        if(initfunc != null){
+            f.error("initial function of `" + this + "' has been defined");
+        }
+        initfunc = f;
+    }
+    
     /*
      * get the virtual function position in the vtable
      * if it doesn't exist return null
@@ -131,15 +151,21 @@ public class Struct extends Type {
         }
         FunctionBasic f = vtable.getVirtualFunction(p);
         assert(f != null);
+        /*
+         * Redefined! 
+         */
+        if(f != father.getVirtualTable().getVirtualFunction(p)){
+            mf.error("virtual function `" + this.lexeme + "." + f.name + "':has been declared before");
+        }
         if(f.getParaNumber() != mf.getParaNumber()){
-            f.error("virtual function `" + this.lexeme + "." + f.name + "':parameters number should be "+ f.getParaNumber() + ",but found " + f.getParaNumber());
+            mf.error("virtual function `" + this.lexeme + "." + f.name + "':parameters number should be "+ f.getParaNumber() + ",but found " + mf.getParaNumber());
         }
         if(!f.type.equals(mf.type)){
-            f.error("virtual function `" + this.lexeme + "." + f.name + "':return type should be `" + mf.type + "',but found `" + f.type +"'");
+            mf.error("virtual function `" + this.lexeme + "." + f.name + "':return type should be `" + f.type + "',but found `" + mf.type +"'");
         }
         for(int i = 1; i < f.getParaNumber() ;i++ ){
             if(!f.getParaInfo(i).type.equals(mf.getParaInfo(i).type)){
-                mf.error("virtual function `" + this.lexeme + "." + mf.name + "':parameter [" + i + "]" + " type is `" +  mf.getParaInfo(i).type + "',but found `" +  f.getParaInfo(i).type + "'");
+                mf.error("virtual function `" + this.lexeme + "." + f.name + "':parameter [" + i + "]" + " type is `" +  f.getParaInfo(i).type + "',but found `" +  mf.getParaInfo(i).type + "'");
             }
         }
         vtable.overrideVirtualFunction(p.generation,p.index,mf);
@@ -269,7 +295,7 @@ public class Struct extends Type {
         FunctionBasic f2;
         f2 = getFunction(fname);
         if(f2 != null){
-           f.error("function `"  + this.lexeme + "." + f + "' has conflict name with a function `" + f2 +"'"); 
+           f.error("function `" +  f + "' has a conflict name with a function `" + f2 +"'"); 
         }
         f2 = funcs.put(fname,f);
         assert(f2 == null);

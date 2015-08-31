@@ -2,7 +2,7 @@ package inter.stmt;
 
 import runtime.*;
 import inter.util.Node;
-
+import inter.expr.Constant;
 public class Stmt extends Node{
     public Stmt()
     {}
@@ -44,6 +44,10 @@ public class Stmt extends Node{
         */
     };
     
+    protected static void ret(Constant c){
+        throw new ReturnResult(c);
+    }
+
     @Override
     public String toString(){
         return this.getClass().getName() + "\n";

@@ -6,22 +6,29 @@ import inter.util.*;
 import inter.expr.*;
 import inter.stmt.*;
 import runtime.LoadFunc;
+import runtime.LoadStruct;
+import runtime.TypeTable;
 
 import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class Parser{
+public class Parser implements TypeTable {
     private Lexer lex;
     private Token look;
     Env top = new Env();
     HashMap<Token,Type> typetable = new HashMap<Token,Type>();
     FuncTable table = new FuncTable();
+    HashSet<Token> forbiddenFunctionName = new HashSet<Token>();
     Type returnType = Type.Int;
     boolean hasDecl = true;
     boolean enableWarning = false;
     /*integer numbers standing for the stack level*/
 
+    
+    Struct dStruct = null;
+    boolean isInStructInitialFunctionDefinition = false;
+    
     public int lastBreakFatherLevel = -1;
     public int lastIterationLevel = -1;
     /* 
@@ -47,6 +54,16 @@ public class Parser{
         top.put(Word.args,new Array(Type.Str));
         ENABLE_EXPR_OPT = expr_opt;
         ENABLE_STMT_OPT = stmt_opt;
+        predefinedForbiddenFunctionName();
+    }
+
+    public void predefinedForbiddenFunctionName(){
+        forbiddenFunctionName.add(Word.This);
+        forbiddenFunctionName.add(Word.Super);
+    }
+    
+    public boolean inForbiddenFunctionNameTables(Token name){
+        return forbiddenFunctionName.contains(name);
     }
 
     public void enablePrintFuncTranslate(){
@@ -149,8 +166,8 @@ public class Parser{
             case Tag.STRUCT:
                 defStruct();
                 break;
-            case Tag.LDFUNC:
-                loadFunction();
+            case Tag.NATIVE:
+                loadNative();
                 break;
             case Tag.IMPORT:
                 importLib();
@@ -187,7 +204,7 @@ public class Parser{
             Entry<Token,Type> info = iter.next();
             Struct st = (Struct)(info.getValue());
             if(st.used() && !st.isCompleted()){
-                error("struct `" + info.getValue() +"' used but not completed " ,st.getFirstUsedLine(),st.getFirstUsedFile());
+                error("`" + info.getValue() +"' used but not completed " ,st.getFirstUsedLine(),st.getFirstUsedFile());
             }
         }
     }
@@ -205,10 +222,10 @@ public class Parser{
          */
         move();
     }
-
-    public void loadFunction() throws IOException {
+    
+    public void loadNative() throws IOException {
         ArrayList<Para> pl  = null;
-        match(Tag.LDFUNC);
+        match(Tag.NATIVE);
         StringBuffer sb = new StringBuffer();
         match('<');
         Token pkg = look;
@@ -223,7 +240,6 @@ public class Parser{
         match('>');
         match('{');
         while(!check('}')){
-            pl = new ArrayList<Para>();
             String clazzname = null;
             if(look.tag == Tag.STR){
                 clazzname = look.toString();
@@ -231,33 +247,74 @@ public class Parser{
                 match(':');
             }
 
-            Type t = type();
-            Token name = look;
-            match(Tag.ID);
-            if(clazzname == null){
-                clazzname = name.toString();
-            }
-            match('(');
-            if(!check(')')){
-                do{
-                    Type vt = type();
-                    Token n = look;
-                    match(Tag.ID);
-                    pl.add(new Para(vt,n));
-                }while(check(','));
-                match(')');
-            }
-            
-            FunctionBasic f = null;
-            try{
-                f = LoadFunc.loadFunc(t,sb.toString(),clazzname,name,pl);
-            } catch (Exception e){
-                error("failed to load extension function `" + sb.toString()  + "." + clazzname + "'");
-            }
-            if(!table.addFunc(name,f)){
-                error("function name has conflict:" + name);
-            }
+            if(check(Tag.STRUCT)){
+                /*
+                 * loadstruct
+                 */
+                Token name = look;
+                match(Tag.ID);
+                if(clazzname == null){
+                    clazzname = name.toString();
+                }
+                Struct s = LoadStruct.loadStruct(sb.toString(),clazzname,name,this.lex);
+                checkNamespace(s.getName(),"struct");
+                defType(s.getName(),s);
 
+                if(check(':')){
+                    Token base = look;
+                    match(Tag.ID);
+                    Type b = typetable.get(base);
+                    if(b == null){
+                        error("base struct `" + base + "' not found");
+                    }
+                    if(s.getFather() != b){
+                        if(s.getFather() == null){
+                            error("native struct `" + s.getName() + "' has no father");
+                        } else {
+                            error("native struct `" + s.getName() + "' has a different father (`"+ s.getFather() +"') with declaration here(`" + b+ "')");
+                        }
+                    }
+                }
+
+                if(check('{')){
+                    /*
+                     * Declaration of the the struct
+                     * It does't check now by ignoring all character util '}'
+                     */
+                    while(!check('}')){
+                        move();
+                    }
+                }
+            } else {
+                pl = new ArrayList<Para>();
+
+                Type t = type();
+                Token name = look;
+                match(Tag.ID);
+                if(clazzname == null){
+                    clazzname = name.toString();
+                }
+                match('(');
+                if(!check(')')){
+                    do{
+                        Type vt = type();
+                        Token n = look;
+                        match(Tag.ID);
+                        pl.add(new Para(vt,n));
+                    }while(check(','));
+                    match(')');
+                }
+                
+                FunctionBasic f = null;
+                try{
+                    f = LoadFunc.loadFunc(t,sb.toString(),clazzname,name,pl,this.lex);
+                } catch (Exception e){
+                    error("failed to load extension function `" + sb.toString()  + "." + clazzname + "'");
+                }
+                if(!table.addFunc(name,f)){
+                    error("function name has conflict:" + name);
+                }
+            }
             match(';');
         }
     }
@@ -297,6 +354,9 @@ public class Parser{
         
         checkNamespace(name,"struct");
         defType(name,s);
+        
+        dStruct = s;
+
         match('{');
         while(!check('}')){
             Token op = null;
@@ -313,7 +373,7 @@ public class Parser{
 
                 if(op.tag == Tag.BASIC && look.tag == '['){
                     Type t = arrtype((Type)op);
-                    error("can't overloading array type `" + t + "' castint operand");
+                    error("can't overloading array type `" + t + "' casting operand");
                 }
             }
             /*Function definition*/
@@ -335,29 +395,70 @@ public class Parser{
                 match(';');
             }
         }
+        
+        dStruct = null;
     }
-    
+
     /*
      * def a function in struct
      * s is the struct,op is the operand to overload(null for non-overloading)
      */
     public void defInnerStructFunction(Struct s,Token op) throws IOException{
+        Env savedEnv = top;
+        top = new Env(top);
+        boolean savedHasDecl = hasDecl;
+        hasDecl = true;
+        Type savedType = returnType;
+        isInStructInitialFunctionDefinition = (look == Word.This);
+
+        Function f = (isInStructInitialFunctionDefinition)?initialFunctionDeclaration(s,op):innerFunctionDeclaration(s,op);
+
+        if(!check(';')){
+            match('{');
+            Stmt stmt = stmts();
+            match('}');
+            f.init(f.name,f.type,stmt,f.paralist);
+        }
+        isInStructInitialFunctionDefinition = false;
+        top = savedEnv;
+        returnType = savedType;
+        hasDecl = savedHasDecl;
+    }
+
+    /*
+     * def this(){
+     *      
+     * }
+     */
+    public Function initialFunctionDeclaration(Struct s,Token op) throws IOException{
+        if(op != null){
+            error("initial function can't be overloaded");
+        }
+        top.put(Word.This,s);
+        match(Tag.ID);
+        ArrayList<Para> l = arguments();
+        l.add(0,new Para(s,Word.This));
+        Function f = new InitialFunction(Word.This,l,s);
+        s.defineInitialFunction(f);
+        return f;
+    }
+    
+    public Function innerFunctionDeclaration(Struct s,Token op) throws IOException{
         int flag = 0;
         
         if(check(Tag.VIRTUAL)){
             flag = Tag.VIRTUAL;
         } else if(check(Tag.OVERRIDE)){
             flag = Tag.OVERRIDE;
-        } 
-
-        Env savedEnv = top;
-        top = new Env(top);
-        boolean savedHasDecl = hasDecl;
-        hasDecl = true;
-        Type savedType = returnType;
+        }
+        
+        
         returnType = type();
         Token fname = look;
         match(Tag.ID);
+        if( inForbiddenFunctionNameTables(fname) ){
+            error("Function name can't be `" + fname + "'");
+        }
 
         /*pass `this' reference as the first argument*/
         top.put(Word.This,s);
@@ -371,22 +472,14 @@ public class Parser{
         } else {
             s.addNormalFunction(fname,f);
         }
+
         if(op != null){
             if(!s.addOverloading(op,f)){
                 error("operand `" + op + "' overloading is redefined");
             }
         }
 
-        if(!check(';')){
-            match('{');
-            Stmt stmt = stmts();
-            match('}');
-            f.init(fname,returnType,stmt,l);
-        }
-
-        top = savedEnv;
-        returnType = savedType;
-        hasDecl = savedHasDecl;
+        return f;
     }
 
     public void defFunction() throws IOException {
@@ -397,6 +490,22 @@ public class Parser{
         hasDecl = true;
         Type savedType = returnType;
         returnType = type();
+        if(check('.')){//maybe the init function for struct defintion
+            if(! (returnType instanceof Struct )){
+                error("Struct name needed here,but found `" + returnType +"'");
+            }
+            Struct s = (Struct)returnType;
+            Token name = look;
+            match(Tag.ID);
+            isInStructInitialFunctionDefinition = true;
+            defOutterStructInitialFunction(s,name);
+            isInStructInitialFunctionDefinition = false;
+            top = savedEnv;
+            returnType = savedType;
+            hasDecl = savedHasDecl;
+            return;
+        }
+        
         Token name = look;
         match(Tag.ID);
 
@@ -472,9 +581,43 @@ public class Parser{
         return;
     }
 
+    public void defOutterStructInitialFunction(Struct t,Token name) throws IOException{
+        dStruct = t;
+        if(name != Word.This){
+            error("unknown function name found here:`" + t.getName() + "."   + name + "'");
+        }
+        InitialFunction f = (InitialFunction)t.getInitialFunction();
+        if(f == null){
+            error("initial function declaration `" + t.getName() + ".[init]' not found");
+        }
+        if(f.isCompleted()){
+            error("initial function `" + t.getName() + ".[init]' redefined");
+        }
+
+        top.put(Word.This,t);
+        ArrayList<Para> l = arguments();
+        l.add(0,new Para(t,Word.This));
+        if(l.size() != f.paralist.size()){
+            error("parameters number of function `" + t.getName() + ".[init]' doesn't match with its former declaration:expect " + (f.paralist.size() - 1) + " but found " + (l.size() - 1));
+        }       
+
+        for(int i = 1;i < l.size();i++){
+            if(!l.get(i).type.equals(f.paralist.get(i).type)){
+                error("function `" + t.getName() + ".[init]' has different arguments["+ (i-1) +"] type `" + l.get(i).type + "' with its former declaration `" + f.paralist.get(i).type + "'");
+            }
+        }
+        match('{');
+        Stmt stmt = stmts();
+        match('}');
+        f.init(stmt);
+        dStruct = null;
+    }
+    
     public void defOutterStructFunction(Struct t,Token name,Type returnType) throws IOException{
+        dStruct = t;
+
         //TODO:check if it is normal or virtual function
-        
+        //     if it is definition of the constructor
         Function f = (Function)t.getDeclaredFunction(name);
         if(f == null){
             error("member function declaration `" +t.lexeme + "." + name + "' not found ");
@@ -505,6 +648,8 @@ public class Parser{
         Stmt stmt = stmts();
         match('}');
         f.init(name,returnType,stmt,l);
+
+        dStruct = null;
     }
 
     public ArrayList<Para> arguments() throws IOException {
@@ -862,7 +1007,10 @@ public class Parser{
         return s;
     }    
 
-    public Type type() throws IOException {
+    /*
+     * match single type (except for array)
+     */
+    public Type singletype() throws IOException {
         if(look.tag == Tag.ID){
             Token t = getType(look);
             if(t == null){
@@ -877,6 +1025,13 @@ public class Parser{
         } else {
             error("type name wanted here,but found `" + look +"' ");
         }
+        return p;
+    }
+    
+    public Type type() throws IOException {
+
+        Type p = singletype();
+
         if( look.tag == '[' ){
             if(p == Type.Void){
                 error("type `" + p.toString() + "' can't be element type of array");
@@ -990,24 +1145,54 @@ public class Parser{
             return new SizeOf(copymove(),unary());
        case Tag.NEW:
             Token l = copymove();
-            match('<');
-            Type  t = type();
+            //match('<');
+            Type  t = singletype();
             if(t == Type.Void){
                 error("can't use type `" + t +"'");
             }
-            match('>');
-            if(check('(')){
-                Expr e = typecheck();
-                match(')');
+            //match('>');
+            if(check('[')){
+                Expr e = null;
+                do{
+                    if(!check(']')){
+                        e = typecheck();
+                        match(']');
+                        break;
+                    }
+                    t = new Array(t);
+                } while(check('['));
+
+                if(e == null){
+                    error("unknown array allocation size:" + t);
+                }
+                
                 return new NewArray(l,t,e);
-            } else {
+            } else {// it is `new' struct 
                 if(t instanceof Struct){
                     ((Struct)t).setUsed(lex.line,lex.filename);
-                    return new New(l,(Struct)t);
+                    Expr eNew = new New(l,(Struct)t);
+                    if(look.tag == '('){//has initial function
+                        ArrayList<Expr> pl = parameters();
+                        InPipe ipNew = new InPipe(eNew);
+                        eNew = ipNew;
+                        Expr init = new OutPipe(ipNew);
+                        pl.add(0,init);
+                        FunctionBasic f = ((Struct)t).getInitialFunction();
+                        if(f == null ){
+                            error("`" + t + "' doesn't have an initial function");
+                        }
+                        return new SeqExpr(Word.This,eNew,new FunctionInvoke(f,pl));
+                    } else {
+                        if( null != ((Struct)t).getInitialFunction()){
+                            error("`" + t + "' has a defined initial function");
+                        }
+                        return eNew;
+                    }
                 } else {
-                    error("new<" + t + "> is not permitted:`" + t + "' is not a struct type");
+                    error("new " + t + " is not permitted:`" + t + "' is not a struct type");
                     return null;
                 }
+                
             }
        case '-':
        case Tag.INC:
@@ -1042,16 +1227,17 @@ public class Parser{
 
     public Expr access(Expr e) throws IOException {
         do{
-            if(look.tag == '.')
+            if(look.tag == '.'){
+                match('.');
                 e = member(e);
-            else
+            } else {
                 e = offset(e);
+            }
         }while(look.tag == '[' || look.tag == '.');
         return e;
     }
 
     public Expr member(Expr e) throws IOException {
-        match('.');
         Token mname = look;
         match(Tag.ID);
         if(look.tag == '('){
@@ -1115,6 +1301,13 @@ public class Parser{
             }
             EnvEntry ee = top.get(tmp);
             if(ee == null){
+                /*
+                 * if it is in struct function definition
+                 */
+                if((ee = top.get(Word.This)) != null ){
+                    Expr pthis = ee.stacklevel == 0? new AbsoluteVar(tmp,ee.type,0,ee.offset) : new Var(tmp,ee.type,top.level - ee.stacklevel,ee.offset);
+                    return member(pthis);
+                }
                 error("variable `" + tmp + "' not declared.");
             }
             /*
@@ -1187,12 +1380,32 @@ public class Parser{
     }
 
     public Expr function(Token id) throws IOException {
-        FunctionBasic f = table.getFuncType(id);
-
-        if(f == null) {
-            error("function `" + id + "' not found.");
-        }
+        FunctionBasic f = null;
         ArrayList<Expr> p = parameters();
+        if( id == Word.Super ){
+            Struct fs = null;
+            if(dStruct == null || !isInStructInitialFunctionDefinition){
+                error("Keyword `" + id + "' can be only used in the struct initial function");
+            }
+            fs = dStruct.getFather();
+            if( fs == null ){
+                error("`" + dStruct + "' has no father");
+            }
+            f = fs.getInitialFunction();
+            if(f == null){
+                error("`" + fs + "'(father of `" + dStruct + "') has no declared initial function");
+            }
+            Expr pthis;EnvEntry ee;
+            ee = top.get(Word.This);
+            assert(ee != null);
+            pthis = new Var(dStruct,ee.type,top.level - ee.stacklevel,ee.offset);
+            p.add(0,pthis);
+        } else {
+            f = table.getFuncType(id);
+            if(f == null) {
+                error("function `" + id + "' not found.");
+            }
+        }
         return new FunctionInvoke(f,p);
     }
 

@@ -10,6 +10,7 @@ public class Word extends  Token {
     }
 
     public static final Word
+        Super   =   new Word("super",Tag.ID),
         This    =   new Word("this",Tag.ID),
         struct  =   new Word("{}",Tag.STRUCT),
         array   =   new Word("[]",Tag.ARRAY),

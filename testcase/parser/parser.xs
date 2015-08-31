@@ -101,7 +101,7 @@ struct lexer{
     }
 
     def Token scan(){
-        Token t = new<Token>;
+        Token t = new Token;
 
         while(this.peek == ' '){
             this.readch();
@@ -115,7 +115,7 @@ struct lexer{
                 this.readch();
                 c = this.peek;
             }while(isDigital(c));
-            Num n = new<Num> ;
+            Num n = new Num ;
             n.init(i);
             return n;
         }
@@ -133,7 +133,7 @@ struct parser{
 
     def void init(lexer l){
         this.lex = l;
-        this.xVar = new <Var>;
+        this.xVar = new Var;
     }
 
     def Var getVar(){
@@ -165,7 +165,7 @@ def Expr parser.term(){
         }
         return e;
     case 256:
-        Const e = new<Const>;
+        Const e = new Const;
         e.setValue(((Num)this.look).value);
         this.next();
         return e;
@@ -182,12 +182,12 @@ def Expr parser.mult(){
     while(this.look.tag == '*' || this.look.tag == '/'){
         if(this.look.tag == '*'){
             this.next();
-            Mult m = new<Mult>;
+            Mult m = new Mult;
             m.init(e,this.term());
             e = m;
         } else {
             this.next();
-            Div d = new<Div>;
+            Div d = new Div;
             d.init(e,this.term());
             e = d;
         }
@@ -200,12 +200,12 @@ def Expr parser.add(){
     while(this.look.tag == '+' || this.look.tag == '-'){
         if(this.look.tag == '+'){
             this.next();
-            Add a= new<Add>;
+            Add a= new Add;
             a.init(e,this.mult());
             e = a;
         } else {
             this.next();
-            Sub s= new<Sub>;
+            Sub s= new Sub;
             s.init(e,this.mult());
             e = s;
         }
