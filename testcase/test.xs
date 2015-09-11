@@ -26,7 +26,6 @@ native<extension.ui>{
     "MouseEventLoop":bool loopForMouse(MouseEventCallback f);
 }
 
-
 struct MyStruct : NTVSTRT{
     def override string getId(){
         return "hello," + this.id ;
@@ -58,6 +57,7 @@ native<extension.math>{
     "SetSeed":void srand(int seed);
     "Random":int rand();
 }
+
 
 def int openPad(int w,int h){
     return openPadWithName(w,h,"Script");
@@ -367,6 +367,7 @@ struct MouseAdapter:MouseEventCallback{
     if(!loopForKeyboard(kba)){
         println("error occurred");
     }
+    
     println("End test for the keyboard");
     println("Test for mouse adapter");
     MouseAdapter ma = new MouseAdapter;

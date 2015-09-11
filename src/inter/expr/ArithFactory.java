@@ -38,9 +38,19 @@ class IntArith extends Arith {
         case '*':
             return new Constant(lv * rv);
         case '/':
-            return new Constant(lv / rv);
+            try{
+                v = new Constant(lv / rv);
+            } catch(RuntimeException e){
+                error(e.getMessage());
+            }
+            return v;
         case '%':
-            return new Constant(lv % rv);
+            try{
+                v = new Constant(lv % rv);
+            } catch(RuntimeException e){
+                error(e.getMessage());
+            }
+            return v;
         default:/*error*/
             return null;
         }
@@ -78,9 +88,19 @@ class BigIntArith extends Arith{
         case '*':
             return new Constant(lv.multiply(rv));
         case '/':
-            return new Constant(lv.divide(rv));
+            try{
+                v = new Constant(lv.divide(rv));
+            } catch(RuntimeException e){
+                error(e.getMessage());
+            }
+            return v;
         case '%':
-            return new Constant(lv.mod(rv));
+            try{
+                v = new Constant(lv.mod(rv));
+            } catch(RuntimeException e){
+                error(e.getMessage());
+            }
+            return v;
         default:/*error*/
             return null;
         }
@@ -117,7 +137,12 @@ class RealArith extends Arith {
         case '*':
             return new Constant(lv * rv);
         case '/':
-            return new Constant(lv / rv);
+            try{
+                v = new Constant(lv / rv);
+            } catch(RuntimeException e){
+                error(e.getMessage());
+            }
+            return v;
         default:/*error*/
             return null;
         }
@@ -153,7 +178,12 @@ class BigRealArith extends Arith{
         case '*':
             return new Constant(lv.multiply(rv));
         case '/':
-            return new Constant(lv.divide(rv));
+            try{
+                v = new Constant(lv.divide(rv));
+            } catch(RuntimeException e){
+                error(e.getMessage());
+            }
+            return v;
         default:/*error*/
             return null;
         }
@@ -191,9 +221,19 @@ class CharArith extends Arith {
         case '*':
             return new Constant((char)(lv * rv));
         case '/':
-            return new Constant((char)(lv / rv));
+            try{
+                v = new Constant((char)(lv / rv));
+            } catch(RuntimeException e){
+                error(e.getMessage());
+            }
+            return v;
         case '%':
-            return new Constant((char)(lv % rv));
+            try{
+                v = new Constant((char)(lv % rv));
+            } catch(RuntimeException e){
+                error(e.getMessage());
+            }
+            return v;
         default:/*error*/
             return null;
         }

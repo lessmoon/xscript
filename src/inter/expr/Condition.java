@@ -19,9 +19,9 @@ public class Condition extends Expr {
         if(type == null){
             error("bad conversion between " + t.type + " and " + f.type);
         }
-        if(t.type != type)
+        if(t.type.equals(type))
             iftrue = ConversionFactory.getConversion(t,type);
-        if(f.type != type)
+        if(f.type.equals(type))
             iffalse = ConversionFactory.getConversion(f,type);
     }
     

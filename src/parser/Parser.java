@@ -922,7 +922,7 @@ public class Parser implements TypeTable {
         boolean hasdecl = false;
         if(look.tag == ';'){
             s1 = Stmt.Null;
-        } else if( look.tag == Tag.BASIC) {
+        } else if( look.tag == Tag.BASIC || getType(look) != null) {
             hasdecl = true;
             top = new Env(top);
             s1 = fordecl();
@@ -1304,10 +1304,10 @@ public class Parser implements TypeTable {
                 /*
                  * if it is in struct function definition
                  */
-                if((ee = top.get(Word.This)) != null ){
-                    Expr pthis = ee.stacklevel == 0? new AbsoluteVar(tmp,ee.type,0,ee.offset) : new Var(tmp,ee.type,top.level - ee.stacklevel,ee.offset);
-                    return member(pthis);
-                }
+                //if((ee = top.get(Word.This)) != null ){
+                //    Expr pthis = ee.stacklevel == 0? new AbsoluteVar(tmp,ee.type,0,ee.offset) : new Var(tmp,ee.type,top.level - ee.stacklevel,ee.offset);
+                //    return member(pthis);
+                //}
                 error("variable `" + tmp + "' not declared.");
             }
             /*
