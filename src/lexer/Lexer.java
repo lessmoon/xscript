@@ -334,7 +334,7 @@ public class Lexer implements Dictionary {
             } while(Character.isLetterOrDigit(peek)||peek == '_');
             String s = b.toString();
             
-            /*add two build-in variable*/
+            /*add two built-in variable*/
             if(s.equals("_line_")){/*line number*/
                 return new Num(line);
             } else if(s.equals("_file_")){/*file name*/

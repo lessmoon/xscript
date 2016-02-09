@@ -5,6 +5,7 @@ import symbols.*;
 import runtime.*;
 import inter.stmt.FunctionBasic;
 import inter.stmt.MemberFunction;
+import inter.stmt.InitialFunction;
 import inter.stmt.ReturnResult;
 
 import java.util.ArrayList;
@@ -64,6 +65,9 @@ public class FunctionInvoke extends Expr {
         StringBuffer sb = new StringBuffer();
         if(func instanceof MemberFunction){
             sb.append(para.get(i++).toString());
+            sb.append(".");
+        } else if(func instanceof InitialFunction){
+            sb.append(((InitialFunction)func).getStruct().toString());
             sb.append(".");
         }
         sb.append(op);

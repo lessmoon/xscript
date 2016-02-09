@@ -10,7 +10,7 @@ public class StructMemberAccess extends Var {
     final   int             index;
     
     public StructMemberAccess(Expr v,Token m){
-        super(Word.struct,null,0,0);
+        super(Word.struct,null);
         value = v;
         member = m;
         index = check();

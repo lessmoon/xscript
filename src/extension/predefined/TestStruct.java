@@ -5,7 +5,7 @@ import runtime.Dictionary;
 import symbols.Type;
 import inter.util.Para;
 import inter.stmt.Stmt;
-import inter.expr.Var;
+import inter.expr.StackVar;
 import inter.expr.StructConst;
 import inter.stmt.MemberFunction;
 
@@ -24,7 +24,7 @@ public class TestStruct extends extension.Struct {
         plist.add(new Para(s,lexer.Word.This));
         /*It is just virtual!*/
         Stmt st = new Stmt(){
-            final Var arg0 = new Var(lexer.Word.This,s,0,0);
+            final StackVar arg0 = new StackVar(lexer.Word.This,s,0,0);
             
             @Override
             public void run(){

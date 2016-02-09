@@ -5,7 +5,6 @@ src/extension/math/sin.java
 src/extension/predefined/EventCallback.java
 src/extension/predefined/MouseEventCallback.java
 src/extension/predefined/TestStruct.java
-src/extension/samples/Cube.java
 src/extension/Struct.java
 src/extension/system/close.java
 src/extension/system/ExFile.java
@@ -58,6 +57,7 @@ src/inter/expr/SeqExpr.java
 src/inter/expr/Set.java
 src/inter/expr/SetFactory.java
 src/inter/expr/SizeOf.java
+src/inter/expr/StackVar.java
 src/inter/expr/StringAccess.java
 src/inter/expr/StringVarAccess.java
 src/inter/expr/StructConst.java

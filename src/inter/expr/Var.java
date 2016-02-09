@@ -1,16 +1,11 @@
 package inter.expr;
 
-import runtime.*;
 import lexer.*;
 import symbols.*;
 
-public class Var extends Expr {
-    final int stacklevel;
-    final int offset;
-    public Var(Token w,Type t,int sl,int o){
+public abstract class Var extends Expr {
+    public Var(Token w,Type t){
         super(w,t);
-        stacklevel = sl;
-        offset = o;
     }
 
     @Override
@@ -19,16 +14,8 @@ public class Var extends Expr {
     }
 
     @Override
-    public Constant getValue(){
-        return VarTable.getVar(stacklevel,offset);
-    }
+    public abstract Constant getValue();
     
-    public Constant setValue(Constant v){
-        return  VarTable.setVar(stacklevel,offset,v);
-    }
+    public abstract Constant setValue(Constant v);
 
-    @Override
-    public String toString(){
-        return "VAR["+stacklevel+","+offset+"](" + op + ")"; 
-    }
 }

@@ -9,7 +9,7 @@ public class StringVarAccess extends Var {
     Expr index;
 
     public StringVarAccess(Var a,Expr i){
-        super(Word.array,Type.Char,a.stacklevel,a.offset);
+        super(Word.array,Type.Char);
         array = a;
         index = i;
         check();

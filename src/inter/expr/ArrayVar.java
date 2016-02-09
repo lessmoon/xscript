@@ -6,11 +6,14 @@ import symbols.*;
 
 public class ArrayVar extends Var {
     Expr loc;
-    Var array;
-    public ArrayVar(Var arr,Type t,Expr l){
-        super(Word.array,t,arr.stacklevel,arr.offset);
+    Expr array;
+    public ArrayVar(Expr arr,Type t,Expr l){
+        super(Word.array,t);
         loc = l;
         array = arr;
+		if(!(array.type instanceof Array)){
+			error("`" + array + "' is not array type");
+		}
     }
 
     @Override
@@ -21,6 +24,7 @@ public class ArrayVar extends Var {
     @Override
     public Expr optimize(){
         loc = loc.optimize();
+		array = array.optimize();
         return this;
     }
 
@@ -28,7 +32,7 @@ public class ArrayVar extends Var {
     public Constant getValue(){
         Constant c = array.getValue();
         if(c == Constant.Null){
-            error("null pointer error:try to set member of a null array");
+            error("null pointer error:try to get member of a null array");
         }
         
         ArrayConst v = (ArrayConst)c;

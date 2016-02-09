@@ -257,6 +257,9 @@ public class Parser implements TypeTable {
                     clazzname = name.toString();
                 }
                 Struct s = LoadStruct.loadStruct(sb.toString(),clazzname,name,this.lex);
+                if(s == null){
+                    error("incomplete extension struct:`" + name + "'");
+                }
                 checkNamespace(s.getName(),"struct");
                 defType(s.getName(),s);
 
@@ -998,7 +1001,12 @@ public class Parser implements TypeTable {
                 }
                 top.put(tok,p);
                 if(check('=')){
-                    e = expr();
+					//deal with the initialization of array
+                    if(p instanceof Array && look.tag == '{'){
+						e = initiallist((Array)p);
+					} else {
+						e = expr();
+					}
                 }
                 s.addDecl(Decl.getDecl(tok,p,e));
             } while(check(','));
@@ -1007,6 +1015,65 @@ public class Parser implements TypeTable {
         return s;
     }    
 
+	public Expr initiallist(Array p) throws IOException {
+		/*
+		 * initlist -> {list}
+		 * list -> element | list,element
+		 * element -> Expr | initlist
+		 * Constraint:in `Y -> Y,B',Type Y must match with B
+		 */
+		 match('{');
+		 Expr e = list(p.of);
+		 match('}');
+		 return e;
+	}
+	
+	public Expr list(Type p) throws IOException {
+		Expr initseq = Constant.Null;
+		
+		ArrayList<Expr> init_list = new ArrayList<Expr>();
+		if(look.tag != '}'){
+			do{
+				init_list.add(element(p));
+			} while(check(','));
+		}
+
+		Expr arrdefine = new NewArray(p,p,new Constant(init_list.size()));
+		InPipe in = new InPipe(arrdefine);
+		OutPipe out = new OutPipe(in);
+		if(!init_list.isEmpty()){
+			initseq = new inter.expr.Set(Word.ass,new ArrayVar(out,p,new Constant(0)),init_list.get(0));
+		}
+		
+		for(int i = 1 ; i < init_list.size();i++){
+			initseq = new SeqExpr(Word.array,initseq,new inter.expr.Set(Word.ass,new ArrayVar(out,p,new Constant(i)),init_list.get(i)));
+		}
+		//for each initseq 
+		return initseq == Constant.Null?arrdefine:new SeqExpr(Word.array,in,initseq);
+	}
+
+	public Expr element(Type p) throws IOException{
+		Expr e = null;
+		if(look.tag == '{'){//array of array
+			//p must be array
+			if(p instanceof Array){
+				e = initiallist((Array)p);
+			} else {
+				//TODO:details
+				error("too many dimensions than the array declaration");
+			}
+		} else {
+			e = expr();
+		}
+		if(!e.type.equals(p)){
+			e = ConversionFactory.getConversion(e,p);
+		}
+		if(e == null){//type error
+			error("array init error:can't convert `" + e.type +"' to `" + p + "'");
+		}
+		return e;
+	}
+	
     /*
      * match single type (except for array)
      */
@@ -1143,57 +1210,6 @@ public class Parser implements TypeTable {
             return new Not(copymove(),unary());
        case Tag.SIZEOF:
             return new SizeOf(copymove(),unary());
-       case Tag.NEW:
-            Token l = copymove();
-            //match('<');
-            Type  t = singletype();
-            if(t == Type.Void){
-                error("can't use type `" + t +"'");
-            }
-            //match('>');
-            if(check('[')){
-                Expr e = null;
-                do{
-                    if(!check(']')){
-                        e = typecheck();
-                        match(']');
-                        break;
-                    }
-                    t = new Array(t);
-                } while(check('['));
-
-                if(e == null){
-                    error("unknown array allocation size:" + t);
-                }
-                
-                return new NewArray(l,t,e);
-            } else {// it is `new' struct 
-                if(t instanceof Struct){
-                    ((Struct)t).setUsed(lex.line,lex.filename);
-                    Expr eNew = new New(l,(Struct)t);
-                    if(look.tag == '('){//has initial function
-                        ArrayList<Expr> pl = parameters();
-                        InPipe ipNew = new InPipe(eNew);
-                        eNew = ipNew;
-                        Expr init = new OutPipe(ipNew);
-                        pl.add(0,init);
-                        FunctionBasic f = ((Struct)t).getInitialFunction();
-                        if(f == null ){
-                            error("`" + t + "' doesn't have an initial function");
-                        }
-                        return new SeqExpr(Word.This,eNew,new FunctionInvoke(f,pl));
-                    } else {
-                        if( null != ((Struct)t).getInitialFunction()){
-                            error("`" + t + "' has a defined initial function");
-                        }
-                        return eNew;
-                    }
-                } else {
-                    error("new " + t + " is not permitted:`" + t + "' is not a struct type");
-                    return null;
-                }
-                
-            }
        case '-':
        case Tag.INC:
        case Tag.DEC:
@@ -1278,19 +1294,22 @@ public class Parser implements TypeTable {
             return e;
         }
 
-        if(!(e instanceof Var && e.type instanceof Array)){
-            error("operand `[]` should be used for array variable or string,not for " + e.type);
+		/*
+		 * update:remove the judge that e must be a variable
+		 */
+        if(!(e.type instanceof Array)){
+            error("operand `[]` should be used for array type or string,not for " + e.type);
         }
 
         Type t = ((Array)(e.type)).of;/*element type*/
 
-        e = new ArrayVar((Var)e,t,loc);
+        e = new ArrayVar(e,t,loc);
         /*for string index access*/
         return e;
     }
 
     public Expr factor() throws IOException {
-        Expr l,r;
+        Expr r;
         
         switch(look.tag){
         case Tag.ID:
@@ -1317,7 +1336,7 @@ public class Parser implements TypeTable {
              * But for the global variable,we can't know what it is 
              * exactly in functions.So we use the AbsoluteVar<stackbackoffset,varoffset>.
              */
-            return ee.stacklevel == 0? new AbsoluteVar(tmp,ee.type,0,ee.offset) : new Var(tmp,ee.type,top.level - ee.stacklevel,ee.offset);
+            return ee.stacklevel == 0? new AbsoluteVar(tmp,ee.type,0,ee.offset) : new StackVar(tmp,ee.type,top.level - ee.stacklevel,ee.offset);
         case Tag.NULL:
             move();
             return Constant.Null;
@@ -1339,7 +1358,57 @@ public class Parser implements TypeTable {
             return new Constant(copymove(),Type.BigInt);
         case Tag.BIGFLOAT:
             return new Constant(copymove(),Type.BigReal);
-        case '(':
+        case Tag.NEW:
+            Token l = copymove();
+            //match('<');
+            Type  t = singletype();
+            if(t == Type.Void){
+                error("can't use type `" + t +"'");
+            }
+            //match('>');
+            if(check('[')){
+                Expr e = null;
+                do{
+                    if(!check(']')){
+                        e = typecheck();
+                        match(']');
+                        break;
+                    }
+                    t = new Array(t);
+                } while(check('['));
+
+                if(e == null){
+                    error("unknown array allocation size:" + t);
+                }
+                
+                return new NewArray(l,t,e);
+            } else {// it is `new' struct 
+                if(t instanceof Struct){
+                    ((Struct)t).setUsed(lex.line,lex.filename);
+                    Expr eNew = new New(l,(Struct)t);
+                    if(look.tag == '('){//has initial function
+                        ArrayList<Expr> pl = parameters();
+                        InPipe ipNew = new InPipe(eNew);
+                        eNew = ipNew;
+                        Expr init = new OutPipe(ipNew);
+                        pl.add(0,init);
+                        FunctionBasic f = ((Struct)t).getInitialFunction();
+                        if(f == null ){
+                            error("`" + t + "' doesn't have an initial function");
+                        }
+                        return new SeqExpr(Word.This,eNew,new FunctionInvoke(f,pl));
+                    } else {
+                        if( null != ((Struct)t).getInitialFunction()){
+                            error("`" + t + "' has a defined initial function");
+                        }
+                        return eNew;
+                    }
+                } else {
+                    error("new " + t + " is not permitted:`" + t + "' is not a struct type");
+                    return null;
+                }
+            }
+		case '(':
             return cast();
         default:
             error("unexpected token found:" + look );
@@ -1398,7 +1467,7 @@ public class Parser implements TypeTable {
             Expr pthis;EnvEntry ee;
             ee = top.get(Word.This);
             assert(ee != null);
-            pthis = new Var(dStruct,ee.type,top.level - ee.stacklevel,ee.offset);
+            pthis = new StackVar(dStruct,ee.type,top.level - ee.stacklevel,ee.offset);
             p.add(0,pthis);
         } else {
             f = table.getFuncType(id);

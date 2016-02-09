@@ -294,9 +294,9 @@ class StrConversionFactory extends Factory {
 class OtherConversionFactory extends Factory {
     @Override
     public  Conversion getConversion(Expr src,Type t){
-        if(t == Type.Str)
+        if(t == Type.Str && !(src.type instanceof Array)){
             return new StrConversion(src);
-        else
+        } else
             return null;
     }
 }

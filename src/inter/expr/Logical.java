@@ -36,4 +36,9 @@ public abstract class Logical extends Expr {
         else 
             return null;
     }
+	
+	@Override
+    public String toString(){
+        return op.toString() + "(" + expr1.toString() + ","+ expr2.toString() + ")";
+    }
 }

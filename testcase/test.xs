@@ -58,7 +58,6 @@ native<extension.math>{
     "Random":int rand();
 }
 
-
 def int openPad(int w,int h){
     return openPadWithName(w,h,"Script");
 }
@@ -200,6 +199,17 @@ def int llist.getSize(){
     print("------------------\n");
     print("+   Test Begin   +\n");
     print("------------------\n");
+}
+
+{
+    println("Test for array initial list");
+    int[][] x = {{23,52},{25,64},{54}};
+    for(int i = 0 ; i < sizeof x;i++){
+		for(int j = 0 ; j < sizeof x[i];j++){
+			print(" " + x[i][j]);
+		}
+		print("\n");
+	}
 }
 
 {
@@ -858,8 +868,8 @@ struct CORD{
     x = new int[][30];
     b = x;
     //x[1] = tmp;
-    println("b[2] = " + b[2]);
-    println("b[1] = " + b[1]);
+    //println("b[2] = " + b[2]);
+    //println("b[1] = " + b[1]);
 }
 
 

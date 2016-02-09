@@ -4,7 +4,7 @@ import runtime.*;
 import lexer.*;
 import symbols.*;
 
-public class AbsoluteVar extends Var {
+public class AbsoluteVar extends StackVar {
     public AbsoluteVar(Token w,Type t,int l,int o){
         super(w,t,l,o);
     }
