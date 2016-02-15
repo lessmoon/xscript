@@ -7,6 +7,7 @@ import parser.*;
 import symbols.*;
 import inter.expr.Constant;
 import inter.expr.ArrayConst;
+import inter.expr.ArithFactory;//for set the big real division scale
 import inter.stmt.Stmt;
 import runtime.VarTable;
 import runtime.RunStack;
@@ -17,13 +18,14 @@ public class Main{
 
     public static void usage(){
         System.out.println(
-            "Usage of xxxscript " + MAJOR_VERSION + "." +  MINOR_VERSION + ":\n"+
+            "Usage of xscript " + MAJOR_VERSION + "." +  MINOR_VERSION + ":\n"+
             "-h --help  This message\n" +
             "-v         Version of xxxscript\n" + 
             "-eo        Enable expression optimizing [disabled at default]\n" +
             "-so        Enable statement optimizing[disabled at default]\n" +
             "-pc        Enable printing code translating result[disabled at default]\n" +
             "-pf        Enable printing function translating result[disabled at default]\n" +
+			"-brds --bigrealdivscale set the bigreal division scale[100 at default]" + 
             "path       The source file path you want to execute\n"+
             "           There should be only one source file\n"
         );
@@ -51,7 +53,21 @@ public class Main{
                 case "-so":
                     stmt_opt = true;
                     break;
-                case "-h":
+				case "-brds":
+				case "--bigrealdivscale":
+					index++;
+					if(index >= args.length){
+						System.err.println("number expected by option `" + args[index-1] + "'");
+						return;
+					}
+					try{
+						ArithFactory.setBigRealDivideScale(Integer.parseInt(args[index]));
+					} catch(NumberFormatException e) {
+						System.err.println("number expected by option `" + args[index-1] + "',but found `" +  args[index] + "'");
+						return;
+					}
+					break;
+				case "-h":
                 case "--help":
                     usage();
                     return;

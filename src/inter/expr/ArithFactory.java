@@ -150,6 +150,12 @@ class RealArith extends Arith {
 }
 
 class BigRealArith extends Arith{
+	private static int DIVIDE_SCALE = 100;
+
+	public static void setDivideScale(int scale){
+		DIVIDE_SCALE = scale;
+	}
+	
     public BigRealArith(Token tok,Expr x1,Expr x2){
         super(tok,x1,x2);
     }
@@ -179,7 +185,7 @@ class BigRealArith extends Arith{
             return new Constant(lv.multiply(rv));
         case '/':
             try{
-                v = new Constant(lv.divide(rv));
+                v = new Constant(lv.divide(rv,DIVIDE_SCALE,BigDecimal.ROUND_HALF_EVEN));
             } catch(RuntimeException e){
                 error(e.getMessage());
             }
@@ -286,6 +292,10 @@ class StringCat extends Arith {
 }
 
 public class ArithFactory {
+	public static void setBigRealDivideScale(int scale){
+		BigRealArith.setDivideScale(scale);
+	}
+	
     public static Expr getArith(Token tok,Expr e1,Expr e2){
 
         if(e1.type instanceof Struct){

@@ -25,4 +25,9 @@ public class Continue extends Stmt {
 
         throw new RuntimeException(ContinueCause);
     }
+	
+	@Override
+	public boolean isLastStmt(){
+		return true;
+	}
 }

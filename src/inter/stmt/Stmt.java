@@ -57,6 +57,10 @@ public class Stmt extends Node{
         return this;
     }
 
+	public boolean isLastStmt(){
+		return false;
+	}
+	
     public static Stmt Enclosing        = Null;
     public static Stmt BreakEnclosing   = Null; 
 }

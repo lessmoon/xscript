@@ -51,4 +51,9 @@ public class Condition extends Expr {
     public Constant getValue(){
         return cond.getValue() != Constant.False?iftrue.getValue():iffalse.getValue();
     }
+	
+	@Override
+    public String toString(){
+        return "((" + cond + ")?(" + iftrue + "):(" + iffalse + "))";
+    }
 }

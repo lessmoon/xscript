@@ -3,13 +3,14 @@ import  "lib/system.xs";
 import  "math/Math.xs";
 import  "math/Ratio.xs";
 import  "parser/parser.xs";
+import  "container/darray.xs";
 
 native<extension.predefined>{
     "TestStruct":struct NTVSTRT{
         string id;
         def virtual string getId();
     };
-    
+
     struct EventCallback{
         def virtual bool callback(int id);
     };
@@ -20,6 +21,7 @@ native<extension.predefined>{
 
     //void setCallback(EventCallback ec);
 }
+
 
 native<extension.ui>{
     "EventLoop":bool loopForKeyboard(EventCallback f);
@@ -203,7 +205,7 @@ def int llist.getSize(){
 
 {
     println("Test for array initial list");
-    int[][] x = {{23,52},{25,64},{54}};
+    int[][] x = {{23,52},{25,64+78},{54},{}};
     for(int i = 0 ; i < sizeof x;i++){
 		for(int j = 0 ; j < sizeof x[i];j++){
 			print(" " + x[i][j]);
@@ -381,7 +383,7 @@ struct MouseAdapter:MouseEventCallback{
     println("End test for the keyboard");
     println("Test for mouse adapter");
     MouseAdapter ma = new MouseAdapter;
-    ma.count = 100;
+    ma.count = 10;
     if(!loopForMouse(ma)){
         println("err occured");
     }
@@ -1147,10 +1149,9 @@ def bool is_prime(int n){
     return true;
 }
 
-def real sqrt(real n){
-    real a = n/2;
-    int i = 0;
-    for(i;i < 20;i++){
+def bigreal sqrt(bigreal n){
+    bigreal a = n/2;
+    for(int i = 0;i < 40;i++){
         a = (n/a+a)/2;
     }
     return a;

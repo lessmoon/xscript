@@ -26,7 +26,6 @@ public class Else extends Stmt {
 
     @Override
     public Stmt optimize(){
-        
         stmt2 = stmt2.optimize();
         if(expr == Constant.False){/*constant False,it will never happen to run the stmt2*/
             return stmt2;
@@ -38,6 +37,11 @@ public class Else extends Stmt {
         return this;
     }
     
+	@Override
+	public boolean isLastStmt(){
+		return stmt1.isLastStmt()&&stmt2.isLastStmt();
+	}
+	
     @Override
     public String toString(){
         return "if(" + expr.toString() + " ){\n"

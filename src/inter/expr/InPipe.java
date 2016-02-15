@@ -15,6 +15,15 @@ public class InPipe extends Expr {
         return expr.isChangeable();
     }
 
+	/*
+	 * NOTE:if the opt option is on,while using inpipe and outpipe in a SeqExpr
+	 *      it should be awared that it will not affect the result of SeqExpr
+	 * e.g.:	SeqExpr(ip,op)
+	 *          after opt: -> SeqExpr(ip->opt,op->opt)
+	 *          if ip -> opt is still ip then it doesn't matter
+	 *          or ip -> opt is not changeable so op -> opt will be the value,
+	 *          it still doesn't matter
+	 */
     @Override
     public Expr optimize(){
         expr = expr.optimize();

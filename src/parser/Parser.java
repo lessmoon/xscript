@@ -197,7 +197,7 @@ public class Parser implements TypeTable {
         }
         
         /*
-         * check if there is a struct is pure virtual but declared
+         * check if there is a struct that is pure virtual but declared
          */
         Iterator<Entry<Token,Type>> iter = typetable.entrySet().iterator();
         while(iter.hasNext()){

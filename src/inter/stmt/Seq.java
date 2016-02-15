@@ -24,9 +24,7 @@ public class Seq extends Stmt{
         stmt1 = stmt1.optimize();
         if(stmt1 == Stmt.Null)
             return stmt2.optimize();
-        if(stmt1 instanceof Return 
-            || stmt1 instanceof Break
-            || stmt1 instanceof Continue)/*anyway,stmt2 will *NOT* run absolutely*/
+        if(stmt1.isLastStmt())/*anyway,stmt2 will *NOT* run absolutely*/
             return stmt1;
         stmt2 = stmt2.optimize();
         if(stmt2 == Stmt.Null)
@@ -38,4 +36,9 @@ public class Seq extends Stmt{
     public String toString(){
         return stmt1.toString() + stmt2.toString();
     }
+	
+	@Override
+	public boolean isLastStmt(){
+		return stmt1.isLastStmt()||stmt2.isLastStmt();
+	}
 }
