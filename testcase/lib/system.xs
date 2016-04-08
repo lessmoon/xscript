@@ -1,4 +1,23 @@
 native<extension.system>{
+	"extime":struct Time{
+		int hour;
+		int minute;
+		int second;
+	};
+
+	"GetTime":void getTime(Time d);
+
+}
+
+struct MyTime:Time{
+
+	@string
+	def string toString(){
+		return "" + this.hour + ":" + this.minute + ":" + this.second;
+	}
+}
+
+native<extension.system>{
     bool PutChar(char c);
     bool print(string str);
     int  time();

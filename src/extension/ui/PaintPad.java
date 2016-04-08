@@ -31,6 +31,22 @@ class item {
     }
 }
 
+class StringItem{
+	final int x,y;
+	final String str;
+
+	final Color color;
+	
+	public StringItem(int x,int y,String str,Color color){
+		this.x = x;
+		this.y = y;
+		this.str = str;
+		this.color = color;
+	}
+	
+	
+}
+
 class Point{
     final int x;
     final int y;
@@ -44,6 +60,8 @@ public class PaintPad extends JFrame{
     static PaintPad                     pp  ;
     static Color                        bc  = Color.BLACK;
     static final ArrayList<item>        ilist = new ArrayList<item>();
+	static final ArrayList<StringItem>        slist = new ArrayList<StringItem>();
+
     static final BlockingQueue<Integer> KBQueue = new LinkedBlockingQueue<Integer>();
     static final BlockingQueue<Point> MCQueue = new LinkedBlockingQueue<Point>();
     
@@ -99,6 +117,13 @@ public class PaintPad extends JFrame{
                             g.drawLine(i.x1,i.y1,i.x2,i.y2);
                         }
                     }
+					synchronized(PaintPad.this.slist){
+                        for(StringItem i : slist){
+                            g.setColor(i.color);
+                            g.drawString(i.str,i.x,i.y);
+                        }
+                    }
+					
                 }
             }
         };
@@ -154,6 +179,20 @@ public class PaintPad extends JFrame{
         return 1;
     }
     
+	static int addString(String str,int x,int y){
+		synchronized(slist){
+            slist.add(new StringItem(x,y,str,bc));
+        }
+		return 0;
+	}
+	
+	static int clearString(){
+		synchronized(slist){
+			slist.clear();
+        }
+		return 0;
+	}
+	
     static int paint(){
         pp.repaint();
         return 0;
@@ -178,6 +217,7 @@ public class PaintPad extends JFrame{
     static int clearPad(){
         synchronized(ilist){
             ilist.clear();
+			slist.clear();
         }
         pp.repaint();
         return 1;
@@ -228,8 +268,6 @@ public class PaintPad extends JFrame{
             res = runtime.Interface.invokeVirualFunctionOfStruct(el,pos,p);
         }while(res == Constant.True);
         return true;
-        
-        
     }
     
     public static void main(String[] args) throws Exception {

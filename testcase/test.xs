@@ -4,6 +4,7 @@ import  "math/Math.xs";
 import  "math/Ratio.xs";
 import  "parser/parser.xs";
 import  "container/darray.xs";
+import  "container/hashmap.xs";
 
 native<extension.predefined>{
     "TestStruct":struct NTVSTRT{
@@ -22,7 +23,6 @@ native<extension.predefined>{
     //void setCallback(EventCallback ec);
 }
 
-
 native<extension.ui>{
     "EventLoop":bool loopForKeyboard(EventCallback f);
     "MouseEventLoop":bool loopForMouse(MouseEventCallback f);
@@ -32,7 +32,7 @@ struct MyStruct : NTVSTRT{
     def override string getId(){
         return "hello," + this.id ;
     }
- 
+
     def virtual void setId(string id){
         this.id = id;
     }
@@ -44,6 +44,7 @@ native<extension.ui>{
     int drawPoint(int x,int y);
     int addLine(int x1,int y1,int x2,int y2);
     int addPoint(int x,int y);
+	"AddString":int addString(string s,int x,int y);
     int setBrushColor(int r,int g,int b);
     int paint();
     int closePad();
@@ -56,13 +57,75 @@ native<extension.system>{
 
 native<extension.math>{
     real sin(real theta);
+	real cos(real theta);
     "SetSeed":void srand(int seed);
     "Random":int rand();
+}
+
+def void addRect(int x,int y,int w,int height){
+    addLine(x,y,x+w,y);
+    addLine(x,y,x,y+height);
+    addLine(x,y+height,x+w,y+height);
+    addLine(x,y,x+w,y+height);
+}
+
+{
+    /*  ________
+     * |____0|=|
+     * |9|8|7|+|
+     * |6|5|4|-|
+     * |3|2|1|*|
+     * |-|0|.|/|
+     */
+    
 }
 
 def int openPad(int w,int h){
     return openPadWithName(w,h,"Script");
 }
+
+struct StringHashContent : HashContent {
+    string val;
+    def this(string val){
+        this.val = val;
+    }
+
+    def override int hash(){
+        int v = 0;
+        int len   = strlen(this.val) ;
+        for(int i = 0;i < len;i++){
+            v += this.val[i];
+        }
+        return v;
+    }
+
+    def override string toString(){
+        return this.val;
+    }
+
+    def override bool equals(HashContent x){
+        return this.val == ((StringHashContent)x).val;
+    }
+}
+struct IntValueContent : ValueContent{
+    int val;
+    def this(int val){
+        this.val = val;
+    }
+    
+    def override string toString(){
+        return (string)(this.val);
+    }
+}
+
+{
+   HashMap hm = new HashMap();
+   for(int i = 0; i < 20;i++){
+        hm.set(new StringHashContent(""+rand()),new IntValueContent(rand()));
+        println("" + i + "\n" + hm);
+   }
+}
+
 
 import  "container/list.xs";
 
@@ -201,6 +264,45 @@ def int llist.getSize(){
     print("------------------\n");
     print("+   Test Begin   +\n");
     print("------------------\n");
+}
+
+real PI = 3.141592654;
+
+def void drawHand(int v,real theta,int len,int r,int g,int b){
+	real arctheta = theta * 2 * PI;
+	int x = cos(arctheta) * len;
+	int y = sin(arctheta) * len;
+	setBrushColor(r,g,b);
+	addLine(150,150,150+x,y+150);
+}
+
+def void drawClock(Time t){
+	for(int i = 1 ; i < 13;i++){
+		real arctheta = ((real)i-3)/6 * PI;
+		int x = cos(arctheta) * 140;
+		int y = sin(arctheta) * 140;
+		addString("" + i,150 + x,150+y);
+	}
+
+	drawHand(t.hour,((real)t.hour-3) / 12,70,0,0,255);
+	drawHand(t.minute,((real)t.minute-15) / 60,110,0,255,0);
+	drawHand(t.second,((real)t.second-15) / 60,130,255,0,0);
+}
+
+{
+	MyTime t = new MyTime;
+	println(t);
+	
+	openPadWithName(300,300,"ClockInXScript");
+	while(true){
+		println(t);
+		getTime(t);
+		clearPad();
+		drawClock(t);
+		paint();
+		sleep(500);
+	}
+	
 }
 
 {
