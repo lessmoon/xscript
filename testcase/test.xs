@@ -5,27 +5,13 @@ import  "math/Ratio.xs";
 import  "parser/parser.xs";
 import  "container/darray.xs";
 import  "container/hashmap.xs";
+import  "container/list.xs";
 
 native<extension.predefined>{
     "TestStruct":struct NTVSTRT{
         string id;
         def virtual string getId();
     };
-
-    struct EventCallback{
-        def virtual bool callback(int id);
-    };
-
-    struct MouseEventCallback{
-        def virtual bool callback(int x,int y);
-    };
-
-    //void setCallback(EventCallback ec);
-}
-
-native<extension.ui>{
-    "EventLoop":bool loopForKeyboard(EventCallback f);
-    "MouseEventLoop":bool loopForMouse(MouseEventCallback f);
 }
 
 struct MyStruct : NTVSTRT{
@@ -38,22 +24,10 @@ struct MyStruct : NTVSTRT{
     }
 }
 
-native<extension.ui>{
-    "openPad":int openPadWithName(int w,int h,string name);
-    int drawLine(int x1,int y1,int x2,int y2);
-    int drawPoint(int x,int y);
-    int addLine(int x1,int y1,int x2,int y2);
-    int addPoint(int x,int y);
-	"AddString":int addString(string s,int x,int y);
-    int setBrushColor(int r,int g,int b);
-    int paint();
-    int closePad();
-    int clearPad();
-}
-
 native<extension.system>{
     "sleep":void sleep(int duration);
 }
+import  "ui/paintpad.xs";
 
 native<extension.math>{
     real sin(real theta);
@@ -62,27 +36,6 @@ native<extension.math>{
     "Random":int rand();
 }
 
-def void addRect(int x,int y,int w,int height){
-    addLine(x,y,x+w,y);
-    addLine(x,y,x,y+height);
-    addLine(x,y+height,x+w,y+height);
-    addLine(x,y,x+w,y+height);
-}
-
-{
-    /*  ________
-     * |____0|=|
-     * |9|8|7|+|
-     * |6|5|4|-|
-     * |3|2|1|*|
-     * |-|0|.|/|
-     */
-    
-}
-
-def int openPad(int w,int h){
-    return openPadWithName(w,h,"Script");
-}
 
 struct StringHashContent : HashContent {
     string val;
@@ -107,6 +60,8 @@ struct StringHashContent : HashContent {
         return this.val == ((StringHashContent)x).val;
     }
 }
+
+
 struct IntValueContent : ValueContent{
     int val;
     def this(int val){
@@ -127,102 +82,7 @@ struct IntValueContent : ValueContent{
 }
 
 
-import  "container/list.xs";
 
-struct Point{
-    int x;
-    int y;
-    def void init(int x,int y){
-        this.x = x;
-        this.y = y;
-    }
-    
-    @+
-    def Point add(Point p){
-        Point t = new Point;
-        t.x = this.x + p.x;
-        t.y = this.y + p.x;
-        return t;
-    }
-
-    @-
-    def Point sub(Point p){
-        Point t = new Point;
-        t.x = this.x - p.x;
-        t.y = this.y - p.x;
-        return t;
-    }
-}
-
-struct Color{
-    int r,g,b;
-}
-
-struct Graphics {
-    int width,height;
-    Point center;
-    Color brushcolor;
-    
-    def void init(int width,int height){
-        this.width = width;
-        this.height = height;
-        this.center = new Point;
-        this.center.init(0,0);
-        openPad(width,height);
-        paint();
-        this.brushcolor = new Color;
-    }
-
-    def virtual void drawPoint(Point p){
-        Point real_p = p + this.center;
-        if(this.width > real_p.x && real_p.x >= 0
-            && this.height > real_p.y && real_p.y >= 0){
-            addPoint(real_p.x,real_p.y);
-            paint();
-        }
-    }
-    
-    def void transite(Point offset){
-        this.center = this.center + offset;
-    }
-    
-    def Point getCenter(){
-        return this.center;
-    }
-
-    def void setBrushColor(Color c){
-        this.brushcolor = c;
-    }
-
-    def Color getBrushColor(){
-        return this.brushcolor;
-    }
-}
-
-struct Brush {
-    def virtual void draw(Point p); 
-    //def virtual void setColor(Color c);
-}
-
-
-
-struct PaintPotBrush : Brush{
-    int radio;
-    int density;
-    
-    def override void draw(Point p){
-        
-    }
-    
-    def void setRadio(int r){
-        
-    }
-    
-    def void setDensity(int d){
-        
-    }
-
-}
 
 def void f2(int b);
 
