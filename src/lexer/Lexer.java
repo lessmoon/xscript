@@ -11,9 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 class Info {
     InputStreamReader in;
@@ -39,6 +37,11 @@ public class Lexer implements Dictionary {
     private Stack<Info> list = new Stack<>();
     private InputStreamReader in = null;
     private Map<String,Token> words = new HashMap<>();
+	/*
+	 * record the files imported to avoid re-import
+	 */
+    private Set<File> importedFiles = new HashSet<>();
+	
 
     private void reserve(Word w) {
         words.put(w.lexeme,w);
@@ -110,6 +113,15 @@ public class Lexer implements Dictionary {
         /*for the first open*/
         File f = new File(file);
         f = f.getCanonicalFile();
+		
+		/*
+		 * we've seen this file before don't import it again
+		 * NOTE: so we can't import a file recurrently!
+		 */
+		if(importedFiles.contains(f)){
+			return;
+		}
+		
         if(in != null)
             save(System.getProperty("user.dir"));
         try{
@@ -124,6 +136,8 @@ public class Lexer implements Dictionary {
         if(!f.canRead()) {
             error("File `" + file + "' can't be read");
         }
+
+		importedFiles.add(f);
 
         in = new InputStreamReader(new FileInputStream(f));
         line = 1;

@@ -12,7 +12,13 @@ public class Stmt extends Node{
         
     }
 
-    public static final Stmt Null = new Stmt();
+    public static final Stmt Null = new Stmt(){
+        @Override
+        public String toString() {
+            return "NullStmt\n";
+        }
+    };
+
     public static final Stmt RecoverStack = new Stmt(){
         @Override
         public void run(){

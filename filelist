@@ -1,4 +1,5 @@
 src/extension/Function.java
+src/extension/math/cos.java
 src/extension/math/Random.java
 src/extension/math/SetSeed.java
 src/extension/math/sin.java
@@ -9,7 +10,9 @@ src/extension/predefined/TestStruct.java
 src/extension/Struct.java
 src/extension/system/close.java
 src/extension/system/ExFile.java
+src/extension/system/extime.java
 src/extension/system/getchar.java
+src/extension/system/GetTime.java
 src/extension/system/open.java
 src/extension/system/print.java
 src/extension/system/PutChar.java
@@ -19,7 +22,9 @@ src/extension/system/time.java
 src/extension/system/writech.java
 src/extension/ui/addLine.java
 src/extension/ui/addPoint.java
+src/extension/ui/AddString.java
 src/extension/ui/clearPad.java
+src/extension/ui/ClearString.java
 src/extension/ui/closePad.java
 src/extension/ui/drawLine.java
 src/extension/ui/drawPoint.java

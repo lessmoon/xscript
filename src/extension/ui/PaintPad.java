@@ -29,6 +29,36 @@ class item {
         this.y2 = y2;
         color = c;
     }
+    
+    public void set(int x1,int y1,int x2,int y2,Color c){
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;
+        color = c;
+    }
+}
+
+class StringItem{
+	int x,y;
+	String str;
+
+	Color color;
+	
+	public StringItem(int x,int y,String str,Color color){
+		this.x = x;
+		this.y = y;
+		this.str = str;
+		this.color = color;
+	}
+	
+    public void set(int x,int y,String str,Color color){
+        this.x = x;
+		this.y = y;
+		this.str = str;
+		this.color = color;
+    }
+	
 }
 
 class Point{
@@ -44,6 +74,8 @@ public class PaintPad extends JFrame{
     static PaintPad                     pp  ;
     static Color                        bc  = Color.BLACK;
     static final ArrayList<item>        ilist = new ArrayList<item>();
+	static final ArrayList<StringItem>        slist = new ArrayList<StringItem>();
+
     static final BlockingQueue<Integer> KBQueue = new LinkedBlockingQueue<Integer>();
     static final BlockingQueue<Point> MCQueue = new LinkedBlockingQueue<Point>();
     
@@ -99,6 +131,13 @@ public class PaintPad extends JFrame{
                             g.drawLine(i.x1,i.y1,i.x2,i.y2);
                         }
                     }
+					synchronized(PaintPad.this.slist){
+                        for(StringItem i : slist){
+                            g.setColor(i.color);
+                            g.drawString(i.str,i.x,i.y);
+                        }
+                    }
+					
                 }
             }
         };
@@ -141,43 +180,90 @@ public class PaintPad extends JFrame{
     }
 
     static int addPoint(int x,int y){
+        int c = 0;
         synchronized(ilist){
+            c = ilist.size();
             ilist.add(new item(x,y,x,y,bc));
         }
-        return 1;
+        return c;
     }
 
-    static int addLine(int x1,int y1,int x2,int y2){
+    static int setPoint(int id,int x,int y){
         synchronized(ilist){
-            ilist.add(new item(x1,y1,x2,y2,bc));
+            if(ilist.size() <= id){
+                return -1;
+            }
+            ilist.get(id).set(x,y,x,y,bc);
         }
-        return 1;
+        return id;
     }
     
+    static int addLine(int x1,int y1,int x2,int y2){
+        int c = 0;
+        synchronized(ilist){
+            c = ilist.size();
+            ilist.add(new item(x1,y1,x2,y2,bc));
+        }
+        return c;
+    }
+    
+    static int setLine(int id,int x1,int y1,int x2,int y2){
+        synchronized(ilist){
+            if(ilist.size() <= id){
+                return -1;
+            }
+            ilist.get(id).set(x1,y1,x2,y2,bc);
+        }
+        return id;
+    }
+
+	static int addString(String str,int x,int y){
+		int c = 0;
+        synchronized(slist){
+            c = slist.size();
+            slist.add(new StringItem(x,y,str,bc));
+        }
+		return c;
+	}
+	
+    static int setString(int id,String str,int x,int y){
+        synchronized(slist){
+            if(slist.size() <= id){
+                return -1;
+            }
+            slist.get(id).set(x,y,str,bc);
+        }
+		return id;
+	}
+    
+	static int clearString(){
+		synchronized(slist){
+			slist.clear();
+        }
+		return 0;
+	}
+	
     static int paint(){
         pp.repaint();
         return 0;
     }
     
     static int drawPoint(int x,int y){
-        synchronized(ilist){
-            ilist.add(new item(x,y,x,y,bc));
-        }
+        int c = addPoint(x,y);
         pp.repaint();
-        return 1;
+        return c;
     }
 
     static int drawLine(int x1,int y1,int x2,int y2){
-        synchronized(ilist){
-            ilist.add(new item(x1,y1,x2,y2,bc));
-        }
+        int c = addLine(x1,y1,x2,y2);
         pp.repaint();
-        return 1;
+        return c;
     }
     
     static int clearPad(){
         synchronized(ilist){
             ilist.clear();
+			slist.clear();
         }
         pp.repaint();
         return 1;
@@ -228,8 +314,6 @@ public class PaintPad extends JFrame{
             res = runtime.Interface.invokeVirualFunctionOfStruct(el,pos,p);
         }while(res == Constant.True);
         return true;
-        
-        
     }
     
     public static void main(String[] args) throws Exception {

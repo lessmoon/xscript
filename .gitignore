@@ -3,4 +3,5 @@ tmp~
 *test.java
 *.class
 .idea
+bin
 *.iml
