@@ -1,21 +1,19 @@
 package extension.system;
 
-import lexer.Token;
-import lexer.Num;
+import extension.Function;
 import inter.expr.Constant;
 import inter.expr.StructConst;
-import extension.Function;
-import runtime.Dictionary;
+import lexer.Token;
 
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
 public class GetTime extends Function {
     public static Token fname = null;
     
     @Override
-    public Constant run(ArrayList<Constant> paras){
+    public Constant run(List<Constant> paras){
         Constant c = paras.get(0);
         if(c == Constant.Null){
             return Constant.Null;

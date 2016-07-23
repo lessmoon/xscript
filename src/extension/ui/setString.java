@@ -1,11 +1,11 @@
 package extension.ui;
 
+import extension.Function;
+import inter.expr.Constant;
 import lexer.Num;
 import lexer.Str;
-import inter.expr.Constant;
-import extension.Function;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /*
  * int addString(string str,int x,int y)
@@ -13,7 +13,8 @@ import java.util.ArrayList;
  */
 
 public class setString extends Function {
-    public Constant run(ArrayList<Constant> paras){
+    @Override
+    public Constant run(List<Constant> paras){
         Constant id = paras.get(0);
         Constant s = paras.get(1);
 		Constant x = paras.get(2);
@@ -25,4 +26,5 @@ public class setString extends Function {
 		
         return new Constant(PaintPad.setString(iid,str,ix,iy));
     }
+
 }

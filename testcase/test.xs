@@ -72,22 +72,7 @@ struct MyStruct : NTVSTRT{
     }
 }
 
-native<extension.system>{
-    "sleep":void sleep(int duration);
-}
 import  "ui/paintpad.xs";
-
-native<extension.ui>{
-    "openPad":int openPadWithName(int w,int h,string name);
-    int drawLine(int x1,int y1,int x2,int y2);
-    int drawPoint(int x,int y);
-    int addLine(int x1,int y1,int x2,int y2);
-    int addPoint(int x,int y);
-    int setBrushColor(int r,int g,int b);
-    int paint();
-    int closePad();
-    int clearPad();
-}
 
 
 native<extension.math>{

@@ -1,13 +1,14 @@
 package extension.ui;
 
-import lexer.Num;
-import inter.expr.Constant;
 import extension.Function;
+import inter.expr.Constant;
+import lexer.Num;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class setLine extends Function {
-    public Constant run(ArrayList<Constant> paras){
+    @Override
+    public Constant run(List<Constant> paras){
         Constant id = paras.get(0);
         Constant x1 = paras.get(1);
         Constant y1 = paras.get(2);

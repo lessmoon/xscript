@@ -1,9 +1,9 @@
 package extension.ui;
 
-import inter.expr.Constant;
 import extension.Function;
+import inter.expr.Constant;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /*
  * int addString(string str,int x,int y)
@@ -11,7 +11,9 @@ import java.util.ArrayList;
  */
 
 public class ClearString extends Function {
-    public Constant run(ArrayList<Constant> paras){
+
+    @Override
+    public Constant run(List<Constant> paras){
         return new Constant(PaintPad.clearString());
     }
 }
