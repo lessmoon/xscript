@@ -1,7 +1,6 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.Token;
 
 /*
  * calculate a first

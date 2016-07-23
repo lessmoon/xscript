@@ -7,6 +7,7 @@ import  "container/darray.xs";
 import  "container/hashmap.xs";
 import  "container/list.xs";
 
+
 native<extension.predefined>{
     "TestStruct":struct NTVSTRT{
         string id;

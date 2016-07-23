@@ -1,9 +1,7 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
-
-import java.util.ArrayList;
+import lexer.Word;
+import symbols.Array;
 
 public class ArrayConst extends Constant {
     public  final int size;
