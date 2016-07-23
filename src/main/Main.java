@@ -1,22 +1,23 @@
 package main;
 
-import java.io.*;
-
-import lexer.*; 
-import parser.*;
-import symbols.*;
-import inter.expr.Constant;
+import inter.expr.ArithFactory;
 import inter.expr.ArrayConst;
-import inter.expr.ArithFactory;//for set the big real division scale
+import inter.expr.Constant;
 import inter.stmt.Stmt;
-import runtime.VarTable;
+import lexer.Lexer;
+import parser.Parser;
 import runtime.RunStack;
+import runtime.VarTable;
+import symbols.Array;
+import symbols.Type;
+
+import java.io.IOException;
 
 public class Main{
     public static final int     MAJOR_VERSION       = 1;
     public static final int     MINOR_VERSION       = 8;
 
-    public static void usage(){
+    private static void usage(){
         System.out.println(
             "Usage of xscript " + MAJOR_VERSION + "." +  MINOR_VERSION + ":\n"+
             "-h --help  This message\n" +
@@ -134,6 +135,7 @@ public class Main{
         } catch (RuntimeException e){
             //e.printStackTrace();
             System.err.println("Runtime Error:");
+            e.printStackTrace();
             RunStack.printStackTrace(e.getMessage());
             return;
         }

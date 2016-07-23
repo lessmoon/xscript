@@ -1,21 +1,24 @@
 package symbols;
 
-import java.util.*;
-import lexer.*;
-import inter.*;
+import lexer.Token;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Env {
-    private     HashMap<Token,EnvEntry> table = new HashMap<Token,EnvEntry>();
-    protected   final Env prev;
-    public      final int level;
+    private     Map<Token,EnvEntry> table;
+    private final Env prev;
+    public  final int level;
     public Env(Env n){
         prev  = n;
         level = n.level + 1;
+        table = new HashMap<>();
     }
     
     public Env(){
         prev  = null;
         level = 0;
+        table = new HashMap<>();
     }
 
     public EnvEntry put(Token w,Type t){

@@ -1,12 +1,14 @@
 package inter.expr;
 
-import runtime.*;
-import lexer.*;
-import symbols.*;
+import lexer.Char;
+import lexer.Num;
+import lexer.Str;
+import lexer.Word;
+import symbols.Type;
 
 public class StringVarAccess extends Var {
-    Var array;
-    Expr index;
+    private Var array;
+    private Expr index;
 
     public StringVarAccess(Var a,Expr i){
         super(Word.array,Type.Char);
@@ -51,7 +53,7 @@ public class StringVarAccess extends Var {
     public Constant setValue(Constant c){
         int i = ((Num)(index.getValue().op)).value;
         String str = ((Str)(array.getValue().op)).value;
-        StringBuffer sb = new StringBuffer(str);
+        StringBuilder sb = new StringBuilder(str);
         sb.setCharAt(i,((Char)(c.op)).value);
         return array.setValue(new Constant(sb.toString()));
     }

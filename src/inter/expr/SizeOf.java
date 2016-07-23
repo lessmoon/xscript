@@ -1,7 +1,8 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.Token;
+import symbols.Array;
+import symbols.Type;
 
 public class SizeOf extends Op{
     public Expr expr;
@@ -39,7 +40,7 @@ public class SizeOf extends Op{
             error("null pointer error:try to get a null array size");
         }
         ArrayConst ac = (ArrayConst)c;
-        return new Constant(ac.size);
+        return new Constant(ac.getSize());
     }
 
     @Override

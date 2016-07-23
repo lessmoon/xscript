@@ -1,28 +1,27 @@
 package symbols;
 
-import lexer.*;
 import inter.stmt.FunctionBasic;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class VirtualTable {
-    private final ArrayList< ArrayList<FunctionBasic> > vtable;
+    private final List<List<FunctionBasic>> vtable;
 
     public VirtualTable(){
-        vtable = new ArrayList< ArrayList<FunctionBasic> >();
+        vtable = new ArrayList<>();
     }
 
     @Override
-    public Object clone(){
+    public Object clone() {
         VirtualTable t = new VirtualTable();
-        for(ArrayList<FunctionBasic> l : vtable){
-            t.vtable.add(new ArrayList<FunctionBasic>(l));
-        }
+        t.vtable.addAll(vtable.stream().map(ArrayList::new).collect(Collectors.toList()));
         return t;
     }
 
     public void createNewTable(){
-        vtable.add(new ArrayList<FunctionBasic>());
+        vtable.add(new ArrayList<>());
     }
 
     public int getGenerations(){
@@ -52,7 +51,7 @@ public class VirtualTable {
     }
 
     public boolean isCompleted(){
-        for(ArrayList<FunctionBasic> l : vtable){
+        for(List<FunctionBasic> l : vtable){
             for(FunctionBasic m : l){
                 if(!m.isCompleted()){
                     return false;

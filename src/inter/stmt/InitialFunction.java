@@ -1,25 +1,26 @@
 package inter.stmt;
 
-import lexer.*;
-import symbols.*;
+import lexer.Token;
 import inter.util.Para;
+import symbols.Struct;
+import symbols.Type;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class InitialFunction extends Function {
-    Struct stct;
-    public InitialFunction(Token n,ArrayList<Para> p,Struct sn){
+    private Struct struct;
+    public InitialFunction(Token n,List<Para> p,Struct sn){
         super(n,Type.Void,p);
-        stct = sn;
+        struct = sn;
     }
 
-    public InitialFunction(Token n,Stmt s,ArrayList<Para> p,Struct sn){
+    public InitialFunction(Token n, Stmt s, List<Para> p, Struct sn){
         super(n,Type.Void,s,p);
-        stct = sn;
+        struct = sn;
     }
 
     public Struct getStruct(){
-        return stct;
+        return struct;
     }
     
     public void init(Stmt s){
@@ -28,7 +29,7 @@ public class InitialFunction extends Function {
 
     @Override
     public String toString(){
-        StringBuffer sb = new StringBuffer(stct.lexeme + ".[init](");
+        StringBuilder sb = new StringBuilder(struct.lexeme + ".[init](");
         int i = 1;
         if(i < paralist.size()){
             sb.append(paralist.get(i++).toString());

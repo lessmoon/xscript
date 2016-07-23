@@ -1,7 +1,6 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.Token;
 
 public abstract class Unary extends Op{
     public Expr expr;

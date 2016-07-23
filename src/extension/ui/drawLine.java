@@ -4,10 +4,10 @@ import lexer.Num;
 import inter.expr.Constant;
 import extension.Function;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class drawLine extends Function {
-    public Constant run(ArrayList<Constant> paras){
+    public Constant run(List<Constant> paras){
         Constant x1 = paras.get(0);
         Constant y1 = paras.get(1);
         Constant x2 = paras.get(2);

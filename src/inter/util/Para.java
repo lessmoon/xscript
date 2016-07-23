@@ -1,7 +1,7 @@
 package inter.util;
 
-import symbols.*;
-import lexer.*;
+import lexer.Token;
+import symbols.Type;
 
 public class Para {
     public final Type  type;

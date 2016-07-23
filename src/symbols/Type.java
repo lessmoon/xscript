@@ -1,13 +1,14 @@
 package symbols;
 
-import lexer.*;
 import inter.expr.Constant;
+import lexer.Tag;
+import lexer.Word;
 
-import java.math.BigInteger;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public class Type extends Word {
-    protected Constant initialValue ;
+    private Constant initialValue ;
 
     public Type(String s,int tag){
         super(s,tag);
@@ -74,7 +75,7 @@ public class Type extends Word {
         return (p == Type.Int || p == Type.Real || p == Type.Char
                 || p == Type.BigInt || p == Type.BigReal);
     }
-    
+
     public static Type max(Type p1,Type p2){
         //(int,int)>int
         //(int,(big)float)>(big)float
@@ -82,6 +83,8 @@ public class Type extends Word {
         
         if( p1 == Type.Str ){
             return Type.Str;
+        } else if(p1 == Type.Bool && p2 ==Type.Bool) {
+            return Type.Bool;
         } else if( !numeric(p1) || !numeric(p2)){
             return null;
         } else if(p1 == Type.BigReal || p2 == Type.BigReal){

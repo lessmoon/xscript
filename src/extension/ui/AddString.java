@@ -1,11 +1,11 @@
 package extension.ui;
 
+import extension.Function;
+import inter.expr.Constant;
 import lexer.Num;
 import lexer.Str;
-import inter.expr.Constant;
-import extension.Function;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /*
  * int addString(string str,int x,int y)
@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 
 public class AddString extends Function {
-    public Constant run(ArrayList<Constant> paras){
+    public Constant run(List<Constant> paras){
         Constant s = paras.get(0);
 		Constant x = paras.get(1);
         Constant y = paras.get(2);

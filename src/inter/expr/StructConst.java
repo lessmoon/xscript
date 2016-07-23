@@ -1,31 +1,41 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.Token;
+import lexer.Word;
+import symbols.Struct;
+import symbols.StructVariable;
+import symbols.Type;
+import symbols.VirtualTable;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
 public class StructConst extends Constant {
     public  int size;
-    final Constant[] table;
-    
+    private final Constant[] table;
+    private Object extension = null;
+
     public StructConst( Struct t ){
         super(Word.struct,t);
         table = new Constant[t.getVariableNumber()];
         
         /*Initial every member*/
         do{
-            Iterator<Entry<Token,StructVariable>> iter = t.table.entrySet().iterator();
-            while(iter.hasNext()){
-                Entry<Token,StructVariable> info = iter.next();
+            for (Entry<Token, StructVariable> info : t.table.entrySet()) {
                 Type vt = info.getValue().type;
                 int i = info.getValue().index;
                 table[i] = vt.getInitialValue();
             }
             t = t.getFather();
         }while(t != null);
+    }
+
+    public void setExtension(Object extension){
+        this.extension = extension;
+    }
+
+    public Object getExtension(){
+       return extension;
     }
 
     @Override

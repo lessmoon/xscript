@@ -1,8 +1,8 @@
 package inter.stmt;
 
-import symbols.*;
 import inter.expr.Constant;
 import inter.expr.Expr;
+import symbols.Type;
 
 public class If extends Stmt{
     Expr expr;
@@ -11,7 +11,7 @@ public class If extends Stmt{
         expr = x;
         stmt = s;
         if(expr.type != Type.Bool)
-            expr.error("boolean requried in if");
+            expr.error("boolean required in if");
     }
 
     @Override

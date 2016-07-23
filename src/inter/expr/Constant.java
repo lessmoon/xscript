@@ -1,7 +1,13 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.BigFloat;
+import lexer.BigNum;
+import lexer.Char;
+import lexer.Num;
+import lexer.Str;
+import lexer.Token;
+import lexer.Word;
+import symbols.Type;
 
 import java.math.BigInteger;
 import java.math.BigDecimal;

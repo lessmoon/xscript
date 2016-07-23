@@ -1,13 +1,19 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.BigFloat;
+import lexer.BigNum;
+import lexer.Char;
+import lexer.Num;
+import lexer.Str;
+import lexer.Tag;
+import lexer.Token;
+import symbols.Type;
 
 import java.math.BigInteger;
 import java.math.BigDecimal;
 
 class BigIntSet extends Set {
-    public BigIntSet(Token tok,Expr i,Expr x){
+    BigIntSet(Token tok, Expr i, Expr x){
         super(tok,i,x);
     }
     
@@ -33,7 +39,7 @@ class BigIntSet extends Set {
 
 class IntSet extends Set {
     
-    public IntSet(Token tok,Expr i,Expr x){
+    IntSet(Token tok, Expr i, Expr x){
         super(tok,i,x);
     }
 
@@ -60,7 +66,7 @@ class IntSet extends Set {
 
 class CharSet extends Set {
     
-    public CharSet(Token tok,Expr i,Expr x){
+    CharSet(Token tok, Expr i, Expr x){
         super(tok,i,x);
     }
 
@@ -86,7 +92,7 @@ class CharSet extends Set {
 }
 
 class BigRealSet extends Set {
-    public BigRealSet(Token tok,Expr i,Expr x){
+    BigRealSet(Token tok, Expr i, Expr x){
         super(tok,i,x);
     }
     
@@ -109,7 +115,7 @@ class BigRealSet extends Set {
 }
 
 class RealSet extends Set {
-    public RealSet(Token tok,Expr i,Expr x){
+    RealSet(Token tok, Expr i, Expr x){
         super(tok,i,x);
     }
     
@@ -133,7 +139,7 @@ class RealSet extends Set {
 }
 
 class StrSet extends Set {
-    public StrSet(Token tok,Expr i,Expr x){
+    StrSet(Token tok, Expr i, Expr x){
         super(tok,i,x);
     }
 

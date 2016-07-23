@@ -4,10 +4,10 @@ import lexer.Num;
 import inter.expr.Constant;
 import extension.Function;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class setBrushColor extends Function {
-    public Constant run(ArrayList<Constant> paras){
+    public Constant run(List<Constant> paras){
         Constant r = paras.get(0);
         Constant g = paras.get(1);
         Constant b = paras.get(2);   

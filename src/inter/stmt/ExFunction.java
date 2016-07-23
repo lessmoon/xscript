@@ -1,15 +1,15 @@
 package inter.stmt;
 
-import lexer.*;
-import symbols.*;
+import lexer.Token;
 import inter.util.Para;
 import runtime.VarTable;
+import symbols.Type;
 
-import java.util.ArrayList;
- 
+import java.util.List;
+
 public class ExFunction extends FunctionBasic {
-    public extension.Function func;
-    public ExFunction(Type t,Token n,ArrayList<Para> pl,extension.Function f){
+    private extension.Function func;
+    public ExFunction(Type t, Token n, List<Para> pl, extension.Function f){
         super(n,t,pl);
         func = f;
     }

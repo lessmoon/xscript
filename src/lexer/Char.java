@@ -13,7 +13,7 @@ public class Char extends Token{
     }
     
     public String toRawString(){
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
        
         switch(value){
         case '\b':

@@ -1,10 +1,10 @@
 package inter.stmt;
 
-import lexer.*;
-import symbols.*;
-import runtime.*;
 import inter.expr.Expr;
-import inter.expr.ArrayConst;
+import lexer.Token;
+import runtime.VarTable;
+import symbols.Array;
+import symbols.Type;
 
 public class ArrayDecl extends Decl {
 
@@ -12,7 +12,7 @@ public class ArrayDecl extends Decl {
         super(i,t,v);
         if(!check(0)){
             error("Can't assign " + value.type + " to " + id + "(" + type + ")");
-        };
+        }
     }
 
     public boolean check(int i){

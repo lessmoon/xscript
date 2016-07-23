@@ -7,8 +7,8 @@ import lexer.Token;
  * (a,b) return a
  */
 public class SeqExpr extends Expr {
-    Expr left;
-    Expr right;
+    private Expr left;
+    private Expr right;
 
     public SeqExpr(Token tok,Expr left,Expr right){
         super(tok,left.type);

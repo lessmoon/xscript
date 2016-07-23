@@ -1,8 +1,8 @@
 package inter.expr;
 
-import runtime.*;
-import lexer.*;
-import symbols.*;
+import lexer.Token;
+import runtime.VarTable;
+import symbols.Type;
 
 public class AbsoluteVar extends StackVar {
     public AbsoluteVar(Token w,Type t,int l,int o){

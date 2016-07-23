@@ -1,6 +1,8 @@
 package inter.expr;
 
-import lexer.*;import symbols.*;
+import lexer.Tag;
+import lexer.Token;
+import symbols.Type;
 
 public class Set extends Expr {
     public Var id;
@@ -21,7 +23,7 @@ public class Set extends Expr {
             expr = ConversionFactory.getConversion(expr,type);
         }
     }
-    
+
     Type check(){
         if( op.tag == Tag.MODASS ){
             Type mt = Type.max(id.type,expr.type);

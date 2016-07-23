@@ -1,25 +1,25 @@
 package inter.stmt;
 
-import lexer.*;
-import symbols.*;
 import inter.util.Para;
+import lexer.Token;
+import symbols.Type;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Function extends FunctionBasic {
     public Stmt  stmt;
     
-    public Function(Token n,Type t,ArrayList<Para> p){
+    public Function(Token n,Type t,List<Para> p){
         super(n,t,p);
         stmt = null;
     }
 
-    public Function(Token n,Type t,Stmt s,ArrayList<Para> p){
+    public Function(Token n,Type t,Stmt s,List<Para> p){
         super(n,t,p);
         stmt = s;
     }
 
-    public void init(Token n,Type t,Stmt s,ArrayList<Para> p){
+    public void init(Token n, Type t, Stmt s, List<Para> p){
         name = n;
         type = t;
         stmt = s;
@@ -29,7 +29,6 @@ public class Function extends FunctionBasic {
     @Override
     public void run(){
         stmt.run();
-        return;
     }
     
     @Override

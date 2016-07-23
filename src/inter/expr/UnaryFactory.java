@@ -1,13 +1,17 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.BigFloat;
+import lexer.BigNum;
+import lexer.Char;
+import lexer.Num;
+import lexer.Tag;
+import lexer.Token;
+import symbols.Type;
 
 import java.math.BigInteger;
-import java.math.BigDecimal;
 
 class IntUnary extends Unary {
-    public IntUnary(Token tok,Expr x){
+    IntUnary(Token tok, Expr x){
         super(tok,x);
         check();
     }
@@ -45,7 +49,7 @@ class IntUnary extends Unary {
 }
 
 class BigIntUnary extends IntUnary {
-    public BigIntUnary(Token tok,Expr x){
+    BigIntUnary(Token tok, Expr x){
         super(tok,x);
     }
 
@@ -67,7 +71,7 @@ class BigIntUnary extends IntUnary {
 }
 
 class RealUnary extends Unary {
-    public RealUnary(Token tok,Expr x){
+    RealUnary(Token tok, Expr x){
         super(tok,x);
         check();
     }
@@ -95,7 +99,7 @@ class RealUnary extends Unary {
 }
 
 class BigRealUnary extends RealUnary {
-    public BigRealUnary(Token tok,Expr x){
+    BigRealUnary(Token tok, Expr x){
         super(tok,x);
     }
 
@@ -112,7 +116,7 @@ class BigRealUnary extends RealUnary {
 }
 
 class CharUnary extends Unary {
-    public CharUnary(Token tok,Expr x){
+    CharUnary(Token tok, Expr x){
         super(tok,x);
         check();
     }

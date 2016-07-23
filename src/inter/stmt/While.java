@@ -1,8 +1,8 @@
 package inter.stmt;
 
-import symbols.*;
 import inter.expr.Expr;
 import inter.expr.Constant;
+import symbols.Type;
 
 public class While extends Stmt{
     Expr expr;

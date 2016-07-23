@@ -1,7 +1,9 @@
 package extension.predefined;
 
+import extension.Struct;
 import lexer.Token;
 import runtime.Dictionary;
+import runtime.TypeTable;
 import symbols.Type;
 import inter.util.Para;
 import inter.stmt.Stmt;
@@ -10,17 +12,18 @@ import inter.expr.StructConst;
 import inter.stmt.MemberFunction;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class TestStruct extends extension.Struct {
+public class TestStruct extends Struct {
     /*
      * return the struct defined by the java code
      */
-    public symbols.Struct setup(Token sname,Dictionary dic){
+    public symbols.Struct setup(Token sname, Dictionary dic, TypeTable typeTable){
         
         final symbols.Struct s = new symbols.Struct(sname);
-        s.addMemberVariable(dic.getOrreserve("id"),Type.Str);
-        Token fname = dic.getOrreserve("getId");
-        ArrayList<Para> plist = new ArrayList<Para>();
+        s.addMemberVariable(dic.getOrReserve("id"),Type.Str);
+        Token fname = dic.getOrReserve("getId");
+        List<Para> plist = new ArrayList<>();
         plist.add(new Para(s,lexer.Word.This));
         /*It is just virtual!*/
         Stmt st = new Stmt(){

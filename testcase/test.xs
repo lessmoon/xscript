@@ -8,6 +8,53 @@ import  "container/hashmap.xs";
 import  "container/list.xs";
 
 
+native<extension.system>{
+    "sleep":void sleep(int duration);
+}
+
+
+struct Runnable {
+    def virtual void run();
+}
+
+native<extension.predefined>{
+    "SimpleThread":struct Thread{
+        def this(Runnable);
+        def void start();
+    };
+}
+
+bool isOdd = true;
+
+struct PrintNumber : Runnable {
+    int index;
+
+    def this(int beg) {
+        this.index = beg;
+    }
+    
+    def override void run(){
+        
+        for(int i = this.index;i<100;i+=2){
+            while((i%2==0)==isOdd){}
+            isOdd=!isOdd;
+            println(i);
+        }
+    }
+}
+
+{
+    Thread t1 = new Thread(new PrintNumber(2));
+    Thread t2 = new Thread(new PrintNumber(1));
+    t1.start();
+    sleep(1);
+    t2.start();
+    sleep(60);
+    
+    
+}
+
+
 native<extension.predefined>{
     "TestStruct":struct NTVSTRT{
         string id;
@@ -29,6 +76,19 @@ native<extension.system>{
     "sleep":void sleep(int duration);
 }
 import  "ui/paintpad.xs";
+
+native<extension.ui>{
+    "openPad":int openPadWithName(int w,int h,string name);
+    int drawLine(int x1,int y1,int x2,int y2);
+    int drawPoint(int x,int y);
+    int addLine(int x1,int y1,int x2,int y2);
+    int addPoint(int x,int y);
+    int setBrushColor(int r,int g,int b);
+    int paint();
+    int closePad();
+    int clearPad();
+}
+
 
 native<extension.math>{
     real sin(real theta);

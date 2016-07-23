@@ -1,48 +1,49 @@
 package parser;
 
-import lexer.*;
-import symbols.*;
-import inter.util.*;
 import inter.expr.*;
 import inter.stmt.*;
+import inter.util.Para;
+import lexer.*;
 import runtime.LoadFunc;
 import runtime.LoadStruct;
 import runtime.TypeTable;
+import symbols.*;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class Parser implements TypeTable {
     private Lexer lex;
     private Token look;
-    Env top = new Env();
-    HashMap<Token,Type> typetable = new HashMap<Token,Type>();
-    FuncTable table = new FuncTable();
-    HashSet<Token> forbiddenFunctionName = new HashSet<Token>();
-    Type returnType = Type.Int;
-    boolean hasDecl = true;
-    boolean enableWarning = false;
+    private Env top = new Env();
+    private HashMap<Token,Type> typetable = new HashMap<>();
+    private FuncTable table = new FuncTable();
+    private HashSet<Token> forbiddenFunctionName = new HashSet<>();
+    private Type returnType = Type.Int;
+    private boolean hasDecl = true;
+    private boolean enableWarning = false;
     /*integer numbers standing for the stack level*/
 
     
-    Struct dStruct = null;
-    boolean isInStructInitialFunctionDefinition = false;
+    private Struct dStruct = null;
+    private boolean isInStructInitialFunctionDefinition = false;
     
-    public int lastBreakFatherLevel = -1;
-    public int lastIterationLevel = -1;
+    private int lastBreakFatherLevel = -1;
+    private int lastIterationLevel = -1;
     /* 
      * The variable lastFunctionLevel is for the  
      * local function definition.
      * For now,it is just 0(which means global level).
      */
-    public int lastFunctionLevel = 0;
-    public int nowLevel = 0;
-    public HashSet<FunctionBasic> f_used = new HashSet<FunctionBasic>();
+    private int lastFunctionLevel = 0;
+    private int nowLevel = 0;
+    private Set<FunctionBasic> fUsed = new HashSet<>();
     
-    public final boolean ENABLE_EXPR_OPT ;
-    public final boolean ENABLE_STMT_OPT ;
-    public boolean PRINT_FUNC_TRANSLATE = false;
+    private final boolean ENABLE_EXPR_OPT ;
+    private final boolean ENABLE_STMT_OPT ;
+    private boolean PRINT_FUNC_TRANSLATE = false;
 
     public  Parser(Lexer l) throws IOException{
         this(l,false,false);
@@ -57,12 +58,12 @@ public class Parser implements TypeTable {
         predefinedForbiddenFunctionName();
     }
 
-    public void predefinedForbiddenFunctionName(){
+    private void predefinedForbiddenFunctionName(){
         forbiddenFunctionName.add(Word.This);
         forbiddenFunctionName.add(Word.Super);
     }
     
-    public boolean inForbiddenFunctionNameTables(Token name){
+    private boolean isForbiddenFunctionName(Token name){
         return forbiddenFunctionName.contains(name);
     }
 
@@ -74,7 +75,7 @@ public class Parser implements TypeTable {
         PRINT_FUNC_TRANSLATE = false;
     }
 
-    public void checkNamespace(Token name,String info){
+    private void checkNamespace(Token name, String info){
         if( top.get(name) != null ){
             error(info + " `" + name + "' has a same name with a variable");
         }
@@ -84,34 +85,34 @@ public class Parser implements TypeTable {
         }
     }
 
-    public void move() throws IOException {
+    private void move() throws IOException {
         look = lex.scan();
     }
 
-    public Token copymove() throws IOException {
+    private Token copymove() throws IOException {
         Token tmp = look;
         move();
         return tmp;
     }
 
-    public void error(String s){
-        error(s,lex.line,lex.filename);
+    public void error(String s) throws RuntimeException{
+        error(s,Lexer.line,Lexer.filename);
     }
     
-    public void error(String s,int l,String f){
+    public void error(String s,int l,String f) throws RuntimeException{
         throw new RuntimeException("line " + l + " in file `" +  f + "':\n\t" + s);
     }
     
     public void warning(String s){
-        warning(s,lex.line,lex.filename);
+        warning(s,Lexer.line,Lexer.filename);
     }
 
-    public void warning(String s,int l,String f){
+    private void warning(String s, int l, String f){
         if(enableWarning)
             System.err.println("line " + l + " in file `" +  f + "':\n\t" + s);
     }
 
-    public void match(char t) throws IOException{
+    private void match(char t) throws IOException{
         if(look.tag == t)
             move();
         else {
@@ -122,7 +123,7 @@ public class Parser implements TypeTable {
         }
     }
         
-    public void match(int t) throws IOException{
+    private void match(int t) throws IOException{
         if(look.tag == t)
             move();
         else {
@@ -184,32 +185,27 @@ public class Parser implements TypeTable {
 
     private void checkFunctionCompletion(){
         /*check if some used functions has not been completed*/
-        for(FunctionBasic b : table.getAllFunctions()){
-            if(b.used()&&!b.isCompleted()){
-                error("function `" + b +"' used but not completed " ,b.lexline,b.filename);
-            }
-        }
-        
-        for(FunctionBasic b : f_used){
-            if(b.used()&&!b.isCompleted()){
-                error("function `" + b +"' used but not completed " ,b.lexline,b.filename);
-            }
-        }
+
+        table.getAllFunctions().stream().filter(b -> b.used() && !b.isCompleted()).forEach(b -> {
+            error("function `" + b + "' used but not completed ", b.lexline, b.filename);
+        });
+
+        fUsed.stream().filter(b -> b.used() && !b.isCompleted()).forEach(b -> {
+            error("function `" + b + "' used but not completed ", b.lexline, b.filename);
+        });
         
         /*
          * check if there is a struct that is pure virtual but declared
          */
-        Iterator<Entry<Token,Type>> iter = typetable.entrySet().iterator();
-        while(iter.hasNext()){
-            Entry<Token,Type> info = iter.next();
-            Struct st = (Struct)(info.getValue());
-            if(st.used() && !st.isCompleted()){
-                error("`" + info.getValue() +"' used but not completed " ,st.getFirstUsedLine(),st.getFirstUsedFile());
+        for (Entry<Token, Type> info : typetable.entrySet()) {
+            Struct st = (Struct) (info.getValue());
+            if (st.used() && !st.isCompleted()) {
+                error("`" + info.getValue() + "' used but not completed ", st.getFirstUsedLine(), st.getFirstUsedFile());
             }
         }
     }
 
-    public void importLib() throws IOException {
+    private void importLib() throws IOException {
         match(Tag.IMPORT);
         Token l = look;
         match(Tag.STR);
@@ -223,10 +219,10 @@ public class Parser implements TypeTable {
         move();
     }
     
-    public void loadNative() throws IOException {
-        ArrayList<Para> pl  = null;
+    private void loadNative() throws IOException {
+        List<Para> pl;
         match(Tag.NATIVE);
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         match('<');
         Token pkg = look;
         match(Tag.ID);
@@ -240,23 +236,23 @@ public class Parser implements TypeTable {
         match('>');
         match('{');
         while(!check('}')){
-            String clazzname = null;
+            String clazzName = null;
             if(look.tag == Tag.STR){
-                clazzname = look.toString();
+                clazzName = look.toString();
                 move();
                 match(':');
             }
 
             if(check(Tag.STRUCT)){
                 /*
-                 * loadstruct
+                 * load struct
                  */
                 Token name = look;
                 match(Tag.ID);
-                if(clazzname == null){
-                    clazzname = name.toString();
+                if(clazzName == null){
+                    clazzName = name.toString();
                 }
-                Struct s = LoadStruct.loadStruct(sb.toString(),clazzname,name,this.lex);
+                Struct s = LoadStruct.loadStruct(sb.toString(),clazzName,name,this.lex,this);
                 if(s == null){
                     error("incomplete extension struct:`" + name + "'");
                 }
@@ -289,13 +285,13 @@ public class Parser implements TypeTable {
                     }
                 }
             } else {
-                pl = new ArrayList<Para>();
+                pl = new ArrayList<>();
 
                 Type t = type();
                 Token name = look;
                 match(Tag.ID);
-                if(clazzname == null){
-                    clazzname = name.toString();
+                if(clazzName == null){
+                    clazzName = name.toString();
                 }
                 match('(');
                 if(!check(')')){
@@ -310,9 +306,9 @@ public class Parser implements TypeTable {
                 
                 FunctionBasic f = null;
                 try{
-                    f = LoadFunc.loadFunc(t,sb.toString(),clazzname,name,pl,this.lex);
+                    f = LoadFunc.loadFunc(t,sb.toString(),clazzName,name,pl,this.lex,this);
                 } catch (Exception e){
-                    error("failed to load extension function `" + sb.toString()  + "." + clazzname + "'");
+                    error("failed to load extension function `" + sb.toString()  + "." + clazzName + "'");
                 }
                 if(!table.addFunc(name,f)){
                     error("function name has conflict:" + name);
@@ -322,7 +318,7 @@ public class Parser implements TypeTable {
         }
     }
 
-    public Type defType(Token tok,Type t) {
+    private Type defType(Token tok, Type t) {
         return typetable.put(tok,t);
     }
     
@@ -330,7 +326,7 @@ public class Parser implements TypeTable {
         return typetable.get(tok);
     }
     
-    public void defStruct() throws IOException {
+    private void defStruct() throws IOException {
         match(Tag.STRUCT);
 
         /*
@@ -406,7 +402,7 @@ public class Parser implements TypeTable {
      * def a function in struct
      * s is the struct,op is the operand to overload(null for non-overloading)
      */
-    public void defInnerStructFunction(Struct s,Token op) throws IOException{
+    private void defInnerStructFunction(Struct s, Token op) throws IOException{
         Env savedEnv = top;
         top = new Env(top);
         boolean savedHasDecl = hasDecl;
@@ -433,20 +429,20 @@ public class Parser implements TypeTable {
      *      
      * }
      */
-    public Function initialFunctionDeclaration(Struct s,Token op) throws IOException{
+    private Function initialFunctionDeclaration(Struct s, Token op) throws IOException{
         if(op != null){
             error("initial function can't be overloaded");
         }
         top.put(Word.This,s);
         match(Tag.ID);
-        ArrayList<Para> l = arguments();
+        List<Para> l = arguments();
         l.add(0,new Para(s,Word.This));
         Function f = new InitialFunction(Word.This,l,s);
         s.defineInitialFunction(f);
         return f;
     }
     
-    public Function innerFunctionDeclaration(Struct s,Token op) throws IOException{
+    private Function innerFunctionDeclaration(Struct s, Token op) throws IOException{
         int flag = 0;
         
         if(check(Tag.VIRTUAL)){
@@ -459,13 +455,13 @@ public class Parser implements TypeTable {
         returnType = type();
         Token fname = look;
         match(Tag.ID);
-        if( inForbiddenFunctionNameTables(fname) ){
+        if( isForbiddenFunctionName(fname) ){
             error("Function name can't be `" + fname + "'");
         }
 
         /*pass `this' reference as the first argument*/
         top.put(Word.This,s);
-        ArrayList<Para> l = arguments();
+        List<Para> l = arguments();
         l.add(0,new Para(s,Word.This));
         Function f = new MemberFunction(fname,returnType,l,s);
         if(flag == Tag.VIRTUAL ){
@@ -485,7 +481,7 @@ public class Parser implements TypeTable {
         return f;
     }
 
-    public void defFunction() throws IOException {
+    private void defFunction() throws IOException {
         match(Tag.DEF);
         Env savedEnv = top;
         top = new Env(top);
@@ -523,14 +519,14 @@ public class Parser implements TypeTable {
             }
             name = look;
             match(Tag.ID);
-            defOutterStructFunction((Struct) t,name,returnType);
+            defOuterStructFunction((Struct) t,name,returnType);
             top = savedEnv;
             returnType = savedType;
             hasDecl = savedHasDecl;
             return;
         }
 
-        ArrayList<Para> l = arguments();
+        List<Para> l = arguments();
         Function f = null;
         if(check(';')){
             f = new Function(name,returnType,l);
@@ -581,10 +577,9 @@ public class Parser implements TypeTable {
         top = savedEnv;
         returnType = savedType;
         hasDecl = savedHasDecl;
-        return;
     }
 
-    public void defOutterStructInitialFunction(Struct t,Token name) throws IOException{
+    private void defOutterStructInitialFunction(Struct t, Token name) throws IOException{
         dStruct = t;
         if(name != Word.This){
             error("unknown function name found here:`" + t.getName() + "."   + name + "'");
@@ -598,7 +593,7 @@ public class Parser implements TypeTable {
         }
 
         top.put(Word.This,t);
-        ArrayList<Para> l = arguments();
+        List<Para> l = arguments();
         l.add(0,new Para(t,Word.This));
         if(l.size() != f.paralist.size()){
             error("parameters number of function `" + t.getName() + ".[init]' doesn't match with its former declaration:expect " + (f.paralist.size() - 1) + " but found " + (l.size() - 1));
@@ -616,7 +611,7 @@ public class Parser implements TypeTable {
         dStruct = null;
     }
     
-    public void defOutterStructFunction(Struct t,Token name,Type returnType) throws IOException{
+    private void defOuterStructFunction(Struct t, Token name, Type returnType) throws IOException{
         dStruct = t;
 
         //TODO:check if it is normal or virtual function
@@ -637,7 +632,7 @@ public class Parser implements TypeTable {
         }
 
         top.put(Word.This,t);
-        ArrayList<Para> l = arguments();
+        List<Para> l = arguments();
         l.add(0,new Para(t,Word.This));
         if(l.size() != f.paralist.size()){
             error("parameters number of function `" + t.lexeme + "." + name  + "' doesn't match with its former declaration");
@@ -655,8 +650,8 @@ public class Parser implements TypeTable {
         dStruct = null;
     }
 
-    public ArrayList<Para> arguments() throws IOException {
-        ArrayList<Para> pl = new ArrayList<Para>();
+    private List<Para> arguments() throws IOException {
+        List<Para> pl = new ArrayList<>();
         match('(');
         if(!check(')')){
             do{
@@ -676,7 +671,7 @@ public class Parser implements TypeTable {
         return pl;
     }
 
-    public Stmt block() throws IOException {
+    private Stmt block() throws IOException {
         match('{');
         Env savedEnv = top;
         boolean savedHasDecl = hasDecl;
@@ -694,7 +689,7 @@ public class Parser implements TypeTable {
         return s;
     }
 
-    public Stmt stmts() throws IOException {
+    private Stmt stmts() throws IOException {
         if(look.tag == '}' ) {
             return Stmt.Null;
         } else {
@@ -707,7 +702,7 @@ public class Parser implements TypeTable {
         Stmt s,s1,s2;
         Stmt savedStmt = Stmt.Enclosing,savedBreak = Stmt.BreakEnclosing;
         int savedLastIterationLevel = lastIterationLevel,
-            savedlastBreakFatherLevel = lastBreakFatherLevel;
+            savedLastBreakFatherLevel = lastBreakFatherLevel;
         switch(look.tag){
         case ';':
             move();
@@ -730,23 +725,23 @@ public class Parser implements TypeTable {
         case Tag.WHILE:
             lastIterationLevel = nowLevel;
             lastBreakFatherLevel = nowLevel;
-            While whilenode = new While();
-            Stmt.Enclosing = whilenode;
-            Stmt.BreakEnclosing = whilenode;
+            While whileNode = new While();
+            Stmt.Enclosing = whileNode;
+            Stmt.BreakEnclosing = whileNode;
             match(Tag.WHILE);
             match('(');
             x = expr();
             match(')');
             s1 = closure();
-            whilenode.init(x,s1);
-            s =  whilenode;
+            whileNode.init(x,s1);
+            s =  whileNode;
             break;
         case Tag.DO:
             lastIterationLevel = nowLevel;
             lastBreakFatherLevel = nowLevel;
-            Do donode = new Do();
-            Stmt.Enclosing = donode;
-            Stmt.BreakEnclosing = donode;
+            Do doNode = new Do();
+            Stmt.Enclosing = doNode;
+            Stmt.BreakEnclosing = doNode;
             match(Tag.DO);
             s1 = closure();
             match(Tag.WHILE);
@@ -754,8 +749,8 @@ public class Parser implements TypeTable {
             x = expr();
             match(')');
             match(';');
-            donode.init(s1,x);
-            s =  donode;
+            doNode.init(s1,x);
+            s =  doNode;
             break;
         case Tag.FOR:
             s = forloop();
@@ -817,11 +812,11 @@ public class Parser implements TypeTable {
         Stmt.BreakEnclosing = savedBreak;
         Stmt.Enclosing = savedStmt;
         lastIterationLevel = savedLastIterationLevel;
-        lastBreakFatherLevel = savedlastBreakFatherLevel;
+        lastBreakFatherLevel = savedLastBreakFatherLevel;
         return s;
     }
 
-    public Stmt casestmts() throws IOException {
+    private Stmt casestmts() throws IOException {
         Stmt s = Stmt.Null;
         
         while(look.tag != Tag.CASE && look.tag != '}' && look.tag != Tag.DEFAULT){
@@ -830,7 +825,7 @@ public class Parser implements TypeTable {
         return s;
     }
 
-    public Stmt casestmt() throws IOException {
+    private Stmt casestmt() throws IOException {
         Env savedEnv = top;
         boolean savedHasDecl = hasDecl;
         hasDecl = false;                
@@ -844,7 +839,7 @@ public class Parser implements TypeTable {
         return ENABLE_STMT_OPT?s.optimize():s;
     }
 
-    public Stmt switchstmt() throws IOException {
+    private Stmt switchstmt() throws IOException {
         match(Tag.SWITCH);
         match('(');
         //Available types for switch
@@ -886,7 +881,7 @@ public class Parser implements TypeTable {
         return sw;
     }
     
-    public Stmt closure() throws IOException {
+    private Stmt closure() throws IOException {
         if(look.tag == '{'){
             return block();
         } else {
@@ -915,7 +910,7 @@ public class Parser implements TypeTable {
      * if it breaks,it will go to 6
      * if it continues,it will goto 5
      */
-    public Stmt forloop() throws IOException {
+    private Stmt forloop() throws IOException {
         For fornode = new For();
         Stmt.Enclosing = fornode;
         move();
@@ -949,7 +944,7 @@ public class Parser implements TypeTable {
         return s;
     }
 
-    Stmt fordecl() throws IOException {
+    private Stmt fordecl() throws IOException {
         /*
          * for(int i = 0,j = 0;;)
          */
@@ -979,9 +974,9 @@ public class Parser implements TypeTable {
         return s;
     }
 
-    public Decls decls() throws IOException{
+    private Decls decls() throws IOException{
         Decls s = new Decls();
-        Expr  e = null;
+        Expr  e;
         while( look.tag == Tag.BASIC){
             Type p = type();
             if(p == Type.Void){
@@ -1015,7 +1010,7 @@ public class Parser implements TypeTable {
         return s;
     }    
 
-	public Expr initiallist(Array p) throws IOException {
+	private Expr initiallist(Array p) throws IOException {
 		/*
 		 * initlist -> {list}
 		 * list -> element | list,element
@@ -1031,7 +1026,7 @@ public class Parser implements TypeTable {
 	public Expr list(Type p) throws IOException {
 		Expr initseq = Constant.Null;
 		
-		ArrayList<Expr> init_list = new ArrayList<Expr>();
+		List<Expr> init_list = new ArrayList<Expr>();
 		if(look.tag != '}'){
 			do{
 				init_list.add(element(p));
@@ -1052,7 +1047,7 @@ public class Parser implements TypeTable {
 		return initseq == Constant.Null?arrdefine:new SeqExpr(Word.array,in,initseq);
 	}
 
-	public Expr element(Type p) throws IOException{
+	private Expr element(Type p) throws IOException{
 		Expr e = null;
 		if(look.tag == '{'){//array of array
 			//p must be array
@@ -1077,7 +1072,7 @@ public class Parser implements TypeTable {
     /*
      * match single type (except for array)
      */
-    public Type singletype() throws IOException {
+    private Type singletype() throws IOException {
         if(look.tag == Tag.ID){
             Token t = getType(look);
             if(t == null){
@@ -1108,7 +1103,7 @@ public class Parser implements TypeTable {
         return p;
     }
 
-    public Array arrtype(Type of) throws IOException {
+    private Array arrtype(Type of) throws IOException {
         match('[');
         match(']');
         Array a = new Array(of);
@@ -1124,7 +1119,7 @@ public class Parser implements TypeTable {
         return ENABLE_EXPR_OPT?e.optimize():e;
     }
 
-    public Expr typecheck() throws IOException {
+    private Expr typecheck() throws IOException {
         Expr e = assign();
         while(look.tag == Tag.INSTOF){
             Token tok = copymove();
@@ -1134,7 +1129,7 @@ public class Parser implements TypeTable {
         return e;
     }
     
-    public Expr assign() throws IOException {
+    private Expr assign() throws IOException {
         Expr l =  condition();
         while(look.tag == '=' || look.tag == Tag.ADDASS || look.tag == Tag.MINASS 
               || look.tag == Tag.MULTASS || look.tag == Tag.DIVASS || look.tag == Tag.MODASS){
@@ -1143,7 +1138,7 @@ public class Parser implements TypeTable {
         return l;
     }
 
-    public Expr condition() throws IOException {
+    private Expr condition() throws IOException {
         Expr e = bool();
         Token t = look;
         if(check('?')){
@@ -1163,7 +1158,7 @@ public class Parser implements TypeTable {
        return l;
     }
 
-    public Expr join() throws IOException {
+    private Expr join() throws IOException {
        Expr l =  equality();
        while(look.tag == Tag.AND){
             l = new And(copymove(),l,equality());
@@ -1171,7 +1166,7 @@ public class Parser implements TypeTable {
        return l;
     }
 
-    public Expr equality() throws IOException {
+    private Expr equality() throws IOException {
        Expr l =  rel();
        if(look.tag == Tag.EQ || look.tag == Tag.NE ){
             l = RelFactory.getRel( copymove(),l,rel());
@@ -1179,7 +1174,7 @@ public class Parser implements TypeTable {
        return l;
     }
 
-    public Expr rel() throws IOException {
+    private Expr rel() throws IOException {
        Expr l =  add();
        if(look.tag == Tag.GE || look.tag == Tag.LE
              ||look.tag == '<' || look.tag == '>'){
@@ -1196,7 +1191,7 @@ public class Parser implements TypeTable {
        return l;
     }
 
-    public Expr mult() throws IOException {
+    private Expr mult() throws IOException {
        Expr l =  unary();
        while(look.tag == '*' || look.tag == '/' || look.tag == '%'){
             l = ArithFactory.getArith(copymove(),l,unary());
@@ -1204,7 +1199,7 @@ public class Parser implements TypeTable {
        return l;
     }
 
-    public Expr unary() throws IOException {
+    private Expr unary() throws IOException {
        switch(look.tag){
        case '!':
             return new Not(copymove(),unary());
@@ -1219,7 +1214,7 @@ public class Parser implements TypeTable {
        }
     }
 
-    public Expr postinc() throws IOException {
+    private Expr postinc() throws IOException {
         Expr e = postfix();
         switch(look.tag){
         case Tag.INC:
@@ -1230,7 +1225,7 @@ public class Parser implements TypeTable {
         }
     }
 
-    public Expr postfix() throws IOException {
+    private Expr postfix() throws IOException {
        Expr e = factor();
        switch(look.tag){
        case '[':
@@ -1241,7 +1236,7 @@ public class Parser implements TypeTable {
        }
     }
 
-    public Expr access(Expr e) throws IOException {
+    private Expr access(Expr e) throws IOException {
         do{
             if(look.tag == '.'){
                 match('.');
@@ -1253,11 +1248,11 @@ public class Parser implements TypeTable {
         return e;
     }
 
-    public Expr member(Expr e) throws IOException {
+    private Expr member(Expr e) throws IOException {
         Token mname = look;
         match(Tag.ID);
         if(look.tag == '('){
-           ArrayList<Expr>  p = parameters();
+            List<Expr>  p = parameters();
             if(!(e.type instanceof Struct))
                 error("member function is for struct,not for `" + e.type +"'");
             Struct s = (Struct)(e.type);
@@ -1266,11 +1261,11 @@ public class Parser implements TypeTable {
                 f = s.getVirtualFunction(mname);
                 if(f == null)
                     error("member function `" + mname + "' not found");
-                f_used.add(f);
+                fUsed.add(f);
                 /*Pass `this' reference as the first argument*/
                 return new VirtualFunctionInvoke(e,f,p);
             } else {
-                f_used.add(f);
+                fUsed.add(f);
                 /*Pass `this' reference as the first argument*/
                 p.add(0,e);
                 return new FunctionInvoke(f,p);
@@ -1279,7 +1274,7 @@ public class Parser implements TypeTable {
         return new StructMemberAccess(e,mname);
     }
 
-    public Expr offset(Expr e) throws IOException {
+    private Expr offset(Expr e) throws IOException {
         match('[');
         /*check type*/
         Expr loc = expr();
@@ -1308,7 +1303,7 @@ public class Parser implements TypeTable {
         return e;
     }
 
-    public Expr factor() throws IOException {
+    private Expr factor() throws IOException {
         Expr r;
         
         switch(look.tag){
@@ -1384,10 +1379,10 @@ public class Parser implements TypeTable {
                 return new NewArray(l,t,e);
             } else {// it is `new' struct 
                 if(t instanceof Struct){
-                    ((Struct)t).setUsed(lex.line,lex.filename);
+                    ((Struct)t).setUsed(Lexer.line, Lexer.filename);
                     Expr eNew = new New(l,(Struct)t);
                     if(look.tag == '('){//has initial function
-                        ArrayList<Expr> pl = parameters();
+                        List<Expr> pl = parameters();
                         InPipe ipNew = new InPipe(eNew);
                         eNew = ipNew;
                         Expr init = new OutPipe(ipNew);
@@ -1416,8 +1411,8 @@ public class Parser implements TypeTable {
         }
     }
 
-    public Expr cast() throws IOException {
-        Expr e = null;
+    private Expr cast() throws IOException {
+        Expr e;
         match('(');
         switch(look.tag){
         case Tag.ID:
@@ -1449,10 +1444,10 @@ public class Parser implements TypeTable {
     }
 
     public Expr function(Token id) throws IOException {
-        FunctionBasic f = null;
-        ArrayList<Expr> p = parameters();
+        FunctionBasic f;
+        List<Expr> p = parameters();
         if( id == Word.Super ){
-            Struct fs = null;
+            Struct fs;
             if(dStruct == null || !isInStructInitialFunctionDefinition){
                 error("Keyword `" + id + "' can be only used in the struct initial function");
             }
@@ -1478,9 +1473,9 @@ public class Parser implements TypeTable {
         return new FunctionInvoke(f,p);
     }
 
-    public ArrayList<Expr> parameters() throws IOException  {
+    private List<Expr> parameters() throws IOException  {
         match('(');
-        ArrayList<Expr> p = new ArrayList<Expr>();
+        List<Expr> p = new ArrayList<>();
         if(!check(')')){
             do{
                 p.add(expr());
