@@ -4,10 +4,10 @@ import lexer.Num;
 import inter.expr.Constant;
 import extension.Function;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class addPoint extends Function {
-    public Constant run(ArrayList<Constant> paras){
+    public Constant run(List<Constant> paras){
         Constant x = paras.get(0);
         Constant y = paras.get(1);
         int ix = ((Num)(x.op)).value;

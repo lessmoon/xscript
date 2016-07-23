@@ -1,14 +1,13 @@
 package inter.stmt;
 
-import lexer.*;
-import symbols.*;
-import inter.expr.Expr;
 import inter.expr.Constant;
+import inter.expr.Expr;
+import symbols.Type;
 
 public class For extends Stmt {
-    public Stmt begin = null;
-    public Expr condition = null;
-    public Stmt end = null;
+    private Stmt begin = null;
+    private Expr condition = null;
+    private Stmt end = null;
     public Stmt stmt = null;
     public For(){}
 

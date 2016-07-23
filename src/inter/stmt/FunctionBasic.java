@@ -1,22 +1,22 @@
 package inter.stmt;
 
-import lexer.*;
-import symbols.*;
+import lexer.Token;
 import inter.util.Para;
+import symbols.Type;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public abstract class FunctionBasic extends Stmt {
     public Type  type;
     public Token name;
-    public ArrayList<Para> paralist;
+    public List<Para> paralist;
     private boolean hasused = false;
     
-    public FunctionBasic(Token name,Type t,ArrayList<Para> p){
+    public FunctionBasic(Token name,Type t,List<Para> p){
         init(name,t,p);    
     }
 
-    public void init(Token n,Type t,ArrayList<Para> p){
+    public void init(Token n,Type t,List<Para> p){
         name = n;
         type = t;
         paralist = p;
@@ -41,8 +41,8 @@ public abstract class FunctionBasic extends Stmt {
     
     @Override
     public String toString(){
-        StringBuffer sb = new StringBuffer(type.toString());
-        sb.append(" " + name + "(");
+        StringBuilder sb = new StringBuilder(type.toString());
+        sb.append(" ").append(name).append("(");
         int i = 0;
         if(i < paralist.size()){
             sb.append(paralist.get(i++).toString());

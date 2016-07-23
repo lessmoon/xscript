@@ -1,12 +1,13 @@
 package inter.stmt;
 
-import symbols.*;
 import inter.expr.Constant;
 import inter.expr.Expr;
+import symbols.Type;
 
 public class Else extends Stmt {
     Expr expr;
-    Stmt stmt1,stmt2;
+    private Stmt stmt1;
+    private Stmt stmt2;
     public Else(Expr x,Stmt s1,Stmt s2){
         expr = x;
         stmt1 = s1;

@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 class Node {
-    File file;
+    private File file;
     FileInputStream fis;
     FileOutputStream fos;
     Node(File f,FileInputStream i,FileOutputStream o){
@@ -19,15 +19,15 @@ class Node {
 
 public class ExFile {
     static private int id = 1;
-    static public  HashMap<Integer,Node> filemap = new HashMap<Integer,Node>();
+    private static HashMap<Integer,Node> filemap = new HashMap<Integer,Node>();
     
     static public int openfile(String filename){
         try {
             File f = new File(filename);
-            if(!f.exists()) 
+            if(!f.exists())
                 f.createNewFile();
             Node n = new Node(f,new FileInputStream(f),new FileOutputStream(f));
-            filemap.put(new Integer(id),n);
+            filemap.put(id,n);
             return id++;
         } catch (Exception e){
             return -1;
@@ -68,7 +68,7 @@ public class ExFile {
             n.fos.flush();
             n.fos.close();
             n.fis.close();
-            filemap.remove(new Integer(fid));
+            filemap.remove(fid);
             return fid;
         } catch (Exception e){
             return -1;

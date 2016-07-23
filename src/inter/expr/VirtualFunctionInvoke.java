@@ -1,22 +1,23 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
-import runtime.*;
 import inter.stmt.FunctionBasic;
-import inter.stmt.MemberFunction;
 import inter.stmt.ReturnResult;
+import runtime.RunStack;
+import runtime.VarTable;
+import symbols.Position;
+import symbols.Struct;
+import symbols.VirtualTable;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class VirtualFunctionInvoke extends Expr {
     static  final   boolean         IS_DEBUG = false;
-            final   FunctionBasic   func;
-            final   ArrayList<Expr> para;
-            final   Expr            expr;
-            final   Position        position;/*the function position in virtual table*/
+    private final   FunctionBasic   func;
+    private final   List<Expr>      para;
+    private final Expr              expr;
+    private final Position          position;/*the function position in virtual table*/
     
-    public VirtualFunctionInvoke(Expr e,FunctionBasic f,ArrayList<Expr> p){
+    public VirtualFunctionInvoke(Expr e, FunctionBasic f, List<Expr> p){
         super(f.name,f.type);
         expr = e;
         func = f;
@@ -57,7 +58,7 @@ public class VirtualFunctionInvoke extends Expr {
 
     @Override
     public String toString(){
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(expr.toString());
         sb.append(".[virtual]");
         sb.append(op);

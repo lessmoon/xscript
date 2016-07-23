@@ -1,7 +1,7 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.Token;
+import symbols.Type;
 
 public abstract class Rel extends Logical {
     public Rel(Token tok,Expr x1,Expr x2){

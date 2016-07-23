@@ -1,7 +1,7 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.Token;
+import symbols.Struct;
 
 /*
  * new<type>;

@@ -1,13 +1,14 @@
 package inter.expr;
 
-import lexer.*; 
-import symbols.*;
+import lexer.Token;
+import symbols.Struct;
+import symbols.Type;
 
 public class IsInstanceOf extends Op {
-    public       Expr       expr;
-    public final Type       cmptype;
-    public       boolean    precal = true;
-    public       boolean    haveto = false;
+    public        Expr      expr;
+    private final Type      cmptype;
+    private boolean         precal = true;
+    private boolean         haveto = false;
     public IsInstanceOf(Token tok,Expr e,Type t){
         super(tok,Type.Bool);
         expr = e;

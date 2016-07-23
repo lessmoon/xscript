@@ -1,15 +1,23 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.BigFloat;
+import lexer.BigNum;
+import lexer.Char;
+import lexer.Num;
+import lexer.Str;
+import lexer.Tag;
+import lexer.Token;
 import inter.stmt.FunctionBasic;
+import symbols.Array;
+import symbols.Struct;
+import symbols.Type;
 
 import java.math.BigInteger;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
 class IntRel extends Rel {
-    public IntRel(Token tok,Expr x1,Expr x2){
+    IntRel(Token tok, Expr x1, Expr x2){
         super(tok,x1,x2);
     }
     
@@ -38,7 +46,7 @@ class IntRel extends Rel {
 }
 
 class BigIntRel extends Rel {
-    public BigIntRel(Token tok,Expr x1,Expr x2){
+    BigIntRel(Token tok, Expr x1, Expr x2){
         super(tok,x1,x2);
     }
     
@@ -67,7 +75,7 @@ class BigIntRel extends Rel {
 }
 
 class CharRel extends Rel {
-    public CharRel(Token tok,Expr x1,Expr x2){
+    CharRel(Token tok, Expr x1, Expr x2){
         super(tok,x1,x2);
     }
     
@@ -96,7 +104,7 @@ class CharRel extends Rel {
 }
 
 class BoolRel extends Rel {
-    public BoolRel(Token tok,Expr x1,Expr x2){
+    BoolRel(Token tok, Expr x1, Expr x2){
         super(tok,x1,x2);
         if(tok.tag != Tag.EQ && tok.tag != Tag.NE)
             error("Operand "+ tok + " forbidden:" + x1.type);
@@ -112,7 +120,7 @@ class BoolRel extends Rel {
 }
 
 class RealRel extends Rel {
-    public RealRel(Token tok,Expr x1,Expr x2){
+    RealRel(Token tok, Expr x1, Expr x2){
         super(tok,x1,x2);
     }
     
@@ -141,7 +149,7 @@ class RealRel extends Rel {
 }
 
 class BigRealRel extends Rel {
-    public BigRealRel(Token tok,Expr x1,Expr x2){
+    BigRealRel(Token tok, Expr x1, Expr x2){
         super(tok,x1,x2);
     }
     
@@ -170,7 +178,7 @@ class BigRealRel extends Rel {
 }
 
 class StrRel extends Rel {
-    public StrRel(Token tok,Expr x1,Expr x2){
+    StrRel(Token tok, Expr x1, Expr x2){
         super(tok,x1,x2);
     }
     
@@ -200,7 +208,7 @@ class StrRel extends Rel {
 }
 
 class ObjectRel extends Rel {
-    public ObjectRel(Token tok,Expr x1,Expr x2){
+    ObjectRel(Token tok, Expr x1, Expr x2){
         super(tok,x1,x2);
         if(op.tag != Tag.EQ && op.tag != Tag.NE ){
             error("Operand `" + op + "' can't used between `" + x1.type + "' and `" + x2.type + "'");
@@ -224,50 +232,50 @@ class ObjectRel extends Rel {
 }
 
 public class RelFactory {
-    public static Expr getRel(Token tok,Expr x1,Expr x2){
+    public static Expr getRel(Token tok,Expr x1,Expr x2) {
         Expr r = null;
-        
-        if(x1 == Constant.Null){
-            if( !x2.type.isBuiltInType() ){
-                if(x1.type != x2.type){
-                    x1 = ConversionFactory.getConversion(x1,x2.type);
-                    return new ObjectRel(tok,x1,x2);
+
+        if (x1 == Constant.Null) {
+            if (!x2.type.isBuiltInType()) {
+                if (x1.type != x2.type) {
+                    x1 = ConversionFactory.getConversion(x1, x2.type);
+                    return new ObjectRel(tok, x1, x2);
                 }
             }
-        } else if( x2 == Constant.Null ){
-            if( !x1.type.isBuiltInType() ){
-                x2 = ConversionFactory.getConversion(x2,x1.type);
-                return new ObjectRel(tok,x1,x2);
+        } else if (x2 == Constant.Null) {
+            if (!x1.type.isBuiltInType()) {
+                x2 = ConversionFactory.getConversion(x2, x1.type);
+                return new ObjectRel(tok, x1, x2);
             }
         }
-        
-        if(x1.type instanceof Struct){
-            Token fname = ((Struct)(x1.type)).getOverloading(tok);
-            if(fname != null){
-                if(x2.type != x1.type){
-                    x2 = ConversionFactory.getConversion(x2,x1.type);
+
+        if (x1.type instanceof Struct) {
+            Token fname = ((Struct) (x1.type)).getOverloading(tok);
+            if (fname != null) {
+                if (x2.type != x1.type) {
+                    x2 = ConversionFactory.getConversion(x2, x1.type);
                 }
 
-                FunctionBasic f = ((Struct)(x1.type)).getNormalFunction(fname);
-                ArrayList<Expr> p = new ArrayList<Expr>();
-                if(f != null){
+                FunctionBasic f = ((Struct) (x1.type)).getNormalFunction(fname);
+                ArrayList<Expr> p = new ArrayList<>();
+                if (f != null) {
                     p.add(x1);
                     p.add(x2);
-                    return new FunctionInvoke(f,p);
+                    return new FunctionInvoke(f, p);
                 }
-                f = ((Struct)(x1.type)).getVirtualFunction(fname);
-                if(f != null){
+                f = ((Struct) (x1.type)).getVirtualFunction(fname);
+                if (f != null) {
                     p.add(x2);
-                    return new VirtualFunctionInvoke(x1,f,p);
+                    return new VirtualFunctionInvoke(x1, f, p);
                 }
             }
         }
-        if( x1.type instanceof Array || x1.type instanceof Struct ){
-            if(x1.type.equals(x2.type))
-                r = new ObjectRel(tok,x1,x2);
-        } else if( x1.type == Type.Str ){
-            if( x2.type == Type.Str ){
-                r = new StrRel(tok,x1,x2);
+        if (x1.type instanceof Array || x1.type instanceof Struct) {
+            if (x1.type.equals(x2.type))
+                r = new ObjectRel(tok, x1, x2);
+        } else if (x1.type == Type.Str) {
+            if (x2.type == Type.Str) {
+                r = new StrRel(tok, x1, x2);
             }
         } else {
             Type t = Type.max(x1.type,x2.type);

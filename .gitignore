@@ -2,3 +2,5 @@
 tmp~
 *test.java
 *.class
+.idea
+*.iml

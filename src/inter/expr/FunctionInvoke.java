@@ -1,19 +1,18 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
-import runtime.*;
 import inter.stmt.FunctionBasic;
-import inter.stmt.MemberFunction;
 import inter.stmt.InitialFunction;
+import inter.stmt.MemberFunction;
 import inter.stmt.ReturnResult;
+import runtime.RunStack;
+import runtime.VarTable;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class FunctionInvoke extends Expr {
-    static final boolean IS_DEBUG = false;
-    FunctionBasic        func;
-    final ArrayList<Expr>      para;
+    private static final boolean IS_DEBUG = false;
+    private FunctionBasic        func;
+    private final List<Expr> para;
 
     /*
      * NOTE:(fixed)
@@ -22,7 +21,7 @@ public class FunctionInvoke extends Expr {
      */
     //final Constant[]     args;
 
-    public FunctionInvoke(FunctionBasic f,ArrayList<Expr> p){
+    public FunctionInvoke(FunctionBasic f,List<Expr> p){
         super(f.name,f.type);
         func = f;
         para = p;
@@ -62,7 +61,7 @@ public class FunctionInvoke extends Expr {
     @Override
     public String toString(){
         int i = 0;
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if(func instanceof MemberFunction){
             sb.append(para.get(i++).toString());
             sb.append(".");

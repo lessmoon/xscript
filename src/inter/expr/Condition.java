@@ -1,12 +1,12 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.Token;
+import symbols.Type;
 
 public class Condition extends Expr {
-    Expr cond;
-    Expr iftrue;
-    Expr iffalse;
+    private Expr cond;
+    private Expr iftrue;
+    private Expr iffalse;
     
     public Condition(Token tok,Expr c,Expr t,Expr f) {
         super(tok,null);

@@ -1,25 +1,29 @@
 package lexer;
 
 
-import symbols.*;
-import runtime.Dictionary;
-
-import java.util.HashMap;
-import java.util.Stack;
-import java.io.*; 
-import java.math.BigInteger;
-import java.math.BigDecimal;
-
 import main.Main;
+import runtime.Dictionary;
+import symbols.Type;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 
 class Info {
     InputStreamReader in;
+
     int         peek;
     String      filename;
     int         line;
     String      path;
 
-    public Info(InputStreamReader i,int p,String f,int l,String pt){
+    Info(InputStreamReader i,int p,String f,int l,String pt){
         in = i;
         peek = p;
         filename = f;
@@ -31,17 +35,17 @@ class Info {
 public class Lexer implements Dictionary {
     public static int line = 1;
     public static String filename = "";
-    int peek = ' ';
-    Stack<Info> list = new Stack<Info>();
-    InputStreamReader in = null;
-    HashMap<String,Token> words = new HashMap<String,Token>();
+    private int peek = ' ';
+    private Stack<Info> list = new Stack<>();
+    private InputStreamReader in = null;
+    private Map<String,Token> words = new HashMap<>();
 
-    void reserve(Word w) {
+    private void reserve(Word w) {
         words.put(w.lexeme,w);
     }
 
     @Override
-    public Token getOrreserve(String name){
+    public Token getOrReserve(String name){
         Token s = words.get(name);
         if(s == null){
             Word tmp = new Word(name,Tag.ID);
@@ -95,7 +99,7 @@ public class Lexer implements Dictionary {
         reserve( Word.args);
     }
 
-    void save(String path){
+    private void save(String path){
         list.push(new Info(in,peek,filename,line,path));
     }
 
@@ -132,7 +136,7 @@ public class Lexer implements Dictionary {
      * empty,do nothing
      * Return false if the stack is empty,or true
      */
-    public boolean recover(){
+    private boolean recover(){
         if(list.empty()){
             return false;
         } else {
@@ -150,7 +154,7 @@ public class Lexer implements Dictionary {
         }
     }
     
-    void readch() throws IOException {
+    private void readch() throws IOException {
         
         int p = in.read();
         while(p < 0){
@@ -166,7 +170,7 @@ public class Lexer implements Dictionary {
         peek = p > 0?(char) p : p;
     }
 
-    boolean readch(char c) throws IOException {
+   private boolean readch(char c) throws IOException {
         readch();
         if(peek != c)
             return false;
@@ -193,7 +197,7 @@ public class Lexer implements Dictionary {
                         readch();
                     }while( peek != '/' );
                 } else if( peek == '/' ){
-                    while(!readch('\n'));
+                    while(!readch('\n')){}
                     line++;
                 } else if( peek == '=' ){
                     peek = ' ';
@@ -327,20 +331,21 @@ public class Lexer implements Dictionary {
         }
 
         if(Character.isLetter(peek)||peek == '_'){
-            StringBuffer b = new StringBuffer();
+            StringBuilder b = new StringBuilder();
             do{
                 b.append((char)peek);
                 readch();
             } while(Character.isLetterOrDigit(peek)||peek == '_');
             String s = b.toString();
             
-            /*add two built-in variable*/
-            if(s.equals("_line_")){/*line number*/
-                return new Num(line);
-            } else if(s.equals("_file_")){/*file name*/
-                return new Str(filename);
-            } else if(s.equals("_version_")){/*version*/
-                return new Num(Main.MAJOR_VERSION*100 + Main.MINOR_VERSION);
+            /*add three built-in variable*/
+            switch (s) {
+                case "_line_": /*line number*/
+                    return new Num(line);
+                case "_file_": /*file name*/
+                    return new Str(filename);
+                case "_version_": /*version*/
+                    return new Num(Main.MAJOR_VERSION * 100 + Main.MINOR_VERSION);
             }
             Word w = (Word)words.get(s);
             if(w != null)
@@ -351,7 +356,7 @@ public class Lexer implements Dictionary {
         }
 
         if(peek == '\"'){
-            StringBuffer b = new StringBuffer();
+            StringBuilder b = new StringBuilder();
             readch();
             while(peek != '\"'){
                 int c = peek;
@@ -432,7 +437,7 @@ public class Lexer implements Dictionary {
     }
 
     static public void main(String[] args) throws IOException {
-        Token t = null;
+        Token t;
         Lexer lex = new Lexer();
         do{
             t = lex.scan();

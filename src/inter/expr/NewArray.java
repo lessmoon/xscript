@@ -1,7 +1,9 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.Num;
+import lexer.Token;
+import symbols.Array;
+import symbols.Type;
 
 public class NewArray extends Op {
     public Expr size;

@@ -1,8 +1,8 @@
 package inter.stmt;
 
-import symbols.*;
 import inter.expr.Constant;
 import inter.expr.Expr;
+import symbols.Type;
 
 public class Do extends Stmt{
     Expr expr;

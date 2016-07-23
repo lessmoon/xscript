@@ -5,10 +5,10 @@ import lexer.Str;
 import inter.expr.Constant;
 import extension.Function;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class openPad extends Function {
-    public Constant run(ArrayList<Constant> paras){
+    public Constant run(List<Constant> paras){
         Constant w = paras.get(0);
         Constant h = paras.get(1);
         Constant name = paras.get(2);

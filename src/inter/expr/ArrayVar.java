@@ -1,12 +1,11 @@
 package inter.expr;
 
-import runtime.*;
 import lexer.*;
 import symbols.*;
 
 public class ArrayVar extends Var {
-    Expr loc;
-    Expr array;
+    private Expr loc;
+    private Expr array;
     public ArrayVar(Expr arr,Type t,Expr l){
         super(Word.array,t);
         loc = l;
@@ -37,8 +36,8 @@ public class ArrayVar extends Var {
         
         ArrayConst v = (ArrayConst)c;
         int l = ((Num)(loc.getValue()).op).value;
-        if(l >= v.size || l < 0){
-            error("Index " + l + " out of range( 0 ~ " + (v.size - 1) + " )");
+        if(l >= v.getSize() || l < 0){
+            error("Index " + l + " out of range( 0 ~ " + (v.getSize() - 1) + " )");
         }
         return v.getElement(l);
     }
@@ -51,8 +50,8 @@ public class ArrayVar extends Var {
         }
         int l = ((Num)(loc.getValue()).op).value;
         ArrayConst var = (ArrayConst)c;
-        if(l >= var.size || l < 0){
-            error("Index " + l + " out of range( 0 ~ " + (var.size - 1) + " )");
+        if(l >= var.getSize() || l < 0){
+            error("Index " + l + " out of range( 0 ~ " + (var.getSize() - 1) + " )");
         }
         var.setElement(l,v);
         return  v;

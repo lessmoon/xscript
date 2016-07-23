@@ -4,10 +4,10 @@ import lexer.Num;
 import inter.expr.Constant;
 import extension.Function;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class sleep extends Function {
-    public Constant run(ArrayList<Constant> paras){
+    public Constant run(List<Constant> paras){
         Constant duration = paras.get(0);    
         int d = ((Num)(duration.op)).value;
         try {

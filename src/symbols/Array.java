@@ -1,7 +1,7 @@
 package symbols;
 
-import lexer.*;
 import inter.expr.Constant;
+import lexer.Tag;
 
 public class Array extends Type {
     public final Type of;

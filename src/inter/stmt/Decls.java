@@ -1,18 +1,16 @@
 package inter.stmt;
 
-import lexer.*;
-import symbols.*;
-import runtime.*;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Decls extends Stmt {
-    ArrayList<Decl> decls = new ArrayList<Decl>();
+   private List<Decl> decls;
     
     public Decls(){
+        decls = new ArrayList<>();
     }
     
-    public ArrayList<Decl> getDecls(){
+    public List<Decl> getDecls(){
         return decls;
     }
 
@@ -26,21 +24,18 @@ public class Decls extends Stmt {
 
     @Override
     public void run(){
-        for(Decl d : decls){
-            d.run();
-        }
+        decls.forEach(Decl::run);
     }
+
     @Override
     public Stmt optimize(){
-        for(Decl d : decls){
-            d.optimize();
-        }
+        decls.forEach(Decl::optimize);
         return this;
     }
     
     @Override
     public String toString(){
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for(Decl d : decls){
             sb.append(d.toString());
         } 

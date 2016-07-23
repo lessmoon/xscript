@@ -1,31 +1,32 @@
 package inter.stmt;
 
-import lexer.*;
-import symbols.*;
+import lexer.Token;
 import inter.util.Para;
+import symbols.Struct;
+import symbols.Type;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class MemberFunction extends Function {
-    Struct stct;
-    public MemberFunction(Token n,Type t,ArrayList<Para> p,Struct sn){
+    private Struct struct;
+    public MemberFunction(Token n, Type t, List<Para> p, Struct sn){
         super(n,t,p);
-        stct = sn;
+        struct = sn;
     }
 
-    public MemberFunction(Token n,Type t,Stmt s,ArrayList<Para> p,Struct sn){
+    public MemberFunction(Token n,Type t,Stmt s,List<Para> p,Struct sn){
         super(n,t,s,p);
-        stct = sn;
+        struct = sn;
     }
 
     public Struct getStruct(){
-        return stct;
+        return struct;
     }
     
     @Override
     public String toString(){
-        StringBuffer sb = new StringBuffer(type.toString() + " " );
-        sb.append( stct.lexeme + "." + name + "(");
+        StringBuilder sb = new StringBuilder(type.toString() + " " );
+        sb.append(struct.lexeme).append(".").append(name).append("(");
         int i = 1;
         if(i < paralist.size()){
             sb.append(paralist.get(i++).toString());

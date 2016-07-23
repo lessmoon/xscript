@@ -3,7 +3,7 @@ package inter.stmt;
 import inter.expr.Expr;
 
 public class ExprStmt extends Stmt {
-    Expr e;
+    private Expr e;
     public ExprStmt( Expr e ){
         this.e = e;
     }

@@ -1,11 +1,11 @@
 package inter.stmt;
 
-import runtime.*;
+import runtime.VarTable;
 
 public class Continue extends Stmt {
     static public  final Throwable ContinueCause = new Throwable();
     Stmt stmt;
-    public final int sizeOfStack;
+    private final int sizeOfStack;
     public Continue(int s){
         if( Stmt.Enclosing == Stmt.Null )
             error("unenclosed continue");

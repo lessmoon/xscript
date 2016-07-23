@@ -1,8 +1,8 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.Token;
 import inter.util.Node;
+import symbols.Type;
 
 public abstract class Expr extends Node {
     public Token op;

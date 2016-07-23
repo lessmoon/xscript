@@ -1,15 +1,16 @@
 package symbols;
 
-import lexer.*;
 import inter.stmt.FunctionBasic;
+import lexer.Token;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
 
 public class FuncTable {
-    public HashMap<Token,FunctionBasic> table = new HashMap<Token,FunctionBasic>(); 
+    public HashMap<Token,FunctionBasic> table;
 
     public FuncTable(){
-        
+        table = new HashMap<>();
     }
 
     public boolean addFunc(Token id,FunctionBasic f){

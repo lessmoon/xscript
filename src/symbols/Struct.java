@@ -1,41 +1,41 @@
 package symbols;
 
-import lexer.*;
 import inter.expr.Constant;
 import inter.stmt.FunctionBasic;
 import inter.stmt.MemberFunction;
+import lexer.Tag;
+import lexer.Token;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
+import java.util.Map;
 
 public class Struct extends Type {
-    public final HashMap<Token,StructVariable> table = new HashMap<Token,StructVariable>();
+    public final Map<Token,StructVariable> table = new HashMap<>();
     /*store normal functions*/
-    final HashMap<Token,FunctionBasic> funcs = new HashMap<Token,FunctionBasic>();
+    private final HashMap<Token,FunctionBasic> funcs = new HashMap<>();
     /*<k,v> => <operand,func_name>*/
-    final Token name;
-    final HashMap<Token,Token> overload_funcs;
+    private final Token name;
+    private final Map<Token,Token> overloadFuncs;
     /*store virtual functions*/
-    final HashMap<Token,Position> vfunc_map;
-    final VirtualTable vtable;
-    FunctionBasic initfunc = null;
+    private final Map<Token,Position> vfuncMap;
+    private final VirtualTable vtable;
+    private FunctionBasic initfunc = null;
 
-    boolean hasDefinedVirtualFunction = false;
-    final Struct father;
-    final int    father_size;/*avoid replicated calculating*/
-    boolean has_used = false;
-    int  first_used_line = -1;
-    String first_used_file = "";
+    private boolean hasDefinedVirtualFunction = false;
+    private final Struct father;
+    private final int fatherSize;/*avoid replicated calculating*/
+    private boolean hasUsed = false;
+    private int firstUsedLine = -1;
+    private String firstUsedFile = "";
 
     public Struct(Token name){
         super(name.toString(),Tag.BASIC,Constant.Null);
         this.name = name;
         father = null;
         vtable = new VirtualTable();
-        vfunc_map = new HashMap<Token,Position>();
-        overload_funcs = new HashMap<Token,Token>();
-        father_size = 0;
+        vfuncMap = new HashMap<>();
+        overloadFuncs = new HashMap<>();
+        fatherSize = 0;
     }
 
     public Struct(Token name,Struct father){
@@ -43,9 +43,9 @@ public class Struct extends Type {
         this.name = name;
         this.father = father;
         vtable = (VirtualTable)father.getVirtualTable().clone();
-        vfunc_map = new HashMap<Token,Position>(father.vfunc_map);
-        overload_funcs = new HashMap<Token,Token>(father.overload_funcs);
-        father_size = father.getVariableNumber();
+        vfuncMap = new HashMap<>(father.vfuncMap);
+        overloadFuncs = new HashMap<>(father.overloadFuncs);
+        fatherSize = father.getVariableNumber();
     }
 
     public boolean isCompleted(){
@@ -92,7 +92,7 @@ public class Struct extends Type {
      * if it doesn't exist return null
      */
     public Position getVirtualFunctionPosition(Token vfname){
-        return vfunc_map.get(vfname);
+        return vfuncMap.get(vfname);
     }
 
     /*
@@ -131,11 +131,11 @@ public class Struct extends Type {
         }
 
         vtable.addVirtualFunction(mf);
-        vfunc_map.put(name,new Position(vtable.getGenerations() - 1,vtable.getTopSize() - 1));
+        vfuncMap.put(name,new Position(vtable.getGenerations() - 1,vtable.getTopSize() - 1));
     }
 
     public FunctionBasic getVirtualFunction(Token name){
-        Position p = vfunc_map.get(name);
+        Position p = vfuncMap.get(name);
         return p==null?null:vtable.getVirtualFunction(p.generation,p.index);
     }
 
@@ -144,7 +144,7 @@ public class Struct extends Type {
      * if it doesn't existed throw error
      */
     public void overrideVirtualFunction(Token name,FunctionBasic mf){
-        Position p = vfunc_map.get(name);
+        Position p = vfuncMap.get(name);
         /*it is not a virtual function of base */
         if(p == null || p.generation > vtable.getGenerations() - 1){
             mf.error("override error:virtual function definition `"  + this.lexeme + "." + name + "' not found");
@@ -189,7 +189,7 @@ public class Struct extends Type {
     /*
      * get base function
      */
-    public FunctionBasic getFunction(Token name){
+    private FunctionBasic getFunction(Token name){
         FunctionBasic f = getVirtualFunction(name);
         if(f == null){
             f = getNormalFunction(name);
@@ -277,21 +277,21 @@ public class Struct extends Type {
             f.error("Can't overload operand `" + op + "'");
             break;
         }
-        return overload_funcs.put(op,f.name) == null;
+        return overloadFuncs.put(op,f.name) == null;
     }
 
     /*
      * Get operand overloading by operand
      */
     public Token getOverloading(Token op){
-        return overload_funcs.get(op);
+        return overloadFuncs.get(op);
     }
 
     /*
      * Just add normal function
      */
     public FunctionBasic addNormalFunction(Token fname,FunctionBasic f){
-        Position p = vfunc_map.get(fname);
+        Position p = vfuncMap.get(fname);
         FunctionBasic f2;
         f2 = getFunction(fname);
         if(f2 != null){
@@ -316,27 +316,27 @@ public class Struct extends Type {
     }
 
     public int getVariableNumber(){
-        return father_size + table.size();
+        return fatherSize + table.size();
     }
 
     public void setUsed(int ful,String fuf){
-        if(!has_used){
-            has_used = true;
-            first_used_file = fuf;
-            first_used_line = ful;
+        if(!hasUsed){
+            hasUsed = true;
+            firstUsedFile = fuf;
+            firstUsedLine = ful;
         }
     }
     
     public boolean used(){
-        return has_used;
+        return hasUsed;
     }
     
     public int getFirstUsedLine(){
-        return first_used_line;
+        return firstUsedLine;
     }
     
     public String getFirstUsedFile(){
-        return first_used_file;
+        return firstUsedFile;
     }
     
     @Override

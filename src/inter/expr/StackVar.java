@@ -1,8 +1,8 @@
 package inter.expr;
 
-import runtime.*;
-import lexer.*;
-import symbols.*;
+import lexer.Token;
+import runtime.VarTable;
+import symbols.Type;
 
 public class StackVar extends Var {
     final int stacklevel;

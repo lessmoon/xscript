@@ -1,20 +1,22 @@
 package inter.stmt;
 
-import lexer.*;
-import symbols.*;
-import inter.expr.*;
+import inter.expr.Constant;
+import inter.expr.ConversionFactory;
+import inter.expr.Expr;
+import lexer.Char;
+import lexer.Num;
+import lexer.Str;
+import symbols.Type;
 
-import java.util.Map.Entry;
-import java.util.Iterator;
+import java.util.Map;
 import java.util.HashMap;
 
 public abstract class Switch extends Stmt {
     Expr condition;
     boolean isdefaultset = false;
-    Stmt defaultStmt = Stmt.Null;
-    Seq stmts = new Seq(Stmt.Null,Stmt.Null);
-    Seq head  = stmts;
-    protected int indexOfDefault = 0;
+    private Stmt defaultStmt = Stmt.Null;
+    private Seq stmts = new Seq(Stmt.Null,Stmt.Null);
+    int indexOfDefault = 0;
 
     public Switch(Expr c){
         condition = c;
@@ -75,9 +77,9 @@ public abstract class Switch extends Stmt {
 }
 
 class IntSwitch extends Switch {
-        HashMap<Integer,Stmt> map = new HashMap<Integer,Stmt>();
+        private HashMap<Integer,Stmt> map = new HashMap<>();
 
-        public IntSwitch(Expr e){
+        IntSwitch(Expr e){
             super(e);
         }
 
@@ -114,9 +116,9 @@ class IntSwitch extends Switch {
 }
 
 class CharSwitch extends Switch {
-        HashMap<Character,Stmt> map = new HashMap<Character,Stmt>();
+        private Map<Character, Stmt> map = new HashMap<>();
 
-        public CharSwitch(Expr e){
+        CharSwitch(Expr e){
             super(e);
         }
         
@@ -162,9 +164,9 @@ class CharSwitch extends Switch {
 }
 
 class StrSwitch extends Switch {
-        HashMap<String,Stmt> map = new HashMap<String,Stmt>();
+        private Map<String,Stmt> map = new HashMap<>();
         
-        public StrSwitch(Expr e){
+        StrSwitch(Expr e){
             super(e);
         }
         

@@ -7,9 +7,10 @@ import inter.stmt.FunctionBasic;
 import java.math.BigInteger;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 class IntArith extends Arith {
-    public IntArith(Token tok,Expr x1,Expr x2){
+    IntArith(Token tok, Expr x1, Expr x2){
         super(tok,x1,x2);
     }
 
@@ -59,7 +60,7 @@ class IntArith extends Arith {
 }
 
 class BigIntArith extends Arith{
-    public BigIntArith(Token tok,Expr x1,Expr x2){
+    BigIntArith(Token tok, Expr x1, Expr x2){
         super(tok,x1,x2);
     }
 
@@ -108,7 +109,7 @@ class BigIntArith extends Arith{
 }
 
 class RealArith extends Arith {
-    public RealArith(Token tok,Expr x1,Expr x2){
+    RealArith(Token tok, Expr x1, Expr x2){
         super(tok,x1,x2);
     }
 
@@ -152,11 +153,11 @@ class RealArith extends Arith {
 class BigRealArith extends Arith{
 	private static int DIVIDE_SCALE = 100;
 
-	public static void setDivideScale(int scale){
+	static void setDivideScale(int scale){
 		DIVIDE_SCALE = scale;
 	}
 	
-    public BigRealArith(Token tok,Expr x1,Expr x2){
+    BigRealArith(Token tok, Expr x1, Expr x2){
         super(tok,x1,x2);
     }
 
@@ -197,7 +198,7 @@ class BigRealArith extends Arith{
 }
 
 class CharArith extends Arith {  
-    public CharArith(Token op,Expr x1,Expr x2){
+    CharArith(Token op, Expr x1, Expr x2){
         super(op,x1,x2);
     }
 
@@ -247,7 +248,7 @@ class CharArith extends Arith {
 }
 
 class StringCat extends Arith {  
-    public StringCat(Token op,Expr x1,Expr x2){
+    StringCat(Token op, Expr x1, Expr x2){
         super(op,x1,x2);
         if(expr1.type != Type.Str || expr2.type != Type.Str)
             error("String can't cat");
@@ -297,23 +298,22 @@ public class ArithFactory {
 	}
 	
     public static Expr getArith(Token tok,Expr e1,Expr e2){
-
         if(e1.type instanceof Struct){
-            Token fname = ((Struct)(e1.type)).getOverloading(tok);
-            if(fname != null){
+            Token fName = ((Struct)(e1.type)).getOverloading(tok);
+            if(fName != null){
                 if(e2.type != e1.type){
                     e2 = ConversionFactory.getConversion(e2,e1.type);
                 }
                 
                 if(e2 != null){
-                    ArrayList<Expr> p = new ArrayList<Expr>();
-                    FunctionBasic f = ((Struct)(e1.type)).getNormalFunction(fname);
+                    List<Expr> p = new ArrayList<>();
+                    FunctionBasic f = ((Struct)(e1.type)).getNormalFunction(fName);
                     if(f != null){
                         p.add(e1);
                         p.add(e2);
                         return new FunctionInvoke(f,p);
                     }
-                    f = ((Struct)(e1.type)).getVirtualFunction(fname);
+                    f = ((Struct)(e1.type)).getVirtualFunction(fName);
                     if(f != null){
                         p.add(e2);
                         return new VirtualFunctionInvoke(e1,f,p);

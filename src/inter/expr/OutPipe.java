@@ -1,7 +1,7 @@
 package inter.expr;
 
 public class OutPipe extends Expr{
-    InPipe inpipe;
+    private InPipe inpipe;
 
     public OutPipe(InPipe inpipe){
         super(inpipe.op,inpipe.type);

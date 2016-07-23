@@ -1,7 +1,11 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.BigNum;
+import lexer.Char;
+import lexer.Num;
+import lexer.Tag;
+import lexer.Token;
+import symbols.Type;
 
 import java.math.BigInteger;
 
@@ -41,7 +45,7 @@ class IntPostUnary extends Unary {
 }
 
 class BigIntPostUnary extends IntUnary {
-    public BigIntPostUnary(Token tok,Expr x){
+    BigIntPostUnary(Token tok, Expr x){
         super(tok,x);
     }
 
@@ -63,7 +67,7 @@ class BigIntPostUnary extends IntUnary {
 }
 
 class CharPostUnary extends Unary {
-    public CharPostUnary(Token tok,Expr x){
+    CharPostUnary(Token tok, Expr x){
         super(tok,x);
         check();
     }

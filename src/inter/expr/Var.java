@@ -1,7 +1,7 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.Token;
+import symbols.Type;
 
 public abstract class Var extends Expr {
     public Var(Token w,Type t){

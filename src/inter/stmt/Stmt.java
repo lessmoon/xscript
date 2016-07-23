@@ -1,8 +1,9 @@
 package inter.stmt;
 
-import runtime.*;
 import inter.util.Node;
 import inter.expr.Constant;
+import runtime.VarTable;
+
 public class Stmt extends Node{
     public Stmt()
     {}

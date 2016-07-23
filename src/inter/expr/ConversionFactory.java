@@ -146,7 +146,7 @@ class RealIntConversion extends Conversion{
 }
 
 class CharIntConversion extends Conversion{
-    public CharIntConversion(Expr e){
+    CharIntConversion(Expr e){
         super(e,Type.Int,Type.Int);
     }
 
@@ -157,7 +157,7 @@ class CharIntConversion extends Conversion{
 }
 
 class IntCharConversion extends Conversion{
-    public IntCharConversion(Expr e){
+    IntCharConversion(Expr e){
         super(e,Type.Char,Type.Char);
     }
 
@@ -302,33 +302,33 @@ class OtherConversionFactory extends Factory {
 }
 
 class ConversionFactoryFactory {
-    static final BigIntConversionFactory bintf = new BigIntConversionFactory();
-    static final IntConversionFactory intf = new IntConversionFactory();
-    static final BigRealConversionFactory brealf = new BigRealConversionFactory();
-    static final RealConversionFactory realf = new RealConversionFactory();
-    static final CharConversionFactory charf = new CharConversionFactory();
-    static final StrConversionFactory strf = new StrConversionFactory();
-    static final BoolConversionFactory boolf = new BoolConversionFactory();
-    static final OtherConversionFactory otherf = new OtherConversionFactory();
+    private static final BigIntConversionFactory bigIntFactory = new BigIntConversionFactory();
+    private static final IntConversionFactory intFactory = new IntConversionFactory();
+    private static final BigRealConversionFactory bigRealFactory = new BigRealConversionFactory();
+    private static final RealConversionFactory realFactory = new RealConversionFactory();
+    private static final CharConversionFactory charFactory = new CharConversionFactory();
+    private static final StrConversionFactory strFactory = new StrConversionFactory();
+    private static final BoolConversionFactory boolFactory = new BoolConversionFactory();
+    private static final OtherConversionFactory otherFactory = new OtherConversionFactory();
     
     static Factory getConversionFactory(Expr src){
         Type t = src.type;
         if(t == Type.Int)
-            return intf;
+            return intFactory;
         else if(t == Type.Char)
-            return charf;
+            return charFactory;
         else if(t == Type.Real)
-            return realf;
+            return realFactory;
         else if(t == Type.Str)
-            return strf;
+            return strFactory;
         else if(t == Type.Bool)
-            return boolf;
+            return boolFactory;
         else if(t == Type.BigInt)
-            return bintf;
+            return bigIntFactory;
         else if(t == Type.BigReal)
-            return brealf;
+            return bigRealFactory;
         else
-            return otherf;
+            return otherFactory;
     }
 }
 
@@ -355,7 +355,7 @@ class UpperCastConversion extends Conversion{
 }
 
 class DownCastConversion extends Conversion {
-    final Struct tar;
+    private final Struct tar;
 
     DownCastConversion(Expr e,Struct tar){
         super(e,tar,tar);
@@ -400,7 +400,6 @@ class NullConversion extends Conversion {
 
 public class ConversionFactory {
     static public Expr getAutoDownCastConversion(Expr src,Type t){
-       Expr c = null;
        if(src.type instanceof Struct){
             /*
              * inherited struct judge
@@ -436,7 +435,7 @@ public class ConversionFactory {
 
             Token fname = ((Struct)(src.type)).getOverloading(t);
             if(fname != null){
-                ArrayList<Expr> p = new ArrayList<Expr>();
+                ArrayList<Expr> p = new ArrayList<>();
                 FunctionBasic f = ((Struct)(src.type)).getNormalFunction(fname);
                 if(f != null){
                     p.add(src);

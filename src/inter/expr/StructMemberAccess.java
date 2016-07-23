@@ -1,13 +1,14 @@
 package inter.expr;
 
-import runtime.*;
-import lexer.*;
-import symbols.*;
+import lexer.Token;
+import lexer.Word;
+import symbols.Struct;
+import symbols.StructVariable;
 
 public class StructMemberAccess extends Var {
-            Expr            value;
-    final   Token           member;
-    final   int             index;
+    protected Expr            value;
+    private final   Token           member;
+    private final   int             index;
     
     public StructMemberAccess(Expr v,Token m){
         super(Word.struct,null);

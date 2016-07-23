@@ -5,6 +5,53 @@ import  "math/Ratio.xs";
 import  "parser/parser.xs";
 import  "container/darray.xs";
 
+native<extension.system>{
+    "sleep":void sleep(int duration);
+}
+
+
+struct Runnable {
+    def virtual void run();
+}
+
+native<extension.predefined>{
+    "SimpleThread":struct Thread{
+        def this(Runnable);
+        def void start();
+    };
+}
+
+bool isOdd = true;
+
+struct PrintNumber : Runnable {
+    int index;
+
+    def this(int beg) {
+        this.index = beg;
+    }
+    
+    def override void run(){
+        
+        for(int i = this.index;i<100;i+=2){
+            while((i%2==0)==isOdd){}
+            isOdd=!isOdd;
+            println(i);
+        }
+    }
+}
+
+{
+    Thread t1 = new Thread(new PrintNumber(2));
+    Thread t2 = new Thread(new PrintNumber(1));
+    t1.start();
+    sleep(1);
+    t2.start();
+    sleep(60);
+    
+    
+}
+
+
 native<extension.predefined>{
     "TestStruct":struct NTVSTRT{
         string id;
@@ -50,9 +97,6 @@ native<extension.ui>{
     int clearPad();
 }
 
-native<extension.system>{
-    "sleep":void sleep(int duration);
-}
 
 native<extension.math>{
     real sin(real theta);

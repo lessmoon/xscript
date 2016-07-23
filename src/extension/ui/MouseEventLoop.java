@@ -1,19 +1,19 @@
 package extension.ui;
 
 import lexer.Token;
-import lexer.Num;
 import inter.expr.Constant;
 import inter.expr.StructConst;
 import extension.Function;
 import runtime.Dictionary;
+import runtime.TypeTable;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class MouseEventLoop extends Function {
     public static Token fname = null;
     
     @Override
-    public Constant run(ArrayList<Constant> paras){
+    public Constant run(List<Constant> paras){
         Constant c = paras.get(0);
         if(c == Constant.Null){
             return Constant.False;
@@ -23,7 +23,7 @@ public class MouseEventLoop extends Function {
     }
 
     @Override
-    public void init(Dictionary dic){
-        fname = dic.getOrreserve("callback");
+    public void init(Dictionary dic, TypeTable typeTable){
+        fname = dic.getOrReserve("callback");
     }
 }

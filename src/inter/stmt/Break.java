@@ -1,11 +1,11 @@
 package inter.stmt;
 
-import runtime.*;
+import runtime.VarTable;
 
 public class Break extends Stmt {
     static public  final Throwable BreakCause = new Throwable();
     Stmt stmt;
-    public final int sizeOfStack;
+    private final int sizeOfStack;
     public Break(int s){
         if( Stmt.BreakEnclosing == Stmt.Null )
             error("unenclosed break");

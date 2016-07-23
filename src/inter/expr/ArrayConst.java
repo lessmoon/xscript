@@ -1,13 +1,11 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
-
-import java.util.ArrayList;
+import lexer.Word;
+import symbols.Array;
 
 public class ArrayConst extends Constant {
     public  final int size;
-    final Constant[] arr;
+    private final Constant[] arr;
 
     public ArrayConst(Array t,int sz){
         super(Word.array,t);
@@ -48,9 +46,9 @@ public class ArrayConst extends Constant {
 
     @Override
     public String toString(){
-        StringBuffer sb = new StringBuffer("[");
+        StringBuilder sb = new StringBuilder("[");
         for(Constant c : arr){
-            sb.append(" " + c);
+            sb.append(" ").append(c);
         }
         sb.append(" ]");
         return sb.toString();

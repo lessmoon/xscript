@@ -1,11 +1,11 @@
 package inter.util;
 
-import lexer.*;
+import lexer.Lexer;
 
 public class Node {
     public final int     lexline;
     public final String  filename;
-    public static boolean enableWarning = false;
+    private static boolean enableWarning = false;
     public static void setEnableWarning(boolean t){
         enableWarning = t;
     }

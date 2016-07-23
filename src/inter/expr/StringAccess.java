@@ -1,11 +1,13 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.Num;
+import lexer.Str;
+import lexer.Word;
+import symbols.Type;
 
 public class StringAccess extends Expr {
-    Expr array;
-    Expr index;
+    private Expr array;
+    private Expr index;
 
     public StringAccess(Expr a,Expr i){
         super(Word.array,Type.Char);

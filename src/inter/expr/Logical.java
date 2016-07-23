@@ -1,10 +1,11 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.Token;
+import symbols.Type;
 
 public abstract class Logical extends Expr {
-    public Expr expr1,expr2;
+    Expr expr1;
+    Expr expr2;
     Logical(Token tok,Expr x1,Expr x2){
         super(tok,null);
         expr1 = x1;

@@ -1,15 +1,14 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.Token;
 
 /*
  * calculate a first
  * (a,b) return a
  */
 public class SeqExpr extends Expr {
-    Expr left;
-    Expr right;
+    private Expr left;
+    private Expr right;
 
     public SeqExpr(Token tok,Expr left,Expr right){
         super(tok,left.type);

@@ -1,14 +1,13 @@
 package inter.stmt;
 
-import symbols.*;
-import runtime.*;
-import inter.expr.Constant;
-import inter.expr.Expr;
 import inter.expr.ConversionFactory;
+import inter.expr.Expr;
+import runtime.VarTable;
+import symbols.Type;
 
 public class Return extends Stmt {
-    public Expr expr;
-    final int sizeOfStack;
+    protected Expr expr;
+    private final int sizeOfStack;
     public Return(Expr e,Type t,int s){
         expr = e;
         check(t);
@@ -16,10 +15,7 @@ public class Return extends Stmt {
     }
 
     public void check(Type t){
-
-        if(t.equals(expr.type)){
-            return;
-        } else {
+        if(!t.equals(expr.type)) {
             expr = ConversionFactory.getConversion(expr,t);
         }
     }
