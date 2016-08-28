@@ -7,13 +7,13 @@ import extension.Function;
 import java.util.List;
 
 public class sleep extends Function {
-    public Constant run(List<Constant> paras){
+    public Constant run(List<Constant> paras) {
         Constant duration = paras.get(0);    
         int d = ((Num)(duration.op)).value;
         try {
             Thread.sleep(d);
         } catch (InterruptedException e) {
-            e.printStackTrace(); 
+            throw new RuntimeException(e);
         }
         return null;
     }

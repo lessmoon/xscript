@@ -62,6 +62,6 @@ public class Set extends Expr {
     
     @Override
     public String toString(){
-        return this.getClass().getName() + "(" + id.toString() + op + expr +")";
+        return this.getClass().getSimpleName() + "(" + id.toString() + op + expr +")";
     }
 }

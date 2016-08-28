@@ -1,7 +1,4 @@
-struct Content{
-	@string
-	def virtual string toString();
-}
+import"content.xs";
 
 struct DynamicArray {
 	int capcity;

@@ -4,13 +4,14 @@ import lexer.Token;
 import inter.util.Para;
 import symbols.Type;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class FunctionBasic extends Stmt {
     public Type  type;
     public Token name;
     public List<Para> paralist;
-    private boolean hasused = false;
+    private boolean used = false;
     
     public FunctionBasic(Token name,Type t,List<Para> p){
         init(name,t,p);    
@@ -19,7 +20,7 @@ public abstract class FunctionBasic extends Stmt {
     public void init(Token n,Type t,List<Para> p){
         name = n;
         type = t;
-        paralist = p;
+        paralist = new ArrayList<>(p);
     }
 
     public Para getParaInfo(int i){
@@ -33,10 +34,10 @@ public abstract class FunctionBasic extends Stmt {
     public abstract void run();
     public abstract boolean isCompleted();
     public boolean used(){
-        return hasused;
+        return used;
     }
     public void setUsed(){
-        hasused = true;
+        used = true;
     }
     
     @Override
@@ -55,5 +56,15 @@ public abstract class FunctionBasic extends Stmt {
         return sb.toString();
     }
 
+    public void setType(Type type) {
+        this.type = type;
+    }
 
+    public void setName(Token name) {
+        this.name = name;
+    }
+
+    public void setParalist(List<Para> paralist) {
+        this.paralist = paralist;
+    }
 }

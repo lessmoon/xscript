@@ -16,7 +16,13 @@ public class ExFunction extends FunctionBasic {
 
     @Override
     public void run(){
-        throw new ReturnResult(func.run(VarTable.getTop()));
+        try {
+            throw new ReturnResult(func.run(VarTable.getTop()));
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
     
     @Override

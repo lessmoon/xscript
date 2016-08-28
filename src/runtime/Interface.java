@@ -29,7 +29,7 @@ public class Interface{
         return result;        
     }
     
-    static public Constant invokeVirualFunctionOfStruct(StructConst c,Position pos,List<Constant> para){
+    static public Constant invokeVirtualFunctionOfStruct(StructConst c, Position pos, List<Constant> para){
         VirtualTable vtable = c.getVirtualTable();
         FunctionBasic f = vtable.getVirtualFunction(pos);
         Constant result =  f.type.getInitialValue();

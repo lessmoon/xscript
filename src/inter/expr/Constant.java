@@ -1,16 +1,11 @@
 package inter.expr;
 
-import lexer.BigFloat;
-import lexer.BigNum;
-import lexer.Char;
-import lexer.Num;
-import lexer.Str;
-import lexer.Token;
-import lexer.Word;
+import lexer.*;
+import lexer.Float;
 import symbols.Type;
 
-import java.math.BigInteger;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public class Constant extends Expr{
     public Constant(Token tok,Type p){
@@ -46,6 +41,10 @@ public class Constant extends Expr{
         return this;
     }
 
+    public static Constant valueOf(boolean b){
+        return b?True:False;
+    }
+
     @Override
     boolean isChangeable(){
         return false;
@@ -57,7 +56,34 @@ public class Constant extends Expr{
 
     public static final Constant
         Null = new Constant(Word.Null,Type.Null);
-        
+
+    /**
+     *  cast
+     * @param t
+     * @param <T>
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public<T> T valueAs(Class<T> t){
+        if(t == Integer.class){
+            return (T)Integer.valueOf(((Num)op).value);
+        } else if(t == String.class){
+            return (T)((Str)op).value;
+        } else if(t == java.lang.Float.class ){
+            return (T) java.lang.Float.valueOf(((Float)op).value);
+        } else if(t == Double.class) {
+            return (T) java.lang.Double.valueOf(((Float)op).value);
+        } else if(t == BigInteger.class){
+            return (T) ((BigNum)op).value;
+        } else if(t == BigDecimal.class){
+            return (T) ((BigFloat)op).value;
+        } else if(t == Character.class){
+            return (T) Character.valueOf(((Char)op).value);
+        } else {
+            throw new ClassCastException("cannot cast " + op.getClass() + " => " + t);
+        }
+    }
+
     @Override
     public String toString(){
         return op.toString();

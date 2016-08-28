@@ -51,8 +51,12 @@ public class Stmt extends Node{
         */
     };
     
-    protected static void ret(Constant c){
+    public static void ret(Constant c){
         throw new ReturnResult(c);
+    }
+
+    public static void ret(boolean b){
+        ret(b?Constant.False:Constant.True);
     }
 
     @Override

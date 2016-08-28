@@ -7,11 +7,85 @@ import  "container/darray.xs";
 import  "container/hashmap.xs";
 import  "container/list.xs";
 
+native<extension.ui>{
+    "PaintPadX":struct PaintPad{
+        def this(string name,int width,int height);
+    };
+}
+
+struct baseA{
+    int id;
+    
+    def void init(int id){
+        this.id = id;
+    }
+    
+    @string
+    def virtual string who(){
+        return ("baseA:" + this.id);
+    }
+}
+
+struct baseB:baseA{
+    def this(int i){
+        super.init(i);
+    }
+    
+    def override string who(){
+        return "baseB:" + super.who();
+    }
+}
+
+struct deriveC:baseB{
+    def this(int i){
+        super.init(i);
+    }
+
+    def override string who(){
+        return "baseC:" + super.who();
+    }
+}
+
+{
+    baseA x = new deriveC(1);
+    
+    println(x);
+}
+
+
+struct MyPaintPad:PaintPad{
+    int lastx,lasty;
+
+    def this(string name,int width,int height){
+        super(name,width,height);
+    }
+
+    def override void onMouseClick(int code,int x,int y){
+         println("(" + x +","+ y + ")");
+
+         if(code == 1){
+            this.addPoint(x,y);
+         } else {
+            this.addLine(x,y,this.lastx,this.lasty);
+         }
+         this.lastx = x;
+         this.lasty = y;
+         this.redraw();
+    }
+
+    def override void onClose(){
+        println("closed");
+        this.close();
+    }
+
+    def override void onClick(int code){
+        println(code);
+    }
+}
 
 native<extension.system>{
     "sleep":void sleep(int duration);
 }
-
 
 struct Runnable {
     def virtual void run();
@@ -20,38 +94,275 @@ struct Runnable {
 native<extension.predefined>{
     "SimpleThread":struct Thread{
         def this(Runnable);
-        def void start();
+        def bool start();
+    };
+
+    "MutexLock":struct MutexLock{
+        def this();
+        def bool tryLock();
+        def bool wait();
+        def bool release();
     };
 }
 
-bool isOdd = true;
+struct Condition{
+    def virtual bool isTrue();
+}
 
-struct PrintNumber : Runnable {
-    int index;
 
-    def this(int beg) {
-        this.index = beg;
+
+struct Schedule : Runnable{
+    int internal;
+    Condition cond;
+    Runnable run; 
+    
+    def this(int internal,Condition cond,Runnable run){
+        this.internal = internal;
+        this.cond     = cond;
+        this.run      = run;
     }
     
     def override void run(){
-        
-        for(int i = this.index;i<100;i+=2){
-            while((i%2==0)==isOdd){}
-            isOdd=!isOdd;
-            println(i);
+        while(this.cond.isTrue()){
+            sleep(this.internal);
+            this.run.run();
         }
     }
 }
 
+struct RepeatSchedule : Condition{
+    def override bool isTrue(){
+        return true;
+    }
+}
+
+struct Timer2 {
+    Thread thread;
+    
+    def this(Runnable run,int internal){
+        this.thread = new Thread(new Schedule(internal,new RepeatSchedule,run));
+    }
+    
+    def void start(){
+        this.thread.start();
+    }
+    
+    def void stop(){
+        this.thread.interrupt();
+    }
+}
+
+struct PrintCount : Runnable{
+    int i;
+    def this(){
+        this.i = 0;
+    }
+    def override void run(){
+        println(this.i ++);
+    }
+}
+
+struct AtomicInteger{
+    int value;
+    MutexLock lock;
+
+    def this(){
+        this.value = 0;
+        this.lock = new MutexLock();
+    }
+
+    def int getAndSet(int value){
+        this.lock.wait();
+        int res = this.value;
+        this.value = value;
+        this.lock.release();
+        return res;
+    }
+
+    def int setAndGet(int value){
+        this.getAndSet(value);
+        return value;
+    }
+
+    def int incrementAndGet(){
+        this.lock.wait();
+        int res = ++ this.value ;
+        this.lock.release();
+        return res;
+    }
+
+    def void waitAndDecrement(int min){
+        bool ok = false;
+        do{
+            this.lock.wait();
+            if(this.value > min){
+               -- this.value;
+               ok = true;
+            }
+            this.lock.release();
+        }while(!ok);
+    }
+    
+    def void waitAndIncrement(int max){
+        bool ok = false;
+        do{
+            this.lock.wait();
+            if(this.value < max){
+               ++ this.value;
+               ok = true;
+            }
+            this.lock.release();
+        }while(!ok);
+    }
+    
+    def int getAndIncrement(){
+        return this.incrementAndGet() - 1;
+    }
+
+    def int decrementAndGet(){
+        this.lock.wait();
+        int res = -- this.value ;
+        this.lock.release();
+        return res;
+    }
+
+    def int getAndDecrement(){
+        return this.decrementAndGet() + 1;
+    }
+
+    def int get(){
+        this.lock.wait();
+        int res = this.value;
+        this.lock.release();
+        return res;
+    }
+
+    def void set(int value){
+        this.lock.wait();
+        this.value = value;
+        this.lock.release();
+    }
+
+    @int
+    def int toInt(){
+        return this.get();
+    }
+
+    @string
+    def string toString(){
+        return this.toInt();
+    }
+}
+
+AtomicInteger value = new AtomicInteger();
+
+import "container/bilist.xs";
+
+struct ConcurrentQueue {
+    AtomicInteger full;
+    AtomicInteger empty;
+    MutexLock     lock;
+    bilist        list;
+    
+    def this(){
+        this.full = new AtomicInteger();
+        this.empty = new AtomicInteger();
+        this.lock = new MutexLock();
+    
+        this.full.set(100);
+        this.empty.set(0);
+        this.list = new bilist();
+    }
+    
+    def void put(Content i){
+        this.full.waitAndDecrement(0);
+        this.lock.wait();   
+        this.list.push_back(i);
+        this.lock.release();
+        this.empty.incrementAndGet();
+    }
+    
+    def Content pop(){
+        this.empty.waitAndDecrement(0);
+        this.lock.wait();
+        Content res = this.list.pop_front();
+        this.lock.release();
+        this.full.incrementAndGet();
+        return res;
+    }
+    
+    def int size(){
+        return this.empty.get();
+    }
+}
+
+struct PairContent2 : Content {
+    int id;
+    int value;
+    
+    def this(int id,int value){
+        this.id = id;
+        this.value = value;
+    }
+    
+    def override string toString(){
+        return ""+ this.id + ":" + this.value;
+    }
+}
+
+ConcurrentQueue queue = new ConcurrentQueue();
+
+struct PrintNumber : Runnable {
+    int id ;
+
+    def this(int id){
+        this.id = id;
+    }
+    
+    def override void run(){
+        int v = 0;
+        while((v = value.getAndIncrement()) < 100 ){
+            queue.put(new PairContent2(this.id,v));
+        }
+    }
+}
+
+struct AsyncRunnable : Runnable{
+    Content value;
+    
+    def virtual Content get();
+    
+    def override void run(){
+        this.value = this.get();
+    }
+}
+
+struct Future {
+    Thread t;
+    AsyncRunnable r;
+    
+    def this(AsyncRunnable r){
+        this.t = new Thread(r);
+        this.r = r;
+        this.t.start();
+    }
+    
+    def Content get(){
+        this.t.join(0);
+        return this.r.value;
+    }
+}
+
 {
-    Thread t1 = new Thread(new PrintNumber(2));
-    Thread t2 = new Thread(new PrintNumber(1));
+    Thread t1 = new Thread(new PrintNumber(1));
+    Thread t2 = new Thread(new PrintNumber(2));
+    Thread t3 = new Thread(new PrintNumber(3));
     t1.start();
-    sleep(1);
     t2.start();
-    sleep(60);
-    
-    
+    t3.start();
+    while(true){
+        println(queue.pop());
+    }
 }
 
 

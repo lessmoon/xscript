@@ -7,7 +7,6 @@ import symbols.StructVariable;
 import symbols.Type;
 import symbols.VirtualTable;
 
-import java.util.Iterator;
 import java.util.Map.Entry;
 
 public class StructConst extends Constant {

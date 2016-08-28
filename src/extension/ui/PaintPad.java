@@ -1,28 +1,67 @@
 package extension.ui;
 
-import java.util.ArrayList;
+import inter.expr.Constant;
+import inter.expr.StructConst;
+import lexer.Token;
+import symbols.Position;
+import symbols.Struct;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.event.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
-import lexer.Token;
-import inter.expr.Constant;
-import inter.expr.StructConst;
-import inter.stmt.FunctionBasic;
-import symbols.Struct;
-import symbols.Position;
-
-class item {
+class Item {
     int x1;
     int y1;
     int x2;
     int y2;
 
     Color color;
+
+    public int getX1() {
+        return x1;
+    }
+
+    public void setX1(int x1) {
+        this.x1 = x1;
+    }
+
+    public int getY1() {
+        return y1;
+    }
+
+    void setY1(int y1) {
+        this.y1 = y1;
+    }
+
+    public int getX2() {
+        return x2;
+    }
+
+    public void setX2(int x2) {
+        this.x2 = x2;
+    }
+
+    public int getY2() {
+        return y2;
+    }
+
+    void setY2(int y2) {
+        this.y2 = y2;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    void setColor(Color color) {
+        this.color = color;
+    }
     
-    public item(int x1,int y1,int x2,int y2,Color c){
+    Item(int x1, int y1, int x2, int y2, Color c){
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;
@@ -41,11 +80,44 @@ class item {
 
 class StringItem{
 	int x,y;
-	String str;
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public String getStr() {
+        return str;
+    }
+
+    public void setStr(String str) {
+        this.str = str;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    String str;
 
 	Color color;
 	
-	public StringItem(int x,int y,String str,Color color){
+	StringItem(int x, int y, String str, Color color){
 		this.x = x;
 		this.y = y;
 		this.str = str;
@@ -73,7 +145,7 @@ class Point{
 public class PaintPad extends JFrame{
     static PaintPad                     pp  ;
     static Color                        bc  = Color.BLACK;
-    static final ArrayList<item>        ilist = new ArrayList<item>();
+    static final ArrayList<Item>        ilist = new ArrayList<Item>();
 	static final ArrayList<StringItem>        slist = new ArrayList<StringItem>();
 
     static final BlockingQueue<Integer> KBQueue = new LinkedBlockingQueue<Integer>();
@@ -126,7 +198,7 @@ public class PaintPad extends JFrame{
                 synchronized(this){
                     super.paint(g);
                     synchronized(PaintPad.this.ilist){
-                        for(item i : ilist){
+                        for(Item i : ilist){
                             g.setColor(i.color);
                             g.drawLine(i.x1,i.y1,i.x2,i.y2);
                         }
@@ -141,7 +213,6 @@ public class PaintPad extends JFrame{
                 }
             }
         };
-        
         jp.addMouseListener(
             new MouseAdapter(){
                 @Override
@@ -183,7 +254,7 @@ public class PaintPad extends JFrame{
         int c = 0;
         synchronized(ilist){
             c = ilist.size();
-            ilist.add(new item(x,y,x,y,bc));
+            ilist.add(new Item(x,y,x,y,bc));
         }
         return c;
     }
@@ -202,7 +273,7 @@ public class PaintPad extends JFrame{
         int c = 0;
         synchronized(ilist){
             c = ilist.size();
-            ilist.add(new item(x1,y1,x2,y2,bc));
+            ilist.add(new Item(x1,y1,x2,y2,bc));
         }
         return c;
     }
@@ -290,7 +361,7 @@ public class PaintPad extends JFrame{
                 continue;
             }
             p.set(0,new Constant(c.intValue()));
-            res = runtime.Interface.invokeVirualFunctionOfStruct(el,pos,p);
+            res = runtime.Interface.invokeVirtualFunctionOfStruct(el,pos,p);
         }while(res == Constant.True);
         return true;
     }
@@ -311,7 +382,7 @@ public class PaintPad extends JFrame{
             }
             p.set(0,new Constant(co.x));
             p.set(1,new Constant(co.y));
-            res = runtime.Interface.invokeVirualFunctionOfStruct(el,pos,p);
+            res = runtime.Interface.invokeVirtualFunctionOfStruct(el,pos,p);
         }while(res == Constant.True);
         return true;
     }

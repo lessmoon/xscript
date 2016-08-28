@@ -18,18 +18,25 @@ public class Parser implements TypeTable {
     private Lexer lex;
     private Token look;
     private Env top = new Env();
-    private HashMap<Token,Type> typetable = new HashMap<>();
+    private Map<Token,Type> typeTable = new HashMap<>();
     private FuncTable table = new FuncTable();
-    private HashSet<Token> forbiddenFunctionName = new HashSet<>();
+    private Set<Token> forbiddenFunctionName = new HashSet<>();
     private Type returnType = Type.Int;
     private boolean hasDecl = true;
     private boolean enableWarning = false;
-    /*integer numbers standing for the stack level*/
 
-    
+    /*
+     * binding for super.func or var,
+     * which means super struct must have this function definition and implementation
+     * this call of this function must be a normal call(directly invoking)
+     * TODO: TEST
+     */
+    private boolean isSuperCalled = false;
+
     private Struct dStruct = null;
     private boolean isInStructInitialFunctionDefinition = false;
-    
+
+    /*integer numbers standing for the stack level*/
     private int lastBreakFatherLevel = -1;
     private int lastIterationLevel = -1;
     /* 
@@ -56,6 +63,18 @@ public class Parser implements TypeTable {
         ENABLE_EXPR_OPT = expr_opt;
         ENABLE_STMT_OPT = stmt_opt;
         predefinedForbiddenFunctionName();
+        reserveBasicTypes();
+    }
+
+    private void reserveBasicTypes(){
+        defType(Type.BigInt,Type.BigInt);
+        defType(Type.BigReal,Type.BigReal);
+        defType(Type.Bool,Type.Bool);
+        defType(Type.Char,Type.Char);
+        defType(Type.Int,Type.Int);
+        defType(Type.Str,Type.Str);
+        defType(Type.Real,Type.Real);
+        defType(Type.Void,Type.Void);
     }
 
     private void predefinedForbiddenFunctionName(){
@@ -197,7 +216,10 @@ public class Parser implements TypeTable {
         /*
          * check if there is a struct that is pure virtual but declared
          */
-        for (Entry<Token, Type> info : typetable.entrySet()) {
+        for (Entry<Token, Type> info : typeTable.entrySet()) {
+            if(! (info.getValue() instanceof Struct)){
+                continue;
+            }
             Struct st = (Struct) (info.getValue());
             if (st.used() && !st.isCompleted()) {
                 error("`" + info.getValue() + "' used but not completed ", st.getFirstUsedLine(), st.getFirstUsedFile());
@@ -262,7 +284,7 @@ public class Parser implements TypeTable {
                 if(check(':')){
                     Token base = look;
                     match(Tag.ID);
-                    Type b = typetable.get(base);
+                    Type b = typeTable.get(base);
                     if(b == null){
                         error("base struct `" + base + "' not found");
                     }
@@ -319,13 +341,14 @@ public class Parser implements TypeTable {
     }
 
     private Type defType(Token tok, Type t) {
-        return typetable.put(tok,t);
+        return typeTable.put(tok,t);
     }
     
+    @Override
     public Type getType(Token tok){
-        return typetable.get(tok);
+        return typeTable.get(tok);
     }
-    
+
     private void defStruct() throws IOException {
         match(Tag.STRUCT);
 
@@ -342,7 +365,7 @@ public class Parser implements TypeTable {
         if(check(':')){
             Token base = look;
             match(Tag.ID);
-            Type b = typetable.get(base);
+            Type b = typeTable.get(base);
             if(b == null){
                 error("base struct `" + base + "' not found");
             }
@@ -398,6 +421,14 @@ public class Parser implements TypeTable {
         dStruct = null;
     }
 
+    private void printFunctionDefinition(FunctionBasic f,Stmt s){
+        if(PRINT_FUNC_TRANSLATE){
+            System.out.println(f.toString() +"{");
+            System.out.print(s.toString());
+            System.out.println("}" );
+        }
+    }
+
     /*
      * def a function in struct
      * s is the struct,op is the operand to overload(null for non-overloading)
@@ -414,9 +445,10 @@ public class Parser implements TypeTable {
 
         if(!check(';')){
             match('{');
-            Stmt stmt = stmts();
+            Stmt stmt = body();
             match('}');
             f.init(f.name,f.type,stmt,f.paralist);
+            printFunctionDefinition(f,stmt);
         }
         isInStructInitialFunctionDefinition = false;
         top = savedEnv;
@@ -497,7 +529,7 @@ public class Parser implements TypeTable {
             Token name = look;
             match(Tag.ID);
             isInStructInitialFunctionDefinition = true;
-            defOutterStructInitialFunction(s,name);
+            defOuterStructInitialFunction(s,name);
             isInStructInitialFunctionDefinition = false;
             top = savedEnv;
             returnType = savedType;
@@ -562,16 +594,10 @@ public class Parser implements TypeTable {
                 }
             }
             match('{');
-            Stmt s = stmts();
-            if(ENABLE_STMT_OPT)
-                s = s.optimize();
+            Stmt s = body();
             match('}');
             f.init(name,returnType,s,l);
-            if(PRINT_FUNC_TRANSLATE){
-                System.out.println(f.toString() +"{");
-                System.out.print(s.toString());
-                System.out.println("}" );
-            }
+            printFunctionDefinition(f,s);
         }
 
         top = savedEnv;
@@ -579,7 +605,7 @@ public class Parser implements TypeTable {
         hasDecl = savedHasDecl;
     }
 
-    private void defOutterStructInitialFunction(Struct t, Token name) throws IOException{
+    private void defOuterStructInitialFunction(Struct t, Token name) throws IOException{
         dStruct = t;
         if(name != Word.This){
             error("unknown function name found here:`" + t.getName() + "."   + name + "'");
@@ -605,9 +631,11 @@ public class Parser implements TypeTable {
             }
         }
         match('{');
-        Stmt stmt = stmts();
+        Stmt stmt = body();
         match('}');
         f.init(stmt);
+
+        printFunctionDefinition(f,stmt);
         dStruct = null;
     }
     
@@ -643,10 +671,10 @@ public class Parser implements TypeTable {
             }
         }
         match('{');
-        Stmt stmt = stmts();
+        Stmt stmt = body();
         match('}');
         f.init(name,returnType,stmt,l);
-
+        printFunctionDefinition(f,stmt);
         dStruct = null;
     }
 
@@ -687,6 +715,12 @@ public class Parser implements TypeTable {
         }
         hasDecl = savedHasDecl;
         return s;
+    }
+
+    private Stmt body() throws IOException{
+        Stmt stmt = stmts();
+        return ENABLE_STMT_OPT?stmt.optimize():stmt;
+
     }
 
     private Stmt stmts() throws IOException {
@@ -1226,14 +1260,16 @@ public class Parser implements TypeTable {
     }
 
     private Expr postfix() throws IOException {
-       Expr e = factor();
+        boolean saved = isSuperCalled;
+        isSuperCalled=false;
+       Expr e = factor();//factor() will change is supper called
        switch(look.tag){
        case '[':
        case '.':
-            return access(e);
-       default:
-            return e;
+            e = access(e);
        }
+       isSuperCalled = saved;
+        return e;
     }
 
     private Expr access(Expr e) throws IOException {
@@ -1242,8 +1278,10 @@ public class Parser implements TypeTable {
                 match('.');
                 e = member(e);
             } else {
+                isSuperCalled = false;
                 e = offset(e);
             }
+            isSuperCalled = false;
         }while(look.tag == '[' || look.tag == '.');
         return e;
     }
@@ -1263,6 +1301,10 @@ public class Parser implements TypeTable {
                     error("member function `" + mname + "' not found");
                 fUsed.add(f);
                 /*Pass `this' reference as the first argument*/
+                if(isSuperCalled) {
+                    p.add(0,e);
+                    return new FunctionInvoke(f,p);
+                }
                 return new VirtualFunctionInvoke(e,f,p);
             } else {
                 fUsed.add(f);
@@ -1279,7 +1321,7 @@ public class Parser implements TypeTable {
         /*check type*/
         Expr loc = expr();
         match(']');
-        /*if it is string item access*/
+        /*if it is string Item access*/
         if(e.type == Type.Str){
             if(e instanceof Var){
                 e = new StringVarAccess((Var)e,loc);
@@ -1304,8 +1346,7 @@ public class Parser implements TypeTable {
     }
 
     private Expr factor() throws IOException {
-        Expr r;
-        
+
         switch(look.tag){
         case Tag.ID:
             Token tmp = copymove();
@@ -1313,7 +1354,12 @@ public class Parser implements TypeTable {
             if(look.tag == '('){
                 return function(tmp);
             }
-            EnvEntry ee = top.get(tmp);
+            Token name = tmp;
+            if(tmp == Word.Super) { //This IS a kind of super!
+                isSuperCalled = true;
+                name = Word.This;
+            }
+            EnvEntry ee = top.get(name);
             if(ee == null){
                 /*
                  * if it is in struct function definition
@@ -1322,7 +1368,7 @@ public class Parser implements TypeTable {
                 //    Expr pthis = ee.stacklevel == 0? new AbsoluteVar(tmp,ee.type,0,ee.offset) : new Var(tmp,ee.type,top.level - ee.stacklevel,ee.offset);
                 //    return member(pthis);
                 //}
-                error("variable `" + tmp + "' not declared.");
+                error("variable `" + tmp + "' not declared");
             }
             /*
              * Level 0 is for the global variables
@@ -1331,7 +1377,14 @@ public class Parser implements TypeTable {
              * But for the global variable,we can't know what it is 
              * exactly in functions.So we use the AbsoluteVar<stackbackoffset,varoffset>.
              */
-            return ee.stacklevel == 0? new AbsoluteVar(tmp,ee.type,0,ee.offset) : new StackVar(tmp,ee.type,top.level - ee.stacklevel,ee.offset);
+            Type t = ee.type;
+            if(isSuperCalled) {// it must be a struct
+                t = ((Struct)(t)).getFather();
+                if(t == null){
+                    error("`" + ee.type + "' has no super struct defined");
+                }
+            }
+            return ee.stacklevel == 0? new AbsoluteVar(tmp,t,0,ee.offset) : new StackVar(tmp,t,top.level - ee.stacklevel,ee.offset);
         case Tag.NULL:
             move();
             return Constant.Null;
@@ -1356,7 +1409,7 @@ public class Parser implements TypeTable {
         case Tag.NEW:
             Token l = copymove();
             //match('<');
-            Type  t = singletype();
+            t = singletype();
             if(t == Type.Void){
                 error("can't use type `" + t +"'");
             }

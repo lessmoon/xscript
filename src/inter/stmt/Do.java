@@ -33,6 +33,11 @@ public class Do extends Stmt{
     }
 
     @Override
+    public  String toString(){
+        return "do{\n" + stmt.toString() + "\n}while(" + expr.toString()+");\n";
+    }
+
+    @Override
     public void run(){
         do{
             try{

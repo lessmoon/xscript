@@ -38,6 +38,6 @@ public abstract class Expr extends Node {
     
     @Override
     public String toString(){
-        return getClass().getName();
+        return getClass().getSimpleName();
     }
 }

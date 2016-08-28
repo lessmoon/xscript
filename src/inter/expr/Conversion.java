@@ -27,7 +27,7 @@ public abstract class Conversion extends Expr {
 
     @Override
     public String toString(){
-        return getClass().getName() + "(" + e + ")";
+        return getClass().getSimpleName() + "(" + e + ")";
     }
 
     public abstract Constant getValue();
