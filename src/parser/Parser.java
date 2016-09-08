@@ -75,6 +75,7 @@ public class Parser implements TypeTable {
         defType(Type.Str,Type.Str);
         defType(Type.Real,Type.Real);
         defType(Type.Void,Type.Void);
+        defType(Word.Auto,Type.Auto);
     }
 
     private void predefinedForbiddenFunctionName(){
@@ -99,7 +100,7 @@ public class Parser implements TypeTable {
             error(info + " `" + name + "' has a same name with a variable");
         }
 
-        if( getType(name) != null ){
+        if( getAutoType(name) != null ){
             error(info + " `" + name + "' has a same name with a struct");
         }
     }
@@ -284,7 +285,7 @@ public class Parser implements TypeTable {
                 if(check(':')){
                     Token base = look;
                     match(Tag.ID);
-                    Type b = typeTable.get(base);
+                    Type b = getType(base);
                     if(b == null){
                         error("base struct `" + base + "' not found");
                     }
@@ -346,6 +347,12 @@ public class Parser implements TypeTable {
     
     @Override
     public Type getType(Token tok){
+        if(tok == Word.Auto)
+            return null;
+        return typeTable.get(tok);
+    }
+
+    private Type getAutoType(Token tok){
         return typeTable.get(tok);
     }
 
@@ -365,7 +372,7 @@ public class Parser implements TypeTable {
         if(check(':')){
             Token base = look;
             match(Tag.ID);
-            Type b = typeTable.get(base);
+            Type b = getType(base);
             if(b == null){
                 error("base struct `" + base + "' not found");
             }
@@ -686,7 +693,7 @@ public class Parser implements TypeTable {
                 Type t = type();
                 Token name = look;
                 match(Tag.ID);
-                if( getType(name) != null ){
+                if( getAutoType(name) != null ){
                     error("argument `" + name + "' shadows a struct type");
                 }
                 pl.add(new Para(t , name));
@@ -811,15 +818,14 @@ public class Parser implements TypeTable {
             s = block();
             break;
         case Tag.ID:
-            Type t = getType(look);
+            Type t = getAutoType(look);
             /*check if it is just a variable*/
             if(t == null){
                 s = new ExprStmt(expr());
                 match(';');
                 break;
             }
-            /*It should be variable definition*/
-            look = t;
+            /*or it should be variable definition*/
         case Tag.BASIC:
             if(hasDecl){
                 s = decls();
@@ -954,7 +960,7 @@ public class Parser implements TypeTable {
         boolean hasdecl = false;
         if(look.tag == ';'){
             s1 = Stmt.Null;
-        } else if( look.tag == Tag.BASIC || getType(look) != null) {
+        } else if( look.tag == Tag.BASIC || getAutoType(look) != null) {
             hasdecl = true;
             top = new Env(top);
             s1 = fordecl();
@@ -978,12 +984,20 @@ public class Parser implements TypeTable {
         return s;
     }
 
+    private Type inferType(Token id,Expr p){
+        if(p == null || p == Constant.Null){
+            error("Can't infer the type of variable `" + id + "'");
+            return null;
+        }
+        return p.type;
+    }
+
     private Stmt fordecl() throws IOException {
         /*
          * for(int i = 0,j = 0;;)
          */
         Decls s = new Decls();
-        Type p = type();
+        Type p = autotype();
         Token tok;
         if(p == Type.Void){
             error("can't declare " + p.toString() + " type variable");
@@ -995,13 +1009,17 @@ public class Parser implements TypeTable {
             if(top.containsVar(tok)){
                 error("variable `" + tok.toString() + "' redefined here");
             }
-            if( getType(tok) != null ){
+            if( getAutoType(tok) != null ){
                 error("variable `" + tok + "' shadows a struct type");
             }
-            top.put(tok,p);
             if(check('=')){
                 e = expr();
             }
+            if(p == Type.Auto ) {//just infer once,every variable's type depends on 1st expr;
+                p = inferType(tok, e);
+            }
+            top.put(tok,p);
+
             s.addDecl(Decl.getDecl(tok,p,e));
         } while(check(','));
         
@@ -1011,8 +1029,8 @@ public class Parser implements TypeTable {
     private Decls decls() throws IOException{
         Decls s = new Decls();
         Expr  e;
-        while( look.tag == Tag.BASIC){
-            Type p = type();
+        //while( look.tag == Tag.BASIC){
+            Type p = autotype();
             if(p == Type.Void){
                 error("can't declare " + p.toString() + " type variable");
             }
@@ -1025,10 +1043,9 @@ public class Parser implements TypeTable {
                     error("variable `" + tok.toString() + "' redefined here");
                 }
 
-                if( getType(tok) != null ){
+                if( getAutoType(tok) != null ){
                     error("variable `" + tok + "' shadows a struct type");
                 }
-                top.put(tok,p);
                 if(check('=')){
 					//deal with the initialization of array
                     if(p instanceof Array && look.tag == '{'){
@@ -1037,10 +1054,17 @@ public class Parser implements TypeTable {
 						e = expr();
 					}
                 }
+
+                if(p == Type.Auto){
+                    p = inferType(tok,e);
+                }
+
+                top.put(tok,p);
+
                 s.addDecl(Decl.getDecl(tok,p,e));
             } while(check(','));
             match(';');
-        }
+        //}
         return s;
     }    
 
@@ -1107,6 +1131,10 @@ public class Parser implements TypeTable {
      * match single type (except for array)
      */
     private Type singletype() throws IOException {
+        if(look == Word.Auto ){//check
+            error("auto type infer is not permitted here ");
+        }
+
         if(look.tag == Tag.ID){
             Token t = getType(look);
             if(t == null){
@@ -1123,7 +1151,15 @@ public class Parser implements TypeTable {
         }
         return p;
     }
-    
+
+    public Type autotype() throws IOException{
+        if(look == Word.Auto){
+            move();
+            return Type.Auto;
+        }
+        return type();
+    }
+
     public Type type() throws IOException {
 
         Type p = singletype();

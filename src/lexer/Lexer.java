@@ -89,6 +89,7 @@ public class Lexer implements Dictionary {
         reserve( Word.This );
         reserve( Word.Super );
         reserve( Word.Null );
+        reserve( Word.Auto );
 
         reserve( Type.Int );
         reserve( Type.Char );

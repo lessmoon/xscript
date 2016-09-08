@@ -53,6 +53,7 @@ public class Type extends Word {
         Void    =   new Type( "void" , Tag.BASIC),
         BigInt  =   new Type( "bigint",Tag.BASIC),
         BigReal =   new Type( "bigreal",Tag.BASIC),
+        Auto    =   new Type("auto",Tag.AUTO),
         Null    =   new Type( "null" , Tag.BASIC ){
             @Override
             public boolean isBuiltInType(){
