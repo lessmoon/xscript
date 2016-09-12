@@ -107,7 +107,7 @@
 		1.  `struct` name {
 		2. &emsp;type-name var-name;[...] ***//Member variable declaration***
 		3. &emsp;`def` `this`([para-type para-name,...]);***//Initial function declaration***
-		4. &emsp;`def` `this`([para-type para-name,...]){***//Initial function defination(initial function can just have one for each struct now )***
+		4. &emsp;`def` `this`([para-type para-name,...]){***//Initial function definition(initial function can just have one for each struct now )***
 		5. &emsp;&emsp;&emsp;&emsp;function-body;
 		6. &emsp;}
 		7. &emsp;`def` return-type func-name([para-type para-name,...]);***//Function declaration***
@@ -123,7 +123,7 @@
 		3. Override function
 			- `def` `override` return-type func-name([para-type para-name,...]) 
 		4. Override function must be virtual function in base struct
-		5. If a struct(or its father) defined a pure virtual function(declared but no definition),it can't be instantial
+		5. If a struct(or its father) defined a pure virtual function(declared but no definition),it is not instantiable
 		6. initial function shouldn't be `virtual`,and so it can't use `override`
 	- Operand overloading
 		- Definition grammar
@@ -135,13 +135,15 @@
 			1. available operands have `+`,`-`,`*`,`/`,`%`,`>`,`<`,`<=`,`>=`, and types(except the self-type and array)
 			2. operands `+`,`-`,`*`,`*` overloading functions should have&only have one parameter whose type is the same as the struct,and they returns the same type as the struct
 			3. operands `<`,`>`,`<=`,`>=` overloading functions should have&only have one parameter whose type is the same as the struct,but the return-type should be `bool`
-			4. the operands `==`,`!=` is built-in operation,they compared by the struct address,so we disabled their overloading to avoid confusion
+			4. the operands `==`,`!=` is built-in operation,they compared by the struct reference,so we disabled their overloading to avoid confusion
 			5. type-conversion function should have no parameter ant its return-type should be the same as the operand
 			6. unfortunately initial functions can't overload operands
 	- Structure member access:
 		- name.member-name
+		- name.func-name([argument,...])
+		- name can be `this` and `super`,but with `super`,it must have a base struct and this base struct must have implemented this member(function or variable).
 * Load extension
-	1. native<package-name>{
+	1. native\<package-name\>{
 	2. &emsp;["class-name":]return-type func-name ( [para-type para-name,...] );***//load extension functions***
 	3. &emsp;["class-name":]def struct something{};
 	4. }

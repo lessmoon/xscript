@@ -9,6 +9,10 @@ native<extension.system>{
 
 }
 
+native<extension.predefined>{
+    "GetThreadId": bigint getThreadId();
+}
+
 struct MyTime:Time{
 
 	@string

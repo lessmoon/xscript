@@ -7,6 +7,7 @@ src/extension/math/Random.java
 src/extension/math/SetSeed.java
 src/extension/math/sin.java
 src/extension/predefined/EventCallback.java
+src/extension/predefined/GetThreadId.java
 src/extension/predefined/MouseEventCallback.java
 src/extension/predefined/MutexLock.java
 src/extension/predefined/SimpleThread.java

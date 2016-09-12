@@ -10,6 +10,7 @@ import  "container/list.xs";
 native<extension.ui>{
     "PaintPadX":struct PaintPad{
         def this(string name,int width,int height);
+        def int addString(string str,int x,int y);
     };
 }
 
@@ -83,6 +84,10 @@ struct MyPaintPad:PaintPad{
     }
 }
 
+{
+
+}
+
 native<extension.system>{
     "sleep":void sleep(int duration);
 }
@@ -93,7 +98,7 @@ struct Runnable {
 
 native<extension.predefined>{
     "SimpleThread":struct Thread{
-        def this(Runnable);
+        def this(Runnable r);
         def bool start();
     };
 
@@ -173,7 +178,7 @@ struct AtomicInteger{
 
     def int getAndSet(int value){
         this.lock.wait();
-        int res = this.value;
+        auto res = this.value;
         this.value = value;
         this.lock.release();
         return res;
@@ -186,7 +191,7 @@ struct AtomicInteger{
 
     def int incrementAndGet(){
         this.lock.wait();
-        int res = ++ this.value ;
+        auto res = ++ this.value ;
         this.lock.release();
         return res;
     }
@@ -221,7 +226,7 @@ struct AtomicInteger{
 
     def int decrementAndGet(){
         this.lock.wait();
-        int res = -- this.value ;
+        auto res = -- this.value ;
         this.lock.release();
         return res;
     }
@@ -232,7 +237,7 @@ struct AtomicInteger{
 
     def int get(){
         this.lock.wait();
-        int res = this.value;
+        auto res = this.value;
         this.lock.release();
         return res;
     }
@@ -323,6 +328,7 @@ struct PrintNumber : Runnable {
         int v = 0;
         while((v = value.getAndIncrement()) < 100 ){
             queue.put(new PairContent2(this.id,v));
+            sleep(50);
         }
     }
 }
@@ -360,8 +366,12 @@ struct Future {
     t1.start();
     t2.start();
     t3.start();
+    int i =0;
     while(true){
         println(queue.pop());
+        if(i ++ == 20){
+            t1.interrupt();
+        }
     }
 }
 
@@ -510,15 +520,15 @@ def void drawClock(Time t){
 	MyTime t = new MyTime;
 	println(t);
 	
-	openPadWithName(300,300,"ClockInXScript");
-	while(true){
-		println(t);
-		getTime(t);
-		clearPad();
-		drawClock(t);
-		paint();
-		sleep(500);
-	}
+	//openPadWithName(300,300,"ClockInXScript");
+	//while(true){
+		//println(t);
+		//getTime(t);
+		//clearPad();
+		//drawClock(t);
+		//paint();
+		//sleep(500);
+	//}
 	
 }
 
@@ -836,7 +846,7 @@ def void GameOfLife(int max)
 
 {
     println("Test for Game of Life");
-    GameOfLife(10);
+    GameOfLife(1000);
 }
 
 {
