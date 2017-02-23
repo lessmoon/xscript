@@ -9,7 +9,7 @@ public abstract class Expr extends Node {
     public Type type;
     static public final Expr VoidExpr = new Expr(Type.Void,Type.Void){
         @Override
-        boolean isChangeable(){
+        public boolean isChangeable(){
             return true;
         }
 
@@ -29,7 +29,7 @@ public abstract class Expr extends Node {
         type = p;
     }
 
-    abstract boolean isChangeable();
+    public abstract boolean isChangeable();
     public abstract Constant getValue();
 
     public Expr optimize() {

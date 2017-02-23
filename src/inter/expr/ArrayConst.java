@@ -39,7 +39,7 @@ public class ArrayConst extends Constant {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         /*array reference is not changeable*/
         return true;
     }

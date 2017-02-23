@@ -28,7 +28,7 @@ public class StringAccess extends Expr {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return index.isChangeable() || array.isChangeable();
     }
 

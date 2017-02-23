@@ -15,6 +15,8 @@ import java.util.List;
 public abstract class PaintPadImp extends JFrame {
     private final List<Item> itemList = Collections.synchronizedList(new ArrayList<>());
     private final List<StringItem> stringItemList = Collections.synchronizedList(new ArrayList<>());
+    private final List<CircleItem> circleItemList = Collections.synchronizedList(new ArrayList<>());
+    
     Color brushColor = Color.BLACK;
 
     public PaintPadImp(String name, final int height, final int width) {
@@ -32,7 +34,14 @@ public abstract class PaintPadImp extends JFrame {
                 super.keyReleased(e);
                 PaintPadImp.this.onClick(e);
             }
+
+            @Override
+            public void keyPressed(KeyEvent e){
+                super.keyReleased(e);
+                PaintPadImp.this.onPress(e);
+            }
         });
+
 
         JPanel jp = new JPanel() {
             public void paint(Graphics g) {
@@ -51,6 +60,12 @@ public abstract class PaintPadImp extends JFrame {
                         }
                     }
 
+                    synchronized (PaintPadImp.this.circleItemList){
+                        for(CircleItem i : circleItemList){
+                            g.setColor(i.color);
+                            g.drawOval(i.x,i.y,i.radius,i.radius);
+                        }
+                    }
                 }
             }
         };
@@ -68,6 +83,7 @@ public abstract class PaintPadImp extends JFrame {
 
     public abstract void onClose();
 
+    public abstract void onPress(KeyEvent e);
 
     public abstract void onClick(KeyEvent e);
 
@@ -102,6 +118,61 @@ public abstract class PaintPadImp extends JFrame {
         return c;
     }
 
+    public int addCircle(int x,int y,int r){
+        int c;
+        synchronized (circleItemList) {
+            c = circleItemList.size();
+            circleItemList.add(new CircleItem(x, y, r, brushColor));
+        }
+        return c;
+    }
+    
+    public boolean setCircle(int id,int x,int y){
+        if (id < 0) {
+            return false;
+        }
+
+        synchronized (circleItemList) {
+            int c = circleItemList.size();
+            if (id < c){
+                circleItemList.get(id).setX(x);
+                circleItemList.get(id).setY(y);
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public boolean setCircleRadio(int id,int r){
+        if (id < 0) {
+            return false;
+        }
+
+        synchronized (circleItemList) {
+            int c = circleItemList.size();
+            if (id < c){
+                circleItemList.get(id).setRadius(r);
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public boolean setCircleColor(int id){
+        if (id < 0) {
+            return false;
+        }
+
+        synchronized (circleItemList) {
+            int c = circleItemList.size();
+            if (id < c){
+                circleItemList.get(id).setColor(brushColor);
+                return true;
+            }
+            return false;
+        }
+    }
+
     public int addString(String string, int x, int y) {
         int c;
         synchronized (stringItemList) {
@@ -132,7 +203,7 @@ public abstract class PaintPadImp extends JFrame {
                 i.setX1(x1);
                 i.setX2(x2);
                 i.setY1(y1);
-                i.setX2(y2);
+                i.setY2(y2);
                 return true;
             }
             return false;

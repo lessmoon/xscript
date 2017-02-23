@@ -11,7 +11,7 @@ public abstract class Conversion extends Expr {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return e.isChangeable();
     }
 

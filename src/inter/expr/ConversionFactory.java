@@ -382,7 +382,7 @@ class NullConversion extends Conversion {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return false;
     }
 

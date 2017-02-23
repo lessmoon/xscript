@@ -10,7 +10,7 @@ public class AbsoluteVar extends StackVar {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return true;
     }
 

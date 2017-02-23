@@ -31,7 +31,7 @@ public abstract class Arith extends Op {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return expr1.isChangeable() || expr2.isChangeable();
     }
     

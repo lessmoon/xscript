@@ -43,7 +43,7 @@ public class VirtualFunctionInvoke extends Expr {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return true;
     }
 

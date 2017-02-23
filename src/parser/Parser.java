@@ -14,12 +14,22 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.Set;
 
+
+
+/*
+ *TODO: Constant table parsing
+ *      Constraint:ONLY BASIC TYPE PERMITTED
+ *                 Naming ruler is the same with variable
+ */
 public class Parser implements TypeTable {
     private final boolean ENABLE_EXPR_OPT;
     private final boolean ENABLE_STMT_OPT;
     private Lexer lex;
     private Token look;
     private Env top = new Env();
+
+    //todo: Test
+    ConstantTable constEnv = new ConstantTable();
     private Map<Token, Type> typeTable = new HashMap<>();
     private FuncTable table = new FuncTable();
     private Set<Token> forbiddenFunctionName = new HashSet<>();
@@ -122,11 +132,22 @@ public class Parser implements TypeTable {
     }
 
     public void error(String s) throws RuntimeException {
-        error(s, Lexer.line, Lexer.filename);
+        error(s,null);
     }
 
-    public void error(String s, int l, String f) throws RuntimeException {
-        throw new RuntimeException("line " + l + " in file `" + f + "':\n\t" + s);
+    public void error(String s,Throwable cause){
+        error(s, Lexer.line, Lexer.filename,cause);
+    }
+
+    public void error(String s,int l,String f) {
+        error(s,l,f,null);
+    }
+
+    public void error(String s, int l, String f,Throwable e) throws RuntimeException {
+        if(e == null)
+            throw new RuntimeException("line " + l + " in file `" + f + "':\n\t" + s);
+        else
+            throw new RuntimeException("line " + l + " in file `" + f + "':\n\t" + s,e);
     }
 
     public void warning(String s) {
@@ -404,7 +425,7 @@ public class Parser implements TypeTable {
                 try {
                     f = LoadFunc.loadFunc(t, sb.toString(), clazzName, name, pl, this.lex, this);
                 } catch (Exception e) {
-                    error("failed to load extension function `" + sb.toString() + "." + clazzName + "'");
+                    error("failed to load extension function `" + sb.toString() + "." + clazzName + "'",e);
                 }
                 if (!table.addFunc(name, f)) {
                     error("function name has conflict:" + name);
@@ -905,6 +926,10 @@ public class Parser implements TypeTable {
                     s = new Seq(Stmt.PushStack, decls());
                 }
                 break;
+            /*TODO*/
+            //case Tag.CONST:
+                //const basic-type id = exper;
+                //break;
             case Tag.SWITCH:
                 s = switchstmt();
                 break;
@@ -923,6 +948,28 @@ public class Parser implements TypeTable {
         lastIterationLevel = savedLastIterationLevel;
         lastBreakFatherLevel = savedLastBreakFatherLevel;
         return s;
+    }
+
+    private void constDecl() throws IOException {
+        match(Tag.CONST);
+        Type t = type();
+        if( !t.isBuiltInType() ){
+            error("const variable should have basic type,but found `" +  t + "'");
+        }
+        do {
+            Token name = look;
+            match(Tag.ID);
+            if(top.containsVar(name)){
+                error("redefined const variable `" + name + "'");
+            }
+            match('=');
+            Expr value = expr().optimize();
+            if(value.isChangeable()){
+                error("const variable `" + name + "'needs constant value expression");
+            }
+            top.put(name,value.getValue());
+
+        } while ( check(','));
     }
 
     private Stmt casestmts() throws IOException {
@@ -1364,6 +1411,11 @@ public class Parser implements TypeTable {
         }
     }
 
+    
+    /*
+     * FIXME: maybe this isSupperCalled has a bug:
+     *        super.someFunc(this.abc)
+     */
     private Expr postfix() throws IOException {
         boolean saved = isSuperCalled;
         isSuperCalled = false;
@@ -1483,6 +1535,14 @@ public class Parser implements TypeTable {
              * exactly in functions.So we use the AbsoluteVar<stackbackoffset,varoffset>.
              */
                 Type t = ee.type;
+                
+                /*
+                 * TODO: DEAL WITH THE CONSTANT
+                 */
+                if(ee instanceof EnvConstEntry){
+                    return ((EnvConstEntry)ee).value;
+                }
+                
                 if (isSuperCalled) {// it must be a struct
                     t = ((Struct) (t)).getFather();
                     if (t == null) {

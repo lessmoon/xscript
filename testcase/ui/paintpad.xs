@@ -375,6 +375,13 @@ struct MouseAdapter2:MouseEventCallback{
 
 } 
 
+native<extension.ui>{
+    "PaintPadX":struct PaintPad{
+        def this(string name,int width,int height);
+        def int addString(string str,int x,int y);
+    };
+}
+
 /*
  *    _____
  *   |_____|
@@ -384,7 +391,7 @@ struct MouseAdapter2:MouseEventCallback{
  *   |_|_|_|
  */
 
-
+/*
 {
     Graphics g = new Graphics;
     EventPool ep = new EventPool();
@@ -446,3 +453,4 @@ struct MouseAdapter2:MouseEventCallback{
     g.setCenter(new Point(20,10));
     loopForMouse(new MouseAdapter2(g,scr,ep));
 }
+*/

@@ -46,7 +46,7 @@ public class Constant extends Expr{
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return false;
     }
 

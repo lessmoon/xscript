@@ -23,7 +23,7 @@ public class NewArray extends Op {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return true;
     }
 

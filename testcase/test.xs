@@ -1,18 +1,110 @@
 import  "lib/file.xs";
 import  "lib/system.xs";
+import  "lib/concurrent.xs";
 import  "math/Math.xs";
 import  "math/Ratio.xs";
 import  "parser/parser.xs";
 import  "container/darray.xs";
 import  "container/hashmap.xs";
 import  "container/list.xs";
+import  "ui/paintpad.xs";
+import  "ui/cyclepaintpad.xs";
 
-native<extension.ui>{
-    "PaintPadX":struct PaintPad{
-        def this(string name,int width,int height);
-        def int addString(string str,int x,int y);
-    };
+
+Thread i = getCurrentThread();
+
+i.interrupt();
+
+int[] r = {3243,545};
+
+int x = 80,y = 170,width = 40;
+
+struct MyPaintPad:PaintPad{
+    def this(){
+        super("test",200,200);
+    }
+    
+    def override void onClick(int bid){
+        super.onClick(bid);
+        switch(bid){
+        case 37:
+           x-=10;
+           break;
+        case 39:
+           x+=10;
+           break;
+        }
+    }
+    
+    def override void onPress(int bid){
+        this.onClick(bid);
+    }
 }
+
+struct Game : CyclePaintPad {
+    int cid;
+    real x;
+    real y;
+    real v_x;
+    real v_y;
+    int lid;
+    
+    def this(){
+        super(new MyPaintPad(),1);
+        this.cid = this.pad.addCircle(50,50,10);
+        this.pad.setBrushColor(0,255,255);
+        this.lid = this.pad.addLine(x,y,width+x,y);
+       
+        this.pad.setBrushColor(0,0,255);
+        this.pad.addLine(10,10,10,190);
+        this.pad.addLine(10,10,190,10);
+        this.pad.addLine(10,190,190,190);
+        this.pad.addLine(190,10,190,190);
+        this.v_x = 0.05;
+        this.v_y = 0.1;
+        this.x = 55;
+        this.y = 55;
+    }
+    
+    def override void run(){
+        this.x += this.v_x;
+        this.y += this.v_y;
+        //collision detection
+     
+        if(this.x <= 5 || this.x >= 185){
+            this.v_x = -this.v_x;
+        }
+        if(this.y <= 5 || this.y >= 185){
+            this.v_y = -this.v_y;
+        }
+        if( x < 10 ){
+           x = 10;
+        }
+        if( x > 150){
+           x = 150;
+        }
+        
+        if(this.y >= y && this.x >= x && this.x <= x + width){
+            this.v_y = -this.v_y;
+        }
+        
+        this.pad.setLine(this.lid,x,y,width+x,y);
+        
+        this.pad.setCircle(this.cid,this.x,this.y);
+        super.run();
+    }
+    
+    def void open(){
+        this.pad.open();
+    }
+}
+
+{
+    auto game = new Game();
+    game.open();
+    game.start();
+}
+
 
 struct baseA{
     int id;
@@ -54,7 +146,7 @@ struct deriveC:baseB{
 }
 
 
-struct MyPaintPad:PaintPad{
+struct MyXPaintPad:PaintPad{
     int lastx,lasty;
 
     def this(string name,int width,int height){
@@ -84,78 +176,6 @@ struct MyPaintPad:PaintPad{
     }
 }
 
-{
-
-}
-
-native<extension.system>{
-    "sleep":void sleep(int duration);
-}
-
-struct Runnable {
-    def virtual void run();
-}
-
-native<extension.predefined>{
-    "SimpleThread":struct Thread{
-        def this(Runnable r);
-        def bool start();
-    };
-
-    "MutexLock":struct MutexLock{
-        def this();
-        def bool tryLock();
-        def bool wait();
-        def bool release();
-    };
-}
-
-struct Condition{
-    def virtual bool isTrue();
-}
-
-
-
-struct Schedule : Runnable{
-    int internal;
-    Condition cond;
-    Runnable run; 
-    
-    def this(int internal,Condition cond,Runnable run){
-        this.internal = internal;
-        this.cond     = cond;
-        this.run      = run;
-    }
-    
-    def override void run(){
-        while(this.cond.isTrue()){
-            sleep(this.internal);
-            this.run.run();
-        }
-    }
-}
-
-struct RepeatSchedule : Condition{
-    def override bool isTrue(){
-        return true;
-    }
-}
-
-struct Timer2 {
-    Thread thread;
-    
-    def this(Runnable run,int internal){
-        this.thread = new Thread(new Schedule(internal,new RepeatSchedule,run));
-    }
-    
-    def void start(){
-        this.thread.start();
-    }
-    
-    def void stop(){
-        this.thread.interrupt();
-    }
-}
 
 struct PrintCount : Runnable{
     int i;
@@ -167,139 +187,7 @@ struct PrintCount : Runnable{
     }
 }
 
-struct AtomicInteger{
-    int value;
-    MutexLock lock;
-
-    def this(){
-        this.value = 0;
-        this.lock = new MutexLock();
-    }
-
-    def int getAndSet(int value){
-        this.lock.wait();
-        auto res = this.value;
-        this.value = value;
-        this.lock.release();
-        return res;
-    }
-
-    def int setAndGet(int value){
-        this.getAndSet(value);
-        return value;
-    }
-
-    def int incrementAndGet(){
-        this.lock.wait();
-        auto res = ++ this.value ;
-        this.lock.release();
-        return res;
-    }
-
-    def void waitAndDecrement(int min){
-        bool ok = false;
-        do{
-            this.lock.wait();
-            if(this.value > min){
-               -- this.value;
-               ok = true;
-            }
-            this.lock.release();
-        }while(!ok);
-    }
-    
-    def void waitAndIncrement(int max){
-        bool ok = false;
-        do{
-            this.lock.wait();
-            if(this.value < max){
-               ++ this.value;
-               ok = true;
-            }
-            this.lock.release();
-        }while(!ok);
-    }
-    
-    def int getAndIncrement(){
-        return this.incrementAndGet() - 1;
-    }
-
-    def int decrementAndGet(){
-        this.lock.wait();
-        auto res = -- this.value ;
-        this.lock.release();
-        return res;
-    }
-
-    def int getAndDecrement(){
-        return this.decrementAndGet() + 1;
-    }
-
-    def int get(){
-        this.lock.wait();
-        auto res = this.value;
-        this.lock.release();
-        return res;
-    }
-
-    def void set(int value){
-        this.lock.wait();
-        this.value = value;
-        this.lock.release();
-    }
-
-    @int
-    def int toInt(){
-        return this.get();
-    }
-
-    @string
-    def string toString(){
-        return this.toInt();
-    }
-}
-
 AtomicInteger value = new AtomicInteger();
-
-import "container/bilist.xs";
-
-struct ConcurrentQueue {
-    AtomicInteger full;
-    AtomicInteger empty;
-    MutexLock     lock;
-    bilist        list;
-    
-    def this(){
-        this.full = new AtomicInteger();
-        this.empty = new AtomicInteger();
-        this.lock = new MutexLock();
-    
-        this.full.set(100);
-        this.empty.set(0);
-        this.list = new bilist();
-    }
-    
-    def void put(Content i){
-        this.full.waitAndDecrement(0);
-        this.lock.wait();   
-        this.list.push_back(i);
-        this.lock.release();
-        this.empty.incrementAndGet();
-    }
-    
-    def Content pop(){
-        this.empty.waitAndDecrement(0);
-        this.lock.wait();
-        Content res = this.list.pop_front();
-        this.lock.release();
-        this.full.incrementAndGet();
-        return res;
-    }
-    
-    def int size(){
-        return this.empty.get();
-    }
-}
 
 struct PairContent2 : Content {
     int id;
@@ -311,7 +199,7 @@ struct PairContent2 : Content {
     }
     
     def override string toString(){
-        return ""+ this.id + ":" + this.value;
+        return "" + this.id + ":" + this.value;
     }
 }
 
@@ -333,32 +221,6 @@ struct PrintNumber : Runnable {
     }
 }
 
-struct AsyncRunnable : Runnable{
-    Content value;
-    
-    def virtual Content get();
-    
-    def override void run(){
-        this.value = this.get();
-    }
-}
-
-struct Future {
-    Thread t;
-    AsyncRunnable r;
-    
-    def this(AsyncRunnable r){
-        this.t = new Thread(r);
-        this.r = r;
-        this.t.start();
-    }
-    
-    def Content get(){
-        this.t.join(0);
-        return this.r.value;
-    }
-}
-
 {
     Thread t1 = new Thread(new PrintNumber(1));
     Thread t2 = new Thread(new PrintNumber(2));
@@ -371,6 +233,9 @@ struct Future {
         println(queue.pop());
         if(i ++ == 20){
             t1.interrupt();
+        }
+        if(i > 100){
+            getCurrentThread().interrupt();
         }
     }
 }
@@ -392,17 +257,6 @@ struct MyStruct : NTVSTRT{
         this.id = id;
     }
 }
-
-import  "ui/paintpad.xs";
-
-
-native<extension.math>{
-    real sin(real theta);
-	real cos(real theta);
-    "SetSeed":void srand(int seed);
-    "Random":int rand();
-}
-
 
 struct StringHashContent : HashContent {
     string val;
@@ -466,7 +320,6 @@ def void f2(int b){
     if(b > 10){
         return;
     }
-    f1(b+1);
 }
 
 struct llist{
@@ -608,11 +461,12 @@ struct rectangle : square {
     hh.init("rectangle");
     shape[] h = new shape[2];
     h[0] = dd;
+    
     h[1] = hh;
     dd.setWidth(10);
     hh.setWidth(4);
     hh.setLength(15);
-    
+   
     for(int i = 0 ; i < sizeof h;i++){
         println("draw a " + h[i]);
         h[i].draw();
