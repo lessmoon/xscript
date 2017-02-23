@@ -373,7 +373,42 @@ struct MouseAdapter2:MouseEventCallback{
         return true;
     }
 
-} 
+}
+
+import"../lib/concurrent.xs";
+
+native<extension.ui>{
+    "PaintPadX":struct PaintPadX{
+        def this(string name,int width,int height);
+        def int addString(string str,int x,int y);
+        def virtual void onClose();
+    };
+}
+
+struct PaintPad:PaintPadX{
+    AtomicInteger i;
+
+    def this(string name,int width,int height){
+        super(name,width,height);
+        this.i = new AtomicInteger();
+        this.i.setAndGet(1);
+    }
+
+    def void show(){
+        this.i.setAndGet(0);
+        super.open();
+    }
+
+    def override void onClose(){
+        super.onClose();
+        this.i.setAndGet(1);
+    }
+
+    def void wait(){
+        this.i.waitAndDecrement(0);
+        this.i.setAndGet(1);
+    }
+}
 
 /*
  *    _____
@@ -384,7 +419,7 @@ struct MouseAdapter2:MouseEventCallback{
  *   |_|_|_|
  */
 
-
+/*
 {
     Graphics g = new Graphics;
     EventPool ep = new EventPool();
@@ -446,3 +481,4 @@ struct MouseAdapter2:MouseEventCallback{
     g.setCenter(new Point(20,10));
     loopForMouse(new MouseAdapter2(g,scr,ep));
 }
+*/

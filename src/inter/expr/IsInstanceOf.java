@@ -17,7 +17,7 @@ public class IsInstanceOf extends Op {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return expr.isChangeable();
     }
 

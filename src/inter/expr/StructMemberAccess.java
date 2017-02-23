@@ -30,7 +30,7 @@ public class StructMemberAccess extends Var {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return true;
     }
     

@@ -19,7 +19,7 @@ public class SizeOf extends Op{
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return expr.isChangeable();
     }
 

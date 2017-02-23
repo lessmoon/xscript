@@ -62,7 +62,7 @@ public class StructConst extends Constant {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return true;
     }
 

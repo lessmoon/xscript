@@ -12,7 +12,7 @@ public abstract class Struct {
     public abstract symbols.Struct setup(Token sname, Dictionary dic, TypeTable typeTable);
     
     
-    public void init(Dictionary dic){
+    public void init(Dictionary dic, TypeTable typeTable){
         //System.out.println("System:Default initialize function invoked");
     }
 }

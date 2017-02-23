@@ -26,7 +26,7 @@ public class Condition extends Expr {
     }
     
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         if(cond.isChangeable())
             return true;
         else {

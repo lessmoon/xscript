@@ -122,11 +122,22 @@ public class Parser implements TypeTable {
     }
 
     public void error(String s) throws RuntimeException {
-        error(s, Lexer.line, Lexer.filename);
+        error(s,null);
     }
 
-    public void error(String s, int l, String f) throws RuntimeException {
-        throw new RuntimeException("line " + l + " in file `" + f + "':\n\t" + s);
+    public void error(String s,Throwable cause){
+        error(s, Lexer.line, Lexer.filename,cause);
+    }
+
+    public void error(String s,int l,String f) {
+        error(s,l,f,null);
+    }
+
+    public void error(String s, int l, String f,Throwable e) throws RuntimeException {
+        if(e == null)
+            throw new RuntimeException("line " + l + " in file `" + f + "':\n\t" + s);
+        else
+            throw new RuntimeException("line " + l + " in file `" + f + "':\n\t" + s,e);
     }
 
     public void warning(String s) {
@@ -404,7 +415,7 @@ public class Parser implements TypeTable {
                 try {
                     f = LoadFunc.loadFunc(t, sb.toString(), clazzName, name, pl, this.lex, this);
                 } catch (Exception e) {
-                    error("failed to load extension function `" + sb.toString() + "." + clazzName + "'");
+                    error("failed to load extension function `" + sb.toString() + "." + clazzName + "'",e);
                 }
                 if (!table.addFunc(name, f)) {
                     error("function name has conflict:" + name);

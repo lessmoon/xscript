@@ -32,7 +32,7 @@ public class SeqExpr extends Expr {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return left.isChangeable() || right.isChangeable();
     }
 

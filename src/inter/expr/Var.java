@@ -9,7 +9,7 @@ public abstract class Var extends Expr {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return true;
     }
 

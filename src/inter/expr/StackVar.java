@@ -14,7 +14,7 @@ public class StackVar extends Var {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return true;
     }
 

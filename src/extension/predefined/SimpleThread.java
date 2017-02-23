@@ -6,12 +6,14 @@ import extension.annotation.Init;
 import extension.annotation.StructMethod;
 import inter.expr.Constant;
 import inter.expr.StructConst;
+import lexer.BigNum;
 import lexer.Token;
 import runtime.Dictionary;
 import runtime.Interface;
 import runtime.TypeTable;
 import symbols.Position;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +28,13 @@ public class SimpleThread extends Struct {
 
     public static class SimpleThreadProxy {
         final static Position vfPos = new Position(0, 0);
-        Thread t;
+        Thread thread;
 
         @Init(args = "Runnable")
         public void init(Constant r) {
             StructConst runnable = (StructConst) r;
 
-            t = new Thread(() -> {
+            thread = new Thread(() -> {
                 try {
                     List<Constant> args = new ArrayList<>();
                     args.add(runnable);
@@ -43,10 +45,15 @@ public class SimpleThread extends Struct {
             });
         }
 
+        @StructMethod(ret = "bigint")
+        public Constant getThreadId(){
+            return new Constant(BigInteger.valueOf(thread.getId()));
+        }
+
         @StructMethod(ret = "bool")
         public Constant start() {
             try {
-                t.start();
+                thread.start();
             } catch (Exception e) {
                 return Constant.False;
             }
@@ -56,7 +63,7 @@ public class SimpleThread extends Struct {
         @StructMethod(args = "int")
         public Constant join(Constant time) {
             try {
-                t.join(time.valueAs(Integer.class));
+                thread.join(time.valueAs(Integer.class));
             } catch (Exception e) {
                 return Constant.False;
             }
@@ -66,7 +73,7 @@ public class SimpleThread extends Struct {
         @StructMethod(ret = "bool")
         public Constant interrupt() {
             try {
-                t.interrupt();
+                thread.interrupt();
             } catch (Exception e) {
                 return Constant.False;
             }

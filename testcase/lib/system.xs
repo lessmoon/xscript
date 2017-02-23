@@ -1,4 +1,8 @@
 native<extension.system>{
+    "sleep":void sleep(int duration);
+}
+
+native<extension.system>{
 	"extime":struct Time{
 		int hour;
 		int minute;
@@ -7,10 +11,6 @@ native<extension.system>{
 
 	"GetTime":void getTime(Time d);
 
-}
-
-native<extension.predefined>{
-    "GetThreadId": bigint getThreadId();
 }
 
 struct MyTime:Time{
@@ -24,7 +24,7 @@ struct MyTime:Time{
 native<extension.system>{
     bool PutChar(char c);
     bool print(string str);
-    int  time();
+    bigint  time();
     int  getchar();
 }
 

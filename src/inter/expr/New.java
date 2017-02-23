@@ -16,7 +16,7 @@ public class New extends Op {
         return "new " + type.toString();
     }
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return true;
     }
 

@@ -13,10 +13,20 @@ public class ArrayVar extends Var {
 		if(!(array.type instanceof Array)){
 			error("`" + array + "' is not array type");
 		}
+        check();
+    }
+
+    void check(){
+        if( Type.max(Type.Int,loc.type) != Type.Int ){
+            error("type " + loc.type + " is not valid for array");
+        }
+
+        if(loc.type != Type.Int)
+            loc = ConversionFactory.getConversion(loc,Type.Int);
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return true;
     }
 
