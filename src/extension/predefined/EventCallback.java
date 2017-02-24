@@ -11,7 +11,7 @@ import symbols.Struct;
 
 public class EventCallback extends extension.Struct {
     public static class CallBack{
-        @StructMethod(args={"int"},ret="bool",virtual=true)
+        @StructMethod(args={"int"},ret="bool",purevirtual=true)
         public Constant callback(Constant id){
             return Constant.False;
         }

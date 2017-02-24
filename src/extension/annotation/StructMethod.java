@@ -15,4 +15,5 @@ public @interface StructMethod {
     String[] args() default {};
     String ret() default "void";
     boolean virtual() default false;
+    boolean purevirtual() default false;
 }

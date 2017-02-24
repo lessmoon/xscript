@@ -71,7 +71,9 @@ public class ExtensionStructHelper {
         } else if (returnType != Type.Void && !Constant.class.isAssignableFrom(m.getReturnType())) {//check if the return type
             throw new RuntimeException("return type `" + m.getReturnType() + "' of " + m.getName() + " is not assignable to Constant and declared return is not void");
         }
-        Stmt body = returnType == Type.Void ? new Stmt() {
+
+        Stmt body = func.purevirtual() ? null
+                                        : returnType == Type.Void ? new Stmt() {
             final StackVar arg0 = new StackVar(Word.This, s, 0, 0);
 
             @Override
@@ -85,7 +87,7 @@ public class ExtensionStructHelper {
                 try {
                     m.invoke(s1.getExtension(), args);
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
         } : new Stmt() {
@@ -116,7 +118,7 @@ public class ExtensionStructHelper {
                     }
                     ret(ret);
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
         };
@@ -141,7 +143,7 @@ public class ExtensionStructHelper {
             final StructMethod methodAnnotation = m.getAnnotation(StructMethod.class);
             if (methodAnnotation != null) {
                 FunctionBasic f = getMemberFunction(m,c,dic,typeTable,s);
-                if (methodAnnotation.virtual()) {
+                if (methodAnnotation.virtual() || methodAnnotation.purevirtual()) {
                     s.defineVirtualFunction(f.name,f);
                 } else {
                     s.addNormalFunction(f.name,f);
