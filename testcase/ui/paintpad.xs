@@ -386,27 +386,24 @@ native<extension.ui>{
 }
 
 struct PaintPad:PaintPadX{
-    AtomicInteger i;
+    Trigger t;
 
     def this(string name,int width,int height){
         super(name,width,height);
-        this.i = new AtomicInteger();
-        this.i.setAndGet(1);
+		this.t = new Trigger();
     }
 
     def void show(){
-        this.i.setAndGet(0);
         super.open();
     }
 
     def override void onClose(){
         super.onClose();
-        this.i.setAndGet(1);
+        this.t.triggerAll();
     }
 
     def void wait(){
-        this.i.waitAndDecrement(0);
-        this.i.setAndGet(1);
+        this.t.wait();
     }
 }
 

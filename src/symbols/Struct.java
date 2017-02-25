@@ -6,6 +6,7 @@ import inter.stmt.MemberFunction;
 import lexer.Tag;
 import lexer.Token;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -338,7 +339,11 @@ public class Struct extends Type {
     public String getFirstUsedFile(){
         return firstUsedFile;
     }
-    
+
+    public Map<Token, Position> getVirtualFunctionMap() {
+        return Collections.unmodifiableMap(this.vfuncMap);
+    }
+
     @Override
     public String toString(){
         return  "struct " + super.toString();

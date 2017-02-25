@@ -198,30 +198,32 @@ public class Lexer implements Dictionary {
         for(;;readch()){
             if(peek == '\n') {
                 line++;
-            } else if(Character.isWhitespace(peek)){
-                continue;
-            } else if(peek == '/'){
-                if(readch('*')){
-                    readch();
-                    do{
-                        while(peek != '*'){
-                            if(peek == '\n')
-                                line ++;
-                            readch();
-                        }
+            } else if (!Character.isWhitespace(peek)) {
+                if(peek == '/'){
+                    if(readch('*')){
                         readch();
-                    }while( peek != '/' );
-                } else if( peek == '/' ){
-                    while(!readch('\n')){}
-                    line++;
-                } else if( peek == '=' ){
-                    peek = ' ';
-                    return Word.divass;
+                        do{
+                            while(peek != '*'){
+                                if(peek == '\n')
+                                    line ++;
+                                readch();
+                            }
+                            readch();
+                        }while( peek != '/' );
+                    } else if( peek == '/' ){
+                        while(true){
+                            if (readch('\n')) break;
+                        }
+                        line++;
+                    } else if( peek == '=' ){
+                        peek = ' ';
+                        return Word.divass;
+                    } else {
+                        return Word.div;
+                    }
                 } else {
-                    return Word.div;
+                    break;
                 }
-            } else {
-                break;
             }
         }
 

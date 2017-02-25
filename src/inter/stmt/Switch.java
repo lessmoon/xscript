@@ -43,7 +43,7 @@ public abstract class Switch extends Stmt {
             return new IntSwitch(c);
         } else {
             c.error("switch expression should be `" + Type.Int + "',`" + Type.Str + "' or `" + Type.Char + "',but `"+ c.type + "' found");
-            return null;
+            return new IntSwitch(c);
         }
     }
 
@@ -132,7 +132,7 @@ class CharSwitch extends Switch {
             }
             return false;
         }
-        
+
         @Override
         public boolean isCaseSet(Constant c){
             if( Type.max(Type.Int,c.type) != Type.Int){
@@ -179,7 +179,7 @@ class StrSwitch extends Switch {
             }
             return false;
         }
-        
+
         @Override
         public boolean isCaseSet(Constant c){
             if( c.type != Type.Str ){

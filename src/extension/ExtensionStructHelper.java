@@ -2,6 +2,7 @@ package extension;
 
 import extension.annotation.Init;
 import extension.annotation.StructMethod;
+import inter.expr.ArrayConst;
 import inter.expr.Constant;
 import inter.expr.StackVar;
 import inter.expr.StructConst;
@@ -14,11 +15,13 @@ import lexer.Token;
 import lexer.Word;
 import runtime.Dictionary;
 import runtime.TypeTable;
+import symbols.Array;
 import symbols.Type;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,49 +34,73 @@ public class ExtensionStructHelper {
 
     /**
      * build a function from method m
-     * @param m the method to use
-     * @param clazz the class built from
-     * @param dic the dictionary
+     *
+     * @param m         the method to use
+     * @param clazz     the class built from
+     * @param dic       the dictionary
      * @param typeTable the type table
-     * @param s the struct
-     * @param <T> the type
+     * @param s         the struct
+     * @param <T>       the type
      * @return the member function
      */
     public static <T> MemberFunction getMemberFunction(final Method m, final Class<T> clazz, Dictionary dic, TypeTable typeTable, symbols.Struct s) {
         StructMethod func = m.getAnnotation(StructMethod.class);
-        assert(func != null);
+        assert (func != null);
 
         final int argLength = func.args().length;
         if (argLength != m.getParameterCount())
             throw new RuntimeException("member function " + m + " for " + s.toString() + "'s parameter length not matched");
         if (Modifier.isStatic(m.getModifiers()))
-            throw new RuntimeException("try to bind with static function" + m + " to " + s );
+            throw new RuntimeException("try to bind with static function" + m + " to " + s);
 
         final StackVar[] vars = new StackVar[argLength];
         final List<Para> param = new ArrayList<>();
 
+        final Parameter[] ps = m.getParameters();
         param.add(new Para(s, Word.This));
         for (int i = 0; i < argLength; i++) {
             Type t = typeTable.getType(dic.getOrReserve(func.args()[i]));
-            if (t == null)
-                throw new RuntimeException("declared arg[" + (i+1) + "] of " + m.getName() + "[aka:init] type[" + func.args()[i] + "] is not found");
+            assert (t != null)
+                    :("declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()' type[" + func.args()[i] + "] is not found");
+            assert (Constant.class.isAssignableFrom(ps[i].getType()))
+                    : ("implementation of declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()':can't bind type[" + t + "] to [" + ps[i].getType().getName() + "] ");
+
+            if (ArrayConst.class.isAssignableFrom(ps[i].getType())) {
+                //check if it is an array arg declared
+                assert (t instanceof Array)
+                        : ("implementation of declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()':can't bind type[" + t + "] to [" + ps[i].getType().getName() + "] ");
+            } else if (Struct.class.isAssignableFrom(ps[i].getType())) {
+                //check if it is an array arg declared
+                assert (t instanceof symbols.Struct)
+                        : ("implementation of declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()':can't bind type[" + t + "] to [" + ps[i].getType().getName() + "] ");
+            }
 
             Token name = dic.getOrReserve("arg#" + i);
             vars[i] = new StackVar(name, t, 0, i + 1);
             param.add(new Para(t, name));
         }
-        final Token funcName = func.value().isEmpty() ?  dic.getOrReserve(m.getName()):dic.getOrReserve(func.value());
+        final Token funcName = func.value().isEmpty() ? dic.getOrReserve(m.getName()) : dic.getOrReserve(func.value());
 
         final Type returnType = func.ret().isEmpty() ? Type.Void : typeTable.getType(dic.getOrReserve(func.ret()));
-
         if (returnType == null) {
             throw new RuntimeException("return type `" + func.ret() + "` for " + s + "." + funcName + " is not valid");
         } else if (returnType != Type.Void && !Constant.class.isAssignableFrom(m.getReturnType())) {//check if the return type
             throw new RuntimeException("return type `" + m.getReturnType() + "' of " + m.getName() + " is not assignable to Constant and declared return is not void");
         }
 
+        if (m.getReturnType().isInstance(ArrayConst.class)) {
+            //check if it is an array
+            assert (returnType instanceof Array)
+                    : ("implementation of return type of " + m.getName() + ":can't bind type[" + returnType + "] to [" + m.getReturnType().getName() + "] ");
+        }
+        if (m.getReturnType().isInstance(StructConst.class)) {
+            //check if it is an Struct
+            assert (returnType instanceof symbols.Struct)
+                    : ("implementation of return type of " + m.getName() + ":can't bind type[" + returnType + "] to [" + m.getReturnType().getName() + "] ");
+        }
+
         Stmt body = func.purevirtual() ? null
-                                        : returnType == Type.Void ? new Stmt() {
+                : returnType == Type.Void ? new Stmt() {
             final StackVar arg0 = new StackVar(Word.This, s, 0, 0);
 
             @Override
@@ -127,26 +154,27 @@ public class ExtensionStructHelper {
 
     /**
      * build a struct from class c,c must have a no arg constructor
-     * @param c the class
-     * @param dic the dictionary
+     *
+     * @param c         the class
+     * @param dic       the dictionary
      * @param typeTable the type table
-     * @param name the struct name
-     * @param <T> the Type
+     * @param name      the struct name
+     * @param <T>       the Type
      * @return the struct
      */
     public static <T> symbols.Struct buildStructFromClass(Class<T> c, Dictionary dic,
-                                                          TypeTable typeTable, Token name,boolean needDefaultInit) {
+                                                          TypeTable typeTable, Token name, boolean needDefaultInit) {
         final Method[] methods = c.getMethods();
 
         symbols.Struct s = new symbols.Struct(name);
         for (final Method m : methods) {
             final StructMethod methodAnnotation = m.getAnnotation(StructMethod.class);
             if (methodAnnotation != null) {
-                FunctionBasic f = getMemberFunction(m,c,dic,typeTable,s);
+                FunctionBasic f = getMemberFunction(m, c, dic, typeTable, s);
                 if (methodAnnotation.virtual() || methodAnnotation.purevirtual()) {
-                    s.defineVirtualFunction(f.name,f);
+                    s.defineVirtualFunction(f.name, f);
                 } else {
-                    s.addNormalFunction(f.name,f);
+                    s.addNormalFunction(f.name, f);
                 }
             }
 
@@ -158,8 +186,8 @@ public class ExtensionStructHelper {
         }
 
         //extension struct from a class must have a constructor
-        if(needDefaultInit && s.getInitialFunction() == null){
-            s.defineInitialFunction(getDefaultInitialFunction(c,dic,typeTable,s));
+        if (needDefaultInit && s.getInitialFunction() == null) {
+            s.defineInitialFunction(getDefaultInitialFunction(c, dic, typeTable, s));
         }
 
         return s;
@@ -188,11 +216,24 @@ public class ExtensionStructHelper {
 
         final StackVar[] vars = new StackVar[argLength];
         final List<Para> param = new ArrayList<>();
-
         param.add(new Para(s, Word.This));
+
+        final Parameter[] ps = m.getParameters();
         for (int i = 0; i < argLength; i++) {
             Type t = typeTable.getType(dic.getOrReserve(init.args()[i]));
-            assert (t != null) : "declared arg[" + (i+1) + "] of " + m.getName() + "[aka:init] type[" + init.args()[i] + "] is not found";
+            assert (t != null) : "declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()'[aka:init] type[" + init.args()[i] + "] is not found";
+            assert (Constant.class.isAssignableFrom(ps[i].getType()))
+                    : ("implementation of declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()'[aka:init] :can't bind type[" + t + "] to [" + ps[i].getType().getName() + "] ");
+
+            if (ArrayConst.class.isAssignableFrom(ps[i].getType())) {
+                //check if it is an array arg declared
+                assert (t instanceof Array)
+                        : ("implementation of declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()'[aka:init] :can't bind type[" + t + "] to [" + ps[i].getType().getName() + "] ");
+            } else if (StructConst.class.isAssignableFrom(ps[i].getType())) {
+                //check if it is an array arg declared
+                assert (t instanceof symbols.Struct)
+                        : ("implementation of declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()'[aka:init] :can't bind type[" + t + "] to [" + ps[i].getType().getName() + "] ");
+            }
 
             Token name = dic.getOrReserve("arg#" + i);
             vars[i] = new StackVar(name, t, 0, i + 1);
@@ -224,27 +265,29 @@ public class ExtensionStructHelper {
 
     /**
      * build a default initial function,it just construct an instance of clazz and set the s.extension
-     * @param clazz the class built from
-     * @param dic the dictionary
+     *
+     * @param clazz     the class built from
+     * @param dic       the dictionary
      * @param typeTable the type table
-     * @param s the struct
-     * @param <T> the type
+     * @param s         the struct
+     * @param <T>       the type
      * @return the default initial function
      */
-    public static <T> InitialFunction getDefaultInitialFunction(final Class<T> clazz, Dictionary dic, TypeTable typeTable, symbols.Struct s){
-        Stmt body = new Stmt(){
-            final StackVar arg0 = new StackVar(Word.This,s,0,0);
+    public static <T> InitialFunction getDefaultInitialFunction(final Class<T> clazz, Dictionary dic, TypeTable typeTable, symbols.Struct s) {
+        Stmt body = new Stmt() {
+            final StackVar arg0 = new StackVar(Word.This, s, 0, 0);
+
             @Override
-            public void run(){
+            public void run() {
                 try {
-                    ((StructConst)arg0.getValue()).setExtension(clazz.newInstance());
+                    ((StructConst) arg0.getValue()).setExtension(clazz.newInstance());
                 } catch (InstantiationException | IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
             }
         };
         List<Para> param = new ArrayList<>();
-        param.add(new Para(s,Word.This));
-        return new InitialFunction(Word.This,body,param,s);
+        param.add(new Para(s, Word.This));
+        return new InitialFunction(Word.This, body, param, s);
     }
 }

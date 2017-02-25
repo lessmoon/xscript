@@ -148,7 +148,7 @@ struct deriveC:baseB{
 {
     baseA x = new deriveC(1);
     
-    println(x);
+    println(x);	
 }
 
 
@@ -240,8 +240,8 @@ struct PrintNumber : Runnable {
         if(i ++ == 20){
             t1.interrupt();
         }
-        if(i > 100){
-            getCurrentThread().interrupt();
+        if(i > 99){
+            break;
         }
     }
 }

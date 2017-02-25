@@ -6,7 +6,6 @@ import extension.annotation.Init;
 import extension.annotation.StructMethod;
 import inter.expr.Constant;
 import inter.expr.StructConst;
-import lexer.BigNum;
 import lexer.Token;
 import runtime.Dictionary;
 import runtime.Interface;
@@ -43,6 +42,16 @@ public class SimpleThread extends Struct {
 
                 }
             });
+        }
+
+        @StructMethod(args = {"string"})
+        public void setName(Constant name) {
+            thread.setName(name.valueAs(String.class));
+        }
+
+        @StructMethod(ret = "string")
+        public Constant getName() {
+            return new Constant(thread.getName());
         }
 
         @StructMethod(ret = "bigint")

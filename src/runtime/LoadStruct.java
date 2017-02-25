@@ -4,6 +4,7 @@ import lexer.Token;
 import symbols.Struct;
 
 public class LoadStruct {
+
     public static Struct loadStruct(String pkg,String clazzname,Token sname,Dictionary dic,TypeTable typeTable){
         try{
             ClassLoader loader = ClassLoader.getSystemClassLoader();

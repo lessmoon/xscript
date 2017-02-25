@@ -25,7 +25,7 @@ public class Parser implements TypeTable {
     private Set<Token> forbiddenFunctionName = new HashSet<>();
     private Type returnType = Type.Int;
     private boolean hasDecl = true;
-    private boolean enableWarning = false;
+    final private boolean enableWarning = false;
     /*
      * binding for super.func or var,
      * which means super struct must have this function definition and implementation
@@ -133,6 +133,8 @@ public class Parser implements TypeTable {
         error(s,l,f,null);
     }
 
+
+
     public void error(String s, int l, String f,Throwable e) throws RuntimeException {
         if(e == null)
             throw new RuntimeException("line " + l + " in file `" + f + "':\n\t" + s);
@@ -223,13 +225,9 @@ public class Parser implements TypeTable {
     private void checkFunctionCompletion() {
         /*check if some used functions has not been completed*/
 
-        table.getAllFunctions().stream().filter(b -> b.used() && !b.isCompleted()).forEach(b -> {
-            error("function `" + b + "' used but not completed ", b.lexline, b.filename);
-        });
+        table.getAllFunctions().stream().filter(b -> b.used() && !b.isCompleted()).forEach(b -> error("function `" + b + "' used but not completed ", b.lexline, b.filename));
 
-        fUsed.stream().filter(b -> b.used() && !b.isCompleted()).forEach(b -> {
-            error("function `" + b + "' used but not completed ", b.lexline, b.filename);
-        });
+        fUsed.stream().filter(b -> b.used() && !b.isCompleted()).forEach(b -> error("function `" + b + "' used but not completed ", b.lexline, b.filename));
 
         /*
          * check if there is a struct that is pure virtual but declared
@@ -272,6 +270,7 @@ public class Parser implements TypeTable {
                     f = s.getInitialFunction();
                     if (f == null) {
                         error("struct `" + s + "' has no initial function");
+                        return;
                     }
                     move();
                 } else {
@@ -286,6 +285,7 @@ public class Parser implements TypeTable {
                     f = isVirtual ? s.getVirtualFunction(fname) : s.getNormalFunction(fname);
                     if (f == null) {
                         error("`" + s + "' has no" + (isVirtual?" virtual ":" ") + "function `" + fname + "'");
+                        return;
                     }
                     if (!returnType.equals(f.type)) {
                         error("function `" + s + "." + f.name + "' return type not match[expect `" + f.type + "', but found `" + returnType+ "']");
@@ -317,11 +317,12 @@ public class Parser implements TypeTable {
                     error("member " + s + "." + varName + " redeclared");
                 }
                 defined.add(varName);
-                Type t1 = s.getMemberVariableType(varName).type;
+                StructVariable t1 = s.getMemberVariableType(varName);
                 if(t1 == null){
                     error("member " + s + "." + varName + " does not actually exists");
+                    return;//forbidden warning
                 }
-                if(!t1.equals(t)){
+                if (!t1.type.equals(t)) {
                     error("type of member " + s + "." + varName + "does not match actually[expect:`" + t1 + "',but found:`"+ t + "']");
                 }
             }
@@ -364,6 +365,7 @@ public class Parser implements TypeTable {
                 Struct s = LoadStruct.loadStruct(sb.toString(), clazzName, name, this.lex, this);
                 if (s == null) {
                     error("incomplete extension struct:`" + name + "'");
+                    return;
                 }
                 checkNamespace(s.getName(), "struct");
                 defType(s.getName(), s);
@@ -470,11 +472,11 @@ public class Parser implements TypeTable {
         while (!check('}')) {
             Token op = null;
             if (check('@')) {
-                Token tmp = look;
                 if (look.tag == Tag.ID) {
                     op = getType(look);
                     if (op == null) {
                         error("type `" + look + "' not found");
+                        return;
                     }
                 } else {
                     op = copymove();
@@ -635,6 +637,7 @@ public class Parser implements TypeTable {
 
             if (!(t instanceof Struct)) {
                 error("struct type needed here,but `" + t + "' found");
+                return;
             }
             name = look;
             match(Tag.ID);
@@ -646,7 +649,7 @@ public class Parser implements TypeTable {
         }
 
         List<Para> l = arguments();
-        Function f = null;
+        Function f;
         if (check(';')) {
             f = new Function(name, returnType, l);
             /*check if its name has been used*/
@@ -700,6 +703,7 @@ public class Parser implements TypeTable {
         InitialFunction f = (InitialFunction) t.getInitialFunction();
         if (f == null) {
             error("initial function declaration `" + t.getName() + ".[init]' not found");
+            return;
         }
         if (f.isCompleted()) {
             error("initial function `" + t.getName() + ".[init]' redefined");
@@ -729,11 +733,11 @@ public class Parser implements TypeTable {
     private void defOuterStructFunction(Struct t, Token name, Type returnType) throws IOException {
         dStruct = t;
 
-        //TODO:check if it is normal or virtual function
         //     if it is definition of the constructor
         Function f = (Function) t.getDeclaredFunction(name);
         if (f == null) {
             error("member function declaration `" + t.lexeme + "." + name + "' not found ");
+            return ;
         }
         /*
          * NOTE:type.equals doesn't conclude
@@ -975,6 +979,7 @@ public class Parser implements TypeTable {
                 Expr c = expr().optimize();
                 if (!(c instanceof Constant)) {
                     error("case expression `" + c + "' is not constant");
+                    return null;
                 }
 
                 Constant val = (Constant) c;
@@ -1164,7 +1169,7 @@ public class Parser implements TypeTable {
     public Expr list(Type p) throws IOException {
         Expr initseq = Constant.Null;
 
-        List<Expr> init_list = new ArrayList<Expr>();
+        List<Expr> init_list = new ArrayList<>();
         if (look.tag != '}') {
             do {
                 init_list.add(element(p));
@@ -1186,7 +1191,7 @@ public class Parser implements TypeTable {
     }
 
     private Expr element(Type p) throws IOException {
-        Expr e = null;
+        Expr e;
         if (look.tag == '{') {//array of array
             //p must be array
             if (p instanceof Array) {
@@ -1194,15 +1199,17 @@ public class Parser implements TypeTable {
             } else {
                 //TODO:details
                 error("too many dimensions than the array declaration");
+                return null;
             }
         } else {
             e = expr();
         }
+        Expr tmp = e;
         if (!e.type.equals(p)) {
             e = ConversionFactory.getConversion(e, p);
         }
         if (e == null) {//type error
-            error("array init error:can't convert `" + e.type + "' to `" + p + "'");
+            error("array init error:can't convert `" + tmp.type + "' to `" + p + "'");
         }
         return e;
     }
@@ -1219,6 +1226,7 @@ public class Parser implements TypeTable {
             Token t = getType(look);
             if (t == null) {
                 error("type `" + look + "' not found");
+                return null;
             }
             look = t;
         }
@@ -1246,7 +1254,7 @@ public class Parser implements TypeTable {
 
         if (look.tag == '[') {
             if (p == Type.Void) {
-                error("type `" + p.toString() + "' can't be element type of array");
+                error("type `" + p + "' can't be element type of array");
             }
             return arrtype(p);
         }
@@ -1485,6 +1493,7 @@ public class Parser implements TypeTable {
                     //    return member(pthis);
                     //}
                     error("variable `" + tmp + "' not declared");
+                    return null;
                 }
             /*
              * Level 0 is for the global variables
@@ -1623,6 +1632,7 @@ public class Parser implements TypeTable {
             fs = dStruct.getFather();
             if (fs == null) {
                 error("`" + dStruct + "' has no father");
+                return null;
             }
             f = fs.getInitialFunction();
             if (f == null) {

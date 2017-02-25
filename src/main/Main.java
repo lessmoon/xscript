@@ -3,6 +3,7 @@ package main;
 import inter.expr.ArithFactory;
 import inter.expr.ArrayConst;
 import inter.expr.Constant;
+import inter.stmt.ReturnResult;
 import inter.stmt.Stmt;
 import lexer.Lexer;
 import parser.Parser;
@@ -38,6 +39,8 @@ public class Main{
         boolean stmt_opt  = false;
         boolean print_code_translate = false;
         boolean print_func_translate = false;
+        boolean debug_compile = false;
+        boolean debug_runtime = false;
         int index = 0 ;
         outer:{
             for(; index < args.length ;index++){
@@ -75,6 +78,14 @@ public class Main{
                 case "-v":
                     System.out.println("Version: xxxscript " + MAJOR_VERSION + "." +  MINOR_VERSION + "\n");
                     return;
+                    case "-dbgrt":
+                    case "--debugruntime":
+                        debug_runtime = true;
+                        break;
+                    case "-dbgcmp":
+                    case "--debugcompile":
+                        debug_compile = true;
+                        break;
                 default:
                     if(args[index].charAt(0) == '-'){
                         System.err.println("Unknown option `" + args[index] + "' found.");
@@ -105,11 +116,14 @@ public class Main{
         try {
             s = parser.program();
         } catch (RuntimeException e){
-            e.printStackTrace();
+            if (debug_compile)
+                e.printStackTrace();
             System.err.println("Compile Error:");
             System.err.println(e.getMessage());
             return;
         } catch( IOException e){
+            if (debug_compile)
+                e.printStackTrace();
             System.err.println("Compile Error(IO):");
             System.err.println(e.getMessage());
             return;
@@ -131,9 +145,12 @@ public class Main{
             } else {
                 return;
             }
-           
-        } catch (RuntimeException e){
-            //e.printStackTrace();
+
+        } catch (ReturnResult res) {
+            System.exit(res.value.valueAs(Integer.class));
+        } catch (RuntimeException e) {
+            if (debug_runtime)
+                e.printStackTrace();
             System.err.println("Runtime Error:");
             RunStack.printStackTrace(e.getMessage());
             return;

@@ -8,11 +8,11 @@ src/extension/math/SetSeed.java
 src/extension/math/sin.java
 src/extension/predefined/EventCallback.java
 src/extension/predefined/GetCurrentThread.java
-src/extension/predefined/GetThreadId.java
 src/extension/predefined/MouseEventCallback.java
 src/extension/predefined/MutexLock.java
 src/extension/predefined/SimpleThread.java
 src/extension/predefined/TestStruct.java
+src/extension/predefined/Trigger.java
 src/extension/Struct.java
 src/extension/system/close.java
 src/extension/system/ExFile.java
