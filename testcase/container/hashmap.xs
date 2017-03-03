@@ -1,22 +1,11 @@
-struct HashContent{
-    def virtual int hash();
-    @string
-    def virtual string toString();
-    
-    
-    def virtual bool equals(HashContent c);
-}
 
-struct ValueContent{
-    @string
-    def virtual string toString();
-}
+import "content.xs";
 
 struct HashPair{
     HashContent key;
-    ValueContent value;
+    Content value;
     
-    def this(HashContent key,ValueContent value){
+    def this(HashContent key,Content value){
         this.key = key;
         this.value = value;
     }

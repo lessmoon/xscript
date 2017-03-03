@@ -29,6 +29,12 @@ public class StructConst extends Constant {
         }while(t != null);
     }
 
+    public StructConst( Struct t ,Object extension ){
+        this(t);
+        setExtension(extension);
+        
+    }
+    
     public void setExtension(Object extension){
         this.extension = extension;
     }

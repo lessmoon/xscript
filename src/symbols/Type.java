@@ -60,7 +60,8 @@ public class Type extends Word {
                 return false;
             }
         };
-    
+    public static final StructPlaceHolder  = new Struct(new Token("#StructPlaceHolder#"));
+
 
     static {
         Int.setInitialValue(new Constant(0));

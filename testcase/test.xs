@@ -264,46 +264,10 @@ struct MyStruct : NTVSTRT{
     }
 }
 
-struct StringHashContent : HashContent {
-    string val;
-    def this(string val){
-        this.val = val;
-    }
-
-    def override int hash(){
-        int v = 0;
-        int len   = strlen(this.val) ;
-        for(int i = 0;i < len;i++){
-            v += this.val[i];
-        }
-        return v;
-    }
-
-    def override string toString(){
-        return this.val;
-    }
-
-    def override bool equals(HashContent x){
-        return this.val == ((StringHashContent)x).val;
-    }
-}
-
-
-struct IntValueContent : ValueContent{
-    int val;
-    def this(int val){
-        this.val = val;
-    }
-    
-    def override string toString(){
-        return (string)(this.val);
-    }
-}
-
 {
    HashMap hm = new HashMap();
    for(int i = 0; i < 20;i++){
-        hm.set(new StringHashContent(""+rand()),new IntValueContent(rand()));
+        hm.set(new StringHashContent(""+rand()),new IntContent(rand()));
         println("" + i + "\n" + hm);
    }
 }

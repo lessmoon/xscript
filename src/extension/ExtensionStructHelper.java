@@ -59,7 +59,8 @@ public class ExtensionStructHelper {
         final Parameter[] ps = m.getParameters();
         param.add(new Para(s, Word.This));
         for (int i = 0; i < argLength; i++) {
-            Type t = typeTable.getType(dic.getOrReserve(func.args()[i]));
+            Type t = func.args()[i].equals("$")?s
+                                            :typeTable.getType(dic.getOrReserve(func.args()[i]));
             assert (t != null)
                     :("declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()' type[" + func.args()[i] + "] is not found");
             assert (Constant.class.isAssignableFrom(ps[i].getType()))
@@ -81,7 +82,9 @@ public class ExtensionStructHelper {
         }
         final Token funcName = func.value().isEmpty() ? dic.getOrReserve(m.getName()) : dic.getOrReserve(func.value());
 
-        final Type returnType = func.ret().isEmpty() ? Type.Void : typeTable.getType(dic.getOrReserve(func.ret()));
+        final Type returnType = func.ret().isEmpty() ? Type.Void 
+                                                      : func.ret().equals("$")? s
+                                                                                :typeTable.getType(dic.getOrReserve(func.ret()));
         if (returnType == null) {
             throw new RuntimeException("return type `" + func.ret() + "` for " + s + "." + funcName + " is not valid");
         } else if (returnType != Type.Void && !Constant.class.isAssignableFrom(m.getReturnType())) {//check if the return type
@@ -119,7 +122,9 @@ public class ExtensionStructHelper {
             }
         } : new Stmt() {
             final StackVar arg0 = new StackVar(Word.This, s, 0, 0);
-
+            final boolean  retflag = func.ret().equals("$");
+            
+            
             @Override
             public void run() {
                 StructConst s1 = (StructConst) arg0.getValue();
@@ -130,12 +135,17 @@ public class ExtensionStructHelper {
                 }
                 try {
                     Constant ret = (Constant) m.invoke(s1.getExtension(), args);
-
+                    
                     //check return type dynamically
                     if (!ret.type.equals(returnType)) {
                         if (returnType instanceof symbols.Struct && ret.type instanceof symbols.Struct) {
                             if (ret != Constant.Null) {
-                                if (!((symbols.Struct) ret.type).isChildOf((symbols.Struct) returnType)) {
+                                if( retflag ){
+                                    //fix the type dynamically
+                                    StructConst r = new StructConst(s);
+                                    r.setExtension(((StructConst)s).getExtension());
+                                    ret = r;
+                                } else if (!((symbols.Struct) ret.type).isChildOf((symbols.Struct) returnType)) {
                                     throw new RuntimeException("error return type[ " + ret.type + "] expect:" + returnType);
                                 }
                             }
@@ -220,7 +230,8 @@ public class ExtensionStructHelper {
 
         final Parameter[] ps = m.getParameters();
         for (int i = 0; i < argLength; i++) {
-            Type t = typeTable.getType(dic.getOrReserve(init.args()[i]));
+            Type t = init.args()[i].equals("$")? s
+                                               :typeTable.getType(dic.getOrReserve(init.args()[i]));
             assert (t != null) : "declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()'[aka:init] type[" + init.args()[i] + "] is not found";
             assert (Constant.class.isAssignableFrom(ps[i].getType()))
                     : ("implementation of declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()'[aka:init] :can't bind type[" + t + "] to [" + ps[i].getType().getName() + "] ");

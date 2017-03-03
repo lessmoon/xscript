@@ -28,7 +28,7 @@ public class Struct extends Type {
     private boolean hasUsed = false;
     private int firstUsedLine = -1;
     private String firstUsedFile = "";
-
+    
     public Struct(Token name){
         super(name.toString(),Tag.BASIC,Constant.Null);
         this.name = name;
