@@ -1,0 +1,31 @@
+<"beg">
+"print":"Yes!!!Finally!!!"
+"type":"HEY THERE?" "100"
+"type":"Anyone THERE?" "150"
+"type":"'SUP??" "20"
+"print":"THANK GOD!!!"
+"sleep":"200"
+"print":"Could you please help me!"
+<"choice">
+"choice":"f" "Yes?" "Sorry,I'm busy now."
+"condition": "f" "1" "pass"
+"print":"Please reconsider"
+"jump":"choice"
+<"pass">
+"print":"Thank you!!!"
+"print":"I'm in an ice world now.I don't know where I am."
+"print":"Even worse,I don't know what happened before this."
+"choice":"f" "What is the last thing you remember?" "What's your name?"
+"condition":"f" "2" "name"
+"print":"I only remember there was a terrible earthquake."
+"jump":"checkingbag"
+<"name">
+"print":"Ahh...Headache.I don't remember my name!"
+<"checkingbag">
+"print":"Wait...I'm carrying a bag.Maybe I could get some useful information from it."
+"sleep":"2000"
+"print":"Hey I found an ID card"
+"print":"It says:"
+"type":"D-r-.-S-m-i-t-h" "100"
+"print":"So that's it.My name is Smith."
+<"end">

@@ -20,7 +20,7 @@ struct IntContent : Content{
 	
 	@int
 	def int toInt(){
-		return val;
+		return this.val;
 	}
 }
 
@@ -48,6 +48,8 @@ struct StringHashContent:HashContent{
 			hash_code *= 10;
 			hash_code += this.value[len];
 		}
+        if( hash_code < 0 )
+            hash_code = - hash_code;
 		return hash_code;
 	}
 
@@ -57,6 +59,6 @@ struct StringHashContent:HashContent{
     
     
     def override bool equals(HashContent c){
-		return c == this || c instanceof StringHashContent && ((StringHashContent)c).value = this.value;
+		return c == this || c instanceof StringHashContent && ((StringHashContent)c).value == this.value;
 	}
 }

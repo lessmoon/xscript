@@ -33,6 +33,14 @@ struct bilist{
         this.tail.prev.prev.next = this.tail.prev;
     }
 
+    def binode front(){
+        return this.head.next;
+    }
+    
+    def binode back(){
+        return this.tail.prev;
+    }
+
     def Content pop_front(){
         Content tmp = this.head.next.value;
         this.head.next = this.head.next.next;

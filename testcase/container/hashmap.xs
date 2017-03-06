@@ -55,7 +55,7 @@ struct HashMap{
         }
     }
 
-    def HashPair set(HashContent key,ValueContent val){
+    def HashPair set(HashContent key,Content val){
         int h = key.hash();
         int index = h%this.capcity;
         HashMapNode p = this.map[index];
@@ -92,7 +92,7 @@ struct HashMap{
     }
     
     def HashPair get(HashContent key){
-        HashMapNode p = this.map[key.hash()];
+        HashMapNode p = this.map[key.hash()%this.capcity];
         for(;p != null;p = p.next){
             if(p.value.key.equals(key)){
                 return p.value;

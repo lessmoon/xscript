@@ -1273,18 +1273,8 @@ public class Parser implements TypeTable {
     }
 
     public Expr expr() throws IOException {
-        Expr e = typecheck();
-        return ENABLE_EXPR_OPT ? e.optimize() : e;
-    }
-
-    private Expr typecheck() throws IOException {
         Expr e = assign();
-        while (look.tag == Tag.INSTOF) {
-            Token tok = copymove();
-            Type t = type();
-            e = new IsInstanceOf(tok, e, t);
-        }
-        return e;
+        return ENABLE_EXPR_OPT ? e.optimize() : e;
     }
 
     private Expr assign() throws IOException {
@@ -1300,7 +1290,7 @@ public class Parser implements TypeTable {
         Expr e = bool();
         Token t = look;
         if (check('?')) {
-            Expr iftrue = typecheck();
+            Expr iftrue = assign();
             match(':');
             Expr iffalse = condition();
             e = new Condition(t, e, iftrue, iffalse);
@@ -1333,14 +1323,24 @@ public class Parser implements TypeTable {
     }
 
     private Expr rel() throws IOException {
-        Expr l = add();
+        Expr l = typecheck();
         if (look.tag == Tag.GE || look.tag == Tag.LE
                 || look.tag == '<' || look.tag == '>') {
-            l = RelFactory.getRel(copymove(), l, add());
+            l = RelFactory.getRel(copymove(), l, typecheck());
         }
         return l;
     }
 
+    private Expr typecheck() throws IOException {
+        Expr e = add();
+        while (look.tag == Tag.INSTOF) {
+            Token tok = copymove();
+            Type t = type();
+            e = new IsInstanceOf(tok, e, t);
+        }
+        return e;
+    }
+    
     public Expr add() throws IOException {
         Expr l = mult();
         while (look.tag == '+' || look.tag == '-') {
@@ -1543,7 +1543,7 @@ public class Parser implements TypeTable {
                     Expr e = null;
                     do {
                         if (!check(']')) {
-                            e = typecheck();
+                            e = assign();
                             match(']');
                             break;
                         }
@@ -1597,7 +1597,7 @@ public class Parser implements TypeTable {
                 Type t1 = getType(look);
             /*check if it is just a variable*/
                 if (t1 == null) {
-                    e = typecheck();
+                    e = assign();
                     match(')');
                     break;
                 }
@@ -1614,7 +1614,7 @@ public class Parser implements TypeTable {
                     error("can't convert " + f.type + " to " + t);
                 break;
             default:
-                e = typecheck();
+                e = assign();
                 match(')');
                 break;
         }

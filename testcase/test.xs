@@ -10,7 +10,121 @@ import  "container/list.xs";
 import  "ui/paintpad.xs";
 import  "ui/cyclepaintpad.xs";
 
+//import "rpg/parser.xs";
 
+
+
+struct ScrollTextOutput{
+    PaintPad x;
+    int width,height;
+    int[] ids;
+    bilist contents;
+
+    int line;
+    
+    def this(int width_tile,int height_tile){
+        this.width = width_tile;
+        this.height = height_tile;
+        this.contents = new bilist();
+        this.x = new PaintPad("XLand",16*height_tile+20,8*width_tile+20);
+        this.ids = new int[height_tile];
+        for(int i = 0; i < height_tile;i++){
+           this.ids[i] = this.x.addString("",10,16*i+20);
+        }
+        this.line = 0;
+    }
+
+    def void update(){
+        if(this.line >= this.height){
+            auto beg = this.contents.front();
+            for(int i = this.height - 1;i >= 0 ;i--){
+                this.x.setString(this.ids[i],beg.value);
+                beg = beg.next;
+            }
+        } else {
+            int i = 0;
+            for(auto iter = this.contents.back();iter.prev != null;iter = iter.prev){
+                this.x.setString(this.ids[i],iter.value);
+                i++;
+            }
+        }
+    }
+
+    def void addString(string str,int r,int p,int g){
+        int len = strlen(str);
+        
+        if(len > this.width){
+            StringBuffer sb1 = new StringBuffer();
+            sb1.append(str);
+            sb1.delete(this.width-1,len - 1);
+            this.contents.push_front(new StringContent(sb1.toString()));
+            len -= this.width;
+            int i = this.width;
+            this.line ++;
+            do{
+                StringBuffer sb = new StringBuffer();
+                for(int j = 0;j < this.width && len > 0;j++){
+                    sb.append(str[i + j]);
+                    len--;
+                }
+                this.contents.push_front(new StringContent(sb.toString()));
+                i += this.width;
+                this.line++;
+            }while(len > 0);
+        } else {
+            this.contents.push_front(new StringContent(str));
+            this.line++;
+        }
+    }
+    
+    def void addCharacter(char c,int r,int p,int g){
+        if(this.contents.front() == null){
+            this.contents.push_front(new StringContent(c));
+        }
+        
+    }
+    
+    def void changeLine(){
+        this.line ++;
+    }
+
+    def void open(){
+        this.x.show();
+    }
+    
+    def void close(){
+        this.x.close();
+    }
+    
+    def void wait(){
+        this.x.wait();
+    }
+}
+
+{
+    //ScrollTextOutput x = new ScrollTextOutput(20,10);
+    //x.addString("Hello?Anyone there?",1,1,1);
+    //x.open();
+    //x.wait();
+}
+
+{
+    RPGParser p = new RPGParser();
+    RPGRuntime r = new RPGRuntime(p);
+    r.registerFunction("sleep",new Sleep);
+    r.registerFunction("condition",new Cond);
+    r.registerFunction("jump",new Jump);
+    r.registerFunction("choice",new Choice);
+    r.registerFunction("set",new Set);
+    r.registerFunction("print",new Print);
+    r.registerFunction("type",new StopPrint);
+    r.registerFunction("open",new Open);
+    r.registerFunction("add",new RPGAdd);
+    r.registerFunction("add",new RPGAdd);
+    r.open("test");
+    r.run();
+    
+}
 
 int[] r = {3243,545};
 
@@ -468,15 +582,6 @@ struct rectangle : square {
         println("" + h[i] + " is a square:"  + ( h[i] instanceof square ));
         println("" + h[i] + " is a rectangle:"  + ( h[i] instanceof rectangle ));
     }
-}
-
-def string readLine(){
-    string l = "";
-    char c;
-    while((c = getchar()) != '\n' ){
-        l+=c;
-    }
-    return l;
 }
 
 def void drawRectangle(int x,int y,int w,int h){

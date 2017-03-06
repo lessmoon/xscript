@@ -214,7 +214,16 @@ class ObjectRel extends Rel {
             error("Operand `" + op + "' can't used between `" + x1.type + "' and `" + x2.type + "'");
         }
     }
-    
+
+    @Override
+    public Type check(Type p1, Type p2) {
+        Type t = super.check(p1, p2);
+        if(t == null && p1 instanceof Struct && p2 instanceof Struct){
+            t = Type.Bool;
+        }
+        return t;
+    }
+
     public Constant getValue(){
         Constant l = expr1.getValue();
         Constant r = expr2.getValue();
@@ -270,9 +279,11 @@ public class RelFactory {
                 }
             }
         }
-        if (x1.type instanceof Array || x1.type instanceof Struct) {
+        if ( x1.type instanceof Array ) {
             if (x1.type.equals(x2.type))
                 r = new ObjectRel(tok, x1, x2);
+        } else if (x1.type instanceof Struct && x2.type instanceof Struct ){
+            r = new ObjectRel(tok,x1,x2);
         } else if (x1.type == Type.Str) {
             if (x2.type == Type.Str) {
                 r = new StrRel(tok, x1, x2);

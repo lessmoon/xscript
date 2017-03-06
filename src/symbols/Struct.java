@@ -5,12 +5,14 @@ import inter.stmt.FunctionBasic;
 import inter.stmt.MemberFunction;
 import lexer.Tag;
 import lexer.Token;
+import lexer.Word;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Struct extends Type {
+    public static final Struct StructPlaceHolder  = new Struct(new Word("#StructPlaceHolder#",Tag.ID));
     public final Map<Token,StructVariable> table = new HashMap<>();
     /*store normal functions*/
     private final HashMap<Token,FunctionBasic> funcs = new HashMap<>();
@@ -21,7 +23,6 @@ public class Struct extends Type {
     private final Map<Token,Position> vfuncMap;
     private final VirtualTable vtable;
     private FunctionBasic initfunc = null;
-
     private boolean hasDefinedVirtualFunction = false;
     private final Struct father;
     private final int fatherSize;/*avoid replicated calculating*/

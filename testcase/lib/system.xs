@@ -28,9 +28,31 @@ native<extension.system>{
     int  getchar();
 }
 
-native<extension.util>{
-    int  strlen(string len);
+import "utils.xs";
+
+
+def int readNumber(){
+    StringBuffer l = new StringBuffer();
+    char c;
+    while(!isDigit(c = getchar()));
+
+    do{
+        l.appendCharacter(c);
+    }while(isDigit(c = getchar()));
+    return parseInt(l.toString());
 }
+
+def string readString(){
+    StringBuffer l = new StringBuffer();
+    char c;
+    while(isBlank(c = getchar()));
+
+    do{
+        l.appendCharacter(c);
+    }while('\n' != (c = getchar()));
+    return l.toString();
+}
+
 
 def int repeat_print(string s,int c){
     int i = 0;
@@ -85,3 +107,4 @@ def void Timer.clear(){
     this.start    = 0;
     this.duration = 0;
 }
+

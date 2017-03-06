@@ -143,7 +143,7 @@ public class ExtensionStructHelper {
                                 if( retflag ){
                                     //fix the type dynamically
                                     StructConst r = new StructConst(s);
-                                    r.setExtension(((StructConst)s).getExtension());
+                                    r.setExtension(((StructConst)ret).getExtension());
                                     ret = r;
                                 } else if (!((symbols.Struct) ret.type).isChildOf((symbols.Struct) returnType)) {
                                     throw new RuntimeException("error return type[ " + ret.type + "] expect:" + returnType);

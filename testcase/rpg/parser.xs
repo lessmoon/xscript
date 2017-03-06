@@ -32,6 +32,8 @@ import "../container/content.xs";
 import "../container/hashmap.xs";
 import "../container/darray.xs";
 import "../lib/system.xs";
+import "../lib/utils.xs";
+import "../ui/paintpad.xs";
 
 struct FunctionBasic:Content{}
 
@@ -48,15 +50,15 @@ struct RuntimeBasic {
 	}
 	
 	def string getVar(string varname){
-		return ((StringHashContent)(this.varMap).getVar( new StringHashContent(varname) ));
+		return ((StringContent)this.varMap.get( new StringHashContent(varname)).value);
 	}
 	
 	def void setVar(string varname,string val){
-		this.varMap.setVar( new StringHashContent(varname), new StringContent(val) );
+		this.varMap.set( new StringHashContent(varname), new StringContent(val) );
 	}
     
 	def void jump(string label){
-		auto l = (IntContent) this.labelMap.get(new StringHashContent(label));
+		auto l = (IntContent) this.labelMap.get(new StringHashContent(label)).value;
 		this.index = (int)l - 1;
 	}
 	
@@ -77,28 +79,6 @@ struct Function:FunctionBasic{
 	}
 }
 
-
-struct Sleep:Function{
-	def override void run(RuntimeBasic r,string[] args){
-		
-	}
-}
-
-struct Set:Function{
-	def override void run(RuntimeBasic r,string[] args){
-		r.setVar(args[0],args[1]);
-	}
-}
-
-struct Condition:Function{
-	def override void run(RuntimeBasic r,string[] args){
-		if(r.getVar(args[0]) == args[1]){
-			r.jump(r.args[2]);
-		}
-	}
-}
-
-
 struct RuntimeBasic_ : RuntimeBasic{
 	HashMap functionMap;//<string,Function>
 	def this(){
@@ -107,7 +87,7 @@ struct RuntimeBasic_ : RuntimeBasic{
 	}
 
 	def Function getFunction(string funcname){
-       return (Function)this.functionMap.get(new StringHashContent(funcname))
+       return (Function)this.functionMap.get(new StringHashContent(funcname)).value;
 	}
 	
     def void registerFunction(string funcname,Function function){
@@ -122,17 +102,17 @@ struct Instruction:Content{
 	string[] args;
 	string function;
 	
-	def this(string[] args,string function){
+	def this(string function,string[] args){
 		this.args = args;
 		this.function = function;
 	}
 
     def void run(RuntimeBasic_ r){
-        r.getFunction(function).run(r,args);
+        r.getFunction(this.function).run(r,this.args);
     }
     
 	def override string toString(){
-		return function;
+		return this.function;
 	}
 	
 }
@@ -143,19 +123,23 @@ struct Runtime:RuntimeBasic_{
 	
 	def this(){
 		super();
-		this.instructions = new DynamicArray();
+		this.instructions = new DynamicArray(1000);
 	}
 	
     def void addLable(string label){
         this.labelMap.set(new StringHashContent(label),new IntContent( this.instructions.size()));
     }
     
-	def void addInstructions2(string[] args,string function){
-		this.instructions.add(new Instruction(args,function));
+	def void addInstructions2(string function,string[] args){
+		this.instructions.push_back(new Instruction(function,args));
 	}
+    
+    def bool isEnd(){
+        return this.instructions.size()<=this.index;
+    }
 	
 	def void addInstructions(Instruction i){
-		this.instructions.add(i);
+		this.instructions.push_back(i);
 	}
 	
 	def void clearInstructions(){
@@ -163,12 +147,15 @@ struct Runtime:RuntimeBasic_{
 	}
     
 	def override void step(){
-		((Instruction)this.instructions).get(this.index);
+		((Instruction)this.instructions.get(this.index)).run(this);
+        sleep(400);
 		this.index++;
 	}
 }
 
 struct RPGToken:Content{
+    int tag;
+
     def override string toString(){
         return "";
     }
@@ -178,6 +165,7 @@ struct ValueToken:RPGToken{
     string value;
     def this(string str){
         this.value = str;
+        this.tag = 256;
     }
 
     def override string toString(){
@@ -186,13 +174,12 @@ struct ValueToken:RPGToken{
 }
 
 struct SymbolToken:RPGToken{
-    int value;
     def this(int c){
-        this.value = c;
+        this.tag = c;
     }
     
     def override string toString(){
-        return (string)this.value;
+        return "" + (char)this.tag + ":" +this.tag;
     }
 }
 
@@ -202,35 +189,38 @@ struct RPGLexer{
     
     def this(){
         this.peak = ' ';
+        this.f = new File();
     }
     
-    def void open(string filename){}
-    
-    def bool check(int c){
-        if(c == this.peak){
-            readch();
-            return true;
-        }
-        return false;
+    def void close(){
+        this.f.close();
     }
+    
+    def void open(string filename){
+        this.f.close();
+        this.peak = ' ';
+        this.f.open(filename);
+    }
+    
+    def bool check(int c);
     
     def void readch(){
-        peak = this.f.readch();
+        this.peak = this.f.readch();
     }
     
-    def Token scan(){
-        Token t;
-        while(this.check('\t')||this.check(' '));
+    def RPGToken scan(){
+        RPGToken t;
+        while(this.check('\t')||this.check(' ')||this.check('\r'));
         
         switch(this.peak){
         case '\"':
-            string str;
+            StringBuffer sb = new StringBuffer();
             this.readch();
             while(!this.check('\"')){
-                str += this.peak;
+                sb.appendCharacter(this.peak);
                 this.readch();
             }
-            t = new ValueToken(str);
+            t = new ValueToken(sb.toString());
             break;
         default:
             t = new SymbolToken(this.peak);
@@ -238,6 +228,15 @@ struct RPGLexer{
         }
         return t;
     }
+}
+
+
+def bool RPGLexer.check(int c){
+    if(c == this.peak){
+        this.readch();
+        return true;
+    }
+    return false;
 }
 
 /*
@@ -248,77 +247,238 @@ struct RPGLexer{
 */
 
 struct RPGParser{
-    int lookup;
-    File file;
+    RPGToken look;
+    RPGLexer lexer;
     
-    def this(){}
-
-	def void parse(string file,Runtime r){
-		if(this.file!=null){
-            this.file.close();
-        }
-        this.file.open(file);
-        this.lookup = ' ';
-        while(!check(-1)){
-            this.statement(r);
-        }
-        this.file.close();
-	}
-
-    def void statement(Runtime r){
-        while(!(this.check('<')||this.check('\n'))){
-           r.addLable(value);
-           this.match('>');
-        }
-        r.addInstructions(this.instruction());
+    def this(){
+        this.lexer = new RPGLexer();
     }
 
-	def Instruction instruction(){
+    def bool check(int id);
+    
+    def void parse(string file,Runtime r);
+
+    def string value();
+    
+    def void error(string msg){
+        println("error "+msg);
+    }
+    
+    def void move(){
+        this.look = this.lexer.scan();
+    }
+    
+    def void match(int id){
+        if(this.look.tag != id){
+            this.error("wrong id" + this.look);
+        }
+        this.move();
+    }
+    
+     def string[] args(){
+        auto arg = new string[20];
+        int i = 0;
+        while(this.look.tag == 256){
+            arg[i++] = this.value();
+        }
+        auto tmp = new string[i];
+        while(--i >= 0){
+            tmp[i] = arg[i];
+        }
+        return tmp;
+    }
+    
+    def Instruction instruction(){
         auto funcname = this.value();
-        match(':');
+        this.match(':');
         auto args = this.args();
         return new Instruction(funcname,args);
     }
-
-    def bool check(int c){
-        if(this.lookup == c){
-            readch();
-            return true;
-        }
-        return false;
-    }
     
-    def string[] args(){
-        auto arg = new string[20];
-        int i = 0;
-        while(!this.check('\n')){
-            arg[i++] = this.value();
+    def void statement(Runtime r){
+        while(this.check('\n'));
+        while(this.check('<')){
+           r.addLable(this.value());
+           this.match('>');
+           while(this.check('\n'));
         }
-        return arg;
-    }
-    
-    def void readch(){
-        this.lookup = file.readch();
-    }
-    
-    def string value(){
-        string ans;
-        while(!this.check('\n')){
-            ans += this.readch();
-        }
-        return ans;
+        if(this.look.tag != -1)
+            r.addInstructions(this.instruction());
     }
     
 }
 
+def bool RPGParser.check(int c){
+    if(this.look.tag == c){
+        this.move();
+        return true;
+    }
+    return false;
+}
+
+def string RPGParser.value(){
+    auto arg = this.look;
+    this.match(256);
+    
+    return ((ValueToken)arg).value;
+}
+
+def void RPGParser.parse(string file,Runtime r){
+    this.lexer.open(file);
+    this.move();
+    while(this.look.tag != -1){
+        this.statement(r);
+    }
+    this.lexer.close();
+}
+
 struct RPGRuntime:Runtime{
     RPGParser parser;
-    
-    def this(RPGParser parser){
-        this.parser = parser;
+
+    def this(RPGParser p){
+        super();
+        this.parser = p;
     }
     
     def override void open(string filename){
+        this.labelMap.clear();
+        this.instructions.clear();
         this.parser.parse(filename,this);
+    }
+
+    def void run(){
+        while(!this.isEnd()){
+            super.step();
+        }
+    }
+}
+
+struct Sleep:Function{
+	def override void run(RuntimeBasic r,string[] args){
+		sleep(parseInt(args[0]));
+	}
+}
+
+struct Choice:Function{
+	def override void run(RuntimeBasic r,string[] args){
+		string var = args[0];
+        println("Choose");
+        for(int i=1;i< sizeof args;i++){
+            println("" + i + "." + args[i]);
+        }
+        print("Enter:");
+        int c = readNumber();
+        r.setVar(var,c);
+	}
+} 
+
+struct Set:Function{
+	def override void run(RuntimeBasic r,string[] args){
+		r.setVar(args[0],args[1]);
+	}
+}
+
+struct Cond:Function{
+	def override void run(RuntimeBasic r,string[] args){
+		if(r.getVar(args[0]) == args[1]){
+			r.jump(args[2]);
+		}
+	}
+}
+
+struct Print:Function{
+	def override void run(RuntimeBasic r,string[] args){
+        StringBuffer sb = new StringBuffer();
+        string content = args[0];
+        int len_1 = strlen(content) - 1;
+        int j = 1;
+        
+        for( int i = 0 ; i <= len_1 ; i++ ){
+            if( content[i] == '$' ){
+                if( i < len_1 ){
+                    if( content[i+1] == '$' ){
+                        i++;
+                        sb.appendCharacter('$');
+                        continue;
+                    }
+                }
+                sb.append( r.getVar( args[j++] ) );
+            } else {
+                sb.appendCharacter( content[i] );
+            }
+        }
+        println(sb.toString());
+	}
+}
+
+struct StopPrint:Function{
+	def override void run(RuntimeBasic r,string[] args){
+        string content = args[0];
+        int stop = parseInt(args[1]);
+
+        StringBuffer sb = new StringBuffer();
+        int len_1 = strlen(content) - 1;
+        int j = 2;
+        
+        for( int i = 0 ; i <= len_1 ; i++ ){
+            if( content[i] == '$' ){
+                if( i < len_1 ){
+                    if( content[i+1] == '$' ){
+                        i++;
+                        sb.appendCharacter('$');
+                        continue;
+                    }
+                }
+                sb.append( r.getVar( args[j++] ) );
+            } else {
+                sb.appendCharacter( content[i] );
+            }
+        }
+        
+        content = sb.toString();
+        
+        for(int i = 0 ; i < strlen( content );i++){
+            print( content[i] );
+            sleep( stop );
+        }
+        println("");
+	}
+}
+
+struct Jump:Function{
+    def override void run(RuntimeBasic r,string[] args){
+        r.jump(args[0]);
+    }
+}
+
+struct TypeString:Function{
+    def override void run(RuntimeBasic r,string[] args){
+        r.setVar(args[0],readString());
+    }
+}
+
+struct RPGAdd:Function{
+    def override void run(RuntimeBasic r,string[] args){
+        int val = parseInt(r.getVar(args[0]));
+        val += parseInt(r.getVar(args[1]));
+        r.setVar(args[0],val);
+    }
+}
+
+/*
+ * It can also be done by "set tmp val, add var,tmp"
+ */
+struct RPGAddConst:Function{
+    def override void run(RuntimeBasic r,string[] args){
+        int val = parseInt(r.getVar(args[0]));
+        val += parseInt(args[1]);
+        r.setVar(args[0],val);
+    }
+}
+
+struct Open:Function{
+    def override void run(RuntimeBasic r,string[] args){
+        r.open(args[0]);
+        r.index = -1;
     }
 }

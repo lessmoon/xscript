@@ -35,6 +35,7 @@ src/extension/ui/closePad.java
 src/extension/ui/drawLine.java
 src/extension/ui/drawPoint.java
 src/extension/ui/EventLoop.java
+src/extension/ui/MouseAdapterX.java
 src/extension/ui/MouseEventLoop.java
 src/extension/ui/openPad.java
 src/extension/ui/paint.java
@@ -45,6 +46,7 @@ src/extension/ui/setBrushColor.java
 src/extension/ui/setLine.java
 src/extension/ui/setPoint.java
 src/extension/ui/setString.java
+src/extension/util/StringBufferX.java
 src/extension/util/strlen.java
 src/inter/expr/AbsoluteVar.java
 src/inter/expr/And.java
