@@ -3,22 +3,22 @@ native<extension.system>{
 }
 
 native<extension.system>{
-	"extime":struct Time{
-		int hour;
-		int minute;
-		int second;
-	};
+    "extime":struct Time{
+        int hour;
+        int minute;
+        int second;
+    };
 
-	"GetTime":void getTime(Time d);
+    "GetTime":void getTime(Time d);
 
 }
 
 struct MyTime:Time{
 
-	@string
-	def string toString(){
-		return "" + this.hour + ":" + this.minute + ":" + this.second;
-	}
+    @string
+    def string toString(){
+        return "" + this.hour + ":" + this.minute + ":" + this.second;
+    }
 }
 
 native<extension.system>{
@@ -49,7 +49,7 @@ def string readString(){
 
     do{
         l.appendCharacter(c);
-    }while('\n' != (c = getchar()));
+    }while(!isEndLine(c = getchar()) );
     return l.toString();
 }
 

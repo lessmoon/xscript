@@ -10,9 +10,7 @@ import  "container/list.xs";
 import  "ui/paintpad.xs";
 import  "ui/cyclepaintpad.xs";
 
-//import "rpg/parser.xs";
-
-
+import "rpg/parser.xs";
 
 struct ScrollTextOutput{
     PaintPad x;
@@ -102,13 +100,6 @@ struct ScrollTextOutput{
 }
 
 {
-    //ScrollTextOutput x = new ScrollTextOutput(20,10);
-    //x.addString("Hello?Anyone there?",1,1,1);
-    //x.open();
-    //x.wait();
-}
-
-{
     RPGParser p = new RPGParser();
     RPGRuntime r = new RPGRuntime(p);
     r.registerFunction("sleep",new Sleep);
@@ -120,7 +111,8 @@ struct ScrollTextOutput{
     r.registerFunction("type",new StopPrint);
     r.registerFunction("open",new Open);
     r.registerFunction("add",new RPGAdd);
-    r.registerFunction("add",new RPGAdd);
+    r.registerFunction("addconst",new RPGAddConst);
+    r.registerFunction("read",new TypeString);
     r.open("test");
     r.run();
     
@@ -144,9 +136,9 @@ struct MyPaintPad:PaintPad{
         case 39:
            x+=10;
            break;
-		case 27:
-		   this.close();
-		   break;
+        case 27:
+           this.close();
+           break;
         default:
            println(bid);
         }
@@ -262,7 +254,7 @@ struct deriveC:baseB{
 {
     baseA x = new deriveC(1);
     
-    println(x);	
+    println(x);    
 }
 
 
@@ -431,77 +423,77 @@ def int llist.getSize(){
 }
 
 struct JustOnce:Runnable{
-	def override void run(){
-		Thread t = getCurrentThread();
-		for(int i =0;i < 10;i++){
-			print("["+t.getThreadId()+"]:" + i + " will stop\n");
-			t.interrupt();
-		}
-	}
+    def override void run(){
+        Thread t = getCurrentThread();
+        for(int i =0;i < 10;i++){
+            print("["+t.getThreadId()+"]:" + i + " will stop\n");
+            t.interrupt();
+        }
+    }
 }
 
 
 {
     println("Test for Thread type");
-	JustOnce i = new JustOnce;
-	Thread t = new Thread(i);
-	int beg = time();
-	print(beg);
-	t.start();
-	t.join(0);
-	int end = time();
-	print(end);
-	print("join time:"+(end-beg)+"\n");
+    JustOnce i = new JustOnce;
+    Thread t = new Thread(i);
+    int beg = time();
+    print(beg);
+    t.start();
+    t.join(0);
+    int end = time();
+    print(end);
+    print("join time:"+(end-beg)+"\n");
 }
 
 real PI = 3.141592654;
 
 def void drawHand(int v,real theta,int len,int r,int g,int b){
-	real arctheta = theta * 2 * PI;
-	int x = cos(arctheta) * len;
-	int y = sin(arctheta) * len;
-	setBrushColor(r,g,b);
-	addLine(150,150,150+x,y+150);
+    real arctheta = theta * 2 * PI;
+    int x = cos(arctheta) * len;
+    int y = sin(arctheta) * len;
+    setBrushColor(r,g,b);
+    addLine(150,150,150+x,y+150);
 }
 
 def void drawClock(Time t){
-	for(int i = 1 ; i < 13;i++){
-		real arctheta = ((real)i-3)/6 * PI;
-		int x = cos(arctheta) * 140;
-		int y = sin(arctheta) * 140;
-		addString("" + i,150 + x,150+y);
-	}
+    for(int i = 1 ; i < 13;i++){
+        real arctheta = ((real)i-3)/6 * PI;
+        int x = cos(arctheta) * 140;
+        int y = sin(arctheta) * 140;
+        addString("" + i,150 + x,150+y);
+    }
 
-	drawHand(t.hour,((real)t.hour-3) / 12,70,0,0,255);
-	drawHand(t.minute,((real)t.minute-15) / 60,110,0,255,0);
-	drawHand(t.second,((real)t.second-15) / 60,130,255,0,0);
+    drawHand(t.hour,((real)t.hour-3) / 12,70,0,0,255);
+    drawHand(t.minute,((real)t.minute-15) / 60,110,0,255,0);
+    drawHand(t.second,((real)t.second-15) / 60,130,255,0,0);
 }
 
 {
-	MyTime t = new MyTime;
-	println(t);
-	
-	//openPadWithName(300,300,"ClockInXScript");
-	//while(true){
-		//println(t);
-		//getTime(t);
-		//clearPad();
-		//drawClock(t);
-		//paint();
-		//sleep(500);
-	//}
-	
+    MyTime t = new MyTime;
+    println(t);
+    
+    //openPadWithName(300,300,"ClockInXScript");
+    //while(true){
+        //println(t);
+        //getTime(t);
+        //clearPad();
+        //drawClock(t);
+        //paint();
+        //sleep(500);
+    //}
+    
 }
 
 {
     println("Test for array initial list");
     int[][] x = {{23,52},{25,64+78},{54},{}};
     for(int i = 0 ; i < sizeof x;i++){
-		for(int j = 0 ; j < sizeof x[i];j++){
-			print(" " + x[i][j]);
-		}
-		print("\n");
-	}
+        for(int j = 0 ; j < sizeof x[i];j++){
+            print(" " + x[i][j]);
+        }
+        print("\n");
+    }
 }
 
 {

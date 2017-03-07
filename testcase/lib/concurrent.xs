@@ -23,28 +23,28 @@ native<extension.predefined>{
         def bool wait();
         def bool release();
     };
-	
-	"Trigger":struct MyTrigger{
-		def this();
-		def void triggerAll();
-		def bool wait();
-	};
+    
+    "Trigger":struct MyTrigger{
+        def this();
+        def void triggerAll();
+        def bool wait();
+    };
 }
 
 struct Trigger {
-	MyTrigger imp;
-	
-	def this(){
-		this.imp = new MyTrigger();
-	}
-	
-	def void triggerAll(){
-		this.imp.triggerAll();
-	}
-	
-	def void wait(){
-		this.imp.wait();
-	}
+    MyTrigger imp;
+    
+    def this(){
+        this.imp = new MyTrigger();
+    }
+    
+    def void triggerAll(){
+        this.imp.triggerAll();
+    }
+    
+    def void wait(){
+        this.imp.wait();
+    }
 }
 
 struct Condition{
@@ -113,20 +113,20 @@ struct Timer2Adapter : Runnable {
 struct AtomicInteger{
     int value;
     MutexLock lock;
-	Trigger n;
-	
-	
+    Trigger n;
+    
+    
     def this(){
         this.value = 0;
         this.lock = new MutexLock();
-		this.n = new Trigger();
+        this.n = new Trigger();
     }
 
     def int getAndSet(int value){
         this.lock.wait();
         auto res = this.value;
         this.value = value;
-		this.n.triggerAll();
+        this.n.triggerAll();
         this.lock.release();
         return res;
     }
@@ -139,7 +139,7 @@ struct AtomicInteger{
     def int incrementAndGet(){
         this.lock.wait();
         auto res = ++ this.value ;
-		this.n.triggerAll();
+        this.n.triggerAll();
         this.lock.release();
         return res;
     }
@@ -148,13 +148,13 @@ struct AtomicInteger{
         do{
             this.lock.wait();
             if(this.value > min){
-               -- this.value;
-               this.n.triggerAll();
-			   this.lock.release();
-			   return;
+                -- this.value;
+                this.n.triggerAll();
+                this.lock.release();
+                return;
             }
             this.lock.release();
-			this.n.wait();
+            this.n.wait();
         }while(true);
     }
     
@@ -164,11 +164,11 @@ struct AtomicInteger{
             if(this.value < max){
                ++ this.value;
                this.n.triggerAll();
-			   this.lock.release();
-			   return;
+            this.lock.release();
+            return;
             }
             this.lock.release();
-			this.n.wait();
+            this.n.wait();
         }while(true);
     }
 
@@ -179,7 +179,7 @@ struct AtomicInteger{
     def int decrementAndGet(){
         this.lock.wait();
         auto res = -- this.value ;
-		this.n.triggerAll();
+        this.n.triggerAll();
         this.lock.release();
         return res;
     }
@@ -188,7 +188,7 @@ struct AtomicInteger{
         return this.decrementAndGet() + 1;
     }
 
-	@int
+    @int
     def int get(){
         this.lock.wait();
         auto res = this.value;
@@ -199,7 +199,7 @@ struct AtomicInteger{
     def void set(int value){
         this.lock.wait();
         this.value = value;
-		this.n.triggerAll();
+        this.n.triggerAll();
         this.lock.release();
     }
 

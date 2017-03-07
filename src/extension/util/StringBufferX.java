@@ -16,19 +16,19 @@ import runtime.TypeTable;
 public class StringBufferX extends Struct{
 
    public static class StringBufferXProxy {
-        StringBuffer sb;
+        StringBuilder sb;
         
         public StringBufferXProxy(){
             
         }
         
-        public StringBufferXProxy(StringBuffer sb){
+        public StringBufferXProxy(StringBuilder sb){
             this.sb = sb;
         }
         
         @Init
         public void Init(){
-            sb = new StringBuffer();
+            sb = new StringBuilder();
         }
         
         

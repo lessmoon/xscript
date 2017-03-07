@@ -1038,6 +1038,7 @@ public class Parser implements TypeTable {
     private Stmt forloop() throws IOException {
         For fornode = new For();
         Stmt.Enclosing = fornode;
+        Stmt.BreakEnclosing = fornode;
         move();
         match('(');
         Stmt s1;

@@ -19,8 +19,12 @@ def bool isDigit(char c){
     return c>='0'&&c<='9';
 }
 
+def bool isEndLine(char c){
+    return c=='\r'||c=='\n';
+}
+
 def bool isBlank(char c){
-    return c==' '||c=='\r'||c=='\n';
+    return c==' '||isEndLine(c);
 }
 
 def int parseInt(string str){

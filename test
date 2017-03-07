@@ -6,18 +6,21 @@
 "print":"THANK GOD!!!"
 "sleep":"200"
 "print":"Could you please help me!"
+"set":"count" "0"
 <"choice">
 "choice":"f" "Yes?" "Sorry,I'm busy now."
 "condition": "f" "1" "pass"
+"addconst":"count" "1"
+"condition": "count" "3" "end"
 "print":"Please reconsider"
 "jump":"choice"
 <"pass">
 "print":"Thank you!!!"
-"print":"I'm in an ice world now.I don't know where I am."
+"print":"I'm in an ice world now.I actually don't know where I am."
 "print":"Even worse,I don't know what happened before this."
 "choice":"f" "What is the last thing you remember?" "What's your name?"
 "condition":"f" "2" "name"
-"print":"I only remember there was a terrible earthquake."
+"print":"I can only remember there was a terrible earthquake."
 "jump":"checkingbag"
 <"name">
 "print":"Ahh...Headache.I don't remember my name!"
@@ -28,4 +31,9 @@
 "print":"It says:"
 "type":"D-r-.-S-m-i-t-h" "100"
 "print":"So that's it.My name is Smith."
+"print":"And what's your name?"
+"read":"playername"
+"print":"Nice to meet you,$!" "playername"
+"print":"Nice to meet you too,Dr.Smith!"
 <"end">
+"type":"Sorry,Smith is Dead!!!" "200"

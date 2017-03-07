@@ -1,6 +1,6 @@
 struct Content{
-	@string
-	def virtual string toString();
+    @string
+    def virtual string toString();
 }
 
 struct HashContent:Content {
@@ -17,11 +17,11 @@ struct IntContent : Content{
     def override string toString(){
         return (string)(this.val);
     }
-	
-	@int
-	def int toInt(){
-		return this.val;
-	}
+    
+    @int
+    def int toInt(){
+        return this.val;
+    }
 }
 
 struct StringContent : Content{
@@ -36,29 +36,29 @@ struct StringContent : Content{
 }
 
 struct StringHashContent:HashContent{
-	string value;
-	def this(string value){
-		this.value = value;
-	}
+    string value;
+    def this(string value){
+        this.value = value;
+    }
 
     def override int hash(){
-		int len = strlen(this.value);
-		int hash_code = 0;
-		while(len-- > 0 ){
-			hash_code *= 10;
-			hash_code += this.value[len];
-		}
+        int len = strlen(this.value);
+        int hash_code = 0;
+        while(len-- > 0 ){
+            hash_code *= 10;
+            hash_code += this.value[len];
+        }
         if( hash_code < 0 )
             hash_code = - hash_code;
-		return hash_code;
-	}
+        return hash_code;
+    }
 
     def override string toString(){
-		return this.value;
-	}
+        return this.value;
+    }
     
     
     def override bool equals(HashContent c){
-		return c == this || c instanceof StringHashContent && ((StringHashContent)c).value == this.value;
-	}
+        return c == this || c instanceof StringHashContent && ((StringHashContent)c).value == this.value;
+    }
 }

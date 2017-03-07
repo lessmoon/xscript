@@ -17,7 +17,7 @@ public abstract class Logical extends Expr {
 
     @Override
     public boolean isChangeable(){
-        return expr1.isChangeable() || expr1.isChangeable();
+        return expr1.isChangeable() || expr2.isChangeable();
     }
 
     @Override

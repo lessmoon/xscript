@@ -15,11 +15,11 @@
 "open":val
 
 while( condition ) {
-	do
+    do
 }
       || ||
-	  || ||
-	  || ||
+      || ||
+      || ||
 <"beg">"condition" varname value "a"
 "jump":"end" 
 <"a">
@@ -38,119 +38,118 @@ import "../ui/paintpad.xs";
 struct FunctionBasic:Content{}
 
 struct RuntimeBasic {
-	//HashMap globalVarMap;//<string,string>
-	HashMap varMap;//<string,string>
-	HashMap labelMap;//<string,integer>
-	int index;
-	
-	def this(){
-		this.varMap = new HashMap();
-		this.labelMap = new HashMap();
-		int index = 0;
-	}
-	
-	def string getVar(string varname){
-		return ((StringContent)this.varMap.get( new StringHashContent(varname)).value);
-	}
-	
-	def void setVar(string varname,string val){
-		this.varMap.set( new StringHashContent(varname), new StringContent(val) );
-	}
+    //HashMap globalVarMap;//<string,string>
+    HashMap varMap;//<string,string>
+    HashMap labelMap;//<string,integer>
+    int index;
     
-	def void jump(string label){
-		auto l = (IntContent) this.labelMap.get(new StringHashContent(label)).value;
-		this.index = (int)l - 1;
-	}
-	
-	def void sleep(int second){
-		sleep(second);
-	}
-	
-	def virtual void open(string filename);
-	
-	def virtual void step();
+    def this(){
+        this.varMap = new HashMap();
+        this.labelMap = new HashMap();
+        int index = 0;
+    }
+    
+    def string getVar(string varname){
+        return ((StringContent)this.varMap.get( new StringHashContent(varname)).value);
+    }
+    
+    def void setVar(string varname,string val){
+        this.varMap.set( new StringHashContent(varname), new StringContent(val) );
+    }
+    
+    def void jump(string label){
+        auto l = (IntContent) this.labelMap.get(new StringHashContent(label)).value;
+        this.index = (int)l - 1;
+    }
+    
+    def void sleep(int second){
+        sleep(second);
+    }
+    
+    def virtual void open(string filename);
+    
+    def virtual void step();
 }
 
 struct Function:FunctionBasic{
     def virtual void run(RuntimeBasic r,string[] args);
-	
-	def override string toString(){
-		return "";
-	}
+    
+    def override string toString(){
+        return "";
+    }
 }
 
 struct RuntimeBasic_ : RuntimeBasic{
-	HashMap functionMap;//<string,Function>
-	def this(){
+    HashMap functionMap;//<string,Function>
+    def this(){
         super();
-		this.functionMap = new HashMap();
-	}
+        this.functionMap = new HashMap();
+    }
 
-	def Function getFunction(string funcname){
+    def Function getFunction(string funcname){
        return (Function)this.functionMap.get(new StringHashContent(funcname)).value;
-	}
-	
+    }
+    
     def void registerFunction(string funcname,Function function){
        this.functionMap.set(new StringHashContent(funcname),function);
-	}
+    }
 
 }
 
 
 
 struct Instruction:Content{
-	string[] args;
-	string function;
-	
-	def this(string function,string[] args){
-		this.args = args;
-		this.function = function;
-	}
+    string[] args;
+    string function;
+    
+    def this(string function,string[] args){
+        this.args = args;
+        this.function = function;
+    }
 
     def void run(RuntimeBasic_ r){
         r.getFunction(this.function).run(r,this.args);
     }
     
-	def override string toString(){
-		return this.function;
-	}
-	
+    def override string toString(){
+        return this.function;
+    }
+    
 }
 
 struct Runtime:RuntimeBasic_{
-	DynamicArray instructions;
+    DynamicArray instructions;
 
-	
-	def this(){
-		super();
-		this.instructions = new DynamicArray(1000);
-	}
-	
+    
+    def this(){
+        super();
+        this.instructions = new DynamicArray(1000);
+    }
+    
     def void addLable(string label){
         this.labelMap.set(new StringHashContent(label),new IntContent( this.instructions.size()));
     }
     
-	def void addInstructions2(string function,string[] args){
-		this.instructions.push_back(new Instruction(function,args));
-	}
+    def void addInstructions2(string function,string[] args){
+        this.instructions.push_back(new Instruction(function,args));
+    }
     
     def bool isEnd(){
         return this.instructions.size()<=this.index;
     }
-	
-	def void addInstructions(Instruction i){
-		this.instructions.push_back(i);
-	}
-	
-	def void clearInstructions(){
-		this.instructions.clear();
-	}
     
-	def override void step(){
-		((Instruction)this.instructions.get(this.index)).run(this);
-        sleep(400);
-		this.index++;
-	}
+    def void addInstructions(Instruction i){
+        this.instructions.push_back(i);
+    }
+    
+    def void clearInstructions(){
+        this.instructions.clear();
+    }
+    
+    def override void step(){
+        ((Instruction)this.instructions.get(this.index)).run(this);
+        this.index++;
+    }
 }
 
 struct RPGToken:Content{
@@ -354,14 +353,14 @@ struct RPGRuntime:Runtime{
 }
 
 struct Sleep:Function{
-	def override void run(RuntimeBasic r,string[] args){
-		sleep(parseInt(args[0]));
-	}
+    def override void run(RuntimeBasic r,string[] args){
+        sleep(parseInt(args[0]));
+    }
 }
 
 struct Choice:Function{
-	def override void run(RuntimeBasic r,string[] args){
-		string var = args[0];
+    def override void run(RuntimeBasic r,string[] args){
+        string var = args[0];
         println("Choose");
         for(int i=1;i< sizeof args;i++){
             println("" + i + "." + args[i]);
@@ -369,30 +368,35 @@ struct Choice:Function{
         print("Enter:");
         int c = readNumber();
         r.setVar(var,c);
-	}
+    }
 } 
 
 struct Set:Function{
-	def override void run(RuntimeBasic r,string[] args){
-		r.setVar(args[0],args[1]);
-	}
+    def override void run(RuntimeBasic r,string[] args){
+        r.setVar(args[0],args[1]);
+    }
 }
 
 struct Cond:Function{
-	def override void run(RuntimeBasic r,string[] args){
-		if(r.getVar(args[0]) == args[1]){
-			r.jump(args[2]);
-		}
-	}
+    def override void run(RuntimeBasic r,string[] args){
+        if(r.getVar(args[0]) == args[1]){
+            r.jump(args[2]);
+        }
+    }
 }
 
 struct Print:Function{
-	def override void run(RuntimeBasic r,string[] args){
-        StringBuffer sb = new StringBuffer();
+    def override void run(RuntimeBasic r,string[] args){
+        
         string content = args[0];
+        if(sizeof args < 1){
+            println(content);
+        }
         int len_1 = strlen(content) - 1;
         int j = 1;
-        
+
+        StringBuffer sb = new StringBuffer();
+
         for( int i = 0 ; i <= len_1 ; i++ ){
             if( content[i] == '$' ){
                 if( i < len_1 ){
@@ -408,41 +412,42 @@ struct Print:Function{
             }
         }
         println(sb.toString());
-	}
+    }
 }
 
 struct StopPrint:Function{
-	def override void run(RuntimeBasic r,string[] args){
+    def override void run(RuntimeBasic r,string[] args){
         string content = args[0];
         int stop = parseInt(args[1]);
-
-        StringBuffer sb = new StringBuffer();
-        int len_1 = strlen(content) - 1;
-        int j = 2;
-        
-        for( int i = 0 ; i <= len_1 ; i++ ){
-            if( content[i] == '$' ){
-                if( i < len_1 ){
-                    if( content[i+1] == '$' ){
-                        i++;
-                        sb.appendCharacter('$');
-                        continue;
+        if(sizeof args > 2){
+            StringBuffer sb = new StringBuffer();
+            int len_1 = strlen(content) - 1;
+            int j = 2;
+            
+            for( int i = 0 ; i <= len_1 ; i++ ){
+                if( content[i] == '$' ){
+                    if( i < len_1 ){
+                        if( content[i+1] == '$' ){
+                            i++;
+                            sb.appendCharacter('$');
+                            continue;
+                        }
                     }
+                    sb.append( r.getVar( args[j++] ) );
+                } else {
+                    sb.appendCharacter( content[i] );
                 }
-                sb.append( r.getVar( args[j++] ) );
-            } else {
-                sb.appendCharacter( content[i] );
             }
+            
+            content = sb.toString();
         }
-        
-        content = sb.toString();
         
         for(int i = 0 ; i < strlen( content );i++){
             print( content[i] );
             sleep( stop );
         }
         println("");
-	}
+    }
 }
 
 struct Jump:Function{

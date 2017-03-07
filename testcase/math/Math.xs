@@ -38,7 +38,7 @@ def int qsort(int[] s,int l,int r){
 
 native<extension.math>{
     real sin(real theta);
-	real cos(real theta);
+    real cos(real theta);
     "SetSeed":void srand(int seed);
     "Random":int rand();
 }
