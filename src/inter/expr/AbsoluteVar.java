@@ -28,6 +28,6 @@ public class AbsoluteVar extends StackVar {
     
     @Override
     public String toString(){
-        return "aVAR["+stacklevel+","+offset+"](" + op + ")"; 
+        return "$"+op+"["+stacklevel+","+offset+"]";
     }
 }

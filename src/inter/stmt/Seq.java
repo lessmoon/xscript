@@ -34,11 +34,17 @@ public class Seq extends Stmt{
 
     @Override
     public String toString(){
-        return stmt1.toString() + stmt2.toString();
+        return "SEQ{" + stmt1.toString() + stmt2.toString() + "}";
     }
-	
+
 	@Override
 	public boolean isLastStmt(){
 		return stmt1.isLastStmt()||stmt2.isLastStmt();
 	}
+
+    @Override
+    public void appendToSeq(LinkedSeq s) {
+        stmt1.appendToSeq(s);
+        stmt2.appendToSeq(s);
+    }
 }

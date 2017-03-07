@@ -197,7 +197,7 @@ public class Parser implements TypeTable {
     }
 
     public Stmt program() throws IOException {
-        Stmt s = Stmt.Null;
+        LinkedSeq s = new LinkedSeq();
         while (look.tag != -1) {
             switch (look.tag) {
                 case Tag.DEF:
@@ -213,7 +213,7 @@ public class Parser implements TypeTable {
                     importLib();
                     break;
                 default:
-                    s = new Seq(s, stmt());
+                    s.append(stmt());
                     break;
             }
         }
@@ -815,11 +815,12 @@ public class Parser implements TypeTable {
     }
 
     private Stmt stmts() throws IOException {
-        if (look.tag == '}') {
-            return Stmt.Null;
-        } else {
-            return new Seq(stmt(), stmts());
-        }
+        if(look.tag == '}') return Stmt.Null;
+        LinkedSeq seq = new LinkedSeq();
+        do {
+            seq.append(stmt());
+        }while (look.tag != '}');
+        return seq;
     }
 
     public Stmt stmt() throws IOException {
@@ -941,10 +942,10 @@ public class Parser implements TypeTable {
     }
 
     private Stmt casestmts() throws IOException {
-        Stmt s = Stmt.Null;
+        LinkedSeq s = new LinkedSeq();
 
         while (look.tag != Tag.CASE && look.tag != '}' && look.tag != Tag.DEFAULT) {
-            s = new Seq(s, stmt());
+            s.append(stmt());
         }
         return s;
     }
@@ -1083,7 +1084,7 @@ public class Parser implements TypeTable {
          * for(int i = 0,j = 0;;)
          */
         Decls s = new Decls();
-        Type p = autotype();
+        Type p = autoType();
         Token tok;
         if (p == Type.Void) {
             error("can't declare " + p.toString() + " type variable");
@@ -1116,7 +1117,7 @@ public class Parser implements TypeTable {
         Decls s = new Decls();
         Expr e;
         //while( look.tag == Tag.BASIC){
-        Type p = autotype();
+        Type p = autoType();
         if (p == Type.Void) {
             error("can't declare " + p.toString() + " type variable");
         }
@@ -1241,7 +1242,7 @@ public class Parser implements TypeTable {
         return p;
     }
 
-    public Type autotype() throws IOException {
+    public Type autoType() throws IOException {
         if (look == Word.Auto) {
             move();
             return Type.Auto;
@@ -1274,8 +1275,12 @@ public class Parser implements TypeTable {
     }
 
     public Expr expr() throws IOException {
-        Expr e = assign();
+        Expr e = rawExpr();
         return ENABLE_EXPR_OPT ? e.optimize() : e;
+    }
+
+    private Expr rawExpr() throws IOException{
+        return assign();
     }
 
     private Expr assign() throws IOException {
@@ -1291,7 +1296,7 @@ public class Parser implements TypeTable {
         Expr e = bool();
         Token t = look;
         if (check('?')) {
-            Expr iftrue = assign();
+            Expr iftrue = rawExpr();
             match(':');
             Expr iffalse = condition();
             e = new Condition(t, e, iftrue, iffalse);
@@ -1544,7 +1549,7 @@ public class Parser implements TypeTable {
                     Expr e = null;
                     do {
                         if (!check(']')) {
-                            e = assign();
+                            e = rawExpr();
                             match(']');
                             break;
                         }
@@ -1598,7 +1603,7 @@ public class Parser implements TypeTable {
                 Type t1 = getType(look);
             /*check if it is just a variable*/
                 if (t1 == null) {
-                    e = assign();
+                    e = rawExpr();
                     match(')');
                     break;
                 }
@@ -1615,7 +1620,7 @@ public class Parser implements TypeTable {
                     error("can't convert " + f.type + " to " + t);
                 break;
             default:
-                e = assign();
+                e = rawExpr();
                 match(')');
                 break;
         }

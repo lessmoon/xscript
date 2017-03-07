@@ -26,7 +26,7 @@ public class ExFile {
             File f = new File(filename);
             if(!f.exists())
                 f.createNewFile();
-            Node n = new Node(f,new FileInputStream(f),null);
+            Node n = new Node(f,new FileInputStream(f),new FileOutputStream(f,true));
             filemap.put(id,n);
             return id++;
         } catch (Exception e){

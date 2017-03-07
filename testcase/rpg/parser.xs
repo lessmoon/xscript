@@ -49,7 +49,7 @@ struct RuntimeBasic {
         int index = 0;
     }
     
-    def string getVar(string varname){
+    def string getVar(string varname){    
         return ((StringContent)this.varMap.get( new StringHashContent(varname)).value);
     }
     
@@ -71,13 +71,54 @@ struct RuntimeBasic {
     def virtual void step();
 }
 
-struct Function:FunctionBasic{
-    def virtual void run(RuntimeBasic r,string[] args);
-    
+struct Function:FunctionBasic{    
     def override string toString(){
         return "";
     }
+    
+    // by default,we deal the "${xxxx} as a var in string"
+    // functions can customize this(or cancel by do nothing to raw ars)
+    def virtual string preprocessArg(RuntimeBasic r,string arg){
+        int len_1 = strlen(arg) - 1;
+        int j = 1;
+
+        StringBuffer sb = new StringBuffer();
+
+        for( int i = 0 ; i <= len_1 ; i++ ){
+            if( arg[i] == '$' ){
+                if( i < len_1 ){
+                    if( arg[i+1] == '{' ){
+                        i+=2;
+                        StringBuffer tmp = new StringBuffer();
+                        do{
+                            tmp.appendCharacter(arg[i]);
+                        } while(arg[++i] != '}');
+                        sb.append(r.getVar(tmp.toString()));
+                        continue;
+                    } 
+                }
+            }
+            sb.appendCharacter( arg[i] );
+        }
+        
+        return sb.toString();
+    }
+    
+    def void preprocessArgs(RuntimeBasic r,string[] args){
+        int len = sizeof args;
+        for(int i = 0 ; i < len;i++){
+            args[i] = this.preprocessArg(r,args[i]);
+        }
+    }
+
+    def virtual void run(RuntimeBasic r,string[] args);
+
+    def void procedure(RuntimeBasic r,string[] args){
+        this.preprocessArgs(r,args);
+        this.run(r,args);
+    }
 }
+
 
 struct RuntimeBasic_ : RuntimeBasic{
     HashMap functionMap;//<string,Function>
@@ -93,7 +134,6 @@ struct RuntimeBasic_ : RuntimeBasic{
     def void registerFunction(string funcname,Function function){
        this.functionMap.set(new StringHashContent(funcname),function);
     }
-
 }
 
 
@@ -108,13 +148,16 @@ struct Instruction:Content{
     }
 
     def void run(RuntimeBasic_ r){
-        r.getFunction(this.function).run(r,this.args);
+        // copy those args
+        string[] tmp = new string[sizeof this.args];
+        for(int i=0;i< sizeof this.args;i++) 
+            tmp[i] = this.args[i];
+        r.getFunction(this.function).procedure(r,tmp);
     }
     
     def override string toString(){
         return this.function;
     }
-    
 }
 
 struct Runtime:RuntimeBasic_{
@@ -185,6 +228,8 @@ struct SymbolToken:RPGToken{
 struct RPGLexer{
     File f;
     int peak;
+    int lineno;
+    int index;
     
     def this(){
         this.peak = ' ';
@@ -198,6 +243,8 @@ struct RPGLexer{
     def void open(string filename){
         this.f.close();
         this.peak = ' ';
+        this.lineno = 1;
+        this.index = 0;
         this.f.open(filename);
     }
     
@@ -205,6 +252,13 @@ struct RPGLexer{
     
     def void readch(){
         this.peak = this.f.readch();
+        if(this.peak == '\n'){
+            this.lineno ++;
+            this.index = 0;
+        } else {
+            this.index ++;
+        }
+        
     }
     
     def RPGToken scan(){
@@ -260,7 +314,7 @@ struct RPGParser{
     def string value();
     
     def void error(string msg){
-        println("error "+msg);
+        println("error "+msg + "@" + this.lexer.lineno + ":" + this.lexer.index);
     }
     
     def void move(){
@@ -269,7 +323,7 @@ struct RPGParser{
     
     def void match(int id){
         if(this.look.tag != id){
-            this.error("wrong id" + this.look);
+            this.error("wrong id" + this.look );
         }
         this.move();
     }
@@ -385,6 +439,14 @@ struct Cond:Function{
     }
 }
 
+struct Select:Function{
+    def override void run(RuntimeBasic r,string[] args){
+        string var = args[0];
+        int i = parseInt(r.getVar(args[1]));
+        r.setVar(var,args[i-1]);
+    }
+}
+
 struct Print:Function{
     def override void run(RuntimeBasic r,string[] args){
         
@@ -478,6 +540,16 @@ struct RPGAddConst:Function{
         int val = parseInt(r.getVar(args[0]));
         val += parseInt(args[1]);
         r.setVar(args[0],val);
+    }
+}
+
+struct RPGCase :Function{
+    def override void run(RuntimeBasic r,string[] args){
+        int len = sizeof args;
+        int c = parseInt(args[0]);
+        if(c < len - 1){
+            r.jump(args[c]);
+        }
     }
 }
 

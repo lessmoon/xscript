@@ -19,7 +19,8 @@ public class NewArray extends Op {
         if(t != Type.Int){
             error("Array size can't be `" + size.type + "'");
         }
-        size = ConversionFactory.getConversion(size,Type.Int);
+        if( size.type != Type.Int )
+            size = ConversionFactory.getConversion(size,Type.Int);
     }
 
     @Override

@@ -29,6 +29,6 @@ public class StackVar extends Var {
 
     @Override
     public String toString(){
-        return "STACKVAR["+stacklevel+","+offset+"](" + op + ")"; 
+        return "$$" + op + "["+stacklevel+","+offset+"]";
     }
 }

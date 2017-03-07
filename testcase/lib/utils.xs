@@ -30,9 +30,13 @@ def bool isBlank(char c){
 def int parseInt(string str){
     int num = 0;
     int len = strlen(str);
+    bool is_minus = false;
     for(int i = 0 ; i < len;i++){
         if(!isDigit(str[i])){
             return num;
+        } else if( str[i] == '-'){
+            is_minus = !is_minus;
+            continue;
         }
         num *= 10;
         num += str[i] - '0';

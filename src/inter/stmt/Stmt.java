@@ -73,5 +73,9 @@ public class Stmt extends Node{
 	}
 	
     public static Stmt Enclosing        = Null;
-    public static Stmt BreakEnclosing   = Null; 
+    public static Stmt BreakEnclosing   = Null;
+
+    public void appendToSeq(LinkedSeq s){
+        s.appendStmt(this);
+    }
 }

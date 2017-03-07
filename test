@@ -1,4 +1,6 @@
 <"beg">
+"set":"rolename" "John"
+"set":"rolename_spell" "J-O-H-N"
 "print":"Yes!!!Finally!!!"
 "type":"HEY THERE?" "100"
 "type":"Anyone THERE?" "150"
@@ -8,6 +10,7 @@
 "print":"Could you please help me!"
 "set":"count" "0"
 <"choice">
+"set":"rrrrr" "hungry"
 "choice":"f" "Yes?" "Sorry,I'm busy now."
 "condition": "f" "1" "pass"
 "addconst":"count" "1"
@@ -29,11 +32,17 @@
 "sleep":"2000"
 "print":"Hey I found an ID card"
 "print":"It says:"
-"type":"D-r-.-S-m-i-t-h" "100"
-"print":"So that's it.My name is Smith."
+"type":"Dr.${rolename_spell}" "100"
+"print":"So that's it.My name is ${rolename}."
 "print":"And what's your name?"
 "read":"playername"
 "print":"Nice to meet you,$!" "playername"
-"print":"Nice to meet you too,Dr.Smith!"
+"print":"Nice to meet you too,Dr.${rolename}!"
+<"dead">
+"jump":"${rrrrr}"
+<"hungry">
+"type":"Sorry,${rolename} died of starvation!" "200"
+"jump":"end"
+<"cold">
+"type":"Sad,${rolename} froze to death!" "200"
 <"end">
-"type":"Sorry,Smith is Dead!!!" "200"

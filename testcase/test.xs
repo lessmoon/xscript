@@ -113,6 +113,7 @@ struct ScrollTextOutput{
     r.registerFunction("add",new RPGAdd);
     r.registerFunction("addconst",new RPGAddConst);
     r.registerFunction("read",new TypeString);
+    r.registerFunction("case",new RPGCase);
     r.open("test");
     r.run();
     
@@ -928,11 +929,11 @@ struct complex{
     case 2:
         println("Wrong!");
         break;
+        println("default Wrong!");
     case 'a':
         println("Correct!");
         break;
     default:
-        println("Wrong!");
     }
 }
 

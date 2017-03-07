@@ -1,4 +1,5 @@
 import "content.xs";
+import "../lib/utils.xs";
 
 struct binode{
     binode next;
@@ -11,6 +12,10 @@ struct binode{
         this.prev = prev;
     }
 
+    @string
+    def string toString(){
+        return this.value;
+    }
 }
 
 struct bilist{
@@ -53,5 +58,15 @@ struct bilist{
         this.tail.prev = this.tail.prev.prev;
         this.tail.prev.next = this.tail;
         return tmp;
+    }
+    
+    @string
+    def string toString(){
+        StringBuffer sb = new StringBuffer();
+        sb.append("[");
+        for(binode i = this.front();i.next != null;i = i.next){
+            sb.append(" " + i);
+        }
+        sb.append(" ]");
     }
 }

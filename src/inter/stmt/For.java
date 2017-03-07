@@ -21,7 +21,7 @@ public class For extends Stmt {
         }
     }
     
-    Type check(Type c){
+    private Type check(Type c){
         return c != Type.Bool?null:c;
     }
 
@@ -61,7 +61,7 @@ public class For extends Stmt {
     public String toString(){
         return "for(" + begin + ";" + condition + ";" + end + "){\n"
                 + stmt
-                +"\n}\n";
+                +"}\n";
     }
     
     /*

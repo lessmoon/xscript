@@ -99,6 +99,7 @@ src/inter/stmt/Function.java
 src/inter/stmt/FunctionBasic.java
 src/inter/stmt/If.java
 src/inter/stmt/InitialFunction.java
+src/inter/stmt/LinkedSeq.java
 src/inter/stmt/MemberFunction.java
 src/inter/stmt/Return.java
 src/inter/stmt/ReturnResult.java
