@@ -1,32 +1,17 @@
 package inter.expr;
 
-import lexer.Token;
 import lexer.Word;
 import symbols.Struct;
-import symbols.StructVariable;
-import symbols.Type;
 import symbols.VirtualTable;
-
-import java.util.Map.Entry;
 
 public class StructConst extends Constant {
     public  int size;
-    private final Constant[] table;
+    private final Constant[] memory;
     private Object extension = null;
 
     public StructConst( Struct t ){
         super(Word.struct,t);
-        table = new Constant[t.getVariableNumber()];
-        
-        /*Initial every member*/
-        do{
-            for (Entry<Token, StructVariable> info : t.table.entrySet()) {
-                Type vt = info.getValue().type;
-                int i = info.getValue().index;
-                table[i] = vt.getInitialValue();
-            }
-            t = t.getFather();
-        }while(t != null);
+        memory = t.createInstanceMemory();
     }
 
     public StructConst( Struct t ,Object extension ){
@@ -49,18 +34,18 @@ public class StructConst extends Constant {
     }
 
     public Constant setElement(int index,Constant c){
-        assert((table.length > index) && (index >= 0));
-        table[index] = c;
+        assert((memory.length > index) && (index >= 0));
+        memory[index] = c;
         return c;
     }
 
     public Constant getElement(int index){
-        assert((table.length > index) && (index >= 0));
-        return table[index];
+        assert((memory.length > index) && (index >= 0));
+        return memory[index];
     }
 
     public int getSize(){
-        return table.length;
+        return memory.length;
     }
     
     public VirtualTable getVirtualTable(){

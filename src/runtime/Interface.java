@@ -18,7 +18,7 @@ public class Interface{
         for(Constant p : para){
             VarTable.pushVar(p);
         }
-        //RunStack.invokeFunction(lexline,filename,f);
+        //RunStack.invokeFunction(line,filename,f);
         try {
             f.run();
         } catch(ReturnResult e){
@@ -40,7 +40,7 @@ public class Interface{
             VarTable.pushVar(p);
         }
 
-        //RunStack.invokeFunction(lexline,filename,f);
+        //RunStack.invokeFunction(line,filename,f);
         try {
             f.run();
         } catch(ReturnResult e){

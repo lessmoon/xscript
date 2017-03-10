@@ -17,17 +17,17 @@ public class AbsoluteVar extends StackVar {
     @Override
     public Constant getValue(){
         /*stack order:top to down*/
-        return VarTable.getVarAbsolutely(stacklevel,offset);
+        return VarTable.getVarAbsolutely(stackLevel, stackOffset);
     }
 
     @Override
     public Constant setValue(Constant v){
         /*stack order:top to down*/
-        return  VarTable.setVarAbsolutely(stacklevel,offset,v);
+        return  VarTable.setVarAbsolutely(stackLevel, stackOffset,v);
     }
     
     @Override
     public String toString(){
-        return "$"+op+"["+stacklevel+","+offset+"]";
+        return "$"+op+"["+ stackLevel +","+ stackOffset +"]";
     }
 }

@@ -13,7 +13,7 @@ import java.util.*;
 
 public abstract class Switch<T> extends Stmt {
     private Expr condition;
-    private boolean isdefaultset = false;
+    private boolean isDefaultSet = false;
     private int indexOfDefault = 0;
     private final Map<Integer, List<T>> mapidx2case = new HashMap<>();
     protected final Map<T, Integer> map = new HashMap<>();
@@ -39,12 +39,12 @@ public abstract class Switch<T> extends Stmt {
     }
 
     public boolean isDefaultSet() {
-        return isdefaultset;
+        return isDefaultSet;
     }
 
     public void setDefault(Stmt s) {
         indexOfDefault = push(s);
-        isdefaultset = true;
+        isDefaultSet = true;
     }
 
     public static Switch getSwitch(Expr c) {

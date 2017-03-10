@@ -307,7 +307,7 @@ public class ArithFactory {
                 
                 if(e2 != null){
                     List<Expr> p = new ArrayList<>();
-                    FunctionBasic f = ((Struct)(e1.type)).getNormalFunction(fName);
+                    FunctionBasic f = ((Struct)(e1.type)).getNaiveFunction(fName);
                     if(f != null){
                         p.add(e1);
                         p.add(e2);

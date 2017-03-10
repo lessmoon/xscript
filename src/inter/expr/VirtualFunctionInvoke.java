@@ -33,7 +33,7 @@ public class VirtualFunctionInvoke extends Expr {
         if(func.getParaNumber() != para.size() + 1)
             error("function parameters number not match:" + func);
         for(int i = 1 ; i < func.getParaNumber(); i++){
-            if(!func.getParaInfo(i).type.equals(para.get(i - 1).type)){
+            if(!func.getParaInfo(i).type.isCongruentWith(para.get(i - 1).type)){
                 Expr e = para.get(i - 1);
                 Expr f = ConversionFactory.getConversion(e,func.getParaInfo(i).type);
                 assert(f != null);
@@ -77,7 +77,6 @@ public class VirtualFunctionInvoke extends Expr {
 
     @Override
     public Constant getValue(){
-        
         final Constant[] args = new Constant[para.size() + 1];
         args[0] = expr.getValue();
         if(args[0] == Constant.Null){
@@ -104,7 +103,7 @@ public class VirtualFunctionInvoke extends Expr {
         if(IS_DEBUG){
             System.out.println("\nVirtualInvoke " + func.toString() + "{");
         }
-        RunStack.invokeFunction(lexline,filename,f);
+        RunStack.invokeFunction(line, offset, filename, f);
         Constant result =  type.getInitialValue();
 
         try {

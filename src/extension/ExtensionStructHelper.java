@@ -137,7 +137,7 @@ public class ExtensionStructHelper {
                     Constant ret = (Constant) m.invoke(s1.getExtension(), args);
                     
                     //check return type dynamically
-                    if (!ret.type.equals(returnType)) {
+                    if (!ret.type.isCongruentWith(returnType)) {
                         if (returnType instanceof symbols.Struct && ret.type instanceof symbols.Struct) {
                             if (ret != Constant.Null) {
                                 if( retflag ){
@@ -184,7 +184,7 @@ public class ExtensionStructHelper {
                 if (methodAnnotation.virtual() || methodAnnotation.purevirtual()) {
                     s.defineVirtualFunction(f.name, f);
                 } else {
-                    s.addNormalFunction(f.name, f);
+                    s.addNaiveFunction(f.name, f);
                 }
             }
 

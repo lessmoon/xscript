@@ -265,7 +265,7 @@ public class RelFactory {
                     x2 = ConversionFactory.getConversion(x2, x1.type);
                 }
 
-                FunctionBasic f = ((Struct) (x1.type)).getNormalFunction(fname);
+                FunctionBasic f = ((Struct) (x1.type)).getNaiveFunction(fname);
                 ArrayList<Expr> p = new ArrayList<>();
                 if (f != null) {
                     p.add(x1);
@@ -280,7 +280,7 @@ public class RelFactory {
             }
         }
         if ( x1.type instanceof Array ) {
-            if (x1.type.equals(x2.type))
+            if (x1.type.isCongruentWith(x2.type))
                 r = new ObjectRel(tok, x1, x2);
         } else if (x1.type instanceof Struct && x2.type instanceof Struct ){
             r = new ObjectRel(tok,x1,x2);

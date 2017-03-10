@@ -28,6 +28,18 @@ native<extension.system>{
     int  getchar();
 }
 
+def int repeat_print(string s,int c){
+    int i = 0;
+    for(i = 0;i < c;i++)
+        print(s);
+    return 0;
+}
+
+def void println(string s){
+    print(s + "\n");
+    return;
+}
+
 import "utils.xs";
 
 
@@ -54,17 +66,6 @@ def string readString(){
 }
 
 
-def int repeat_print(string s,int c){
-    int i = 0;
-    for(i = 0;i < c;i++)
-        print(s);
-    return 0;
-}
-
-def void println(string s){
-    print(s + "\n");
-    return;
-}
 
 struct Timer{
     def void start();

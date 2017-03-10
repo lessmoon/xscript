@@ -13,11 +13,13 @@ public class VirtualTable {
         vtable = new ArrayList<>();
     }
 
+    private VirtualTable(List<List<FunctionBasic>> vtable){
+        this.vtable = vtable;
+    }
+
     @Override
     public Object clone() {
-        VirtualTable t = new VirtualTable();
-        t.vtable.addAll(vtable.stream().map(ArrayList::new).collect(Collectors.toList()));
-        return t;
+        return new VirtualTable(vtable.stream().map(ArrayList::new).collect(Collectors.toList()));
     }
 
     public void createNewTable(){
@@ -61,4 +63,8 @@ public class VirtualTable {
         return true;
     }
 
+    public void copy(VirtualTable t){
+        vtable.clear();
+        vtable.addAll(t.vtable.stream().map(ArrayList::new).collect(Collectors.toList()));
+    }
 }

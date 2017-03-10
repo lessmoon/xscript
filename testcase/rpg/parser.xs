@@ -433,7 +433,7 @@ struct Set:Function{
 
 struct Cond:Function{
     def override void run(RuntimeBasic r,string[] args){
-        if(r.getVar(args[0]) == args[1]){
+        if(args[0] == args[1]){
             r.jump(args[2]);
         }
     }
@@ -442,7 +442,7 @@ struct Cond:Function{
 struct Select:Function{
     def override void run(RuntimeBasic r,string[] args){
         string var = args[0];
-        int i = parseInt(r.getVar(args[1]));
+        int i = parseInt(args[1]);
         r.setVar(var,args[i-1]);
     }
 }
@@ -524,21 +524,16 @@ struct TypeString:Function{
     }
 }
 
-struct RPGAdd:Function{
+struct RPGTime:Function{
     def override void run(RuntimeBasic r,string[] args){
-        int val = parseInt(r.getVar(args[0]));
-        val += parseInt(r.getVar(args[1]));
-        r.setVar(args[0],val);
+        r.setVar(args[0],time());
     }
 }
 
-/*
- * It can also be done by "set tmp val, add var,tmp"
- */
-struct RPGAddConst:Function{
+struct RPGAdd:Function{
     def override void run(RuntimeBasic r,string[] args){
-        int val = parseInt(r.getVar(args[0]));
-        val += parseInt(args[1]);
+        bigint val = parseBigInt(r.getVar(args[0]));
+        val += parseBigInt(args[1]);
         r.setVar(args[0],val);
     }
 }

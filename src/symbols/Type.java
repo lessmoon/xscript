@@ -20,27 +20,36 @@ public class Type extends Word {
         initialValue = val;
     }
 
-    public int getSize(){
-        return 1;
+    /**
+     * Two type are congruent with each other iff:
+     *     1.they are totally same or
+     *     2.they are array types and they have congruent component types
+     * @param type the type to compare with
+     * @return if {@param type} is congruent with this type
+     */
+    public boolean isCongruentWith(Type type ){
+        return this == type;
     }
-    
-    public int getElementNumber(){
-        return 1;
-    }
-    
-    public boolean equals( Type t ){
-        return this == t;
-    }
-    
+
+    /**
+     *  A type is not built-in iff it can't be used as reference
+     *  There are two types which are built-in:{@link Struct},{@link #Null} and {@link Array}
+     *  @return if the type is built-in
+     */
     public boolean isBuiltInType(){
         return true;
     }
-    
+
+    /**
+     *  Every type needs an initial value in case that undefined behaviors.
+     *  That is "declaration is initialization"
+     * @return the initial value of a type
+     */
     public Constant getInitialValue(){
         return initialValue;
     }
     
-    protected void setInitialValue(Constant c){
+    private void setInitialValue(Constant c){
         initialValue = c;
     }
     
@@ -76,26 +85,38 @@ public class Type extends Word {
                 || p == Type.BigInt || p == Type.BigReal);
     }
 
-    public static Type max(Type p1,Type p2){
-        //(int,int)>int
-        //(int,(big)float)>(big)float
-        //(bigint,(big)float)>bigfloat
-        
-        if( p1 == Type.Str ){
+
+    /**
+     * If T1 and T2 are both numerical,bool or string ,the max type of T1 and T2 is
+     *    1.T1 if T1 == T2
+     *    2.In two partial ordering relations(= for the same types)
+     *                  / real
+     *         bigreal >        > int > char
+     *                  \ bigint
+     *       the minimum type can >= T1 and T2 in both relations.
+     *       e.g: max(string,string) = string,
+     *            max(int,real) = real
+     *            max(bigint,real) = bigreal
+     * @param type1 the left type
+     * @param type2 the right type
+     * @return the max type or null if either {@param type1} or {@param type2} is not numeric,bool or string
+     */
+    public static Type max(Type type1,Type type2){
+        if( type1 == Type.Str ){
             return Type.Str;
-        } else if(p1 == Type.Bool && p2 ==Type.Bool) {
+        } else if(type1 == Type.Bool && type2 ==Type.Bool) {
             return Type.Bool;
-        } else if( !numeric(p1) || !numeric(p2)){
+        } else if( !numeric(type1) || !numeric(type2)){
             return null;
-        } else if(p1 == Type.BigReal || p2 == Type.BigReal){
+        } else if(type1 == Type.BigReal || type2 == Type.BigReal){
             return Type.BigReal;
-        } else if( p1 == Type.Real ){
-            return p2 == Type.BigInt?Type.BigReal:Type.Real;
-        } else if( p2 == Type.Real ){
-            return p1 == Type.BigInt?Type.BigReal:Type.Real;
-        } else if(p1 == Type.BigInt || p2 == Type.BigInt){
+        } else if( type1 == Type.Real ){
+            return type2 == Type.BigInt?Type.BigReal:Type.Real;
+        } else if( type2 == Type.Real ){
+            return type1 == Type.BigInt?Type.BigReal:Type.Real;
+        } else if(type1 == Type.BigInt || type2 == Type.BigInt){
             return Type.BigInt;
-        } else if(p1 == Type.Int || p2 == Type.Int){
+        } else if(type1 == Type.Int || type2 == Type.Int){
             return Type.Int;
         } else {
             return Type.Char;

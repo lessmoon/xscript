@@ -34,7 +34,7 @@ public class FunctionInvoke extends Expr {
         if(func.getParaNumber() != para.size())
             error("function parameters number not match:" + func);
         for(int i = 0 ; i < func.getParaNumber(); i++){
-            if(!func.getParaInfo(i).type.equals(para.get(i).type)){
+            if(!func.getParaInfo(i).type.isCongruentWith(para.get(i).type)){
                 Expr e = para.get(i);
                 Expr f = ConversionFactory.getConversion(e,func.getParaInfo(i).type);
                 assert(f != null);/*won't happen*/
@@ -103,7 +103,7 @@ public class FunctionInvoke extends Expr {
         if(IS_DEBUG){
             System.out.println("\nInvoke " + func.toString() + "{");
         }
-        RunStack.invokeFunction(lexline,filename,func);
+        RunStack.invokeFunction(line, offset, filename, func);
         try {
             func.run();
             if(IS_DEBUG){

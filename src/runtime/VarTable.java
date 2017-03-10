@@ -7,21 +7,24 @@ import java.util.List;
 import java.util.Stack;
 
 class ConstantReference {
-    Constant v;
-    ConstantReference(Constant v){
-        this.v = v;
+    private Constant value;
+    ConstantReference(Constant value){
+        this.value = value;
+    }
+    public Constant getValue(){
+        return value;
+    }
+
+    public Constant setValue(Constant value) {
+        this.value = value;
+        return value;
     }
 }
 
 public class VarTable {
     static final boolean IS_DEBUG = false;
     static final private List<ConstantReference> globalTable = new ArrayList<>();
-    static final private ThreadLocal<Stack<List<ConstantReference>>> table = new ThreadLocal<Stack<List<ConstantReference>>>() {
-        @Override
-        protected Stack<List<ConstantReference>> initialValue(){
-            return new Stack<>();
-        }
-    };
+    static final private ThreadLocal<Stack<List<ConstantReference>>> table = ThreadLocal.withInitial(Stack::new);
 
     static private int levels(VarTable r){
         return 1;//r.prev==null?1:levels(r.prev) + 1;
@@ -30,11 +33,9 @@ public class VarTable {
     static public List<Constant> getTop(){
         List<Constant> arr = new ArrayList<>();
         if(table.get().empty()){
-            globalTable.forEach(v -> arr.add(v.v));
+            globalTable.stream().map(ConstantReference::getValue).forEach(arr::add);
         } else {
-            table.get().peek().forEach(v -> {
-                arr.add(v.v);
-            });
+            table.get().peek().stream().map(ConstantReference::getValue).forEach(arr::add);
         }
         return arr;
     }
@@ -102,7 +103,7 @@ public class VarTable {
             System.out.println("get " + offset );
         }//*/
         List<ConstantReference> c = sl == 0 ? globalTable:table.get().get(sl - 1);
-        return c.get(offset).v;
+        return c.get(offset).getValue();
     }
     
     static public Constant setVarAbsolutely(int sl,int offset,Constant v){
@@ -113,7 +114,6 @@ public class VarTable {
             System.out.println("set " + offset + " = " );
         }//*/
         List<ConstantReference> c = sl == 0 ? globalTable:table.get().get( sl - 1 );
-        c.get(offset).v = v;
-        return v;
+        return c.get(offset).setValue(v);
     }
 }

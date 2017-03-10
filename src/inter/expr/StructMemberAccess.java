@@ -21,7 +21,7 @@ public class StructMemberAccess extends Var {
         if( ! (value.type instanceof Struct) ){
             error("struct access can't be used for " + value.type );
         }
-        StructVariable variable = ((Struct)(value.type)).getMemberVariableType(member);
+        StructVariable variable = ((Struct)(value.type)).getVariable(member);
         if( variable == null ){
             error("can't find member `" + member + "' in " + value.type);
         }
@@ -47,7 +47,8 @@ public class StructMemberAccess extends Var {
             error("null pointer error:try to get member `" + member + "' of a null struct");
         }
         StructConst s = (StructConst)c;
-        return s.getElement(index);
+        Constant tmp = s.getElement(index);
+        return tmp;
     }
 
     @Override

@@ -57,6 +57,19 @@ public class For extends Stmt {
         return this;
     }
 
+    /**
+     *  TODO: 2017/3/10
+     *  optimize to unfolding the loop
+     */
+    @Override
+    public void appendToSeq(LinkedSeq s) {
+        super.appendToSeq(s);
+        //begin.appendToSeq(s);
+        //new ExprStmt(condition).appendToSeq(s);
+        //stmt.appendToSeq(s);
+        //end.appendToSeq(s);
+    }
+
     @Override
     public String toString(){
         return "for(" + begin + ";" + condition + ";" + end + "){\n"

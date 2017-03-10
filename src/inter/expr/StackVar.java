@@ -5,12 +5,12 @@ import runtime.VarTable;
 import symbols.Type;
 
 public class StackVar extends Var {
-    final int stacklevel;
-    final int offset;
+    final int stackLevel;
+    final int stackOffset;
     public StackVar(Token w,Type t,int sl,int o){
         super(w,t);
-        stacklevel = sl;
-        offset = o;
+        stackLevel = sl;
+        stackOffset = o;
     }
 
     @Override
@@ -20,15 +20,15 @@ public class StackVar extends Var {
 
     @Override
     public Constant getValue(){
-        return VarTable.getVar(stacklevel,offset);
+        return VarTable.getVar(stackLevel, stackOffset);
     }
     
     public Constant setValue(Constant v){
-        return  VarTable.setVar(stacklevel,offset,v);
+        return  VarTable.setVar(stackLevel, stackOffset,v);
     }
 
     @Override
     public String toString(){
-        return "$$" + op + "["+stacklevel+","+offset+"]";
+        return "$$" + op + "["+ stackLevel +","+ stackOffset +"]";
     }
 }

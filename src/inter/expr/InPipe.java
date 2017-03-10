@@ -39,6 +39,11 @@ public class InPipe extends Expr {
         return value;
     }
 
+    @Override
+    public String toString(){
+        return expr.toString();
+    }
+
     public Constant getPipeValue(){
         return value;
     }

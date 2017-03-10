@@ -9,8 +9,3 @@ code = function-definition|struct-definition|statement;
 statement = declaration | control-flow-statement | data-flow-statement;
 var = var-id | namespace-name::var;
 function-invoke = function-name() | namspace-name::function-invoke;
-2.inherit and overriding
-struct base{
-}
-
-struct child:base{}

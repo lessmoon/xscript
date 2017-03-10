@@ -123,7 +123,7 @@
 		3. Override function
 			- `def` `override` return-type func-name([para-type para-name,...]) 
 		4. Override function must be virtual function in base struct
-		5. If a struct(or its father) defined a pure virtual function(declared but no definition),it is not instantiable
+		5. If a struct(or its base struct) defined a pure virtual function(declared but no definition),it is not instantiable
 		6. initial function shouldn't be `virtual`,and so it can't use `override`
 	- Operand overloading
 		- Definition grammar

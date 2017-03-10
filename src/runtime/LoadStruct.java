@@ -10,7 +10,7 @@ public class LoadStruct {
             ClassLoader loader = ClassLoader.getSystemClassLoader();
             Class clazz = loader.loadClass(pkg + "." + clazzname);
             extension.Struct s = (extension.Struct)clazz.newInstance();
-            return s.setup(sname,dic, typeTable);
+            return s.setup(sname,dic, typeTable).close();
         } catch(Exception e) {
             throw new RuntimeException(e);
         }

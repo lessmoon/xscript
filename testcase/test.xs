@@ -12,6 +12,13 @@ import  "ui/cyclepaintpad.xs";
 
 import "rpg/parser.xs";
 
+{
+    int[] x = {12,3,4,5};
+    
+}
+
+
+
 struct ScrollTextOutput{
     PaintPad x;
     int width,height;
@@ -98,6 +105,21 @@ struct ScrollTextOutput{
         this.x.wait();
     }
 }
+struct base;
+struct derive:base;
+struct base{
+    def base getBase();
+}
+
+struct derive:base{
+    def void test();
+}
+
+{
+    
+}
+
+
 
 {
     RPGParser p = new RPGParser();
@@ -111,9 +133,9 @@ struct ScrollTextOutput{
     r.registerFunction("type",new StopPrint);
     r.registerFunction("open",new Open);
     r.registerFunction("add",new RPGAdd);
-    r.registerFunction("addconst",new RPGAddConst);
     r.registerFunction("read",new TypeString);
     r.registerFunction("case",new RPGCase);
+    r.registerFunction("time",new RPGTime);
     r.open("test");
     r.run();
     

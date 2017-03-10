@@ -21,7 +21,7 @@ public class TestStruct extends Struct {
     public symbols.Struct setup(Token sname, Dictionary dic, TypeTable typeTable){
         
         final symbols.Struct s = new symbols.Struct(sname);
-        s.addMemberVariable(dic.getOrReserve("id"),Type.Str);
+        s.addVariable(dic.getOrReserve("id"),Type.Str);
         Token fname = dic.getOrReserve("getId");
         List<Para> plist = new ArrayList<>();
         plist.add(new Para(s,lexer.Word.This));

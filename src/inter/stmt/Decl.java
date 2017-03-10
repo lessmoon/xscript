@@ -28,7 +28,7 @@ public class Decl extends Stmt {
         if(value == null){
             value = type.getInitialValue();
             return true;
-        } else if( !type.equals(value.type) ) {
+        } else if( !type.isCongruentWith(value.type) ) {
             value = ConversionFactory.getConversion(value,type);
             return value != null;
         }

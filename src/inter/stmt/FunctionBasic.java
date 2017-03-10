@@ -33,6 +33,10 @@ public abstract class FunctionBasic extends Stmt {
     
     public abstract void run();
     public abstract boolean isCompleted();
+    public boolean isNotCompleted(){
+        return !isCompleted();
+    }
+
     public boolean used(){
         return used;
     }

@@ -17,14 +17,14 @@ public class Array extends Type {
     }
 
     @Override
-    public boolean equals( Type t ){
-        if(this == t)
+    public boolean isCongruentWith(Type type){
+        if(this == type)
             return true;
-        if(!(t instanceof Array))
+        if(!(type instanceof Array))
             return false;
         /*we don't care the first dimension*/
         Array t1 = this;
-        Array t2 = (Array)t;
+        Array t2 = (Array) type;
 
         for(;t1.of instanceof Array;t1 = (Array)t1.of,t2 = (Array)t2.of){
             if(!(t2.of instanceof Array)){

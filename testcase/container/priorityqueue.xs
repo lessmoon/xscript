@@ -69,7 +69,7 @@ struct PriorityQueue{
                  *     /  \
                  *    Y   Z
                  *    we need compare X,Y and Z,
-                 *    choose the 'largest' one of them as the father node
+                 *    choose the 'largest' one of them as the baseStruct node
                  */
                 int max = lc;//the max index of child
                 if(cc[lc] < cc[rc]){
@@ -109,7 +109,7 @@ struct PriorityQueue{
         this.contents[this.size] = e;
         
         int x = this.size;
-        //if the father node is less than the child node
+        //if the baseStruct node is less than the child node
         while(x >= 2 && this.contents[x/2] < e){
             this.swap(x,x/2);
             x /= 2;

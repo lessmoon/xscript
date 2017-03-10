@@ -42,10 +42,7 @@ public class LinkedSeq extends Stmt {
     }
 
     public void runAt(int beg){
-        Iterator<Stmt> iter = stmts.listIterator(beg);
-        while (iter.hasNext()){
-            iter.next().run();
-        }
+        stmts.listIterator(beg).forEachRemaining(Stmt::run);
     }
 
     public int length(){

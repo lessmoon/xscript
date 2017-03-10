@@ -23,7 +23,7 @@ public class StructDecl extends Decl {
         if( value == Constant.Null )
             return type instanceof Struct;
         else
-            return type.equals(value.type) || ((Struct) value.type).isChildOf((Struct)type);
+            return type.isCongruentWith(value.type) || ((Struct) value.type).isChildOf((Struct)type);
     }
 
     @Override

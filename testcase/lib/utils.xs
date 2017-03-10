@@ -27,19 +27,41 @@ def bool isBlank(char c){
     return c==' '||isEndLine(c);
 }
 
+import"system.xs";
+def bigint parseBigInt(string str){
+    bigint num = 0;
+    int len = strlen(str);
+    bool is_minus = false;
+    
+    for(int i = 0 ; i < len;i++){
+        if(isDigit(str[i])){
+            num *= 10;
+            num += str[i] - '0';
+        } else if( str[i] == '-'){
+            is_minus = !is_minus;
+            continue;
+        } else {
+            break;
+        }
+    }    
+    return is_minus?-num:num;
+}
+
 def int parseInt(string str){
     int num = 0;
     int len = strlen(str);
     bool is_minus = false;
+    
     for(int i = 0 ; i < len;i++){
-        if(!isDigit(str[i])){
-            return num;
+        if(isDigit(str[i])){
+            num *= 10;
+            num += str[i] - '0';
         } else if( str[i] == '-'){
             is_minus = !is_minus;
             continue;
+        } else {
+            break;
         }
-        num *= 10;
-        num += str[i] - '0';
     }
-    return num;
+    return is_minus?-num:num;
 }

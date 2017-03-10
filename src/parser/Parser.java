@@ -30,7 +30,6 @@ public class Parser implements TypeTable {
      * binding for super.func or var,
      * which means super struct must have this function definition and implementation
      * this call of this function must be a normal call(directly invoking)
-     * TODO: TEST
      */
     private boolean isSuperCalled = false;
     private Struct dStruct = null;
@@ -126,20 +125,18 @@ public class Parser implements TypeTable {
     }
 
     public void error(String s,Throwable cause){
-        error(s, Lexer.line, Lexer.filename,cause);
+        error(s, Lexer.line, Lexer.offset, Lexer.filename, cause);
     }
 
-    public void error(String s,int l,String f) {
-        error(s,l,f,null);
+    public void error(String s, int l, int offset, String f) {
+        error(s, l, offset, f, null);
     }
 
-
-
-    public void error(String s, int l, String f,Throwable e) throws RuntimeException {
+    public void error(String s, int l, int offset, String f, Throwable e) throws RuntimeException {
         if(e == null)
-            throw new RuntimeException("line " + l + " in file `" + f + "':\n\t" + s);
+            throw new RuntimeException(" in file `" + f + "' at line " + l + ":" + offset + ":\n\t" + s);
         else
-            throw new RuntimeException("line " + l + " in file `" + f + "':\n\t" + s,e);
+            throw new RuntimeException(" in file `" + f + "' at line " + l + ":" + offset + ":\n\t" + s, e);
     }
 
     public void warning(String s) {
@@ -225,9 +222,15 @@ public class Parser implements TypeTable {
     private void checkFunctionCompletion() {
         /*check if some used functions has not been completed*/
 
-        table.getAllFunctions().stream().filter(b -> b.used() && !b.isCompleted()).forEach(b -> error("function `" + b + "' used but not completed ", b.lexline, b.filename));
+        table.getAllFunctions().stream()
+                .filter(FunctionBasic::used)
+                .filter(FunctionBasic::isNotCompleted)
+                .forEach(b -> error("function `" + b + "' used but not completed ", b.line,b.offset, b.filename));
 
-        fUsed.stream().filter(b -> b.used() && !b.isCompleted()).forEach(b -> error("function `" + b + "' used but not completed ", b.lexline, b.filename));
+        fUsed.stream()
+                .filter(FunctionBasic::used)
+                .filter(FunctionBasic::isNotCompleted)
+                .forEach(b -> error("function `" + b + "' used but not completed ", b.line,b.offset, b.filename));
 
         /*
          * check if there is a struct that is pure virtual but declared
@@ -237,8 +240,8 @@ public class Parser implements TypeTable {
                 continue;
             }
             Struct st = (Struct) (info.getValue());
-            if (st.used() && !st.isCompleted()) {
-                error("`" + info.getValue() + "' used but not completed ", st.getFirstUsedLine(), st.getFirstUsedFile());
+            if (st.isInstantiated() && !st.isCompleted()) {
+                error("`" + info.getValue() + "' used but not completed ", st.getFirstInstantiatedLine(),st.getFirstInstantiatedIndex(), st.getFirstInstantiatedFile());
             }
         }
     }
@@ -282,12 +285,12 @@ public class Parser implements TypeTable {
                     }
                     defined.add(fname);
                     match(Tag.ID);
-                    f = isVirtual ? s.getVirtualFunction(fname) : s.getNormalFunction(fname);
+                    f = isVirtual ? s.getVirtualFunction(fname) : s.getNaiveFunction(fname);
                     if (f == null) {
                         error("`" + s + "' has no" + (isVirtual?" virtual ":" ") + "function `" + fname + "'");
                         return;
                     }
-                    if (!returnType.equals(f.type)) {
+                    if (!returnType.isCongruentWith(f.type)) {
                         error("function `" + s + "." + f.name + "' return type not match[expect `" + f.type + "', but found `" + returnType+ "']");
                     }
 
@@ -304,7 +307,7 @@ public class Parser implements TypeTable {
                 }
 
                 for (int i = 0; i < arguments.size(); i++) {
-                    if (!arguments.get(i).type.equals(f.getParaInfo(i + 1).type)) {
+                    if (!arguments.get(i).type.isCongruentWith(f.getParaInfo(i + 1).type)) {
                         error("function " + f + " parameter "+ arguments.get(i).type +"[" + i + "] type not matched with the declared one[expect:`" + f.getParaInfo(i + 1).type + "',but found:`" + arguments.get(i).type + "']");
                     }
                 }
@@ -317,12 +320,12 @@ public class Parser implements TypeTable {
                     error("member " + s + "." + varName + " redeclared");
                 }
                 defined.add(varName);
-                StructVariable t1 = s.getMemberVariableType(varName);
+                StructVariable t1 = s.getVariable(varName);
                 if(t1 == null){
                     error("member " + s + "." + varName + " does not actually exists");
                     return;//forbidden warning
                 }
-                if (!t1.type.equals(t)) {
+                if (!t1.type.isCongruentWith(t)) {
                     error("type of member " + s + "." + varName + "does not match actually[expect:`" + t1 + "',but found:`"+ t + "']");
                 }
             }
@@ -377,11 +380,11 @@ public class Parser implements TypeTable {
                     if (b == null) {
                         error("base struct `" + base + "' not found");
                     }
-                    if (s.getFather() != b) {
-                        if (s.getFather() == null) {
+                    if (s.getBaseStruct() != b) {
+                        if (s.getBaseStruct() == null) {
                             error("native struct `" + s.getName() + "' has no father");
                         } else {
-                            error("native struct `" + s.getName() + "' has a different father (`" + s.getFather() + "') with declaration here(`" + b + "')");
+                            error("native struct `" + s.getName() + "' has a different father (`" + s.getBaseStruct() + "') with declaration here(`" + b + "')");
                         }
                     }
                 }
@@ -450,7 +453,9 @@ public class Parser implements TypeTable {
 
         Token name = look;
         match(Tag.ID);
-        Struct s;
+        Struct s = (Struct) getType(name);
+        final boolean isPreDecl = !(s == null || s.isClosed());
+
         if (check(':')) {
             Token base = look;
             match(Tag.ID);
@@ -458,17 +463,37 @@ public class Parser implements TypeTable {
             if (b == null) {
                 error("base struct `" + base + "' not found");
             }
-            s = new Struct(name, (Struct) b);
+            if (isPreDecl) {
+                if (s.getBaseStruct() == null) {
+                    error("declared struct `" + s + "' has no base struct,but found `" + base + "'");
+                } else if (!s.getBaseStruct().isCongruentWith(b)) {
+                    error("declared struct `" + s + "' has a base struct `" + s.getBaseStruct() + "',but found `" + base + "'");
+                }
+            } else {
+                s = new Struct(name, (Struct) b);
+            }
         } else {
-            s = new Struct(name);
+            if (!isPreDecl) {
+                s = new Struct(name);
+            } else if (s.getBaseStruct() != null) {
+                error("declared struct `" + s + "' has a base struct `" + s.getBaseStruct() + "',but not found in this definition");
+            }
         }
 
-        checkNamespace(name, "struct");
-        defType(name, s);
+        if (!isPreDecl) {
+            checkNamespace(name, "struct");
+            defType(name, s);
+        }
 
         dStruct = s;
-
+        if (check(';')) {
+            return;
+        }
         match('{');
+        if (!(s.getBaseStruct() == null || s.getBaseStruct().isClosed())) {
+            error("predeclared base struct `" + s.getBaseStruct() + "' of `" + s + "' is not closed yet");
+        }
+        s.close();
         while (!check('}')) {
             Token op = null;
             if (check('@')) {
@@ -499,14 +524,14 @@ public class Parser implements TypeTable {
                 do {
                     m = look;
                     match(Tag.ID);
-                    if (s.addMemberVariable(m, t) != null) {
+                    if (s.addVariable(m, t) != null) {
                         error("member `" + m.toString() + "' defined previously ");
                     }
                 } while (check(','));
                 match(';');
             }
         }
-
+        s.iteratorDerivedStruct().forEachRemaining(Struct::copyBase);
         dStruct = null;
     }
 
@@ -590,7 +615,7 @@ public class Parser implements TypeTable {
         } else if (flag == Tag.OVERRIDE) {
             s.overrideVirtualFunction(fname, f);
         } else {
-            s.addNormalFunction(fname, f);
+            s.addNaiveFunction(fname, f);
         }
 
         if (op != null) {
@@ -663,7 +688,7 @@ public class Parser implements TypeTable {
                     error("function redefined:" + fb);
                 }
                 f = (Function) fb;
-                if (!f.type.equals(returnType)) {
+                if (!f.type.isCongruentWith(returnType)) {
                     error("function return type doesn't match with its former declaration:" + f + "\nnote: " + returnType);
                 }
                 if (f.paralist.size() != l.size()) {
@@ -671,7 +696,7 @@ public class Parser implements TypeTable {
                 }
                 int i = 0;
                 for (Para t : f.paralist) {
-                    if (!t.type.equals(l.get(i).type)) {
+                    if (!t.type.isCongruentWith(l.get(i).type)) {
                         error("function " + (new Function(name, returnType, l)).toString() + " has different arguments[" + i + "] types with its former declaration " + f);
                     }
                     i++;
@@ -717,7 +742,7 @@ public class Parser implements TypeTable {
         }
 
         for (int i = 1; i < l.size(); i++) {
-            if (!l.get(i).type.equals(f.paralist.get(i).type)) {
+            if (!l.get(i).type.isCongruentWith(f.paralist.get(i).type)) {
                 error("function `" + t.getName() + ".[init]' has different arguments[" + (i - 1) + "] type `" + l.get(i).type + "' with its former declaration `" + f.paralist.get(i).type + "'");
             }
         }
@@ -740,10 +765,10 @@ public class Parser implements TypeTable {
             return ;
         }
         /*
-         * NOTE:type.equals doesn't conclude
+         * NOTE:type.isCongruentWith doesn't conclude
          * that father struct and child struct is the same
          */
-        if (!f.type.equals(returnType)) {
+        if (!f.type.isCongruentWith(returnType)) {
             error("member function `" + t.lexeme + "." + name + "' return type doesn't match with the former declaration");
         }
         if (f.isCompleted()) {
@@ -757,7 +782,7 @@ public class Parser implements TypeTable {
             error("parameters number of function `" + t.lexeme + "." + name + "' doesn't match with its former declaration");
         }
         for (int i = 1; i < l.size(); i++) {
-            if (!l.get(i).type.equals(f.paralist.get(i).type)) {
+            if (!l.get(i).type.isCongruentWith(f.paralist.get(i).type)) {
                 error("function `" + t.lexeme + "." + name + "' has different arguments[" + (i - 1) + "] type `" + l.get(i).type + "' with its former declaration `" + f.paralist.get(i).type + "'");
             }
         }
@@ -922,7 +947,7 @@ public class Parser implements TypeTable {
                 }
                 break;
             case Tag.SWITCH:
-                s = switchstmt();
+                s = switchStmt();
                 break;
             case Tag.DEFAULT:
             case Tag.CASE:/*CASE*/
@@ -964,7 +989,7 @@ public class Parser implements TypeTable {
         return ENABLE_STMT_OPT ? s.optimize() : s;
     }
 
-    private Stmt switchstmt() throws IOException {
+    private Stmt switchStmt() throws IOException {
         match(Tag.SWITCH);
         match('(');
         //Available types for switch
@@ -1207,7 +1232,7 @@ public class Parser implements TypeTable {
             e = expr();
         }
         Expr tmp = e;
-        if (!e.type.equals(p)) {
+        if (!e.type.isCongruentWith(p)) {
             e = ConversionFactory.getConversion(e, p);
         }
         if (e == null) {//type error
@@ -1219,7 +1244,7 @@ public class Parser implements TypeTable {
     /*
      * match single type (except for array)
      */
-    private Type singletype() throws IOException {
+    private Type singleType() throws IOException {
         if (look == Word.Auto) {//check
             error("auto type infer is not permitted here ");
         }
@@ -1242,7 +1267,7 @@ public class Parser implements TypeTable {
         return p;
     }
 
-    public Type autoType() throws IOException {
+    private Type autoType() throws IOException {
         if (look == Word.Auto) {
             move();
             return Type.Auto;
@@ -1250,9 +1275,8 @@ public class Parser implements TypeTable {
         return type();
     }
 
-    public Type type() throws IOException {
-
-        Type p = singletype();
+    private Type type() throws IOException {
+        Type p = singleType();
 
         if (look.tag == '[') {
             if (p == Type.Void) {
@@ -1329,15 +1353,15 @@ public class Parser implements TypeTable {
     }
 
     private Expr rel() throws IOException {
-        Expr l = typecheck();
+        Expr l = typeCheck();
         if (look.tag == Tag.GE || look.tag == Tag.LE
                 || look.tag == '<' || look.tag == '>') {
-            l = RelFactory.getRel(copymove(), l, typecheck());
+            l = RelFactory.getRel(copymove(), l, typeCheck());
         }
         return l;
     }
 
-    private Expr typecheck() throws IOException {
+    private Expr typeCheck() throws IOException {
         Expr e = add();
         while (look.tag == Tag.INSTOF) {
             Token tok = copymove();
@@ -1374,11 +1398,11 @@ public class Parser implements TypeTable {
             case Tag.DEC:
                 return UnaryFactory.getUnary(copymove(), unary());
             default:
-                return postinc();
+                return postInc();
         }
     }
 
-    private Expr postinc() throws IOException {
+    private Expr postInc() throws IOException {
         Expr e = postfix();
         switch (look.tag) {
             case Tag.INC:
@@ -1424,7 +1448,7 @@ public class Parser implements TypeTable {
             if (!(e.type instanceof Struct))
                 error("member function is for struct,not for `" + e.type + "'");
             Struct s = (Struct) (e.type);
-            FunctionBasic f = s.getNormalFunction(mname);
+            FunctionBasic f = s.getNaiveFunction(mname);
             if (f == null) {
                 f = s.getVirtualFunction(mname);
                 if (f == null)
@@ -1510,7 +1534,7 @@ public class Parser implements TypeTable {
              */
                 Type t = ee.type;
                 if (isSuperCalled) {// it must be a struct
-                    t = ((Struct) (t)).getFather();
+                    t = ((Struct) (t)).getBaseStruct();
                     if (t == null) {
                         error("`" + ee.type + "' has no super struct defined");
                     }
@@ -1540,7 +1564,7 @@ public class Parser implements TypeTable {
             case Tag.NEW:
                 Token l = copymove();
                 //match('<');
-                t = singletype();
+                t = singleType();
                 if (t == Type.Void) {
                     error("can't use type `" + t + "'");
                 }
@@ -1563,7 +1587,10 @@ public class Parser implements TypeTable {
                     return new NewArray(l, t, e);
                 } else {// it is `new' struct
                     if (t instanceof Struct) {
-                        ((Struct) t).setUsed(Lexer.line, Lexer.filename);
+                        ((Struct) t).setInstantiated(Lexer.line, Lexer.offset, Lexer.filename);
+                        if (!((Struct) t).isClosed()) {
+                            error("try to instantiate a struct `" + t + "' which is not closed yet");
+                        }
                         Expr eNew = new New(l, (Struct) t);
                         if (look.tag == '(') {//has initial function
                             List<Expr> pl = parameters();
@@ -1614,7 +1641,7 @@ public class Parser implements TypeTable {
                 Expr f = unary();
                 assert (f != null);
                 e = f;
-                if (!f.type.equals(t))
+                if (!f.type.isCongruentWith(t))
                     e = ConversionFactory.getAutoDownCastConversion(f, t);
                 if (e == null)
                     error("can't convert " + f.type + " to " + t);
@@ -1635,7 +1662,7 @@ public class Parser implements TypeTable {
             if (dStruct == null || !isInStructInitialFunctionDefinition) {
                 error("Keyword `" + id + "' can be only used in the struct initial function");
             }
-            fs = dStruct.getFather();
+            fs = dStruct.getBaseStruct();
             if (fs == null) {
                 error("`" + dStruct + "' has no father");
                 return null;

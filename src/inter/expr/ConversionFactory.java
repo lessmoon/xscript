@@ -368,7 +368,7 @@ class DownCastConversion extends Conversion {
         Constant v = e.getValue();
         assert(v.type instanceof Struct);
         /*runtime check if it is ok to downcast*/
-        if(!tar.equals(v.type) && !((Struct)(v.type)).isChildOf(tar)){
+        if(!tar.isCongruentWith(v.type) && !((Struct)(v.type)).isChildOf(tar)){
             error("can't cast from `" + v.type + "' to `" + tar + "'");
         }
         return v;
@@ -436,7 +436,7 @@ public class ConversionFactory {
             Token fname = ((Struct)(src.type)).getOverloading(t);
             if(fname != null){
                 ArrayList<Expr> p = new ArrayList<>();
-                FunctionBasic f = ((Struct)(src.type)).getNormalFunction(fname);
+                FunctionBasic f = ((Struct)(src.type)).getNaiveFunction(fname);
                 if(f != null){
                     p.add(src);
                     c = new FunctionInvoke(f,p);
