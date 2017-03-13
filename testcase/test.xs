@@ -12,13 +12,6 @@ import  "ui/cyclepaintpad.xs";
 
 import "rpg/parser.xs";
 
-{
-    int[] x = {12,3,4,5};
-    
-}
-
-
-
 struct ScrollTextOutput{
     PaintPad x;
     int width,height;
@@ -105,21 +98,22 @@ struct ScrollTextOutput{
         this.x.wait();
     }
 }
+
 struct base;
 struct derive:base;
 struct base{
-    def base getBase();
+    def virtual base getBase();
 }
+
+struct rrr{
+    def void test(derive d){
+        d.getBase();
+    }
+} 
 
 struct derive:base{
     def void test();
 }
-
-{
-    
-}
-
-
 
 {
     RPGParser p = new RPGParser();
@@ -137,7 +131,7 @@ struct derive:base{
     r.registerFunction("case",new RPGCase);
     r.registerFunction("time",new RPGTime);
     r.open("test");
-    r.run();
+    //r.run();
     
 }
 
@@ -148,6 +142,8 @@ int x = 80,y = 170,width = 40;
 struct MyPaintPad:PaintPad{
     def this(){
         super("test",200,200);
+        Font f = super.getFont();
+        println(f.getFontName() + " : end");
     }
     
     def override void onClick(int bid){

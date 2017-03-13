@@ -17,7 +17,7 @@ public abstract class PaintPadImp extends JFrame {
     private final List<StringItem> stringItemList = Collections.synchronizedList(new ArrayList<>());
     private final List<CircleItem> circleItemList = Collections.synchronizedList(new ArrayList<>());
     
-    Color brushColor = Color.BLACK;
+    private Color brushColor = Color.BLACK;
 
     public PaintPadImp(String name, final int height, final int width) {
         super(name);
@@ -88,10 +88,6 @@ public abstract class PaintPadImp extends JFrame {
     public abstract void onClick(KeyEvent e);
 
     public abstract void onMouseClick(MouseEvent e);
-
-    public Object getLockObject(){
-        return this.getTreeLock();
-    }
 
     public void open() {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

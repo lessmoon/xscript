@@ -378,13 +378,19 @@ struct MouseAdapter2:MouseEventCallback{
 import"../lib/concurrent.xs";
 
 native<extension.ui>{
+    "SimpleFont":struct Font{
+        def this(string name,int style,int size);
+        def string getFontName();
+    };
+
     "PaintPadX":struct PaintPadX{
         def this(string name,int width,int height);
         def int addString(string str,int x,int y);
+        def void setFont(Font f);
+        def Font getFont();
         def virtual void onClose();
     };
 }
-
 struct PaintPad:PaintPadX{
     Trigger t;
 

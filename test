@@ -9,9 +9,6 @@
 "jump":"m_loop"
 <"end_loop">
 "jump":"${back}"
-
-
-
 <"beg">
 "set":"back" "ret"
 "print":"Enter a"
@@ -37,7 +34,7 @@
 <"choice">
 "set":"rrrrr" "hungry"
 "choice":"f" "Yes?" "Sorry,I'm busy now."
-"condition": "f" "1" "pass"
+"condition": "${f}" "1" "pass"
 "add":"count" "1"
 "condition": "count" "3" "dead"
 "print":"Please reconsider"

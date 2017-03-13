@@ -14,14 +14,12 @@ import inter.util.Para;
 import lexer.Token;
 import lexer.Word;
 import runtime.Dictionary;
+import runtime.LoadStruct;
 import runtime.TypeTable;
 import symbols.Array;
 import symbols.Type;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,11 +28,8 @@ import java.util.List;
  */
 
 public class ExtensionStructHelper {
-
-
     /**
      * build a function from method m
-     *
      * @param m         the method to use
      * @param clazz     the class built from
      * @param dic       the dictionary
@@ -59,10 +54,17 @@ public class ExtensionStructHelper {
         final Parameter[] ps = m.getParameters();
         param.add(new Para(s, Word.This));
         for (int i = 0; i < argLength; i++) {
-            Type t = func.args()[i].equals("$")?s
-                                            :typeTable.getType(dic.getOrReserve(func.args()[i]));
+            final Type t;
+            String typeStr = func.args()[i];
+            if(typeStr.startsWith("#")){
+                t = LoadStruct.getBoundStructOfClass(typeStr.substring(1));
+            } else if(typeStr.equals("$")){
+                t = s;
+            } else {
+                t = typeTable.getType(dic.getOrReserve(typeStr));
+            }
             assert (t != null)
-                    :("declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()' type[" + func.args()[i] + "] is not found");
+                    :("declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()' type[" + typeStr + "] is not found");
             assert (Constant.class.isAssignableFrom(ps[i].getType()))
                     : ("implementation of declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()':can't bind type[" + t + "] to [" + ps[i].getType().getName() + "] ");
 
@@ -82,9 +84,16 @@ public class ExtensionStructHelper {
         }
         final Token funcName = func.value().isEmpty() ? dic.getOrReserve(m.getName()) : dic.getOrReserve(func.value());
 
-        final Type returnType = func.ret().isEmpty() ? Type.Void 
-                                                      : func.ret().equals("$")? s
-                                                                                :typeTable.getType(dic.getOrReserve(func.ret()));
+        final Type returnType;
+        if (func.ret().isEmpty()) {
+            returnType = Type.Void;
+        } else if (func.ret().equals("$")) {
+            returnType = s;
+        } else if (func.ret().startsWith("#")) {
+            returnType = LoadStruct.getBoundStructOfClass(func.ret().substring(1));
+        } else {
+            returnType = typeTable.getType(dic.getOrReserve(func.ret()));
+        }
         if (returnType == null) {
             throw new RuntimeException("return type `" + func.ret() + "` for " + s + "." + funcName + " is not valid");
         } else if (returnType != Type.Void && !Constant.class.isAssignableFrom(m.getReturnType())) {//check if the return type
@@ -122,9 +131,7 @@ public class ExtensionStructHelper {
             }
         } : new Stmt() {
             final StackVar arg0 = new StackVar(Word.This, s, 0, 0);
-            final boolean  retflag = func.ret().equals("$");
-            
-            
+            final boolean  retflag = func.ret().equals("$")||func.ret().startsWith("#");
             @Override
             public void run() {
                 StructConst s1 = (StructConst) arg0.getValue();
@@ -230,8 +237,15 @@ public class ExtensionStructHelper {
 
         final Parameter[] ps = m.getParameters();
         for (int i = 0; i < argLength; i++) {
-            Type t = init.args()[i].equals("$")? s
-                                               :typeTable.getType(dic.getOrReserve(init.args()[i]));
+            Type t;
+            String typeStr = init.args()[i];
+            if(typeStr.startsWith("#")){
+                t = LoadStruct.getBoundStructOfClass(typeStr.substring(1));
+            } else if(typeStr.equals("$")){
+                t = s;
+            } else {
+                t = typeTable.getType(dic.getOrReserve(typeStr));
+            }
             assert (t != null) : "declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()'[aka:init] type[" + init.args()[i] + "] is not found";
             assert (Constant.class.isAssignableFrom(ps[i].getType()))
                     : ("implementation of declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()'[aka:init] :can't bind type[" + t + "] to [" + ps[i].getType().getName() + "] ");

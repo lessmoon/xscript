@@ -10,7 +10,6 @@ native<extension.system>{
     };
 
     "GetTime":void getTime(Time d);
-
 }
 
 struct MyTime:Time{

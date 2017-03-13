@@ -29,7 +29,7 @@ public class SimpleThread extends Struct {
         final static Position vfPos = new Position(0, 0);
         Thread thread;
 
-        @Init(args = "Runnable")
+        @Init(args = "#extension.predefined.SimpleRunnable")
         public void init(Constant r) {
             StructConst runnable = (StructConst) r;
 

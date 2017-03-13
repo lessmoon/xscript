@@ -78,14 +78,14 @@ public class Main{
                 case "-v":
                     System.out.println("Version: xxxscript " + MAJOR_VERSION + "." +  MINOR_VERSION + "\n");
                     return;
-                    case "-dbgrt":
-                    case "--debugruntime":
-                        debug_runtime = true;
-                        break;
-                    case "-dbgcmp":
-                    case "--debugcompile":
-                        debug_compile = true;
-                        break;
+                case "-dbgrt":
+                case "--debugruntime":
+                    debug_runtime = true;
+                    break;
+                case "-dbgcmp":
+                case "--debugcompile":
+                    debug_compile = true;
+                    break;
                 default:
                     if(args[index].charAt(0) == '-'){
                         System.err.println("Unknown option `" + args[index] + "' found.");

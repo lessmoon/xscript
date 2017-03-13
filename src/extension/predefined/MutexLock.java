@@ -52,10 +52,6 @@ public class MutexLock extends Struct {
         }
     }
 
-    private static final String waitFunctionName = "wait";
-    private static final String tryLockFunctionName = "tryLock";
-    private static final String releaseFunctionName = "release";
-
     @Override
     public symbols.Struct setup(Token sname, Dictionary dic, TypeTable typeTable) {
         return ExtensionStructHelper.buildStructFromClass(MutexLockProxy.class,dic,typeTable,sname,true);

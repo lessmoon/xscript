@@ -1,11 +1,11 @@
 import "system.xs";
 import "../container/content.xs";
 
-struct Runnable {
-    def virtual void run();
-}
-
 native<extension.predefined>{
+
+    "SimpleRunnable":struct Runnable{
+        def virtual void run();
+    };
 
     "SimpleThread":struct Thread{
         def this(Runnable r);

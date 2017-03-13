@@ -4,6 +4,7 @@ import extension.Function;
 import inter.expr.Constant;
 import inter.expr.StructConst;
 import runtime.Dictionary;
+import runtime.LoadStruct;
 import runtime.TypeTable;
 import symbols.Struct;
 
@@ -26,6 +27,6 @@ public class GetCurrentThread extends Function {
 
     @Override
     public void init(Dictionary dic, TypeTable typeTable){
-        threadType = (Struct)typeTable.getType(dic.getOrReserve("Thread"));
+        threadType = LoadStruct.getBoundStructOfClass(SimpleThread.class);
     }
 }

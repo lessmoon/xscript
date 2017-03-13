@@ -25,9 +25,6 @@ import java.util.List;
 /**
  * Created by lessmoon on 2016/8/16.
  */
-
-
-
 public class PaintPadX extends Struct {
     static Token onClick ,onMouseMove,onClose;
 
@@ -88,6 +85,16 @@ public class PaintPadX extends Struct {
         @StructMethod(virtual = true,args = {"int"})
         public void onPress(Constant code){}
         
+        @StructMethod(args = {"#extension.ui.SimpleFont"})
+        public void setFont(StructConst s){
+            this.imp.setFont(((SimpleFont.SimpleFontProxy) s.getExtension()).getFont());
+        }
+
+        @StructMethod(ret = "#extension.ui.SimpleFont")
+        public StructConst getFont(){
+            return new StructConst(symbols.Struct.StructPlaceHolder,new SimpleFont.SimpleFontProxy(this.imp.getFont()));
+        }
+
         @StructMethod
         public void open(){
             imp.open();
