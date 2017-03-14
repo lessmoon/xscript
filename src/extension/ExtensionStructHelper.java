@@ -1,6 +1,7 @@
 package extension;
 
 import extension.annotation.Init;
+import extension.annotation.PassThisReference;
 import extension.annotation.StructMethod;
 import inter.expr.ArrayConst;
 import inter.expr.Constant;
@@ -19,7 +20,10 @@ import runtime.TypeTable;
 import symbols.Array;
 import symbols.Type;
 
-import java.lang.reflect.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,9 +44,11 @@ public class ExtensionStructHelper {
      */
     public static <T> MemberFunction getMemberFunction(final Method m, final Class<T> clazz, Dictionary dic, TypeTable typeTable, symbols.Struct s) {
         StructMethod func = m.getAnnotation(StructMethod.class);
-        assert (func != null);
 
-        final int argLength = func.args().length;
+        PassThisReference tmp = m.getAnnotation(PassThisReference.class);
+        final boolean needPassThisReference = tmp != null && tmp.value();
+        assert (func != null);
+        final int argLength = needPassThisReference ? func.args().length + 1 : func.args().length;
         if (argLength != m.getParameterCount())
             throw new RuntimeException("member function " + m + " for " + s.toString() + "'s parameter length not matched");
         if (Modifier.isStatic(m.getModifiers()))
@@ -119,9 +125,14 @@ public class ExtensionStructHelper {
             public void run() {
                 StructConst s1 = (StructConst) arg0.getValue();
                 final Object[] args = new Constant[argLength];
+                int i = 0;
+                if (needPassThisReference) {
+                    args[0] = s1;
+                    i++;
+                }
 
-                for (int i = 0; i < argLength; i++) {
-                    args[i] = vars[i].getValue();
+                for (int j = 0; i < argLength; i++, j++) {
+                    args[i] = vars[j].getValue();
                 }
                 try {
                     m.invoke(s1.getExtension(), args);
@@ -136,9 +147,13 @@ public class ExtensionStructHelper {
             public void run() {
                 StructConst s1 = (StructConst) arg0.getValue();
                 final Object[] args = new Constant[argLength];
-
-                for (int i = 0; i < argLength; i++) {
-                    args[i] = vars[i].getValue();
+                int i = 0;
+                if (needPassThisReference) {
+                    args[0] = s1;
+                    i++;
+                }
+                for (int j = 0; i < argLength; i++, j++) {
+                    args[i] = vars[j].getValue();
                 }
                 try {
                     Constant ret = (Constant) m.invoke(s1.getExtension(), args);
@@ -226,8 +241,9 @@ public class ExtensionStructHelper {
         if (init == null) {
             return null;
         }
-
-        final int argLength = init.args().length;
+        PassThisReference tmp = m.getAnnotation(PassThisReference.class);
+        final boolean needPassThisReference = tmp != null && tmp.value();
+        final int argLength = needPassThisReference ? init.args().length : init.args().length + 1;
         assert (argLength == m.getParameterCount()) : "init function for " + s.toString() + "'s parameter length not matched";
         assert (!Modifier.isStatic(m.getModifiers()));
 
@@ -272,9 +288,14 @@ public class ExtensionStructHelper {
             public void run() {
                 StructConst s1 = (StructConst) arg0.getValue();
                 final Object[] args = new Constant[argLength];
+                int i = 0;
+                if (needPassThisReference) {
+                    args[0] = s1;
+                    i++;
+                }
 
-                for (int i = 0; i < argLength; i++) {
-                    args[i] = vars[i].getValue();
+                for (int j = 0; i < argLength; i++, j++) {
+                    args[i] = vars[j].getValue();
                 }
 
                 try {

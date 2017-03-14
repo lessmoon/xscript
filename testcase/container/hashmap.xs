@@ -134,7 +134,8 @@ struct HashMap{
     
     @string
     def string toString(){
-        string buf = "{";
+        StringBuffer buf = new StringBuffer();
+        buf.append("{");
         for(int i = 0 ; i < this.capcity;i++){
             
             if(this.map[i] != null){
