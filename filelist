@@ -1,4 +1,5 @@
 src/extension/annotation/Init.java
+src/extension/annotation/PassThisReference.java
 src/extension/annotation/StructMethod.java
 src/extension/ExtensionStructHelper.java
 src/extension/Function.java

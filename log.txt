@@ -1,9 +1,0 @@
-
-C:\Users\lessmoon\IdeaProjects\script>SET BIN_PATH=bin/ 
-
-C:\Users\lessmoon\IdeaProjects\script>SET SRC_PATH=src/ 
-
-C:\Users\lessmoon\IdeaProjects\script>javac tool/GenTable.java -d "bin/" 
-
-C:\Users\lessmoon\IdeaProjects\script>javac @filelist -d "bin/" -Xlint:unchecked 
-^C

@@ -6,10 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by lessmoon on 2016/8/18.
+ * Created by lessmoon on 2017/3/14.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Init {
-     String[] args() default {};
+public @interface PassThisReference {
+    boolean value() default true;
 }
