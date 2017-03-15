@@ -55,8 +55,8 @@ public class Set extends Expr {
     }
 
     @Override
-    public Constant getValue(){
-        Constant v = expr.getValue();
+    public Value getValue(){
+        Value v = expr.getValue();
         return id.setValue(v);
     }
     

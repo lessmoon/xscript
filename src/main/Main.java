@@ -1,8 +1,8 @@
 package main;
 
 import inter.expr.ArithFactory;
-import inter.expr.ArrayConst;
-import inter.expr.Constant;
+import inter.expr.ArrayValue;
+import inter.expr.Value;
 import inter.stmt.ReturnResult;
 import inter.stmt.Stmt;
 import lexer.Lexer;
@@ -134,10 +134,10 @@ public class Main{
                 return; 
             } else if(!print_func_translate) {
                 /* push arguments */
-                ArrayConst a = new ArrayConst(new Array(Type.Str),args.length - index);
+                ArrayValue a = new ArrayValue(new Array(Type.Str),args.length - index);
 
                 for(int i = 0;i + index < args.length;i++){
-                    a.setElement(i,new Constant(args[i + index]));
+                    a.setElement(i,new Value(args[i + index]));
                 }
                 VarTable.pushVar(a);
 

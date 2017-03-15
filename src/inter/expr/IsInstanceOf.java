@@ -53,15 +53,15 @@ public class IsInstanceOf extends Op {
     }
 
     @Override
-    public Constant getValue(){
-        Constant c = expr.getValue();
+    public Value getValue(){
+        Value c = expr.getValue();
         boolean  value = precal;
         if(haveto){
             assert(c.type instanceof Struct);
             assert(cmptype instanceof Struct);   
             value = cmptype.isCongruentWith(c.type)||((Struct)c.type).isChildOf((Struct)cmptype);
         }
-        return value?Constant.True:Constant.False;
+        return value? Value.True: Value.False;
     }
 
     @Override

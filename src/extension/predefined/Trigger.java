@@ -3,7 +3,7 @@ package extension.predefined;
 import extension.ExtensionStructHelper;
 import extension.Struct;
 import extension.annotation.StructMethod;
-import inter.expr.Constant;
+import inter.expr.Value;
 import lexer.Token;
 import runtime.Dictionary;
 import runtime.TypeTable;
@@ -22,15 +22,15 @@ public class Trigger extends Struct {
         final Object trigger = new Object();
 
         @StructMethod(ret = "bool", value = "wait")
-        public Constant await() {
+        public Value await() {
             synchronized (trigger) {
                 try {
                     trigger.wait();
                 } catch (InterruptedException e) {
-                    return Constant.False;
+                    return Value.False;
                 }
             }
-            return Constant.True;
+            return Value.True;
         }
 
         @StructMethod("triggerAll")

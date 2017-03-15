@@ -4,8 +4,8 @@ import extension.ExtensionStructHelper;
 import extension.Struct;
 import extension.annotation.Init;
 import extension.annotation.StructMethod;
-import inter.expr.Constant;
-import inter.expr.StructConst;
+import inter.expr.StructValue;
+import inter.expr.Value;
 import lexer.Token;
 import runtime.Dictionary;
 import runtime.Interface;
@@ -30,12 +30,12 @@ public class SimpleThread extends Struct {
         Thread thread;
 
         @Init(args = "#extension.predefined.SimpleRunnable")
-        public void init(Constant r) {
-            StructConst runnable = (StructConst) r;
+        public void init(Value r) {
+            StructValue runnable = (StructValue) r;
 
             thread = new Thread(() -> {
                 try {
-                    List<Constant> args = new ArrayList<>();
+                    List<Value> args = new ArrayList<>();
                     args.add(runnable);
                     Interface.invokeVirtualFunctionOfStruct(runnable, vfPos, args);
                 } catch (RuntimeException ignored) {
@@ -45,48 +45,48 @@ public class SimpleThread extends Struct {
         }
 
         @StructMethod(args = {"string"})
-        public void setName(Constant name) {
+        public void setName(Value name) {
             thread.setName(name.valueAs(String.class));
         }
 
         @StructMethod(ret = "string")
-        public Constant getName() {
-            return new Constant(thread.getName());
+        public Value getName() {
+            return new Value(thread.getName());
         }
 
         @StructMethod(ret = "bigint")
-        public Constant getThreadId(){
-            return new Constant(BigInteger.valueOf(thread.getId()));
+        public Value getThreadId(){
+            return new Value(BigInteger.valueOf(thread.getId()));
         }
 
         @StructMethod(ret = "bool")
-        public Constant start() {
+        public Value start() {
             try {
                 thread.start();
             } catch (Exception e) {
-                return Constant.False;
+                return Value.False;
             }
-            return Constant.True;
+            return Value.True;
         }
 
         @StructMethod(args = "int")
-        public Constant join(Constant time) {
+        public Value join(Value time) {
             try {
                 thread.join(time.valueAs(Integer.class));
             } catch (Exception e) {
-                return Constant.False;
+                return Value.False;
             }
-            return Constant.True;
+            return Value.True;
         }
 
         @StructMethod(ret = "bool")
-        public Constant interrupt() {
+        public Value interrupt() {
             try {
                 thread.interrupt();
             } catch (Exception e) {
-                return Constant.False;
+                return Value.False;
             }
-            return Constant.True;
+            return Value.True;
         }
     }
 }

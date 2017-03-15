@@ -14,8 +14,8 @@ public abstract class Var extends Expr {
     }
 
     @Override
-    public abstract Constant getValue();
+    public abstract Value getValue();
     
-    public abstract Constant setValue(Constant v);
+    public abstract Value setValue(Value v);
 
 }

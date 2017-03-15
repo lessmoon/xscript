@@ -21,8 +21,8 @@ public class New extends Op {
     }
 
     @Override
-    public Constant getValue(){
-        return new StructConst((Struct)type);
+    public Value getValue(){
+        return new StructValue((Struct)type);
     }
 }
 

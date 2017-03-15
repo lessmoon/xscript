@@ -9,8 +9,8 @@ import  "container/hashmap.xs";
 import  "container/list.xs";
 import  "ui/paintpad.xs";
 import  "ui/cyclepaintpad.xs";
-
 import "rpg/parser.xs";
+
 
 struct ScrollTextOutput{
     PaintPad x;
@@ -131,7 +131,7 @@ struct derive:base{
     r.registerFunction("case",new RPGCase);
     r.registerFunction("time",new RPGTime);
     r.open("test");
-    //r.run();
+    r.run();
     
 }
 
@@ -810,7 +810,7 @@ def void GameOfLife(int max)
 
 {
     println("Test for Game of Life");
-    GameOfLife(1000);
+    GameOfLife(10);
 }
 
 {

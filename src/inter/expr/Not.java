@@ -8,8 +8,8 @@ public class Not extends Logical{
     }
 
     @Override
-    public Constant getValue(){
-        return expr1.getValue() != Constant.False? Constant.False:Constant.True;
+    public Value getValue(){
+        return expr1.getValue() != Value.False? Value.False: Value.True;
     }
 
     @Override

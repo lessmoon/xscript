@@ -14,7 +14,6 @@ class Node {
         fis  = i;
         fos  = o;
     }
-
 }
 
 public class ExFile {

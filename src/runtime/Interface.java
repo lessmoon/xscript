@@ -1,7 +1,7 @@
 package runtime;
 
-import inter.expr.Constant;
-import inter.expr.StructConst;
+import inter.expr.StructValue;
+import inter.expr.Value;
 import inter.stmt.FunctionBasic;
 import inter.stmt.ReturnResult;
 import symbols.Position;
@@ -10,12 +10,12 @@ import symbols.VirtualTable;
 import java.util.List;
 
 public class Interface{
-    static public Constant invokeNormalFunctionOfStruct(StructConst c,FunctionBasic f,List<Constant> para){
-        Constant result =  f.type.getInitialValue();
+    static public Value invokeNormalFunctionOfStruct(StructValue c, FunctionBasic f, List<Value> para){
+        Value result =  f.type.getInitialValue();
         
         VarTable.pushTop();
         VarTable.pushVar(c);
-        for(Constant p : para){
+        for(Value p : para){
             VarTable.pushVar(p);
         }
         //RunStack.invokeFunction(line,filename,f);
@@ -29,14 +29,14 @@ public class Interface{
         return result;        
     }
     
-    static public Constant invokeVirtualFunctionOfStruct(StructConst c, Position pos, List<Constant> para){
+    static public Value invokeVirtualFunctionOfStruct(StructValue c, Position pos, List<Value> para){
         VirtualTable vtable = c.getVirtualTable();
         FunctionBasic f = vtable.getVirtualFunction(pos);
-        Constant result =  f.type.getInitialValue();
+        Value result =  f.type.getInitialValue();
 
         VarTable.pushTop();
         VarTable.pushVar(c);
-        for(Constant p : para){
+        for(Value p : para){
             VarTable.pushVar(p);
         }
 

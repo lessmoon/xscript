@@ -4,17 +4,17 @@ import lexer.Word;
 import symbols.Struct;
 import symbols.VirtualTable;
 
-public class StructConst extends Constant {
+public class StructValue extends Value {
     public  int size;
-    private final Constant[] memory;
+    private final Value[] memory;
     private Object extension = null;
 
-    public StructConst( Struct t ){
+    public StructValue(Struct t ){
         super(Word.struct,t);
         memory = t.createInstanceMemory();
     }
 
-    public StructConst( Struct t ,Object extension ){
+    public StructValue(Struct t , Object extension ){
         this(t);
         setExtension(extension);
         
@@ -29,17 +29,17 @@ public class StructConst extends Constant {
     }
 
     @Override
-    public Constant getValue(){
+    public Value getValue(){
         return this;
     }
 
-    public Constant setElement(int index,Constant c){
+    public Value setElement(int index, Value c){
         assert((memory.length > index) && (index >= 0));
         memory[index] = c;
         return c;
     }
 
-    public Constant getElement(int index){
+    public Value getElement(int index){
         assert((memory.length > index) && (index >= 0));
         return memory[index];
     }

@@ -23,7 +23,7 @@ public class OutPipe extends Expr{
     }
 
     @Override
-    public Constant getValue(){
+    public Value getValue(){
         return inpipe.getPipeValue();
     }
 }

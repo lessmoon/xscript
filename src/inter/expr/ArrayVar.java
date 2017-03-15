@@ -1,7 +1,9 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
+import lexer.Num;
+import lexer.Word;
+import symbols.Array;
+import symbols.Type;
 
 public class ArrayVar extends Var {
     private Expr loc;
@@ -38,13 +40,13 @@ public class ArrayVar extends Var {
     }
 
     @Override
-    public Constant getValue(){
-        Constant c = array.getValue();
-        if(c == Constant.Null){
+    public Value getValue(){
+        Value c = array.getValue();
+        if(c == Value.Null){
             error("null pointer error:try to get member of a null array");
         }
         
-        ArrayConst v = (ArrayConst)c;
+        ArrayValue v = (ArrayValue)c;
         int l = ((Num)(loc.getValue()).op).value;
         if(l >= v.getSize() || l < 0){
             error("Index " + l + " out of range( 0 ~ " + (v.getSize() - 1) + " )");
@@ -53,13 +55,13 @@ public class ArrayVar extends Var {
     }
 
     @Override
-    public Constant setValue(Constant v){
-        Constant c = array.getValue();
-        if(c == Constant.Null){
+    public Value setValue(Value v){
+        Value c = array.getValue();
+        if(c == Value.Null){
             error("null pointer error:try to set member of a null array");
         }
         int l = ((Num)(loc.getValue()).op).value;
-        ArrayConst var = (ArrayConst)c;
+        ArrayValue var = (ArrayValue)c;
         if(l >= var.getSize() || l < 0){
             error("Index " + l + " out of range( 0 ~ " + (var.getSize() - 1) + " )");
         }

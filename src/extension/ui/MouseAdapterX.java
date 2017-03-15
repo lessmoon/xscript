@@ -3,7 +3,7 @@ package extension.ui;
 import extension.ExtensionStructHelper;
 import extension.Struct;
 import extension.annotation.StructMethod;
-import inter.expr.Constant;
+import inter.expr.Value;
 import lexer.Token;
 import runtime.Dictionary;
 import runtime.TypeTable;
@@ -16,28 +16,28 @@ public class MouseAdapterX extends Struct{
 
    public static class MouseAdapterProxy {
        @StructMethod(args = {"int","int","int"},virtual = true)
-       public void mouseClicked(Constant id, Constant x,Constant y) {}
+       public void mouseClicked(Value id, Value x, Value y) {}
 
        @StructMethod(args = {"int","int","int"},virtual = true)
-       public void mousePressed(Constant id, Constant x,Constant y) {}
+       public void mousePressed(Value id, Value x, Value y) {}
 
        @StructMethod(args = {"int","int","int"},virtual = true)
-       public void mouseReleased(Constant id, Constant x,Constant y) {}
+       public void mouseReleased(Value id, Value x, Value y) {}
 
        @StructMethod(args = {"int","int","int"},virtual = true)
-       public void mouseEntered(Constant id, Constant x,Constant y)  {}
+       public void mouseEntered(Value id, Value x, Value y)  {}
 
        @StructMethod(args = {"int","int","int"},virtual = true)
-       public void mouseExited(Constant id, Constant x,Constant y) {}
+       public void mouseExited(Value id, Value x, Value y) {}
 
        @StructMethod(args = {"int","int","int"},virtual = true)
-       public void mouseWheelMoved(Constant id, Constant x,Constant y)  {}
+       public void mouseWheelMoved(Value id, Value x, Value y)  {}
 
        @StructMethod(args = {"int","int","int"},virtual = true)
-       public void mouseDragged(Constant id, Constant x,Constant y) {}
+       public void mouseDragged(Value id, Value x, Value y) {}
 
        @StructMethod(args = {"int","int","int"},virtual = true)
-       public void mouseMoved(Constant id, Constant x,Constant y)  {}
+       public void mouseMoved(Value id, Value x, Value y)  {}
    }
 
     @Override

@@ -31,7 +31,7 @@ public class Condition extends Expr {
             return true;
         else {
             cond = cond.getValue();/*don't calculate twice*/
-            return cond != Constant.False?iftrue.isChangeable():iffalse.isChangeable();
+            return cond != Value.False?iftrue.isChangeable():iffalse.isChangeable();
         }
     }
 
@@ -48,8 +48,8 @@ public class Condition extends Expr {
     } 
 
     @Override
-    public Constant getValue(){
-        return cond.getValue() != Constant.False?iftrue.getValue():iffalse.getValue();
+    public Value getValue(){
+        return cond.getValue() != Value.False?iftrue.getValue():iffalse.getValue();
     }
 	
 	@Override

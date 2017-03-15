@@ -39,13 +39,13 @@ public class NewArray extends Op {
     }
 
     @Override
-    public Constant getValue(){
-        Constant v = size.getValue();
+    public Value getValue(){
+        Value v = size.getValue();
         int sz = ((Num)(v.op)).value;
         if(sz < 0){
             error("try to allocate `" + type +"' array with negative number:" + sz);
         }
-        return new ArrayConst((Array)type,sz);
+        return new ArrayValue((Array)type,sz);
     }
 
     @Override

@@ -7,41 +7,41 @@ import symbols.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class Constant extends Expr{
-    public Constant(Token tok,Type p){
+public class Value extends Expr{
+    public Value(Token tok, Type p){
         super(tok,p);
     }
 
-    public Constant(char c){
+    public Value(char c){
         super(new Char(c),Type.Str);
     }
 
-    public Constant(int i){
+    public Value(int i){
         super(new Num(i),Type.Int);
     }
 
-    public Constant(String s){
+    public Value(String s){
         super(new Str(s),Type.Str);
     }
 
-    public Constant(float r){
+    public Value(float r){
         super(new lexer.Float(r),Type.Real);
     }
 
-    public Constant(BigInteger bi){
+    public Value(BigInteger bi){
         super(new BigNum(bi),Type.BigInt);
     }
     
-    public Constant(BigDecimal bd){
+    public Value(BigDecimal bd){
         super(new BigFloat(bd),Type.BigReal);
     }
     
     @Override
-    public Constant getValue(){
+    public Value getValue(){
         return this;
     }
 
-    public static Constant valueOf(boolean b){
+    public static Value valueOf(boolean b){
         return b?True:False;
     }
 
@@ -50,12 +50,12 @@ public class Constant extends Expr{
         return false;
     }
 
-    public static final Constant
-        True = new Constant(Word.True,Type.Bool),
-        False = new Constant(Word.False,Type.Bool);
+    public static final Value
+        True = new Value(Word.True,Type.Bool),
+        False = new Value(Word.False,Type.Bool);
 
-    public static final Constant
-        Null = new Constant(Word.Null,Type.Null);
+    public static final Value
+        Null = new Value(Word.Null,Type.Null);
 
     /**
      *  cast

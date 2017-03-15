@@ -1,8 +1,8 @@
 package extension.predefined;
 
 import extension.Function;
-import inter.expr.Constant;
-import inter.expr.StructConst;
+import inter.expr.StructValue;
+import inter.expr.Value;
 import runtime.Dictionary;
 import runtime.LoadStruct;
 import runtime.TypeTable;
@@ -17,8 +17,8 @@ public class GetCurrentThread extends Function {
     Struct threadType;
 
     @Override
-    public Constant run(List<Constant> paras) {
-        StructConst s = new StructConst(threadType);
+    public Value run(List<Value> paras) {
+        StructValue s = new StructValue(threadType);
         SimpleThread.SimpleThreadProxy t = new SimpleThread.SimpleThreadProxy();
         t.thread = Thread.currentThread();
         s.setExtension(t);

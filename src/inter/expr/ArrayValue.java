@@ -3,31 +3,31 @@ package inter.expr;
 import lexer.Word;
 import symbols.Array;
 
-public class ArrayConst extends Constant {
+public class ArrayValue extends Value {
     public  final int size;
-    private final Constant[] arr;
+    private final Value[] arr;
 
-    public ArrayConst(Array t,int sz){
+    public ArrayValue(Array t, int sz){
         super(Word.array,t);
         size = sz;
-        arr = new Constant[size];
-        Constant val = t.of.getInitialValue();
+        arr = new Value[size];
+        Value val = t.of.getInitialValue();
         for(int i = 0; i     < size;i++){
             arr[i] = val;
         }
     }
 
     @Override
-    public Constant getValue(){
+    public Value getValue(){
         return this;
     }
 
-    public Constant setElement(int i,Constant c){
+    public Value setElement(int i, Value c){
         arr[i] = c;
         return c;
     }
 
-    public Constant getElement(int i){
+    public Value getElement(int i){
         if(i >= size || i < 0){
             error("Index " + i + " out of range( 0~" + size + " )");
         }
@@ -47,7 +47,7 @@ public class ArrayConst extends Constant {
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder("[");
-        for(Constant c : arr){
+        for(Value c : arr){
             sb.append(" ").append(c);
         }
         sb.append(" ]");

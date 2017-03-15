@@ -1,11 +1,6 @@
 package inter.expr;
 
-import lexer.BigFloat;
-import lexer.BigNum;
-import lexer.Char;
-import lexer.Num;
-import lexer.Tag;
-import lexer.Token;
+import lexer.*;
 import symbols.Type;
 
 import java.math.BigInteger;
@@ -32,15 +27,15 @@ class IntUnary extends Unary {
     }
 
     @Override
-    public Constant getValue(){
-        Constant c = expr.getValue();
+    public Value getValue(){
+        Value c = expr.getValue();
         switch(op.tag){
         case Tag.INC:
-            return ((Var)expr).setValue(new Constant(((Num)(c.op)).value + 1));
+            return ((Var)expr).setValue(new Value(((Num)(c.op)).value + 1));
         case Tag.DEC:
-            return ((Var)expr).setValue(new Constant(((Num)(c.op)).value - 1));
+            return ((Var)expr).setValue(new Value(((Num)(c.op)).value - 1));
         case '-':
-            return new Constant(-((Num)(c.op)).value);
+            return new Value(-((Num)(c.op)).value);
         default:
             error("Unknown operand:`" + op + "'");
             return null;
@@ -54,15 +49,15 @@ class BigIntUnary extends IntUnary {
     }
 
     @Override
-    public Constant getValue(){
-        Constant c = expr.getValue();
+    public Value getValue(){
+        Value c = expr.getValue();
         switch(op.tag){
         case Tag.INC:
-            return ((Var)expr).setValue(new Constant(((BigNum)(c.op)).value.add(BigInteger.ONE)));
+            return ((Var)expr).setValue(new Value(((BigNum)(c.op)).value.add(BigInteger.ONE)));
         case Tag.DEC:
-            return ((Var)expr).setValue(new Constant(((BigNum)(c.op)).value.subtract(BigInteger.ONE)));
+            return ((Var)expr).setValue(new Value(((BigNum)(c.op)).value.subtract(BigInteger.ONE)));
         case '-':
-            return new Constant(((BigNum)(c.op)).value.negate());
+            return new Value(((BigNum)(c.op)).value.negate());
         default:
             error("Unknown operand:`" + op + "'");
             return null;
@@ -87,10 +82,10 @@ class RealUnary extends Unary {
     }
     
     @Override
-    public Constant getValue(){
+    public Value getValue(){
         if(op.tag == '-'){
-            Constant c = expr.getValue();
-            return new Constant(-((lexer.Float)(c.op)).value);
+            Value c = expr.getValue();
+            return new Value(-((lexer.Float)(c.op)).value);
         } else {
             error("Unknown operand:`" + op + "'");
             return null;
@@ -104,10 +99,10 @@ class BigRealUnary extends RealUnary {
     }
 
     @Override
-    public Constant getValue(){
+    public Value getValue(){
         if(op.tag == '-'){
-            Constant c = expr.getValue();
-            return new Constant(((BigFloat)(c.op)).value.negate());
+            Value c = expr.getValue();
+            return new Value(((BigFloat)(c.op)).value.negate());
         } else {
             error("Unknown operand:`" + op + "'");
             return null;
@@ -136,17 +131,17 @@ class CharUnary extends Unary {
         }
     }
 
-    public Constant getValue(){
-        Constant c = expr.getValue();
+    public Value getValue(){
+        Value c = expr.getValue();
         switch(op.tag){
         case Tag.INC:
-            c = ((Var)expr).setValue(new Constant((char)(((Char)(c.op)).value + 1)));
+            c = ((Var)expr).setValue(new Value((char)(((Char)(c.op)).value + 1)));
             return c;
         case Tag.DEC:
-            c = ((Var)expr).setValue(new Constant((char)(((Char)(c.op)).value - 1)));
+            c = ((Var)expr).setValue(new Value((char)(((Char)(c.op)).value - 1)));
             return c;
         case '-':
-            return new Constant((char)(-((Char)(c.op)).value));
+            return new Value((char)(-((Char)(c.op)).value));
         default:
             error("Unknown operand:`" + op + "'");
             return null;

@@ -1,7 +1,7 @@
 package inter.stmt;
 
-import inter.expr.Constant;
 import inter.expr.Expr;
+import inter.expr.Value;
 import symbols.Type;
 
 public class For extends Stmt {
@@ -28,7 +28,7 @@ public class For extends Stmt {
     @Override
     public void run(){
         for(begin.run();
-        condition.getValue() != Constant.False;
+        condition.getValue() != Value.False;
         end.run()){
             try{
                 stmt.run();
@@ -46,10 +46,10 @@ public class For extends Stmt {
     @Override
     public Stmt optimize(){
         begin = begin.optimize();
-        if(condition == Constant.False){
+        if(condition == Value.False){
             //just remain the begin,and the condition
             return begin;
-        } else if(condition == Constant.True){/*TODO*/
+        } else if(condition == Value.True){/*TODO*/
             
         }
         end = end.optimize();

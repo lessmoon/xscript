@@ -1,7 +1,7 @@
 package inter.stmt;
 
+import inter.expr.Value;
 import inter.util.Node;
-import inter.expr.Constant;
 import runtime.VarTable;
 
 public class Stmt extends Node{
@@ -51,12 +51,12 @@ public class Stmt extends Node{
         */
     };
     
-    public static void ret(Constant c){
+    public static void ret(Value c){
         throw new ReturnResult(c);
     }
 
     public static void ret(boolean b){
-        ret(b?Constant.False:Constant.True);
+        ret(b? Value.False: Value.True);
     }
 
     @Override

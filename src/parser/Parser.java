@@ -1003,12 +1003,12 @@ public class Parser implements TypeTable {
         while (look.tag != '}') {
             if (check(Tag.CASE)) {
                 Expr c = expr().optimize();
-                if (!(c instanceof Constant)) {
+                if (!(c instanceof Value)) {
                     error("case expression `" + c + "' is not constant");
                     return null;
                 }
 
-                Constant val = (Constant) c;
+                Value val = (Value) c;
 
                 if (sw.isCaseSet(val)) {
                     error("case `" + c + "' has been handled before");
@@ -1083,7 +1083,7 @@ public class Parser implements TypeTable {
         lastIterationLevel = nowLevel;
         lastBreakFatherLevel = nowLevel;
         match(';');
-        Expr e2 = (look.tag == ';') ? Constant.True : expr();
+        Expr e2 = (look.tag == ';') ? Value.True : expr();
         match(';');
         Stmt s3 = (look.tag == ')') ? Stmt.Null : new ExprStmt(expr());
         match(')');
@@ -1097,7 +1097,7 @@ public class Parser implements TypeTable {
     }
 
     private Type inferType(Token id, Expr p) {
-        if (p == null || p == Constant.Null) {
+        if (p == null || p == Value.Null) {
             error("Can't infer the type of variable `" + id + "'");
             return null;
         }
@@ -1194,7 +1194,7 @@ public class Parser implements TypeTable {
     }
 
     public Expr list(Type p) throws IOException {
-        Expr initseq = Constant.Null;
+        Expr initseq = Value.Null;
 
         List<Expr> init_list = new ArrayList<>();
         if (look.tag != '}') {
@@ -1203,18 +1203,18 @@ public class Parser implements TypeTable {
             } while (check(','));
         }
 
-        Expr arrdefine = new NewArray(p, p, new Constant(init_list.size()));
+        Expr arrdefine = new NewArray(p, p, new Value(init_list.size()));
         InPipe in = new InPipe(arrdefine);
         OutPipe out = new OutPipe(in);
         if (!init_list.isEmpty()) {
-            initseq = new inter.expr.Set(Word.ass, new ArrayVar(out, p, new Constant(0)), init_list.get(0));
+            initseq = new inter.expr.Set(Word.ass, new ArrayVar(out, p, new Value(0)), init_list.get(0));
         }
 
         for (int i = 1; i < init_list.size(); i++) {
-            initseq = new SeqExpr(Word.array, initseq, new inter.expr.Set(Word.ass, new ArrayVar(out, p, new Constant(i)), init_list.get(i)));
+            initseq = new SeqExpr(Word.array, initseq, new inter.expr.Set(Word.ass, new ArrayVar(out, p, new Value(i)), init_list.get(i)));
         }
         //for each initseq
-        return initseq == Constant.Null ? arrdefine : new SeqExpr(Word.array, in, initseq);
+        return initseq == Value.Null ? arrdefine : new SeqExpr(Word.array, in, initseq);
     }
 
     private Expr element(Type p) throws IOException {
@@ -1542,25 +1542,25 @@ public class Parser implements TypeTable {
                 return ee.stacklevel == 0 ? new AbsoluteVar(tmp, t, 0, ee.offset) : new StackVar(tmp, t, top.level - ee.stacklevel, ee.offset);
             case Tag.NULL:
                 move();
-                return Constant.Null;
+                return Value.Null;
             case Tag.TRUE:
                 move();
-                return Constant.True;
+                return Value.True;
             case Tag.FALSE:
                 move();
-                return Constant.False;
+                return Value.False;
             case Tag.NUM:
-                return new Constant(copymove(), Type.Int);
+                return new Value(copymove(), Type.Int);
             case Tag.STR:
-                return new Constant(copymove(), Type.Str);
+                return new Value(copymove(), Type.Str);
             case Tag.FLOAT:
-                return new Constant(copymove(), Type.Real);
+                return new Value(copymove(), Type.Real);
             case Tag.CHAR:
-                return new Constant(copymove(), Type.Char);
+                return new Value(copymove(), Type.Char);
             case Tag.BIGNUM:
-                return new Constant(copymove(), Type.BigInt);
+                return new Value(copymove(), Type.BigInt);
             case Tag.BIGFLOAT:
-                return new Constant(copymove(), Type.BigReal);
+                return new Value(copymove(), Type.BigReal);
             case Tag.NEW:
                 Token l = copymove();
                 //match('<');

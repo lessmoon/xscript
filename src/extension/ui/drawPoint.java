@@ -1,17 +1,17 @@
 package extension.ui;
 
-import lexer.Num;
-import inter.expr.Constant;
 import extension.Function;
+import inter.expr.Value;
+import lexer.Num;
 
 import java.util.List;
 
 public class drawPoint extends Function {
-    public Constant run(List<Constant> paras){
-        Constant x = paras.get(0);
-        Constant y = paras.get(1);
+    public Value run(List<Value> paras){
+        Value x = paras.get(0);
+        Value y = paras.get(1);
         int ix = ((Num)(x.op)).value;
         int iy = ((Num)(y.op)).value;
-        return new Constant(PaintPad.drawPoint(ix,iy));
+        return new Value(PaintPad.drawPoint(ix,iy));
     }
 }

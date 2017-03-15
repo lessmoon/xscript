@@ -137,12 +137,12 @@ struct HashMap{
         StringBuffer buf = new StringBuffer();
         buf.append("{");
         for(int i = 0 ; i < this.capcity;i++){
-            
             if(this.map[i] != null){
-                buf += "" + i + ":" +  this.map[i] + "\n";
+                buf.append(i).append(".").append(this.map[i]).append("\n");
             }
         }
-        return buf + "}";
+        buf.append("}");
+        return buf.toString();
     }
 }
 

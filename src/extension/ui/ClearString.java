@@ -1,7 +1,7 @@
 package extension.ui;
 
 import extension.Function;
-import inter.expr.Constant;
+import inter.expr.Value;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
 public class ClearString extends Function {
 
     @Override
-    public Constant run(List<Constant> paras){
-        return new Constant(PaintPad.clearString());
+    public Value run(List<Value> paras){
+        return new Value(PaintPad.clearString());
     }
 }

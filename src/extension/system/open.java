@@ -1,13 +1,13 @@
 package extension.system;
 
 import extension.Function;
-import inter.expr.Constant;
+import inter.expr.Value;
 
 import java.util.List;
 
 public class open extends Function {
-    public Constant run(List<Constant> paras){
-        Constant c = paras.get(0);
-        return new Constant(ExFile.openfile(c.toString()));
+    public Value run(List<Value> paras){
+        Value c = paras.get(0);
+        return new Value(ExFile.openfile(c.toString()));
     }
 }

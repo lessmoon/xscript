@@ -1,9 +1,9 @@
 package inter.stmt;
 
-import lexer.Token;
-import inter.expr.Constant;
-import inter.expr.Expr;
 import inter.expr.ConversionFactory;
+import inter.expr.Expr;
+import inter.expr.Value;
+import lexer.Token;
 import runtime.VarTable;
 import symbols.Array;
 import symbols.Struct;
@@ -37,7 +37,7 @@ public class Decl extends Stmt {
 
     @Override
     public void run(){
-        Constant v = (value == null)?null:value.getValue();
+        Value v = (value == null)?null:value.getValue();
         VarTable.pushVar(v);
     }
     

@@ -1,19 +1,13 @@
 package inter.expr;
 
-import lexer.BigFloat;
-import lexer.BigNum;
-import lexer.Char;
-import lexer.Num;
-import lexer.Str;
-import lexer.Tag;
-import lexer.Token;
 import inter.stmt.FunctionBasic;
+import lexer.*;
 import symbols.Array;
 import symbols.Struct;
 import symbols.Type;
 
-import java.math.BigInteger;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 class IntRel extends Rel {
@@ -21,23 +15,23 @@ class IntRel extends Rel {
         super(tok,x1,x2);
     }
     
-    public Constant getValue(){
+    public Value getValue(){
         int l = ((Num)(expr1.getValue().op)).value;
         int r = ((Num)(expr2.getValue().op)).value;
 
         switch(op.tag){
         case '>':
-            return  l > r?Constant.True :Constant.False;
+            return  l > r? Value.True : Value.False;
         case '<':
-            return  l < r?Constant.True :Constant.False;
+            return  l < r? Value.True : Value.False;
         case Tag.EQ:
-            return  l == r?Constant.True :Constant.False;
+            return  l == r? Value.True : Value.False;
         case Tag.NE:
-            return  l != r?Constant.True :Constant.False;
+            return  l != r? Value.True : Value.False;
         case Tag.GE:
-            return  l >= r?Constant.True :Constant.False;
+            return  l >= r? Value.True : Value.False;
         case Tag.LE:
-            return  l <= r?Constant.True :Constant.False;
+            return  l <= r? Value.True : Value.False;
         default:
             /*error*/
             return null;
@@ -50,23 +44,23 @@ class BigIntRel extends Rel {
         super(tok,x1,x2);
     }
     
-    public Constant getValue(){
+    public Value getValue(){
         BigInteger l = ((BigNum)(expr1.getValue().op)).value;
         BigInteger r = ((BigNum)(expr2.getValue().op)).value;
         int d = l.compareTo(r);
         switch(op.tag){
         case '>':
-            return  d > 0?Constant.True :Constant.False;
+            return  d > 0? Value.True : Value.False;
         case '<':
-            return  d < 0?Constant.True :Constant.False;
+            return  d < 0? Value.True : Value.False;
         case Tag.EQ:
-            return  d == 0?Constant.True :Constant.False;
+            return  d == 0? Value.True : Value.False;
         case Tag.NE:
-            return  d != 0?Constant.True :Constant.False;
+            return  d != 0? Value.True : Value.False;
         case Tag.GE:
-            return  d >= 0?Constant.True :Constant.False;
+            return  d >= 0? Value.True : Value.False;
         case Tag.LE:
-            return  d <= 0?Constant.True :Constant.False;
+            return  d <= 0? Value.True : Value.False;
         default:
             /*error*/
             return null;
@@ -79,23 +73,23 @@ class CharRel extends Rel {
         super(tok,x1,x2);
     }
     
-    public Constant getValue(){
+    public Value getValue(){
         char l = ((Char)(expr1.getValue().op)).value;
         char r = ((Char)(expr2.getValue().op)).value;
 
         switch(op.tag){
         case '>':
-            return  l > r?Constant.True :Constant.False;
+            return  l > r? Value.True : Value.False;
         case '<':
-            return  l < r?Constant.True :Constant.False;
+            return  l < r? Value.True : Value.False;
         case Tag.EQ:
-            return  l == r?Constant.True :Constant.False;
+            return  l == r? Value.True : Value.False;
         case Tag.NE:
-            return  l != r?Constant.True :Constant.False;
+            return  l != r? Value.True : Value.False;
         case Tag.GE:
-            return  l >= r?Constant.True :Constant.False;
+            return  l >= r? Value.True : Value.False;
         case Tag.LE:
-            return  l <= r?Constant.True :Constant.False;
+            return  l <= r? Value.True : Value.False;
         default:
             /*error*/
             return null;
@@ -110,11 +104,11 @@ class BoolRel extends Rel {
             error("Operand "+ tok + " forbidden:" + x1.type);
     }
     
-    public Constant getValue(){
+    public Value getValue(){
         if(op.tag == Tag.EQ)
-            return expr1.getValue() == expr2.getValue()? Constant.True :Constant.False;
+            return expr1.getValue() == expr2.getValue()? Value.True : Value.False;
         else //Tag.NE
-            return expr1.getValue() != expr2.getValue()? Constant.True :Constant.False; 
+            return expr1.getValue() != expr2.getValue()? Value.True : Value.False;
     }
 
 }
@@ -124,23 +118,23 @@ class RealRel extends Rel {
         super(tok,x1,x2);
     }
     
-    public Constant getValue(){
+    public Value getValue(){
         float l = ((lexer.Float)(expr1.getValue().op)).value;
         float r = ((lexer.Float)(expr2.getValue().op)).value;
 
         switch(op.tag){
         case '>':
-            return  l > r?Constant.True :Constant.False;
+            return  l > r? Value.True : Value.False;
         case '<':
-            return  l < r?Constant.True :Constant.False;
+            return  l < r? Value.True : Value.False;
         case Tag.EQ:
-            return  l == r?Constant.True :Constant.False;
+            return  l == r? Value.True : Value.False;
         case Tag.NE:
-            return  l != r?Constant.True :Constant.False;
+            return  l != r? Value.True : Value.False;
         case Tag.GE:
-            return  l >= r?Constant.True :Constant.False;
+            return  l >= r? Value.True : Value.False;
         case Tag.LE:
-            return  l <= r?Constant.True :Constant.False;
+            return  l <= r? Value.True : Value.False;
         default:
             /*error*/
             return null;
@@ -153,23 +147,23 @@ class BigRealRel extends Rel {
         super(tok,x1,x2);
     }
     
-    public Constant getValue(){
+    public Value getValue(){
         BigDecimal l = ((BigFloat)(expr1.getValue().op)).value;
         BigDecimal r = ((BigFloat)(expr2.getValue().op)).value;
         int d = l.compareTo(r);
         switch(op.tag){
         case '>':
-            return  d > 0?Constant.True :Constant.False;
+            return  d > 0? Value.True : Value.False;
         case '<':
-            return  d < 0?Constant.True :Constant.False;
+            return  d < 0? Value.True : Value.False;
         case Tag.EQ:
-            return  d == 0?Constant.True :Constant.False;
+            return  d == 0? Value.True : Value.False;
         case Tag.NE:
-            return  d != 0?Constant.True :Constant.False;
+            return  d != 0? Value.True : Value.False;
         case Tag.GE:
-            return  d >= 0?Constant.True :Constant.False;
+            return  d >= 0? Value.True : Value.False;
         case Tag.LE:
-            return  d <= 0?Constant.True :Constant.False;
+            return  d <= 0? Value.True : Value.False;
         default:
             /*error*/
             return null;
@@ -182,23 +176,23 @@ class StrRel extends Rel {
         super(tok,x1,x2);
     }
     
-    public Constant getValue(){
+    public Value getValue(){
         String l = ((Str)(expr1.getValue().op)).value;
         String r = ((Str)(expr2.getValue().op)).value;
         int delt = l.compareTo(r);
         switch(op.tag){
         case '>':
-            return  delt > 0?Constant.True :Constant.False;
+            return  delt > 0? Value.True : Value.False;
         case '<':
-            return  delt < 0?Constant.True :Constant.False;
+            return  delt < 0? Value.True : Value.False;
         case Tag.EQ:
-            return  delt == 0?Constant.True :Constant.False;
+            return  delt == 0? Value.True : Value.False;
         case Tag.NE:
-            return  delt != 0?Constant.True :Constant.False;
+            return  delt != 0? Value.True : Value.False;
         case Tag.GE:
-            return  delt >= 0?Constant.True :Constant.False;
+            return  delt >= 0? Value.True : Value.False;
         case Tag.LE:
-            return  delt <= 0?Constant.True :Constant.False;
+            return  delt <= 0? Value.True : Value.False;
         default:
             /*error*/
             return null;
@@ -224,14 +218,14 @@ class ObjectRel extends Rel {
         return t;
     }
 
-    public Constant getValue(){
-        Constant l = expr1.getValue();
-        Constant r = expr2.getValue();
+    public Value getValue(){
+        Value l = expr1.getValue();
+        Value r = expr2.getValue();
         switch(op.tag){
         case Tag.EQ:
-            return  (l == r)?Constant.True:Constant.False;
+            return  (l == r)? Value.True: Value.False;
         case Tag.NE:
-            return  (l != r)?Constant.True:Constant.False;
+            return  (l != r)? Value.True: Value.False;
         default:
             /*error*/
             return null;
@@ -244,14 +238,14 @@ public class RelFactory {
     public static Expr getRel(Token tok,Expr x1,Expr x2) {
         Expr r = null;
 
-        if (x1 == Constant.Null) {
+        if (x1 == Value.Null) {
             if (!x2.type.isBuiltInType()) {
                 if (x1.type != x2.type) {
                     x1 = ConversionFactory.getConversion(x1, x2.type);
                     return new ObjectRel(tok, x1, x2);
                 }
             }
-        } else if (x2 == Constant.Null) {
+        } else if (x2 == Value.Null) {
             if (!x1.type.isBuiltInType()) {
                 x2 = ConversionFactory.getConversion(x2, x1.type);
                 return new ObjectRel(tok, x1, x2);

@@ -19,11 +19,11 @@ public class StackVar extends Var {
     }
 
     @Override
-    public Constant getValue(){
+    public Value getValue(){
         return VarTable.getVar(stackLevel, stackOffset);
     }
     
-    public Constant setValue(Constant v){
+    public Value setValue(Value v){
         return  VarTable.setVar(stackLevel, stackOffset,v);
     }
 

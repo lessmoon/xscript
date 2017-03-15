@@ -4,7 +4,7 @@ import extension.ExtensionStructHelper;
 import extension.Struct;
 import extension.annotation.Init;
 import extension.annotation.StructMethod;
-import inter.expr.Constant;
+import inter.expr.Value;
 import lexer.Token;
 import runtime.Dictionary;
 import runtime.TypeTable;
@@ -27,28 +27,28 @@ public class MutexLock extends Struct {
         }
 
         @StructMethod(ret="bool")
-        public Constant tryLock(){
-            return Constant.valueOf(reentrantLock.tryLock());
+        public Value tryLock(){
+            return Value.valueOf(reentrantLock.tryLock());
         }
 
         @StructMethod(value = "wait",ret="bool")
-        public Constant _wait(){
+        public Value _wait(){
             try {
                 reentrantLock.lock();
             }catch (Exception e){
-                return Constant.False;
+                return Value.False;
             }
-            return Constant.True;
+            return Value.True;
         }
 
         @StructMethod(value="release",ret="bool")
-        public Constant release(){
+        public Value release(){
             try{
                 reentrantLock.unlock();
             } catch (Exception e){
-                return Constant.False;
+                return Value.False;
             }
-            return Constant.True;
+            return Value.True;
         }
     }
 

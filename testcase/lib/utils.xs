@@ -1,12 +1,13 @@
 native<extension.util>{
     "StringBufferX":struct StringBuffer{
         def this();
-        def void append(string str);
-        def void appendCharacter(char c);
-        def void delete(int beg,int end);
-        def void insert(int beg,string str);
+        def StringBuffer append(string str);
+        def StringBuffer appendCharacter(char c);
+        def StringBuffer delete(int beg,int end);
+        def StringBuffer insert(int beg,string str);
         def StringBuffer reverse();
-        def void setCharAt(int index,char c);
+        def StringBuffer setCharAt(int index,char c);
+        def void reserve(int size);
         def string toString();
     };
 }

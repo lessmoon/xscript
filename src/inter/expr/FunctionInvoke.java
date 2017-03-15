@@ -19,7 +19,7 @@ public class FunctionInvoke extends Expr {
      * Wrong when recursively call itself
      * It may rewrite the args in another calling
      */
-    //final Constant[]     args;
+    //final Value[]     args;
 
     public FunctionInvoke(FunctionBasic f,List<Expr> p){
         super(f.name,f.type);
@@ -27,7 +27,7 @@ public class FunctionInvoke extends Expr {
         para = p;
         check();
         f.setUsed();
-        //args = new Constant[p.size()];
+        //args = new Value[p.size()];
     }
 
     void check(){
@@ -83,16 +83,16 @@ public class FunctionInvoke extends Expr {
     }
 
     @Override
-    public Constant getValue(){
-        Constant result = type.getInitialValue();
-        final Constant[] args = new Constant[para.size()];
+    public Value getValue(){
+        Value result = type.getInitialValue();
+        final Value[] args = new Value[para.size()];
         for(int i = 0 ; i < args.length;i++){
             args[i] = para.get(i).getValue();
         }
         
         VarTable.pushTop();
         int i = 0;
-        for(Constant c : args){
+        for(Value c : args){
             
             if(IS_DEBUG){
                 System.out.println("\narg[" + i + "]{" + para.get(i) + "} = " + c + "<->" + c.hashCode());

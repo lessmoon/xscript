@@ -37,8 +37,8 @@ public class SeqExpr extends Expr {
     }
 
     @Override
-    public Constant getValue(){
-        Constant c = left.getValue();
+    public Value getValue(){
+        Value c = left.getValue();
         right.getValue();
         return c;
     }

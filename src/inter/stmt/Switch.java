@@ -1,8 +1,8 @@
 package inter.stmt;
 
-import inter.expr.Constant;
 import inter.expr.ConversionFactory;
 import inter.expr.Expr;
+import inter.expr.Value;
 import lexer.Char;
 import lexer.Num;
 import lexer.Str;
@@ -24,15 +24,15 @@ public abstract class Switch<T> extends Stmt {
         condition = c;
     }
 
-    public final void appendCase(Constant c, Stmt s){
+    public final void appendCase(Value c, Stmt s){
         this.appendCaseImp(c,s);
         if(!isDefaultSet()){
             indexOfDefault = stmts.length();
         }
     }
-    public abstract void appendCaseImp(Constant c, Stmt s);
+    public abstract void appendCaseImp(Value c, Stmt s);
 
-    public abstract boolean isCaseSet(Constant c);
+    public abstract boolean isCaseSet(Value c);
 
     void updateMap(T caze, Integer index) {
         mapidx2case.computeIfAbsent(index, k -> new ArrayList<>()).add(caze);
@@ -123,7 +123,7 @@ public abstract class Switch<T> extends Stmt {
         this.run(getIndex(condition.getValue()));
     }
 
-    public abstract Integer getIndex(Constant c);
+    public abstract Integer getIndex(Value c);
 
     final int push(Stmt s) {
         int nextPos = stmts.length();
@@ -195,7 +195,7 @@ class IntSwitch extends Switch<Integer> {
     }
 
     @Override
-    public void appendCaseImp(Constant c, Stmt s) {
+    public void appendCaseImp(Value c, Stmt s) {
         c = ConversionFactory.getConversion(c, Type.Int).getValue();
         int i = ((Num) c.op).value;
         int idx = push(s);
@@ -204,7 +204,7 @@ class IntSwitch extends Switch<Integer> {
     }
 
     @Override
-    public boolean isCaseSet(Constant c) {
+    public boolean isCaseSet(Value c) {
         if (Type.max(Type.Int, c.type) != Type.Int) {
             c.error("case type should be `" + Type.Int +
                     "',but `" + c.type + "' found.");
@@ -215,7 +215,7 @@ class IntSwitch extends Switch<Integer> {
     }
 
     @Override
-    public Integer getIndex(Constant c) {
+    public Integer getIndex(Value c) {
         return map.get(((Num) c.op).value);
     }
 
@@ -229,7 +229,7 @@ class CharSwitch extends Switch<Character> {
     }
 
     @Override
-    public void appendCaseImp(Constant c, Stmt s) {
+    public void appendCaseImp(Value c, Stmt s) {
         c = ConversionFactory.getConversion(c, Type.Char).getValue();
         char i = ((Char) c.op).value;
         int idx = push(s);
@@ -238,7 +238,7 @@ class CharSwitch extends Switch<Character> {
     }
 
     @Override
-    public boolean isCaseSet(Constant c) {
+    public boolean isCaseSet(Value c) {
         if (Type.max(Type.Int, c.type) != Type.Int) {
             c.error("case type should be `" + Type.Char +
                     "',but `" + c.type + "' found.");
@@ -258,7 +258,7 @@ class CharSwitch extends Switch<Character> {
     }
 
     @Override
-    public Integer getIndex(Constant c) {
+    public Integer getIndex(Value c) {
         return map.get(((Char) c.op).value);
     }
 }
@@ -270,7 +270,7 @@ class StrSwitch extends Switch<String> {
     }
 
     @Override
-    public void appendCaseImp(Constant c, Stmt s) {
+    public void appendCaseImp(Value c, Stmt s) {
         String i = ((Str) c.op).value;
         int idx = push(s);
         updateMap(i, idx);
@@ -278,7 +278,7 @@ class StrSwitch extends Switch<String> {
     }
 
     @Override
-    public boolean isCaseSet(Constant c) {
+    public boolean isCaseSet(Value c) {
         if (c.type != Type.Str) {
             c.error("case type should be `" + Type.Str +
                     "',but `" + c.type + "' found.");
@@ -289,7 +289,7 @@ class StrSwitch extends Switch<String> {
 
 
     @Override
-    public Integer getIndex(Constant c) {
+    public Integer getIndex(Value c) {
         return map.get(((Str) c.op).value);
     }
 

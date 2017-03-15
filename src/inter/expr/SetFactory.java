@@ -1,36 +1,30 @@
 package inter.expr;
 
-import lexer.BigFloat;
-import lexer.BigNum;
-import lexer.Char;
-import lexer.Num;
-import lexer.Str;
-import lexer.Tag;
-import lexer.Token;
+import lexer.*;
 import symbols.Type;
 
-import java.math.BigInteger;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 class BigIntSet extends Set {
     BigIntSet(Token tok, Expr i, Expr x){
         super(tok,i,x);
     }
     
-    public Constant getValue(){
+    public Value getValue(){
         BigInteger r = ((BigNum)(expr.getValue().op)).value;
         BigInteger l = ((BigNum)(id.getValue().op)).value;
         switch(op.tag){
         case Tag.ADDASS:
-            return id.setValue( new Constant(l.add(r)));
+            return id.setValue( new Value(l.add(r)));
         case Tag.MINASS:
-            return id.setValue( new Constant(l.subtract(r)));
+            return id.setValue( new Value(l.subtract(r)));
         case Tag.MULTASS:
-            return id.setValue( new Constant(l.multiply(r)));
+            return id.setValue( new Value(l.multiply(r)));
         case Tag.DIVASS:
-            return id.setValue( new Constant(l.divide(r)));
+            return id.setValue( new Value(l.divide(r)));
         case Tag.MODASS:
-            return id.setValue( new Constant(l.mod(r)));
+            return id.setValue( new Value(l.mod(r)));
         default:
             return null;
         }
@@ -43,21 +37,21 @@ class IntSet extends Set {
         super(tok,i,x);
     }
 
-    public Constant getValue(){
+    public Value getValue(){
         int r = ((Num)(expr.getValue().op)).value;
         int l = ((Num)(id.getValue().op)).value;
 
         switch(op.tag){
         case Tag.ADDASS:
-            return id.setValue( new Constant(l + r));
+            return id.setValue( new Value(l + r));
         case Tag.MINASS:
-            return id.setValue( new Constant(l - r));
+            return id.setValue( new Value(l - r));
         case Tag.MULTASS:
-            return id.setValue( new Constant(l * r));
+            return id.setValue( new Value(l * r));
         case Tag.DIVASS:
-            return id.setValue( new Constant(l / r));
+            return id.setValue( new Value(l / r));
         case Tag.MODASS:
-            return id.setValue( new Constant(l % r));
+            return id.setValue( new Value(l % r));
         default:
             return null;
         }
@@ -70,21 +64,21 @@ class CharSet extends Set {
         super(tok,i,x);
     }
 
-    public Constant getValue(){
+    public Value getValue(){
         char r = ((Char)(expr.getValue().op)).value;
         char l = ((Char)(id.getValue().op)).value;
         
         switch(op.tag){
         case Tag.ADDASS:
-            return id.setValue( new Constant(l + r));
+            return id.setValue( new Value(l + r));
         case Tag.MINASS:
-            return id.setValue( new Constant(l - r));
+            return id.setValue( new Value(l - r));
         case Tag.MULTASS:
-            return id.setValue( new Constant(l * r));
+            return id.setValue( new Value(l * r));
         case Tag.DIVASS:
-            return id.setValue( new Constant(l / r));
+            return id.setValue( new Value(l / r));
         case Tag.MODASS:
-            return id.setValue( new Constant(l % r));
+            return id.setValue( new Value(l % r));
         default:
             return null;
         }
@@ -96,18 +90,18 @@ class BigRealSet extends Set {
         super(tok,i,x);
     }
     
-    public Constant getValue(){
+    public Value getValue(){
         BigDecimal r = ((BigFloat)(expr.getValue().op)).value;
         BigDecimal l = ((BigFloat)(id.getValue().op)).value;
         switch(op.tag){
         case Tag.ADDASS:
-            return id.setValue( new Constant(l.add(r)));
+            return id.setValue( new Value(l.add(r)));
         case Tag.MINASS:
-            return id.setValue( new Constant(l.subtract(r)));
+            return id.setValue( new Value(l.subtract(r)));
         case Tag.MULTASS:
-            return id.setValue( new Constant(l.multiply(r)));
+            return id.setValue( new Value(l.multiply(r)));
         case Tag.DIVASS:
-            return id.setValue( new Constant(l.divide(r)));
+            return id.setValue( new Value(l.divide(r)));
         default:
             return null;
         }
@@ -119,19 +113,19 @@ class RealSet extends Set {
         super(tok,i,x);
     }
     
-    public Constant getValue(){
+    public Value getValue(){
         float r = ((lexer.Float)(expr.getValue().op)).value;
         float l = ((lexer.Float)(id.getValue().op)).value;
 
         switch(op.tag){
         case Tag.ADDASS:
-            return id.setValue( new Constant(l + r));
+            return id.setValue( new Value(l + r));
         case Tag.MINASS:
-            return id.setValue( new Constant(l - r));
+            return id.setValue( new Value(l - r));
         case Tag.MULTASS:
-            return id.setValue( new Constant(l * r));
+            return id.setValue( new Value(l * r));
         case Tag.DIVASS:
-            return id.setValue( new Constant(l / r));
+            return id.setValue( new Value(l / r));
         default:
             return null;
         }
@@ -143,13 +137,13 @@ class StrSet extends Set {
         super(tok,i,x);
     }
 
-    public Constant getValue(){
+    public Value getValue(){
         String r = ((Str)(expr.getValue().op)).value;
         String l = ((Str)(id.getValue().op)).value;
         
         switch(op.tag){
         case Tag.ADDASS:
-            return id.setValue( new Constant(l + r));
+            return id.setValue( new Value(l + r));
         default:
             return null;
         }

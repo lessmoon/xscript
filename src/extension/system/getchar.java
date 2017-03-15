@@ -1,17 +1,17 @@
 package extension.system;
 
-import inter.expr.Constant;
 import extension.Function;
+import inter.expr.Value;
 
 import java.io.IOException;
 import java.util.List;
 
 public class getchar extends Function {
-    public Constant run(List<Constant> paras){
+    public Value run(List<Value> paras){
         try{
-            return new Constant(System.in.read());
+            return new Value(System.in.read());
         } catch(IOException e){
-            return new Constant(-2);
+            return new Value(-2);
         }
     }
 }

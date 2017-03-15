@@ -41,23 +41,23 @@ public class StructMemberAccess extends Var {
     }
 
     @Override
-    public Constant getValue(){
-        Constant c = value.getValue();
-        if(c == Constant.Null){
+    public Value getValue(){
+        Value c = value.getValue();
+        if(c == Value.Null){
             error("null pointer error:try to get member `" + member + "' of a null struct");
         }
-        StructConst s = (StructConst)c;
-        Constant tmp = s.getElement(index);
+        StructValue s = (StructValue)c;
+        Value tmp = s.getElement(index);
         return tmp;
     }
 
     @Override
-    public Constant setValue(Constant v){
-        Constant c = value.getValue();
-        if(c == Constant.Null){
+    public Value setValue(Value v){
+        Value c = value.getValue();
+        if(c == Value.Null){
             error("null pointer error:try to set member `" + member + "' of a null struct ");
         }
-        StructConst s = (StructConst)c;
+        StructValue s = (StructValue)c;
         return s.setElement(index,v);
     }
     

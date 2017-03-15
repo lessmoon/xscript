@@ -1,7 +1,7 @@
 package extension.ui;
 
-import inter.expr.Constant;
-import inter.expr.StructConst;
+import inter.expr.StructValue;
+import inter.expr.Value;
 import lexer.Token;
 import symbols.Position;
 import symbols.Struct;
@@ -378,11 +378,11 @@ public class PaintPad extends JFrame{
         return 1;
     }
 
-    static boolean KeyBoardEvent(StructConst el,Token fname){
+    static boolean KeyBoardEvent(StructValue el, Token fname){
         KBQueue.clear();
         Position pos = ((Struct)el.type).getVirtualFunctionPosition(fname);
-        Constant res = null;
-        ArrayList<Constant> p = new ArrayList<Constant>();
+        Value res = null;
+        ArrayList<Value> p = new ArrayList<Value>();
         p.add(null);
         do{
             Integer c ;
@@ -391,17 +391,17 @@ public class PaintPad extends JFrame{
             }catch(Exception e){
                 continue;
             }
-            p.set(0,new Constant(c.intValue()));
+            p.set(0,new Value(c.intValue()));
             res = runtime.Interface.invokeVirtualFunctionOfStruct(el,pos,p);
-        }while(res == Constant.True);
+        }while(res == Value.True);
         return true;
     }
 
-    static boolean SimpleMouseEvent(StructConst el,Token fname){
+    static boolean SimpleMouseEvent(StructValue el, Token fname){
         MCQueue.clear();
         Position pos = ((Struct)el.type).getVirtualFunctionPosition(fname);
-        Constant res = null;
-        ArrayList<Constant> p = new ArrayList<Constant>();
+        Value res = null;
+        ArrayList<Value> p = new ArrayList<Value>();
         p.add(null);
         p.add(null);
         do{
@@ -411,10 +411,10 @@ public class PaintPad extends JFrame{
             }catch(Exception e){
                 continue;
             }
-            p.set(0,new Constant(co.x));
-            p.set(1,new Constant(co.y));
+            p.set(0,new Value(co.x));
+            p.set(1,new Value(co.y));
             res = runtime.Interface.invokeVirtualFunctionOfStruct(el,pos,p);
-        }while(res == Constant.True);
+        }while(res == Value.True);
         return true;
     }
     

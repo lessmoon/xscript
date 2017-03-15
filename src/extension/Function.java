@@ -1,6 +1,6 @@
 package extension;
 
-import inter.expr.Constant;
+import inter.expr.Value;
 import runtime.Dictionary;
 import runtime.TypeTable;
 
@@ -8,7 +8,7 @@ import java.util.List;
 
 
 public abstract class Function {
-    public abstract Constant run(List<Constant> paras);
+    public abstract Value run(List<Value> paras);
     /*
      * Invoked while importing the model
      * Doing nothing by default.

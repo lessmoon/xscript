@@ -44,9 +44,9 @@ public class StringAccess extends Expr {
     }
 
     @Override
-    public Constant getValue(){
+    public Value getValue(){
         int i = ((Num)(index.getValue().op)).value;
         String str = ((Str)(array.getValue().op)).value;
-        return new Constant(str.charAt(i));
+        return new Value(str.charAt(i));
     }
 }

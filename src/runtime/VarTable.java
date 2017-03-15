@@ -1,21 +1,21 @@
 package runtime;
 
-import inter.expr.Constant;
+import inter.expr.Value;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 class ConstantReference {
-    private Constant value;
-    ConstantReference(Constant value){
+    private Value value;
+    ConstantReference(Value value){
         this.value = value;
     }
-    public Constant getValue(){
+    public Value getValue(){
         return value;
     }
 
-    public Constant setValue(Constant value) {
+    public Value setValue(Value value) {
         this.value = value;
         return value;
     }
@@ -30,8 +30,8 @@ public class VarTable {
         return 1;//r.prev==null?1:levels(r.prev) + 1;
     }
 
-    static public List<Constant> getTop(){
-        List<Constant> arr = new ArrayList<>();
+    static public List<Value> getTop(){
+        List<Value> arr = new ArrayList<>();
         if(table.get().empty()){
             globalTable.stream().map(ConstantReference::getValue).forEach(arr::add);
         } else {
@@ -61,7 +61,7 @@ public class VarTable {
         table.get().push(new ArrayList<>());
     }
 
-    static public void pushVar(Constant v){
+    static public void pushVar(Value v){
         ///*
         if(IS_DEBUG){
             for(int i = 0 ; i < table.get().size() - 1 ; i++)
@@ -76,7 +76,7 @@ public class VarTable {
         }
     }
 
-    static public Constant getVar(int sloff,int offset){
+    static public Value getVar(int sloff, int offset){
         /*
         for(int i = 0 ; i < sloff ; i++)
             System.out.print("  |");
@@ -85,7 +85,7 @@ public class VarTable {
         return getVarAbsolutely(nowlevel - sloff,offset);
     }
 
-    static public Constant setVar(int sloff,int offset,Constant v){
+    static public Value setVar(int sloff, int offset, Value v){
         /*
         for(int i = 0 ; i < sl ; i++)
             System.out.print("  |");
@@ -94,7 +94,7 @@ public class VarTable {
         return setVarAbsolutely(nowlevel - sloff,offset,v);
     }
     
-    static public Constant getVarAbsolutely(int sl,int offset){
+    static public Value getVarAbsolutely(int sl, int offset){
         
         ///*
         if(IS_DEBUG&&false){
@@ -106,7 +106,7 @@ public class VarTable {
         return c.get(offset).getValue();
     }
     
-    static public Constant setVarAbsolutely(int sl,int offset,Constant v){
+    static public Value setVarAbsolutely(int sl, int offset, Value v){
         ///*
         if(IS_DEBUG&&false){
             for(int i = 0 ; i < sl ; i++)

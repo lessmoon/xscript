@@ -1,6 +1,6 @@
 package symbols;
 
-import inter.expr.Constant;
+import inter.expr.Value;
 import lexer.Tag;
 import lexer.Word;
 
@@ -8,14 +8,14 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class Type extends Word {
-    private Constant initialValue ;
+    private Value initialValue ;
 
     public Type(String s,int tag){
         super(s,tag);
         initialValue = null;
     }
 
-    protected Type(String s,int tag,Constant val){
+    protected Type(String s,int tag,Value val){
         super(s,tag);
         initialValue = val;
     }
@@ -45,11 +45,11 @@ public class Type extends Word {
      *  That is "declaration is initialization"
      * @return the initial value of a type
      */
-    public Constant getInitialValue(){
+    public Value getInitialValue(){
         return initialValue;
     }
     
-    private void setInitialValue(Constant c){
+    private void setInitialValue(Value c){
         initialValue = c;
     }
     
@@ -71,13 +71,13 @@ public class Type extends Word {
         };
 
     static {
-        Int.setInitialValue(new Constant(0));
-        Real.setInitialValue(new Constant(0.0f));
-        Str.setInitialValue(new Constant(""));
-        Char.setInitialValue(new Constant('\0'));
-        Bool.setInitialValue(Constant.False);
-        BigInt.setInitialValue(new Constant(BigInteger.ZERO));
-        BigReal.setInitialValue(new Constant(BigDecimal.ZERO));
+        Int.setInitialValue(new Value(0));
+        Real.setInitialValue(new Value(0.0f));
+        Str.setInitialValue(new Value(""));
+        Char.setInitialValue(new Value('\0'));
+        Bool.setInitialValue(Value.False);
+        BigInt.setInitialValue(new Value(BigInteger.ZERO));
+        BigReal.setInitialValue(new Value(BigDecimal.ZERO));
     }
         
     public static boolean numeric(Type p){

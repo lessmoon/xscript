@@ -1,15 +1,15 @@
 package extension.predefined;
 
 import extension.Struct;
+import inter.expr.StackVar;
+import inter.expr.StructValue;
+import inter.stmt.MemberFunction;
+import inter.stmt.Stmt;
+import inter.util.Para;
 import lexer.Token;
 import runtime.Dictionary;
 import runtime.TypeTable;
 import symbols.Type;
-import inter.util.Para;
-import inter.stmt.Stmt;
-import inter.expr.StackVar;
-import inter.expr.StructConst;
-import inter.stmt.MemberFunction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class TestStruct extends Struct {
             
             @Override
             public void run(){
-                StructConst s = (StructConst)arg0.getValue();
+                StructValue s = (StructValue)arg0.getValue();
                 ret(s.getElement(0));
             }
         };

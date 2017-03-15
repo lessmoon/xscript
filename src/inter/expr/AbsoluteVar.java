@@ -15,13 +15,13 @@ public class AbsoluteVar extends StackVar {
     }
 
     @Override
-    public Constant getValue(){
+    public Value getValue(){
         /*stack order:top to down*/
         return VarTable.getVarAbsolutely(stackLevel, stackOffset);
     }
 
     @Override
-    public Constant setValue(Constant v){
+    public Value setValue(Value v){
         /*stack order:top to down*/
         return  VarTable.setVarAbsolutely(stackLevel, stackOffset,v);
     }

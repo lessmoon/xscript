@@ -1,13 +1,13 @@
 package symbols;
 
-import inter.expr.Constant;
+import inter.expr.Value;
 import lexer.Tag;
 
 public class Array extends Type {
     public final Type of;
 
     public Array(Type t){
-        super("[]",Tag.BASIC,Constant.Null);
+        super("[]",Tag.BASIC, Value.Null);
         of = t;
     }
 

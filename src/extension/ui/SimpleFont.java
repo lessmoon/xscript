@@ -4,7 +4,7 @@ import extension.ExtensionStructHelper;
 import extension.Struct;
 import extension.annotation.Init;
 import extension.annotation.StructMethod;
-import inter.expr.Constant;
+import inter.expr.Value;
 import lexer.Token;
 import runtime.Dictionary;
 import runtime.TypeTable;
@@ -35,13 +35,13 @@ public class SimpleFont extends Struct {
         }
 
         @Init(args = {"string","int","int"})
-        public void init(Constant str,Constant style,Constant size){
+        public void init(Value str, Value style, Value size){
             font = new Font(str.valueAs(String.class),style.valueAs(int.class),size.valueAs(int.class));
         }
 
         @StructMethod(ret = "string")
-        public Constant getFontName(){
-            return new Constant(font.getFontName());
+        public Value getFontName(){
+            return new Value(font.getFontName());
         }
 
         public Font getFont() {

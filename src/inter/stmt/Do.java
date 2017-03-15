@@ -1,7 +1,7 @@
 package inter.stmt;
 
-import inter.expr.Constant;
 import inter.expr.Expr;
+import inter.expr.Value;
 import symbols.Type;
 
 public class Do extends Stmt{
@@ -26,7 +26,7 @@ public class Do extends Stmt{
          * Considering that if it has a break or continue in the loop statement
          * so we couldn't replace the do-while with its statement(stmt)
          */
-        /*if(expr == Constant.False){/*constant False,it will never happen to run the stmt*/
+        /*if(expr == Value.False){/*constant False,it will never happen to run the stmt*/
         /*    return stmt;
         }*/
         return this;
@@ -50,6 +50,6 @@ public class Do extends Stmt{
                 else
                     throw e;
             }
-        }while(expr.getValue() != Constant.False);
+        }while(expr.getValue() != Value.False);
     }
 }

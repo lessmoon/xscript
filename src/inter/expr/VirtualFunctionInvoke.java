@@ -76,16 +76,16 @@ public class VirtualFunctionInvoke extends Expr {
     }
 
     @Override
-    public Constant getValue(){
-        final Constant[] args = new Constant[para.size() + 1];
+    public Value getValue(){
+        final Value[] args = new Value[para.size() + 1];
         args[0] = expr.getValue();
-        if(args[0] == Constant.Null){
+        if(args[0] == Value.Null){
             error("null pointer error:try to invoke virtual function `" + func + "' of a null pointer");
         }
 
-        assert(args[0] instanceof StructConst);
+        assert(args[0] instanceof StructValue);
 
-        VirtualTable vtable = ((StructConst)(args[0])).getVirtualTable();
+        VirtualTable vtable = ((StructValue)(args[0])).getVirtualTable();
         FunctionBasic f = vtable.getVirtualFunction(position);
 
         for(int i = 1 ; i < args.length;i++){
@@ -93,7 +93,7 @@ public class VirtualFunctionInvoke extends Expr {
         }
         VarTable.pushTop();
         int i = 0;
-        for(Constant c : args){
+        for(Value c : args){
             if(IS_DEBUG){
                 System.out.println("\narg[" + i + "]{" + para.get(i) + "} = " + c + "<->" + c.hashCode());
                 i++;
@@ -104,7 +104,7 @@ public class VirtualFunctionInvoke extends Expr {
             System.out.println("\nVirtualInvoke " + func.toString() + "{");
         }
         RunStack.invokeFunction(line, offset, filename, f);
-        Constant result =  type.getInitialValue();
+        Value result =  type.getInitialValue();
 
         try {
             f.run();

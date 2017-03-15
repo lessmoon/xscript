@@ -1,6 +1,6 @@
 package symbols;
 
-import inter.expr.Constant;
+import inter.expr.Value;
 import inter.stmt.FunctionBasic;
 import inter.stmt.MemberFunction;
 import lexer.Tag;
@@ -31,11 +31,11 @@ public class Struct extends Type implements Iterable<StructVariable>{
     private String firstInstantiatedFile = "";
     private boolean closed = false;
     private boolean needCopyBase;
-    private Constant[] instanceMemoryTemplate;
+    private Value[] instanceMemoryTemplate;
     private int firstInstantiatedIndex;
 
     public Struct(Token name){
-        super(name.toString(),Tag.BASIC,Constant.Null);
+        super(name.toString(),Tag.BASIC, Value.Null);
         this.name = name;
         baseStruct = null;
         virtualTable = new VirtualTable();
@@ -46,7 +46,7 @@ public class Struct extends Type implements Iterable<StructVariable>{
     }
 
     public Struct(Token name,Struct baseStruct){
-        super(name.toString(),Tag.BASIC,Constant.Null);
+        super(name.toString(),Tag.BASIC, Value.Null);
         this.name = name;
         this.baseStruct = baseStruct;
         baseStruct.addDerivedStruct(this);
@@ -101,9 +101,9 @@ public class Struct extends Type implements Iterable<StructVariable>{
      *      |________________________|
      * @return the instance memory created
      */
-    public Constant[] createInstanceMemory(){
+    public Value[] createInstanceMemory(){
         if(instanceMemoryTemplate == null){
-            instanceMemoryTemplate = new Constant[countVariables()];
+            instanceMemoryTemplate = new Value[countVariables()];
             Struct t = this;
             do{
                 t.forEach(i -> instanceMemoryTemplate[i.index] = i.type.getInitialValue());

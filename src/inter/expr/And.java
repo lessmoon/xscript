@@ -8,7 +8,7 @@ public class And extends Logical {
     }
     
     @Override
-    public Constant getValue(){
-        return expr1.getValue() != Constant.False?expr2.getValue():Constant.False;
+    public Value getValue(){
+        return expr1.getValue() != Value.False?expr2.getValue(): Value.False;
     }
 }
