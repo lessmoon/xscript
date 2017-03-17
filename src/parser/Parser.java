@@ -340,8 +340,9 @@ public class Parser implements TypeTable {
         Token pkg = look;
         match(Tag.ID);
         sb.append(pkg.toString());
-        while (check('.')) {
-            sb.append(".");
+        while (look.tag == '.' || look.tag == '$') {
+            sb.append((char) look.tag);
+            move();
             pkg = look;
             match(Tag.ID);
             sb.append(pkg.toString());
@@ -365,9 +366,12 @@ public class Parser implements TypeTable {
                 if (clazzName == null) {
                     clazzName = name.toString();
                 }
-                Struct s = LoadStruct.loadStruct(sb.toString(), clazzName, name, this.lex, this);
-                if (s == null) {
-                    error("incomplete extension struct:`" + name + "'");
+
+                Struct s;
+                try {
+                    s = LoadStruct.loadStruct(sb.toString(), clazzName, name, this.lex, this);
+                }catch (Exception e){
+                    error("failed to load extension struct `" + sb.toString() + "." + clazzName + "'",e);
                     return;
                 }
                 checkNamespace(s.getName(), "struct");

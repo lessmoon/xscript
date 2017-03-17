@@ -10,7 +10,168 @@ import java.util.List;
 /**
  * Created by lessmoon on 2016/8/15.
  */
+class Item {
+    int x1;
+    int y1;
+    int x2;
+    int y2;
 
+    Color color;
+
+    public int getX1() {
+        return x1;
+    }
+
+    public void setX1(int x1) {
+        this.x1 = x1;
+    }
+
+    public int getY1() {
+        return y1;
+    }
+
+    void setY1(int y1) {
+        this.y1 = y1;
+    }
+
+    public int getX2() {
+        return x2;
+    }
+
+    public void setX2(int x2) {
+        this.x2 = x2;
+    }
+
+    public int getY2() {
+        return y2;
+    }
+
+    void setY2(int y2) {
+        this.y2 = y2;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    void setColor(Color color) {
+        this.color = color;
+    }
+
+    Item(int x1, int y1, int x2, int y2, Color c) {
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;
+        color = c;
+    }
+
+    public void set(int x1, int y1, int x2, int y2, Color c) {
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;
+        color = c;
+    }
+}
+
+class CircleItem {
+    int x;
+    int y;
+    int radius;
+    Color color;
+
+
+    public CircleItem(int x, int y, int radius, Color color) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+}
+
+class StringItem {
+    private int x;
+    private int y;
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public String getStr() {
+        return str;
+    }
+
+    public void setStr(String str) {
+        this.str = str;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public void setFont(Font f){
+        this.font = f;
+    }
+
+    public Font getFont(){
+        return font;
+    }
+
+    private String str;
+
+    private Color color;
+    private Font font;
+
+    StringItem(int x, int y, String str, Color color,Font f) {
+        this.setX(x);
+        this.setY(y);
+        this.setStr(str);
+        this.setColor(color);
+        this.setFont(f);
+    }
+
+    public void set(int x, int y, String str, Color color,Font f) {
+        this.setX(x);
+        this.setY(y);
+        this.setStr(str);
+        this.setColor(color);
+        this.setFont(f);
+    }
+
+}
 
 public abstract class PaintPadImp extends JFrame {
     private final List<Item> itemList = Collections.synchronizedList(new ArrayList<>());
@@ -18,6 +179,7 @@ public abstract class PaintPadImp extends JFrame {
     private final List<CircleItem> circleItemList = Collections.synchronizedList(new ArrayList<>());
     
     private Color brushColor = Color.BLACK;
+    private Font font = this.getFont();
 
     public PaintPadImp(String name, final int height, final int width) {
         super(name);
@@ -55,8 +217,9 @@ public abstract class PaintPadImp extends JFrame {
                     }
                     synchronized (PaintPadImp.this.stringItemList) {
                         for (StringItem i : stringItemList) {
-                            g.setColor(i.color);
-                            g.drawString(i.str, i.x, i.y);
+                            g.setColor(i.getColor());
+                            g.setFont(i.getFont());
+                            g.drawString(i.getStr(), i.getX(), i.getY());
                         }
                     }
 
@@ -173,7 +336,7 @@ public abstract class PaintPadImp extends JFrame {
         int c;
         synchronized (stringItemList) {
             c = stringItemList.size();
-            stringItemList.add(new StringItem(x, y, string, brushColor));
+            stringItemList.add(new StringItem(x, y, string, brushColor,font));
         }
         return c;
     }
@@ -262,6 +425,20 @@ public abstract class PaintPadImp extends JFrame {
         }
     }
 
+    public boolean setStringFont(int id){
+        if( id < 0){
+            return false;
+        }
+        synchronized (stringItemList){
+            if(id < stringItemList.size()) {
+                StringItem stringItem = stringItemList.get(id);
+                stringItem.setFont(font);
+                return true;
+            }
+            return false;
+        }
+    }
+
     public boolean setPoint(int id, int x, int y){
         if(id < 0) {
             return false;
@@ -306,5 +483,13 @@ public abstract class PaintPadImp extends JFrame {
 
     public void redraw(){
         this.repaint();
+    }
+
+    public Font getMyFont() {
+        return this.font;
+    }
+
+    public void setMyFont(Font font) {
+        this.font = font;
     }
 }

@@ -4,13 +4,11 @@ import inter.expr.Value;
 import inter.util.Node;
 import runtime.VarTable;
 
-public class Stmt extends Node{
+public class Stmt extends Node {
     public Stmt()
     {}
 
-    public void run(){
-        
-    }
+    public void run(){}
 
     public static final Stmt Null = new Stmt(){
         @Override
@@ -78,4 +76,5 @@ public class Stmt extends Node{
     public void appendToSeq(LinkedSeq s){
         s.appendStmt(this);
     }
+
 }

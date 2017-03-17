@@ -245,7 +245,7 @@ struct RPGLexer{
         this.peak = ' ';
         this.lineno = 1;
         this.index = 0;
-        this.f.open(filename);
+        this.f.open(filename,true);
     }
     
     def bool check(int c);

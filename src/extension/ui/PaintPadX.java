@@ -85,14 +85,14 @@ public class PaintPadX extends Struct {
         @StructMethod(virtual = true,args = {"int"})
         public void onPress(Value code){}
         
-        @StructMethod(args = {"#extension.ui.SimpleFont"})
+        @StructMethod(args = {"#.SimpleFont"})
         public void setFont(StructValue s){
-            this.imp.setFont(((SimpleFont.SimpleFontProxy) s.getExtension()).getFont());
+            this.imp.setMyFont(((SimpleFont.SimpleFontProxy) s.getExtension()).getFont());
         }
 
-        @StructMethod(ret = "#extension.ui.SimpleFont")
+        @StructMethod(ret = "#.SimpleFont")
         public StructValue getFont(){
-            return new StructValue(symbols.Struct.StructPlaceHolder,new SimpleFont.SimpleFontProxy(this.imp.getFont()));
+            return new StructValue(symbols.Struct.StructPlaceHolder,new SimpleFont.SimpleFontProxy(this.imp.getMyFont()));
         }
 
         @StructMethod

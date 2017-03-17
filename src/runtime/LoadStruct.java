@@ -10,9 +10,16 @@ public class LoadStruct {
     public static final Map<Class, Struct> map = new HashMap<>();
 
     public static Struct loadStruct(String pkg,String clazzname,Token sname,Dictionary dic,TypeTable typeTable){
+        ClassLoader loader = ClassLoader.getSystemClassLoader();
+        Class clazz = null;
+
         try{
-            ClassLoader loader = ClassLoader.getSystemClassLoader();
-            Class clazz = loader.loadClass(pkg + "." + clazzname);
+            try {
+                clazz = loader.loadClass(pkg + "." + clazzname);
+            } catch (Exception ignored) {
+                clazz = loader.loadClass(pkg + "$" + clazzname);
+            }
+
             if(map.containsKey(clazz)){
                 throw new RuntimeException("reload struct `" + clazz.getCanonicalName() + "'");
             }

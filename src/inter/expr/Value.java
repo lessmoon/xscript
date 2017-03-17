@@ -58,16 +58,18 @@ public class Value extends Expr{
         Null = new Value(Word.Null,Type.Null);
 
     /**
-     *  cast
-     * @param t
-     * @param <T>
-     * @return
+     *  cast the value to java value
+     * @param t the target type class
+     * @param <T> the target Type
+     * @return the value
      */
     @SuppressWarnings("unchecked")
     public<T> T valueAs(Class<T> t){
         if(t == Integer.class){
             return (T)Integer.valueOf(((Num)op).value);
-        } else if(t == String.class){
+        } else if (t == Boolean.class || t == boolean.class) {
+            return (T) Boolean.valueOf(this == Value.True);
+        } else if (t == String.class) {
             return (T)((Str)op).value;
         } else if(t == java.lang.Float.class ){
             return (T) java.lang.Float.valueOf(((Float)op).value);

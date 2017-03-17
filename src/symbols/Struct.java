@@ -224,8 +224,9 @@ public class Struct extends Type implements Iterable<StructVariable>{
      * Define a virtual function.This function will handle conflicts when it shadows a naive function({@link #addNaiveFunction(Token, FunctionBasic)})
      * @param name the virtual function's name
      * @param mf the member function body
+     * @return the position of the virtual function
      */
-    public void defineVirtualFunction(Token name,FunctionBasic mf){
+    public Position defineVirtualFunction(Token name, FunctionBasic mf) {
         if(!hasDefinedVirtualFunction){
             virtualTable.createNewTable();
             hasDefinedVirtualFunction = true;
@@ -236,7 +237,9 @@ public class Struct extends Type implements Iterable<StructVariable>{
         }
 
         virtualTable.addVirtualFunction(mf);
-        virtualFunctionPositionMap.put(name,new Position(virtualTable.getGenerations() - 1, virtualTable.getTopSize() - 1));
+        final Position p = new Position(virtualTable.getGenerations() - 1, virtualTable.getTopSize() - 1);
+        virtualFunctionPositionMap.put(name, p);
+        return p;
     }
 
     public FunctionBasic getVirtualFunction(Token name){

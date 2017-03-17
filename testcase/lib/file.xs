@@ -1,26 +1,37 @@
 native<extension.system>{
-    int open(string fname);
-    int close(int fid);
-    int readch(int fid);
-    int writech(int fid,char c);
+    //todo : add function contract
+    "SimpleFile":struct SimpleFile;
+    "SimpleFileInputStream":struct FileInputStream;
+    "SimpleFileOutputStream":struct FileOutputStream;
+    
 }
 
 struct File {
     string fname;
-    int fid;
+    SimpleFile file;
+    FileInputStream fis;
+    FileOutputStream fos;
+    
+    def this(){}
 
-    def this(){
-        this.fname = "";
-        this.fid   = -1;
-    }
-
-    def bool open(string fname){
+    def bool open(string fname,bool append){
         this.fname = fname;
-        return ((this.fid = open(fname)) < 0);
+        this.file = new SimpleFile(this.fname);
+        if(!this.file.exists()){
+            this.file.createNewFile();
+        }
+        if(this.fis == null)
+            this.fis = new FileInputStream(this.file);
+        else
+            this.fis.open(this.file);
+        if(this.fos == null)
+            this.fos = new FileOutputStream(this.file,append);
+        else 
+            this.fos.open(this.file,append);
     }
 
     def bool is_open(){
-        return this.fid < 0;
+        return this.file != null;
     }
 
     def string file_name(){
@@ -28,16 +39,21 @@ struct File {
     }
 
     def int readch(){
-        return readch(this.fid);
+        return this.fis.readChar();
     }
 
     def void close(){
-        close(this.fid);
-        this.fid   = -1;
+        if(this.fis != null){
+            this.fis.close();
+        }
+        if(this.fos != null){
+            this.fos.close();
+        }
+        this.file = null;
     }
 
     def void writech(char c){
-        writech(this.fid,c);
+        this.fos.writeInt(c);
     }
 
 }

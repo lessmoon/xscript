@@ -1,46 +1,47 @@
-native<extension.predefined>{
-    struct EventCallback{
-        def virtual bool callback(int id);
-    };
-
-    struct MouseEventCallback{
-        def virtual bool callback(int x,int y);
-    };
-
-    //void setCallback(EventCallback ec);
-}
+import"../lib/concurrent.xs";
 
 native<extension.ui>{
-    "openPad":int openPadWithName(int w,int h,string name);
-    int drawLine(int x1,int y1,int x2,int y2);
-    int drawPoint(int x,int y);
-    int addLine(int x1,int y1,int x2,int y2);
-    int addPoint(int x,int y);
-	"AddString":int addString(string s,int x,int y);
-    int setLine(int id,int x1,int y1,int x2,int y2);
-    int setPoint(int id,int x,int y);
-    int setString(int id,string s,int x,int y);
-    int setBrushColor(int r,int g,int b);
-    int paint();
-    int closePad();
-    int clearPad();
+    "SimpleFont":struct Font{
+        def this(string name,int style,int size);
+        def string getFontName();
+    };
+
+    "PaintPadX":struct PaintPadX{
+        def this(string name,int width,int height);
+        def int addString(string str,int x,int y);
+        def void setFont(Font f);
+        def Font getFont();
+        def virtual void onClose();
+    };
 }
 
+struct PaintPad:PaintPadX{
+    Trigger t;
 
-native<extension.ui>{
-    "EventLoop":bool loopForKeyboard(EventCallback f);
-    "MouseEventLoop":bool loopForMouse(MouseEventCallback f);
+    def this(string name,int width,int height){
+        super(name,width,height);
+		this.t = new Trigger();
+    }
+
+    def void show(){
+        super.open();
+    }
+
+    def override void onClose(){
+        super.onClose();
+        this.t.triggerAll();
+    }
+
+    def void wait(){
+        this.t.wait();
+    }
 }
 
-def int openPad(int w,int h){
-    return openPadWithName(w,h,"Script");
-}
-
-def void addRect(int x,int y,int w,int height){
-    addLine(x,y,x+w,y);
-    addLine(x,y,x,y+height);
-    addLine(x,y+height,x+w,y+height);
-    addLine(x+w,y,x+w,y+height);
+def void addRect(PaintPad pad,int x,int y,int w,int height){
+    pad.addLine(x,y,x+w,y);
+    pad.addLine(x,y,x,y+height);
+    pad.addLine(x,y+height,x+w,y+height);
+    pad.addLine(x+w,y,x+w,y+height);
 }
 
 struct Point{
@@ -86,13 +87,14 @@ struct Graphics {
     Point center;
     Color brushcolor;
     DynamicArray rects;
-
+    PaintPad pad;
+    
     def void init(int width,int height){
         this.width = width;
         this.height = height;
         this.center = new Point(0,0);
-        openPad(width,height);
-        paint();
+        this.pad = new PaintPad("script",width,height);
+        this.pad.show();
         this.brushcolor = new Color(0,0,0);
         this.rects = new DynamicArray(10);
     }
@@ -101,7 +103,7 @@ struct Graphics {
         Point real_p = p + this.center;
         if(this.width > real_p.x && real_p.x >= 0
             && this.height > real_p.y && real_p.y >= 0){
-            addPoint(real_p.x,real_p.y);
+            this.pad.addPoint(real_p.x,real_p.y);
         }
     }
 
@@ -109,33 +111,36 @@ struct Graphics {
         Point real_p = p + this.center;
         if(this.width > real_p.x && real_p.x >= 0
             && this.height > real_p.y && real_p.y >= 0){
-            return setPoint(id,real_p.x,real_p.y);
+            this.pad.setPoint(id,real_p.x,real_p.y);
+            return id;
         }
         return -1;
     }
     
     def virtual void addRect(Point o,int width,int height){
-        addRect(o.x + this.center.x,o.y + this.center.y,width,height);
+        addRect(this.pad,o.x + this.center.x,o.y + this.center.y,width,height);
     }
 
     def virtual int addString(Point pos,string text){
-        return addString(text,pos.x+ this.center.x,pos.y+ this.center.y);
+        return this.pad.addString(text,pos.x+ this.center.x,pos.y+ this.center.y);
     }
 
     def virtual int setString(int id,Point pos,string text){
-        return setString(id,text,pos.x+ this.center.x,pos.y+ this.center.y);
+        this.pad.setString(id,text);
+        this.pad.setStringPosition(id,pos.x+ this.center.x,pos.y+ this.center.y);
     }
 
     def virtual void draw(){
-        paint();
+        this.pad.show();
     }
 
     def void clear(){
-        clearPad();
+        this.pad.clearString();
+        this.pad.clearPointAndLine();
     }
 
     def void close(){
-        closePad();
+        this.pad.close();
     }
 
     def void transite(Point offset){
@@ -152,7 +157,7 @@ struct Graphics {
 
     def void setBrushColor(Color c){
         this.brushcolor = c;
-        setBrushColor(c.r,c.g,c.b);
+        this.pad.setBrushColor(c.r,c.g,c.b);
     }
 
     def Color getBrushColor(){
@@ -329,7 +334,7 @@ struct PairContent : Content{
         return "";
     }
 }
-
+/*
 struct EventPool{
     DynamicArray eps ;
 
@@ -375,43 +380,7 @@ struct MouseAdapter2:MouseEventCallback{
 
 }
 
-import"../lib/concurrent.xs";
 
-native<extension.ui>{
-    "SimpleFont":struct Font{
-        def this(string name,int style,int size);
-        def string getFontName();
-    };
-
-    "PaintPadX":struct PaintPadX{
-        def this(string name,int width,int height);
-        def int addString(string str,int x,int y);
-        def void setFont(Font f);
-        def Font getFont();
-        def virtual void onClose();
-    };
-}
-struct PaintPad:PaintPadX{
-    Trigger t;
-
-    def this(string name,int width,int height){
-        super(name,width,height);
-		this.t = new Trigger();
-    }
-
-    def void show(){
-        super.open();
-    }
-
-    def override void onClose(){
-        super.onClose();
-        this.t.triggerAll();
-    }
-
-    def void wait(){
-        this.t.wait();
-    }
-}
 
 /*
  *    _____

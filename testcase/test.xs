@@ -131,7 +131,7 @@ struct derive:base{
     r.registerFunction("case",new RPGCase);
     r.registerFunction("time",new RPGTime);
     r.open("test");
-    r.run();
+    //r.run();
     
 }
 
@@ -371,24 +371,6 @@ struct PrintNumber : Runnable {
     }
 }
 
-
-native<extension.predefined>{
-    "TestStruct":struct NTVSTRT{
-        string id;
-        def virtual string getId();
-    };
-}
-
-struct MyStruct : NTVSTRT{
-    def override string getId(){
-        return "hello," + this.id ;
-    }
-
-    def virtual void setId(string id){
-        this.id = id;
-    }
-}
-
 {
    HashMap hm = new HashMap();
    for(int i = 0; i < 20;i++){
@@ -467,25 +449,25 @@ struct JustOnce:Runnable{
 
 real PI = 3.141592654;
 
-def void drawHand(int v,real theta,int len,int r,int g,int b){
+def void drawHand(PaintPad p,int v,real theta,int len,int r,int g,int b){
     real arctheta = theta * 2 * PI;
     int x = cos(arctheta) * len;
     int y = sin(arctheta) * len;
-    setBrushColor(r,g,b);
-    addLine(150,150,150+x,y+150);
+    p.setBrushColor(r,g,b);
+    p.addLine(150,150,150+x,y+150);
 }
 
-def void drawClock(Time t){
+def void drawClock(PaintPad p,Time t){
     for(int i = 1 ; i < 13;i++){
         real arctheta = ((real)i-3)/6 * PI;
         int x = cos(arctheta) * 140;
         int y = sin(arctheta) * 140;
-        addString("" + i,150 + x,150+y);
+        p.addString("" + i,150 + x,150+y);
     }
 
-    drawHand(t.hour,((real)t.hour-3) / 12,70,0,0,255);
-    drawHand(t.minute,((real)t.minute-15) / 60,110,0,255,0);
-    drawHand(t.second,((real)t.second-15) / 60,130,255,0,0);
+    drawHand(p,t.hour,((real)t.hour-3) / 12,70,0,0,255);
+    drawHand(p,t.minute,((real)t.minute-15) / 60,110,0,255,0);
+    drawHand(p,t.second,((real)t.second-15) / 60,130,255,0,0);
 }
 
 {
@@ -514,14 +496,6 @@ def void drawClock(Time t){
         print("\n");
     }
 }
-
-{
-    println("Test for predefined struct");
-    MyStruct s = new MyStruct;
-    s.setId(25);
-    println(s.getId());
-}
-
 
 struct shape{
     string name;
@@ -595,11 +569,11 @@ struct rectangle : square {
     }
 }
 
-def void drawRectangle(int x,int y,int w,int h){
-    addLine(x,y,x+w,y);
-    addLine(x,y,x,y+h);
-    addLine(x,y+h,x+w,y+h);
-    addLine(x+w,y,x+w,y+h);
+def void drawRectangle(PaintPad p,int x,int y,int w,int h){
+    p.addLine(x,y,x+w,y);
+    p.addLine(x,y,x,y+h);
+    p.addLine(x,y+h,x+w,y+h);
+    p.addLine(x+w,y,x+w,y+h);
     
 }
     int WIDTH = 50;
@@ -607,107 +581,60 @@ def void drawRectangle(int x,int y,int w,int h){
     int TILE_WIDTH = 10;
     int CHESS_WIDTH = 8;
 /*CHESS PLAYING*/
-def void drawChessPad(int x,int y)
+def void drawChessPad(PaintPad p,int x,int y)
 {
-    clearPad();
-    setBrushColor(0,0,0);
+    p.clear();
+    p.setBrushColor(0,0,0);
     for(int i = 0;i <= WIDTH;i++){
         //println("x " + i + ":" + TILE_WIDTH*i+","+HEIGHT*TILE_WIDTH);
-        addLine(TILE_WIDTH*i,0,TILE_WIDTH*i,HEIGHT*TILE_WIDTH);
+        p.addLine(TILE_WIDTH*i,0,TILE_WIDTH*i,HEIGHT*TILE_WIDTH);
     }
     for(int i = 0;i <= HEIGHT;i++){
         //println("y " + i + ":" + TILE_WIDTH*i+","+WIDTH*TILE_WIDTH);
-        addLine(0,TILE_WIDTH*i,WIDTH*TILE_WIDTH,TILE_WIDTH*i);
+        p.addLine(0,TILE_WIDTH*i,WIDTH*TILE_WIDTH,TILE_WIDTH*i);
     }
-    setBrushColor(255,0,0);
+    p.setBrushColor(255,0,0);
     int co = (TILE_WIDTH - CHESS_WIDTH)/2;
-    drawRectangle(x*TILE_WIDTH+co,y*TILE_WIDTH+co,CHESS_WIDTH,CHESS_WIDTH);
+    drawRectangle(p,x*TILE_WIDTH+co,y*TILE_WIDTH+co,CHESS_WIDTH,CHESS_WIDTH);
 
-    paint();
+    p.redraw();
 }
 
-struct KeyboardAdapter: EventCallback{
-    int x;
-    int y;
-    def override bool callback(int id){
-        switch(id){
-        case 'W':case 'w':
-            this.y--;
-            break;
-        case 'S':case 's':
-            this.y++;
-            break;
-        case 'A':case 'a':
-            this.x--;
-            break;
-        case 'D':case 'd':
-            this.x++;
-            break;
-        case ' ':case 'e':
-            return false;
-        }
-        drawChessPad(this.x,this.y);
-        return true;
-    }
-}
 
-struct MouseAdapter:MouseEventCallback{
-    int count;
-    def override bool callback(int x,int y){
-        println("" + x + "," + y);
-        int newX = x/TILE_WIDTH;
-        int newY = y/TILE_WIDTH;
-        drawChessPad(newX,newY);
-        return --this.count != 0;
-    }
-} 
-
-{
-    println("Test for chess pad");
-    openPadWithName(WIDTH*TILE_WIDTH+1,HEIGHT*TILE_WIDTH+1,"Chess");
-    KeyboardAdapter kba = new KeyboardAdapter;
-    kba.x = WIDTH/2;
-    kba.y = HEIGHT/2;
-    drawChessPad(kba.x,kba.y);
-    if(!loopForKeyboard(kba)){
-        println("error occurred");
+struct ChessPad:PaintPad{
+    def this(string name,int w,int h){
+        super(name,w,h);
     }
     
-    println("End test for the keyboard");
-    println("Test for mouse adapter");
-    MouseAdapter ma = new MouseAdapter;
-    ma.count = 10;
-    if(!loopForMouse(ma)){
-        println("err occured");
+    def override void onClick(int id){
+        
     }
-    println("end for the mouse");
-    clearPad();
-    closePad();
 }
 
+
 /*CELL SIMULATION*/
-def void drawWorld(bool[][] worldmap)
+def void drawWorld(PaintPad p,bool[][] worldmap)
 {
-    clearPad();
-    setBrushColor(0,0,0);
+    p.clear();
+    p.setBrushColor(0,0,0);
     //println("Line " + _line_ + ":" + TILE_WIDTH);
     for(int i = 0;i <= WIDTH;i++){
         //println("x " + i + ":" + TILE_WIDTH*i+","+HEIGHT*TILE_WIDTH);
-        addLine(TILE_WIDTH*i,0,TILE_WIDTH*i,HEIGHT*TILE_WIDTH);
+        p.addLine(TILE_WIDTH*i,0,TILE_WIDTH*i,HEIGHT*TILE_WIDTH);
     }
     for(int i = 0;i <= HEIGHT;i++){
         //println("y " + i + ":" + TILE_WIDTH*i+","+WIDTH*TILE_WIDTH);
-        addLine(0,TILE_WIDTH*i,WIDTH*TILE_WIDTH,TILE_WIDTH*i);
+        p.addLine(0,TILE_WIDTH*i,WIDTH*TILE_WIDTH,TILE_WIDTH*i);
     }
-    setBrushColor(255,0,0);
+    p.setBrushColor(255,0,0);
     int co = (TILE_WIDTH - CHESS_WIDTH)/2;
     for(int x = 0;x < WIDTH;x++){
         for(int y = 0;y < HEIGHT;y++){
             if(worldmap[x][y])
-                drawRectangle(x*TILE_WIDTH+co,y*TILE_WIDTH+co,CHESS_WIDTH,CHESS_WIDTH);
+                drawRectangle(p,x*TILE_WIDTH+co,y*TILE_WIDTH+co,CHESS_WIDTH,CHESS_WIDTH);
         }
     }
-    paint();
+    p.redraw();
 }
 
 def bool isAlive(bool[][] src,int x,int y){
@@ -774,7 +701,7 @@ def void calMap(bool[][] src,bool[][] tar){
 def void GameOfLife(int max)
 {
     //println("Line " + _line_ + ":" + TILE_WIDTH);
-    openPadWithName(WIDTH*TILE_WIDTH+1,HEIGHT*TILE_WIDTH+1,"GameOfLife");
+    auto pad = new PaintPad("Game Of Life",WIDTH*TILE_WIDTH+1,HEIGHT*TILE_WIDTH+1);
     //println("Line " + _line_ + ":" + TILE_WIDTH);
     bool[][] world,world1 = new bool[][WIDTH],
              world2 = new bool[][WIDTH];
@@ -782,6 +709,7 @@ def void GameOfLife(int max)
         world1[i] = new bool[HEIGHT];
         world2[i] = new bool[HEIGHT];
     }
+    
     srand(time());
     int sum = rand()%(WIDTH*HEIGHT);
     
@@ -793,7 +721,8 @@ def void GameOfLife(int max)
         }while(world1[x][y]);
         world1[x][y] = true;
     }
-    drawWorld(world1);
+    drawWorld(pad,world1);
+    pad.show();
     sleep(200);
     //println("Line " + _line_ + ":" + TILE_WIDTH);
     while(max-- > 0){
@@ -801,11 +730,10 @@ def void GameOfLife(int max)
         world = world2;
         world2 = world1;
         world1 = world;
-        drawWorld(world);
+        drawWorld(pad,world);
         sleep(200);
     }
-    clearPad();
-    closePad();
+    pad.close();
 }
 
 {
@@ -827,26 +755,24 @@ def void GameOfLife(int max)
     /*draw a red line*/
     int last_x = -10000;
     int last_y = -10000;
-    setBrushColor(255,0,0);
+    auto pad = new PaintPad("Parser",600,800);
+    pad.setBrushColor(255,0,0);
     for (real x = 300; x > -300; x -= 1) {
         v.setValue(x);
         int y = e.getValue();
-        addPoint(x + 300 ,-y + 240);
+        pad.addPoint(x + 300 ,-y + 240);
         if(last_x > -10000){
-            addLine(last_x,last_y,x+300,-y+240);
+            pad.addLine(last_x,last_y,x+300,-y+240);
         }
         last_x = x+300;
         last_y = -y+240;
     }
     println("drawing function line of f(x)=" + s);
-    setBrushColor(0,0,0);
-    addLine(0,240,600,240);
-    addLine(300,0,300,480);
-    openPad(600,480);
-    paint();
-    getchar();
-    getchar();
-    closePad();
+    pad.setBrushColor(0,0,0);
+    pad.addLine(0,240,600,240);
+    pad.addLine(300,0,300,480);
+    pad.show();
+    pad.wait();
 }
 
 
@@ -983,10 +909,10 @@ struct complex{
     println("This code is in file " + _file_ + " at " + _line_ );
     println("Compiler version is " + _version_/100 + "." + _version_%100);
 }
-
+/*
 {
     println("Test for animated painting");
-    openPad(600,480);
+    auto pad = new PaintPad();
     setBrushColor(255,0,0);
     int x,y;
     for(real off = 0;off < 1;off += 0.01 ){
@@ -1001,7 +927,7 @@ struct complex{
     }
     closePad();
 }
-
+/*
 {
     println("Test for basic painting");
     
@@ -1027,8 +953,9 @@ struct complex{
             }
         }
     }
-   
+  
     /*draw a red heart*/
+    /* 
     setBrushColor(255,0,0);
     for (real y = 1.5; y > -1.5; y -= 0.01) {
         real min = 1.5;
@@ -1053,7 +980,7 @@ struct complex{
         }
     }
     
-    /*draw a green round*/
+    /*draw a green round*//* 
     setBrushColor(0,255,0);
     real r = 100.0;
     for (int y = -r; y < r; y ++ ) {
@@ -1084,13 +1011,10 @@ struct complex{
     addLine(0,240,600,240);
     addLine(300,0,300,480);
     openPad(600,480);
-    paint();
-    
-    getchar();
-    getchar();
+
     closePad();
 }
-
+*/
 {
     /*test code for list union*/
     list a = create_list() ;
@@ -1396,22 +1320,23 @@ def int printarray(int[] arr,int len){
 
 {
     println("Test for file write");
-    int fid= open("t.txt");
+    File f = new File();
+    f.open("t.txt",false);
     println("write to file " + "t.txt");
     
     for (char y = 'a'; y <= 'z'; y++) {
-        writech(fid,y);
+        f.writech(y);
         int i = y;
         string x = ((string)i);
-        writech(fid,':');
+        f.writech(':');
         for(int i = 0 ; i < strlen(x);i++)
-            writech(fid,x[i]);
+            f.writech(x[i]);
         if( y != 'z'){
-            writech(fid,'\r');
-            writech(fid,'\n');
+            f.writech('\r');
+            f.writech('\n');
         }
     }
-    close(fid);
+    f.close();
 }
 
 def int max(int a,int b){

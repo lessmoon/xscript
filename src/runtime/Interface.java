@@ -29,14 +29,14 @@ public class Interface{
         return result;        
     }
     
-    static public Value invokeVirtualFunctionOfStruct(StructValue c, Position pos, List<Value> para){
+    static public Value invokeVirtualFunctionOfStruct(StructValue c, Position pos, List<Value> args){
         VirtualTable vtable = c.getVirtualTable();
         FunctionBasic f = vtable.getVirtualFunction(pos);
         Value result =  f.type.getInitialValue();
 
         VarTable.pushTop();
         VarTable.pushVar(c);
-        for(Value p : para){
+        for(Value p : args){
             VarTable.pushVar(p);
         }
 
