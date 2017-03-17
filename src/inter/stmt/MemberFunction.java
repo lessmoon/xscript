@@ -24,9 +24,12 @@ public class MemberFunction extends Function {
     }
     
     @Override
-    public String toString(){
+    public String getDescription(boolean needStructInfo) {
         StringBuilder sb = new StringBuilder(type.toString() + " " );
-        sb.append(struct.lexeme).append(".").append(name).append("(");
+        if(needStructInfo) {
+            sb.append(struct.lexeme).append(".");
+        }
+        sb.append(name).append("(");
         int i = 1;
         if(i < paralist.size()){
             sb.append(paralist.get(i++).toString());

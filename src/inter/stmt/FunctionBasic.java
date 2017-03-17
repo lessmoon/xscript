@@ -46,8 +46,12 @@ public abstract class FunctionBasic extends Stmt {
     
     @Override
     public String toString(){
+        return this.getDescription(true);
+    }
+
+    public String getDescription(boolean needStructInfo){
         StringBuilder sb = new StringBuilder(type.toString());
-        sb.append(" ").append(name).append("(");
+        sb.append("  ").append(name).append("(");
         int i = 0;
         if(i < paralist.size()){
             sb.append(paralist.get(i++).toString());

@@ -8,6 +8,7 @@ import lexer.Token;
 import lexer.Word;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class Struct extends Type implements Iterable<StructVariable>{
     public static final Struct StructPlaceHolder  = new Struct(new Word("#StructPlaceHolder#",Tag.ID));
@@ -477,9 +478,44 @@ public class Struct extends Type implements Iterable<StructVariable>{
         return firstInstantiatedFile;
     }
 
-    @Override
-    public String toString(){
-        return  "struct " + super.toString();
+    public String getDescription() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("struct ").append(name).append(baseStruct == null ? "" : " : " + baseStruct.name).append("{\n");
+        if (!variableMap.isEmpty()) {
+            stringBuilder.append("    //variables\n");
+            variableMap.entrySet().stream()
+                    .sorted(Comparator.comparingInt(a -> a.getValue().index))
+                    .forEach(sv -> stringBuilder.append("    ").append(sv.getValue().type).append(" ").append(sv.getKey()).append(";\n"));
+        }
+
+        if(initFunction != null){
+            stringBuilder.append("    //init function\n");
+            stringBuilder.append("    def ").append(initFunction.getDescription(false)).append(";\n");
+        }
+        if (!functionMap.isEmpty()) {
+            stringBuilder.append("    //functions\n");
+            functionMap.entrySet()
+                    .forEach(sv -> stringBuilder.append("    def ").append(sv.getValue().getDescription(false)).append(";\n"));
+        }
+        if (virtualTable.getGenerations() > 0) {
+            Stream<Position> positionStream = virtualFunctionPositionMap.values().stream().filter(pos -> virtualTable.getVirtualFunction(pos).isCompleted());
+            if (positionStream.count() > 0) {
+                positionStream = virtualFunctionPositionMap.values().stream().filter(pos -> virtualTable.getVirtualFunction(pos).isCompleted());
+                stringBuilder.append("    //virtual functions\n");
+                positionStream.forEach(pos -> stringBuilder.append("    def virtual ").append(virtualTable.getVirtualFunction(pos).getDescription(false)).append(";\n"));
+            }
+        }
+        if (virtualTable.getGenerations() > 0) {
+            Stream<Position> positionStream = virtualFunctionPositionMap.values().stream().filter(pos -> !virtualTable.getVirtualFunction(pos).isCompleted());
+            if (positionStream.count() > 0) {
+                positionStream = virtualFunctionPositionMap.values().stream().filter(pos -> !virtualTable.getVirtualFunction(pos).isCompleted());
+                stringBuilder.append("    //pure virtual functions\n");
+                positionStream.forEach(pos -> stringBuilder.append("    def virtual ").append(virtualTable.getVirtualFunction(pos).getDescription(false)).append(";\n"));
+            }
+        }
+
+        stringBuilder.append("}");
+        return stringBuilder.toString();
     }
 
     /**

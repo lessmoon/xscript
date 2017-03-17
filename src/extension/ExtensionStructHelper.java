@@ -156,7 +156,7 @@ public class ExtensionStructHelper {
                         : ("implementation of declared arg[" + (i + 1) + "] of `" + s.getName() + "." + m.getName() + "()':can't bind type[" + t + "] to [" + ps[j].getType().getName() + "] ");
             }
 
-            Token name = dic.getOrReserve("arg#" + i);
+            Token name = dic.getOrReserve("arg" + i);
             vars[i] = new StackVar(name, t, 0, i + 1);
             param.add(new Para(t, name));
         }
@@ -365,7 +365,6 @@ public class ExtensionStructHelper {
             }
         }, param, s);
     }
-
 
     /**
      * build a default initial function,it just construct an instance of clazz and set the s.extension

@@ -20,12 +20,13 @@ public class Parser implements TypeTable {
     private Lexer lex;
     private Token look;
     private Env top = new Env();
-    private Map<Token, Type> typeTable = new HashMap<>();
+    private Map<Token, Type> typeTable = new LinkedHashMap<>();
     private FuncTable table = new FuncTable();
     private Set<Token> forbiddenFunctionName = new HashSet<>();
     private Type returnType = Type.Int;
     private boolean hasDecl = true;
     final private boolean enableWarning = false;
+    private boolean PRINT_STRUCT = false;
     /*
      * binding for super.func or var,
      * which means super struct must have this function definition and implementation
@@ -98,6 +99,14 @@ public class Parser implements TypeTable {
 
     public void enablePrintFuncTranslate() {
         PRINT_FUNC_TRANSLATE = true;
+    }
+
+    public void enablePrintStruct(){
+        PRINT_STRUCT = true;
+    }
+
+    public void disablePrintStruct(){
+        PRINT_STRUCT = false;
     }
 
     public void disablePrintFuncTranslate() {
@@ -216,6 +225,14 @@ public class Parser implements TypeTable {
         }
 
         checkFunctionCompletion();
+        if(PRINT_STRUCT){
+            typeTable.forEach((id,t)->{
+                if(t instanceof Struct){
+                    System.out.println(((Struct) t).getDescription());
+                }
+            });
+        }
+
         return ENABLE_STMT_OPT ? s.optimize() : s;
     }
 

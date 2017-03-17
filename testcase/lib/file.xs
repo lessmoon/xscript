@@ -1,9 +1,31 @@
 native<extension.system>{
-    //todo : add function contract
-    "SimpleFile":struct SimpleFile;
-    "SimpleFileInputStream":struct FileInputStream;
-    "SimpleFileOutputStream":struct FileOutputStream;
-    
+    "SimpleFile":struct SimpleFile{
+        def this(string path);
+        def string getName();
+        def bool canRead();
+        def bool canWrite();
+        def bool isDirectory();
+        def bool isFile();
+        def bool isHidden();
+        def bool exists();
+        def bool mkdir();
+        def bool createNewFile();
+        def SimpleFile getParent();
+    };
+    "SimpleFileInputStream":struct FileInputStream{
+        def this(SimpleFile file);
+        def void open(SimpleFile file);
+        def int readChar();
+        def void close();
+        def bigint skip(bigint i);
+    };
+    "SimpleFileOutputStream":struct FileOutputStream{
+        def this(SimpleFile file,bool append);
+        def void open(SimpleFile file,bool append);
+        def void writeInt(int aInt);
+        def void close();
+        def void flush();
+    };
 }
 
 struct File {
@@ -14,7 +36,18 @@ struct File {
     
     def this(){}
 
+    def void close(){
+        if(this.fis != null){
+            this.fis.close();
+        }
+        if(this.fos != null){
+            this.fos.close();
+        }
+        this.file = null;
+    }
+    
     def bool open(string fname,bool append){
+        this.close();
         this.fname = fname;
         this.file = new SimpleFile(this.fname);
         if(!this.file.exists()){
@@ -40,16 +73,6 @@ struct File {
 
     def int readch(){
         return this.fis.readChar();
-    }
-
-    def void close(){
-        if(this.fis != null){
-            this.fis.close();
-        }
-        if(this.fos != null){
-            this.fos.close();
-        }
-        this.file = null;
     }
 
     def void writech(char c){

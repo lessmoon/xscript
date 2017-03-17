@@ -7,11 +7,37 @@ native<extension.ui>{
     };
 
     "PaintPadX":struct PaintPadX{
+        //init function
         def this(string name,int width,int height);
+        //functions
+        def void open();
+        def bool setString(int id,string arg1);
+        def bool setLineColor(int id);
+        def bool setStringPosition(int id,int x,int y);
+        def int addLine(int x1,int y1,int x2,int y2);
+        def void clearPointAndLine();
+        def void close();
+        def void setBrushColor(int r,int g,int b);
+        def void clearString();
+        def bool setCircleRadius(int id,int radius);
+        def bool setLine(int id,int x1,int y1,int x2,int y2);
+        def bool setPointColor(int id);
         def int addString(string str,int x,int y);
-        def void setFont(Font f);
+        def void clear();
         def Font getFont();
+        def bool setCircleColor(int id);
+        def int addCircle(int x,int y,int radius);
+        def int addPoint(int x,int y);
+        def void redraw();
+        def bool setPoint(int id,int x,int y);
+        def bool setStringColor(int id);
+        def void setFont(Font font);
+        def bool setCircle(int id,int x,int y);
+        //virtual functions
+        def virtual void onMouseClick(int bid,int x,int y);
+        def virtual void onPress(int kid);
         def virtual void onClose();
+        def virtual void onClick(int kid);
     };
 }
 
@@ -89,11 +115,11 @@ struct Graphics {
     DynamicArray rects;
     PaintPad pad;
     
-    def void init(int width,int height){
+    def void init(PaintPad pad,int width,int height){
         this.width = width;
         this.height = height;
         this.center = new Point(0,0);
-        this.pad = new PaintPad("script",width,height);
+        this.pad = pad;
         this.pad.show();
         this.brushcolor = new Color(0,0,0);
         this.rects = new DynamicArray(10);
@@ -126,23 +152,30 @@ struct Graphics {
     }
 
     def virtual int setString(int id,Point pos,string text){
-        this.pad.setString(id,text);
+        bool r = this.pad.setString(id,text);
         this.pad.setStringPosition(id,pos.x+ this.center.x,pos.y+ this.center.y);
     }
 
     def virtual void draw(){
-        this.pad.show();
+        this.pad.redraw();
     }
 
+    def virtual void show(){
+        this.pad.show();
+    }
+    
     def void clear(){
-        this.pad.clearString();
-        this.pad.clearPointAndLine();
+        this.pad.clear();
     }
 
     def void close(){
         this.pad.close();
     }
 
+    def void wait(){
+        this.pad.wait();
+    }
+    
     def void transite(Point offset){
         this.center = this.center + offset;
     }
@@ -187,6 +220,7 @@ struct Screen{
     def void clear(Graphics g){
         this.text = "0";
         g.setString(this.index,new Point(0,15),this.text);
+        println("clear");
     }
     
     def void setText(Graphics g,string text){
@@ -253,7 +287,7 @@ struct Button{
     }
 
     def void onclick(Graphics g,Screen scr,cal_state cs){
-        println("CLICKED " + this.text);
+        println("CLICKED " + this.text + ":" + this.id);
         switch(this.id){
         case '1':case '2':case '3':case '4':case '5':case '6':case '7':
         case '8':case '9':case '0':
@@ -334,12 +368,12 @@ struct PairContent : Content{
         return "";
     }
 }
-/*
+
 struct EventPool{
     DynamicArray eps ;
 
     def this(){
-        this.eps = new DynamicArray(20);
+        this.eps = new DynamicArray(1);
     }
     
     def void addListener(Region r,Button b){
@@ -359,27 +393,25 @@ struct EventPool{
     }
 }
 
-struct MouseAdapter2:MouseEventCallback{
-    Graphics    g;
-    Screen      scr;
-    EventPool   e;
-    cal_state   cs;
+struct Calculator:PaintPad{
+    EventPool pool;
+    Graphics g;
+    Screen scr;
+    cal_state cs;
     
-    def this(Graphics g,Screen s,EventPool e){
+    def this(string title,int width,int height
+             ,EventPool pool,Graphics g,Screen scr){
+        super(title,width,height);
+        this.pool = pool;
         this.g = g;
-        this.scr = s;
-        this.e = e;
+        this.scr = scr;
         this.cs = new cal_state();
     }
-
-    def override bool callback(int x,int y){
-        println("" + x + "," + y);
-        this.e.onclick(new Point(x,y),this.g,this.scr,this.cs);
-        return true;
+    
+    def override void onMouseClick(int bid,int x,int y){
+        this.pool.onclick(new Point(x,y),this.g,this.scr,this.cs);
     }
-
 }
-
 
 
 /*
@@ -391,11 +423,12 @@ struct MouseAdapter2:MouseEventCallback{
  *   |_|_|_|
  */
 
-/*
+
 {
     Graphics g = new Graphics;
     EventPool ep = new EventPool();
     Screen scr = new Screen();
+
     Button[] bs = {
     new Button('1','1',new Color(255,0,0)),new Button('2','2',new Color(255,0,0)),
     new Button('3','3',new Color(255,0,0)),new Button('+','+',new Color(0,0,255)),
@@ -427,7 +460,7 @@ struct MouseAdapter2:MouseEventCallback{
        
     }
 
-    g.init(82,122);
+    g.init(new Calculator("Calculator",122,82,ep,g,scr),82,122);
     g.transite(new Point(20,10));
     scr.add(g);
     
@@ -448,9 +481,7 @@ struct MouseAdapter2:MouseEventCallback{
         break;
        }
     }
-
-    g.draw();
     g.setCenter(new Point(20,10));
-    loopForMouse(new MouseAdapter2(g,scr,ep));
+    g.show();
+    g.wait();
 }
-*/

@@ -1,7 +1,7 @@
 package inter.stmt;
 
-import lexer.Token;
 import inter.util.Para;
+import lexer.Token;
 import symbols.Struct;
 import symbols.Type;
 
@@ -28,8 +28,12 @@ public class InitialFunction extends Function {
     }
 
     @Override
-    public String toString(){
-        StringBuilder sb = new StringBuilder(struct.lexeme + ".[init](");
+    public String getDescription(boolean needStructInfo) {
+        StringBuilder sb = new StringBuilder();
+        if (needStructInfo) {
+            sb.append(struct.lexeme).append(".");
+        }
+        sb.append("this(");
         int i = 1;
         if(i < paralist.size()){
             sb.append(paralist.get(i++).toString());
@@ -40,5 +44,6 @@ public class InitialFunction extends Function {
         }
         sb.append(")");
         return sb.toString();
+
     }
 }
