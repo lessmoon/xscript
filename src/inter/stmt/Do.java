@@ -24,10 +24,10 @@ public class Do extends Stmt{
         stmt = stmt.optimize();
         /*
          * Considering that if it has a break or continue in the loop statement
-         * so we couldn't replace the do-while with its statement(stmt)
+         * so we couldn't replace the do-while with its statement(body)
          */
-        /*if(expr == Value.False){/*constant False,it will never happen to run the stmt*/
-        /*    return stmt;
+        /*if(expr == Value.False){/*constant False,it will never happen to run the body*/
+        /*    return body;
         }*/
         return this;
     }

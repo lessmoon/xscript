@@ -2,17 +2,17 @@ package runtime;
 
 import extension.Function;
 import inter.stmt.ExFunction;
-import inter.util.Para;
+import inter.util.Param;
 import lexer.Token;
 import symbols.Type;
 
 import java.util.List;
 
 public class LoadFunc {
-    public static ExFunction loadFunc(Type t, String pkg, String clazzname, Token fn, List<Para> pl, Dictionary dic, TypeTable typeTable){
+    public static ExFunction loadFunc(Type t, String pkg, String clazzname, Token fn, List<Param> pl, Dictionary dic, TypeTable typeTable){
         ClassLoader loader = ClassLoader.getSystemClassLoader();
 
-        Class clazz = null;
+        Class clazz;
 
         try{
             try {

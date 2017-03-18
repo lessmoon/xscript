@@ -423,7 +423,7 @@ struct Calculator:PaintPad{
  *   |_|_|_|
  */
 
-
+/*
 {
     Graphics g = new Graphics;
     EventPool ep = new EventPool();
@@ -460,9 +460,9 @@ struct Calculator:PaintPad{
        
     }
 
-    g.init(new Calculator("Calculator",122,82,ep,g,scr),82,122);
-    g.transite(new Point(20,10));
-    scr.add(g);
+    //g.init(new Calculator("Calculator",122,82,ep,g,scr),82,122);
+    //g.transite(new Point(20,10));
+    //scr.add(g);
     
     for(int i = 0; i < len;i++){
        switch(i%4){
@@ -481,7 +481,8 @@ struct Calculator:PaintPad{
         break;
        }
     }
-    g.setCenter(new Point(20,10));
-    g.show();
-    g.wait();
-}
+    //g.setCenter(new Point(20,10));
+    //g.show();
+    //g.draw();
+    //g.wait();
+}*/

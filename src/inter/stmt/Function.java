@@ -1,38 +1,41 @@
 package inter.stmt;
 
-import inter.util.Para;
+import inter.util.Param;
 import lexer.Token;
 import symbols.Type;
 
 import java.util.List;
 
 public class Function extends FunctionBasic {
-    public Stmt  stmt;
-    
-    public Function(Token n,Type t,List<Para> p){
+
+    private Stmt body;
+
+    public Function(Token n, Type t, List<Param> p) {
         super(n,t,p);
-        stmt = null;
+        body = null;
     }
 
-    public Function(Token n,Type t,Stmt s,List<Para> p){
+    public Function(Token n, Type t, List<Param> p, Stmt body) {
         super(n,t,p);
-        stmt = s;
+        this.body = body;
     }
 
-    public void init(Token n, Type t, Stmt s, List<Para> p){
-        name = n;
-        type = t;
-        stmt = s;
-        paralist = p;
+    public final void setBody(Stmt body) {
+        this.body = body;
     }
 
-    public void run(){
-        stmt.run();
+    public final Stmt getBody() {
+        return body;
+    }
+
+    @Override
+    public final void run(){
+        body.run();
     }
     
     @Override
     public boolean isCompleted(){
-        return stmt != null;
+        return body != null;
     }
     
 }

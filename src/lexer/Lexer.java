@@ -109,8 +109,9 @@ public class Lexer implements Dictionary {
         list.push(new Info(in, peek, filename, line, offset, path));
     }
 
-    /*
+    /**
      * Save the file name
+     * @param file the file name(relative)
      */
     public void open( String file ) throws IOException {
         /*for the first open*/
@@ -149,7 +150,7 @@ public class Lexer implements Dictionary {
         filename = file;
     }
 
-    /*
+    /**
      * Recover the lexer's info,if the stack is 
      * empty,do nothing
      * Return false if the stack is empty,or true
@@ -173,6 +174,12 @@ public class Lexer implements Dictionary {
         }
     }
 
+    /**
+     * Read new char if present char is c
+     * @param c the condition char
+     * @return if present char is c
+     * @throws IOException check {@linkplain InputStreamReader#read()}
+     */
     private boolean readIf(int c) throws IOException {
         if (peek == c) {
             readch();

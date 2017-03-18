@@ -1,41 +1,35 @@
 package inter.stmt;
 
 import lexer.Token;
-import inter.util.Para;
+import inter.util.Param;
 import symbols.Struct;
 import symbols.Type;
 
 import java.util.List;
 
-public class MemberFunction extends Function {
-    private Struct struct;
-    public MemberFunction(Token n, Type t, List<Para> p, Struct sn){
-        super(n,t,p);
-        struct = sn;
+public class MemberFunction extends StructFunction {
+
+    public MemberFunction(Token n, Type t, List<Param> p, Struct sn) {
+        super(n, t, p, sn);
     }
 
-    public MemberFunction(Token n,Type t,Stmt s,List<Para> p,Struct sn){
-        super(n,t,s,p);
-        struct = sn;
+    public MemberFunction(Token n, Type t, Stmt s, List<Param> p, Struct sn) {
+        super(n, t, p, sn, s);
     }
 
-    public Struct getStruct(){
-        return struct;
-    }
-    
     @Override
     public String getDescription(boolean needStructInfo) {
-        StringBuilder sb = new StringBuilder(type.toString() + " " );
+        StringBuilder sb = new StringBuilder(getType().toString() + " " );
         if(needStructInfo) {
-            sb.append(struct.lexeme).append(".");
+            sb.append(getStruct().lexeme).append(".");
         }
-        sb.append(name).append("(");
+        sb.append(getName()).append("(");
         int i = 1;
-        if(i < paralist.size()){
-            sb.append(paralist.get(i++).toString());
-            while(i < paralist.size() ){
+        if(i < getParamList().size()){
+            sb.append(getParamList().get(i++).toString());
+            while(i < getParamList().size() ){
                 sb.append(",");
-                sb.append(paralist.get(i++).toString());
+                sb.append(getParamList().get(i++).toString());
             }
         }
         sb.append(")");

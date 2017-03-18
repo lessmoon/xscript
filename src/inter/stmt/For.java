@@ -66,7 +66,7 @@ public class For extends Stmt {
         super.appendToSeq(s);
         //begin.appendToSeq(s);
         //new ExprStmt(condition).appendToSeq(s);
-        //stmt.appendToSeq(s);
+        //body.appendToSeq(s);
         //end.appendToSeq(s);
     }
 
@@ -89,7 +89,7 @@ public class For extends Stmt {
             x.emitIntegerReference(Reference<Integer>(s));
             end.emit(x);
             int s = x.getCurrentAddress();
-            stmt.emit(x);
+            body.emit(x);
             int p = x.getCurrentAddress();
             x.emit(JOFF);
             x.emitIntegerOffsetReference(Reference<Integer>(c),p);  

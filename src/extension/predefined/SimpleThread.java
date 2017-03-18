@@ -36,7 +36,6 @@ public class SimpleThread extends Struct {
             thread = new Thread(() -> {
                 try {
                     List<Value> args = new ArrayList<>();
-                    args.add(runnable);
                     Interface.invokeVirtualFunctionOfStruct(runnable, vfPos, args);
                 } catch (RuntimeException ignored) {
 

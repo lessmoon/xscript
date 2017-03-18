@@ -83,10 +83,11 @@ src/inter/stmt/ReturnResult.java
 src/inter/stmt/Seq.java
 src/inter/stmt/Stmt.java
 src/inter/stmt/StructDecl.java
+src/inter/stmt/StructFunction.java
 src/inter/stmt/Switch.java
 src/inter/stmt/While.java
 src/inter/util/Node.java
-src/inter/util/Para.java
+src/inter/util/Param.java
 src/lexer/BigFloat.java
 src/lexer/BigNum.java
 src/lexer/Char.java

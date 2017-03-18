@@ -8,7 +8,7 @@ import inter.expr.StructValue;
 import inter.expr.Value;
 import inter.stmt.InitialFunction;
 import inter.stmt.Stmt;
-import inter.util.Para;
+import inter.util.Param;
 import lexer.Token;
 import lexer.Word;
 import runtime.Dictionary;
@@ -209,23 +209,23 @@ public class PaintPadX extends Struct {
                 onMouseClick = s.getVirtualFunctionPosition(dic.getOrReserve("onMouseClick")),
                 onPress = s.getVirtualFunctionPosition(dic.getOrReserve("onPress")),
                 onClose = s.getVirtualFunctionPosition(dic.getOrReserve("onClose"));
-        List<Para> paraList = new ArrayList<>();
-        paraList.add(new Para(s,Word.This));
-        paraList.add(new Para(Type.Str,dic.getOrReserve("name")));
-        paraList.add(new Para(Type.Int,dic.getOrReserve("width")));
-        paraList.add(new Para(Type.Int,dic.getOrReserve("height")));
+        List<Param> paramList = new ArrayList<>();
+        paramList.add(new Param(s,Word.This));
+        paramList.add(new Param(Type.Str,dic.getOrReserve("name")));
+        paramList.add(new Param(Type.Int,dic.getOrReserve("width")));
+        paramList.add(new Param(Type.Int,dic.getOrReserve("height")));
 
-        s.defineInitialFunction(new InitialFunction(Word.This,new Stmt(){
-            final StackVar arg0 = new StackVar(Word.This,s,0,0);
-            final StackVar arg1 = new StackVar(dic.getOrReserve("name"),Type.Str,0,1);
-            final StackVar arg2 = new StackVar(dic.getOrReserve("width"), Type.Int,0,2);
-            final StackVar arg3 = new StackVar(dic.getOrReserve("height"),Type.Int,0,3);
+        s.defineInitialFunction(new InitialFunction(Word.This, paramList, s, new Stmt(){
+                    final StackVar arg0 = new StackVar(Word.This,s,0,0);
+                    final StackVar arg1 = new StackVar(dic.getOrReserve("name"),Type.Str,0,1);
+                    final StackVar arg2 = new StackVar(dic.getOrReserve("width"), Type.Int,0,2);
+                    final StackVar arg3 = new StackVar(dic.getOrReserve("height"),Type.Int,0,3);
 
-            @Override
-            public void run(){
-                PadProxy.init(arg0.getValue(),arg1.getValue(),arg2.getValue(),arg3.getValue(),onClick,onMouseClick,onClose,onPress);
-            }
-        },paraList,s));
+                    @Override
+                    public void run(){
+                        PadProxy.init(arg0.getValue(),arg1.getValue(),arg2.getValue(),arg3.getValue(),onClick,onMouseClick,onClose,onPress);
+                    }
+                }));
         return s;
     }
 

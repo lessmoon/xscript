@@ -11,8 +11,8 @@ import java.util.List;
 
 public class FunctionInvoke extends Expr {
     private static final boolean IS_DEBUG = false;
-    private FunctionBasic        func;
-    private final List<Expr> para;
+    private FunctionBasic functions;
+    private final List<Expr> arguments;
 
     /*
      * NOTE:(fixed)
@@ -21,61 +21,61 @@ public class FunctionInvoke extends Expr {
      */
     //final Value[]     args;
 
-    public FunctionInvoke(FunctionBasic f,List<Expr> p){
-        super(f.name,f.type);
-        func = f;
-        para = p;
+    public FunctionInvoke(FunctionBasic function, List<Expr> arguments) {
+        super(function.getName(), function.getType());
+        functions = function;
+        this.arguments = arguments;
         check();
-        f.setUsed();
-        //args = new Value[p.size()];
+        function.setUsed();
+        //args = new Value[arguments.size()];
     }
 
-    void check(){
-        if(func.getParaNumber() != para.size())
-            error("function parameters number not match:" + func);
-        for(int i = 0 ; i < func.getParaNumber(); i++){
-            if(!func.getParaInfo(i).type.isCongruentWith(para.get(i).type)){
-                Expr e = para.get(i);
-                Expr f = ConversionFactory.getConversion(e,func.getParaInfo(i).type);
-                assert(f != null);/*won't happen*/
-                para.set(i,f);
+    void check() {
+        if (functions.getParamSize() != arguments.size())
+            error("function parameters number not match:" + functions);
+        for (int i = 0; i < functions.getParamSize(); i++) {
+            if (!functions.getParamInfo(i).type.isCongruentWith(arguments.get(i).type)) {
+                Expr e = arguments.get(i);
+                Expr f = ConversionFactory.getConversion(e, functions.getParamInfo(i).type);
+                assert (f != null);/*won't happen*/
+                arguments.set(i, f);
             }
         }
     }
 
     @Override
-    public boolean isChangeable(){
+    public boolean isChangeable() {
         return true;
     }
 
     @Override
-    public Expr optimize(){
+    public Expr optimize() {
         
         /*may have conversion*/
-        for(int i = 0 ; i < para.size();i++){
-            para.set(i,para.get(i).optimize());
+        for (int i = 0; i < arguments.size(); i++) {
+            arguments.set(i, arguments.get(i).optimize());
         }
         return this;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         int i = 0;
         StringBuilder sb = new StringBuilder();
-        if(func instanceof MemberFunction){
-            sb.append(para.get(i++).toString());
+        if (functions instanceof MemberFunction) {
+            sb.append(arguments.get(i++).toString());
             sb.append(".");
-        } else if(func instanceof InitialFunction){
-            sb.append(((InitialFunction)func).getStruct().toString());
+        } else if (functions instanceof InitialFunction) {
+            sb.append(((InitialFunction) functions).getStruct().toString());
             sb.append(".");
         }
         sb.append(op);
-        sb.append( "(");
-        if(i < para.size()){
-            sb.append(para.get(i++).toString());
-            while(i < para.size() ){
+        sb.append("(");
+        if (i < arguments.size()) {
+            sb.append(arguments.get(i++).toString());
+            while (i < arguments.size()) {
                 sb.append(",");
-                sb.append(para.get(i++).toString());
+                sb.append(arguments.get(i++).toString());
             }
         }
         sb.append(")");
@@ -83,37 +83,37 @@ public class FunctionInvoke extends Expr {
     }
 
     @Override
-    public Value getValue(){
+    public Value getValue() {
         Value result = type.getInitialValue();
-        final Value[] args = new Value[para.size()];
-        for(int i = 0 ; i < args.length;i++){
-            args[i] = para.get(i).getValue();
+        final Value[] args = new Value[arguments.size()];
+        for (int i = 0; i < args.length; i++) {
+            args[i] = arguments.get(i).getValue();
         }
-        
+
         VarTable.pushTop();
         int i = 0;
-        for(Value c : args){
-            
-            if(IS_DEBUG){
-                System.out.println("\narg[" + i + "]{" + para.get(i) + "} = " + c + "<->" + c.hashCode());
+        for (Value c : args) {
+
+            if (IS_DEBUG) {
+                System.out.println("\narg[" + i + "]{" + arguments.get(i) + "} = " + c + "<->" + c.hashCode());
             }
             VarTable.pushVar(c);
             i++;
         }
-        if(IS_DEBUG){
-            System.out.println("\nInvoke " + func.toString() + "{");
+        if (IS_DEBUG) {
+            System.out.println("\nInvoke " + functions.toString() + "{");
         }
-        RunStack.invokeFunction(line, offset, filename, func);
+        RunStack.invokeFunction(line, offset, filename, functions);
         try {
-            func.run();
-            if(IS_DEBUG){
-            System.out.println("\n}End Invoke#2 " + func.toString());
+            functions.run();
+            if (IS_DEBUG) {
+                System.out.println("\n}End Invoke#2 " + functions.toString());
             }
-        } catch(ReturnResult e){
-            if(IS_DEBUG){
-            System.out.println("\n}End Invoke#1 " + func.toString());
+        } catch (ReturnResult e) {
+            if (IS_DEBUG) {
+                System.out.println("\n}End Invoke#1 " + functions.toString());
             }
-            result =  e.value;
+            result = e.value;
         }
         RunStack.endInvokeFunction();
         VarTable.popTop();

@@ -1,34 +1,40 @@
 package inter.stmt;
 
+import inter.util.Param;
 import lexer.Token;
-import inter.util.Para;
 import symbols.Type;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class FunctionBasic extends Stmt {
-    public Type  type;
-    public Token name;
-    public List<Para> paralist;
+    private final Type type;
+
+    public Type getType() {
+        return type;
+    }
+
+    public Token getName() {
+        return name;
+    }
+
+    private final Token name;
+    private final List<Param> paramList;
     private boolean used = false;
-    
-    public FunctionBasic(Token name,Type t,List<Para> p){
-        init(name,t,p);    
-    }
 
-    public void init(Token n,Type t,List<Para> p){
-        name = n;
+    public FunctionBasic(Token name, Type t, List<Param> p) {
+        this.name = name;
         type = t;
-        paralist = new ArrayList<>(p);
+        paramList = new ArrayList<>(p);
     }
 
-    public Para getParaInfo(int i){
-        return paralist.get(i);
+
+    public Param getParamInfo(int i) {
+        return getParamList().get(i);
     }
 
-    public int getParaNumber(){
-        return paralist.size();
+    public int getParamSize() {
+        return getParamList().size();
     }
     
     public abstract void run();
@@ -50,29 +56,21 @@ public abstract class FunctionBasic extends Stmt {
     }
 
     public String getDescription(boolean needStructInfo){
-        StringBuilder sb = new StringBuilder(type.toString());
-        sb.append("  ").append(name).append("(");
+        StringBuilder sb = new StringBuilder(getType().toString());
+        sb.append("  ").append(getName()).append("(");
         int i = 0;
-        if(i < paralist.size()){
-            sb.append(paralist.get(i++).toString());
-            while(i < paralist.size() ){
+        if (i < getParamList().size()) {
+            sb.append(getParamList().get(i++).toString());
+            while (i < getParamList().size()) {
                 sb.append(",");
-                sb.append(paralist.get(i++).toString());
+                sb.append(getParamList().get(i++).toString());
             }
         }
         sb.append(")");
         return sb.toString();
     }
 
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public void setName(Token name) {
-        this.name = name;
-    }
-
-    public void setParalist(List<Para> paralist) {
-        this.paralist = paralist;
+    public List<Param> getParamList() {
+        return paramList;
     }
 }

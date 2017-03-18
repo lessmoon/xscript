@@ -11,7 +11,6 @@ import  "ui/paintpad.xs";
 import  "ui/cyclepaintpad.xs";
 import "rpg/parser.xs";
 
-
 struct ScrollTextOutput{
     PaintPad x;
     int width,height;
@@ -432,7 +431,7 @@ struct JustOnce:Runnable{
     }
 }
 
-
+/*
 {
     println("Test for Thread type");
     JustOnce i = new JustOnce;
@@ -445,7 +444,7 @@ struct JustOnce:Runnable{
     print(end);
     print("join time:"+(end-beg)+"\n");
 }
-
+*/
 real PI = 3.141592654;
 
 def void drawHand(PaintPad p,int v,real theta,int len,int r,int g,int b){
@@ -464,25 +463,38 @@ def void drawClock(PaintPad p,Time t){
         p.addString("" + i,150 + x,150+y);
     }
 
-    drawHand(p,t.hour,((real)t.hour-3) / 12,70,0,0,255);
+    drawHand(p,t.hour,((real)t.hour-3) / 12  + ((real)t.minute)/ 60 / 12 ,70,0,0,255);
     drawHand(p,t.minute,((real)t.minute-15) / 60,110,0,255,0);
     drawHand(p,t.second,((real)t.second-15) / 60,130,255,0,0);
 }
 
 {
-    MyTime t = new MyTime;
-    println(t);
+
+    PaintPad pad = new PaintPad("ClockInXScript",300,300);
     
-    //openPadWithName(300,300,"ClockInXScript");
-    //while(true){
-        //println(t);
-        //getTime(t);
-        //clearPad();
-        //drawClock(t);
-        //paint();
-        //sleep(500);
-    //}
-    
+    Thread t = new Thread(new Runnable(pad){
+        PaintPad p;
+        def this(PaintPad p){
+            this.p = p;
+        }
+        
+        def override void run(){
+            MyTime t = new MyTime;
+            println(t);
+            while(true){
+                println(t);
+                getTime(t);
+                this.p.clear();
+                drawClock(this.p,t);
+                this.p.redraw();
+                sleep(500);
+            }
+        }
+    });
+    pad.show();
+    t.start();
+    pad.wait();
+    t.interrupt();
 }
 
 {
@@ -697,7 +709,7 @@ def void calMap(bool[][] src,bool[][] tar){
     }
 }
 
-def void GameOfLife(int max)
+def void GameOfLife()
 {
     //println("Line " + _line_ + ":" + TILE_WIDTH);
     auto pad = new PaintPad("Game Of Life",WIDTH*TILE_WIDTH+1,HEIGHT*TILE_WIDTH+1);
@@ -724,20 +736,38 @@ def void GameOfLife(int max)
     pad.show();
     sleep(200);
     //println("Line " + _line_ + ":" + TILE_WIDTH);
-    while(max-- > 0){
-        calMap(world1,world2);
-        world = world2;
-        world2 = world1;
-        world1 = world;
-        drawWorld(pad,world);
-        sleep(200);
-    }
+    Thread t = new Thread(new Runnable(world,world1,world2,pad){
+        bool[][] world,world1,world2;
+        PaintPad pad;
+        def this(bool[][] world,bool[][] world1,
+                 bool[][] world2,PaintPad pad){
+            this.world = world;
+            this.world1 = world1;
+            this.world2 = world2;
+            this.pad = pad;
+        }
+    
+        def override void run(){
+            while(true){
+                calMap(this.world1,this.world2);
+                this.world = this.world2;
+                this.world2 = this.world1;
+                this.world1 = this.world;
+                drawWorld(this.pad,this.world);
+                sleep(500);
+            }
+        }
+    });
+    pad.show();
+    t.start();
+    pad.wait();
+    t.interrupt();
     pad.close();
 }
 
 {
     println("Test for Game of Life");
-    GameOfLife(10);
+    GameOfLife();
 }
 
 {
@@ -745,7 +775,9 @@ def void GameOfLife(int max)
     parser p = new parser;
     lexer l = new lexer;
     //print("Enter the function you want to draw:f(x)=");
-    string s = "(x/10-10)*(x/10-20)";
+    string s;
+    s = readString();
+    
     l.init(s);
     p.init(l);
     Var v = p.getVar();
@@ -908,29 +940,43 @@ struct complex{
     println("This code is in file " + _file_ + " at " + _line_ );
     println("Compiler version is " + _version_/100 + "." + _version_%100);
 }
-/*
+
 {
     println("Test for animated painting");
-    auto pad = new PaintPad();
-    setBrushColor(255,0,0);
-    int x,y;
-    for(real off = 0;off < 1;off += 0.01 ){
-        for(real theta = 0; theta <= 3.14 * 2 + 0.01;theta += 0.01){
-            x = theta * 100 + (-314 + 300);
-            y =  - sin(theta + off) * 100 + 240;
-            addPoint(x,y);
+    auto pad = new PaintPad("animated",500,800);
+    pad.setBrushColor(255,0,0);
+    
+    pad.show();
+    Thread t = new Thread(new Runnable(pad){
+        PaintPad pad;
+        def this(PaintPad pad){
+            this.pad = pad;
         }
-        paint();
-        sleep(56);
-        clearPad();
-    }
-    closePad();
+    
+        def override void run(){
+            int x,y;
+            for(real off = 0;;off += 0.01 ){
+                for(real theta = 0; theta <= 3.14 * 2 + 0.01;theta += 0.01){
+                    x = theta * 100 + (-314 + 300);
+                    y =  - sin(theta + off) * 100 + 240;
+                    this.pad.addPoint(x,y);
+                }
+                this.pad.redraw();
+                sleep(56);
+                this.pad.clear();
+            }
+        }
+    });
+    
+    t.start();
+    pad.wait();
+    t.interrupt();
 }
-/*
+
 {
     println("Test for basic painting");
-    
-    setBrushColor(25,25,255);
+    PaintPad pad = new PaintPad("basic",480,600);
+    pad.setBrushColor(25,25,255);
     {
         real x,y;int a = 20,b = 20;
         real x_m,y_m;
@@ -945,17 +991,17 @@ struct complex{
             y += 240;
             y_m += 240;
             if(x < 600 && y < 480 && x > 0 && y > 0){
-                addPoint(x,y);
-                addPoint(x,y_m);
-                addPoint(x_m,y);
-                addPoint(x_m,y_m);
+                pad.addPoint(x,y);
+                pad.addPoint(x,y_m);
+                pad.addPoint(x_m,y);
+                pad.addPoint(x_m,y_m);
             }
         }
     }
   
     /*draw a red heart*/
-    /* 
-    setBrushColor(255,0,0);
+    
+    pad.setBrushColor(255,0,0);
     for (real y = 1.5; y > -1.5; y -= 0.01) {
         real min = 1.5;
         real max = -1.5;
@@ -968,19 +1014,19 @@ struct complex{
                     max = x;
             } else {
                 if(min <= max){
-                    addLine(min*100 + 300  - 100,-y*100 + 240 - 80,max*100 + 300  - 100,-y*100 + 240 - 80);
+                    pad.addLine(min*100 + 300  - 100,-y*100 + 240 - 80,max*100 + 300  - 100,-y*100 + 240 - 80);
                     min = 1.5;
                     max = -15;
                 }
             }
         }
         if(min <= max){
-            addLine(min*100 + 300  - 100,-y*100 + 240 - 80,max*100 + 300  - 100,-y*100 + 240 - 80);
+            pad.addLine(min*100 + 300  - 100,-y*100 + 240 - 80,max*100 + 300  - 100,-y*100 + 240 - 80);
         }
     }
     
-    /*draw a green round*//* 
-    setBrushColor(0,255,0);
+    /*draw a green round*/
+    pad.setBrushColor(0,255,0);
     real r = 100.0;
     for (int y = -r; y < r; y ++ ) {
         int min = r;
@@ -994,26 +1040,26 @@ struct complex{
                     max = x;
             } else {
                 if(min <= max){
-                    addLine(min + 300 + 100 ,-y + 240 + 100,max + 300 + 100,-y + 240 + 100);
+                    pad.addLine(min + 300 + 100 ,-y + 240 + 100,max + 300 + 100,-y + 240 + 100);
                     min = r;
                     max = -r;
                 }
             }
         }
         if(min <= max){
-            addLine(min + 300 + 100 ,-y + 240 + 100,max + 300 + 100,-y + 240 + 100);
+            pad.addLine(min + 300 + 100 ,-y + 240 + 100,max + 300 + 100,-y + 240 + 100);
         }
     }
     
     
-    setBrushColor(0,0,0);
-    addLine(0,240,600,240);
-    addLine(300,0,300,480);
-    openPad(600,480);
+    pad.setBrushColor(0,0,0);
+    pad.addLine(0,240,600,240);
+    pad.addLine(300,0,300,480);
+    pad.show();
 
-    closePad();
+    pad.wait();
 }
-*/
+
 {
     /*test code for list union*/
     list a = create_list() ;

@@ -24,7 +24,7 @@ public class If extends Stmt{
     @Override
     public Stmt optimize(){
         stmt = stmt.optimize();
-        if(expr == Value.False){/*constant False,it will never happen to run the stmt*/
+        if(expr == Value.False){/*constant False,it will never happen to run the body*/
             return Stmt.Null;
         } else if(expr == Value.True){
             return stmt;
@@ -45,7 +45,7 @@ public class If extends Stmt{
             x.emit(J_OFF);
             int x = x.getCurrentAddress();
             x.emitIntegerOffsetReference(after,x);
-            stmt.emitBinaryCode(x);
+            body.emitBinaryCode(x);
             int after = x.getCurrentAddress();
          }
     */ 

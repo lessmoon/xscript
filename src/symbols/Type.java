@@ -21,8 +21,8 @@ public class Type extends Word {
     }
 
     /**
-     * Two type are congruent with each other iff:
-     *     1.they are totally same or
+     * Two type are congruent with each other iff:<br/>
+     *     1.they are totally same or<br/>
      *     2.they are array types and they have congruent component types
      * @param type the type to compare with
      * @return if {@param type} is congruent with this type
@@ -32,7 +32,7 @@ public class Type extends Word {
     }
 
     /**
-     *  A type is not built-in iff it can't be used as reference
+     *  A type is not built-in iff it can't be used as reference<br/>
      *  There are two types which are built-in:{@link Struct},{@link #Null} and {@link Array}
      *  @return if the type is built-in
      */
@@ -41,7 +41,7 @@ public class Type extends Word {
     }
 
     /**
-     *  Every type needs an initial value in case that undefined behaviors.
+     *  Every type needs an initial value in case that undefined behaviors.<br/>
      *  That is "declaration is initialization"
      * @return the initial value of a type
      */
@@ -87,16 +87,16 @@ public class Type extends Word {
 
 
     /**
-     * If T1 and T2 are both numerical,bool or string ,the max type of T1 and T2 is
-     *    1.T1 if T1 == T2
-     *    2.In two partial ordering relations(= for the same types)
-     *                  / real
-     *         bigreal >        > int > char
-     *                  \ bigint
-     *       the minimum type can >= T1 and T2 in both relations.
-     *       e.g: max(string,string) = string,
-     *            max(int,real) = real
-     *            max(bigint,real) = bigreal
+     * If T1 and T2 are both numerical,bool or string ,the max type of T1 and T2 is<br/>
+     *    1.T1 if T1 == T2<br/>
+     *    2.In two partial ordering relations(= for the same types)<br/>
+     *                  / real<br/>
+     *         bigreal >        > int > char<br/>
+     *                  \ bigint<br/>
+     *       the minimum type can >= T1 and T2 in both relations.<br/>
+     *       e.g: max(string,string) = string,<br/>
+     *            max(int,real) = real<br/>
+     *            max(bigint,real) = bigreal<br/>
      * @param type1 the left type
      * @param type2 the right type
      * @return the max type or null if either {@param type1} or {@param type2} is not numeric,bool or string

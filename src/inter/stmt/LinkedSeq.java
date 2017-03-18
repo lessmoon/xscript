@@ -84,7 +84,6 @@ public class LinkedSeq extends Stmt {
                 return this;
         }
     }
-
     @Override
     public boolean isLastStmt() {
         return stmts.stream().anyMatch(Stmt::isLastStmt);

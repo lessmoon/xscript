@@ -32,7 +32,7 @@ public class Struct extends Type implements Iterable<StructVariable>{
     private String firstInstantiatedFile = "";
     private boolean closed = false;
     private boolean needCopyBase;
-    private Value[] instanceMemoryTemplate;
+    private  Value[] instanceMemoryTemplate;
     private int firstInstantiatedIndex;
 
     public Struct(Token name){
@@ -91,14 +91,14 @@ public class Struct extends Type implements Iterable<StructVariable>{
     }
 
     /**
-     * Create memory space for new instance of this struct,each variable has been initialized
-     * The memory map is arranged order by the defined position as following:
-     *      |------------------------|
-     *      |     Base Struct Map    |
-     *      |------------------------|
-     *      |  1st defined variable  |
-     *      |  ....................  |
-     *      |  nth defined variable  |
+     * Create memory space for new instance of this struct,each variable has been initialized<br/>
+     * The memory map is arranged order by the defined position as following:<br/>
+     *       _________________________<br/>
+     *      |     Base Struct Map    |<br/>
+     *      |________________________|<br/>
+     *      |  1st defined variable  |<br/>
+     *      |________________________|<br/>
+     *      |  nth defined variable  |<br/>
      *      |________________________|
      * @return the instance memory created
      */
@@ -113,8 +113,8 @@ public class Struct extends Type implements Iterable<StructVariable>{
         return instanceMemoryTemplate.clone();
     }
     /**
-     * A struct is closed iff:
-     *   1.Its base struct is closed
+     * A struct is closed iff:<br/>
+     *   1.Its base struct is closed<br/>
      *   2.All of its variables and its functions has been DECLARED(not DEFINED).
      */
     public boolean isClosed() {
@@ -122,7 +122,7 @@ public class Struct extends Type implements Iterable<StructVariable>{
     }
 
     /**
-     * Check if this struct still need copy base struct's variables table's information
+     * Check if this struct still need copy base struct's variables table's information<br/>
      *  Because the base struct may not be closed {@see #isClosed} when this struct is pre-declared
      * @return if this struct need copy base
      */
@@ -138,8 +138,8 @@ public class Struct extends Type implements Iterable<StructVariable>{
     }
 
     /**
-     * A struct is completed iff
-     *  1.it has no initial function or its initial function is defined already
+     * A struct is completed iff<br/>
+     *  1.it has no initial function or its initial function is defined already<br/>
      *  2. it has no virtual functions or its all virtual function has been defined
      * @return if the struct is completed
      */
@@ -148,11 +148,11 @@ public class Struct extends Type implements Iterable<StructVariable>{
     }
 
     /**
-     * Struct D is child of struct B iff
-     *      1.D inherits B directly
+     * Struct D is child of struct B iff<br/>
+     *      1.D inherits B directly<br/>
      *      2.Base struct of D is child of struct B
      * @param struct the struct type to compare with
-     * @return true if the struct is a child struct of {@param struct}
+     * @return true if the struct is a child struct of {@code struct}
      */
     public boolean isChildOf(Struct struct){
         Struct f = this.baseStruct;
@@ -249,9 +249,9 @@ public class Struct extends Type implements Iterable<StructVariable>{
     }
 
     /**
-     * Declare a virtual function overriding,it will handle most errors in following situation:
-     *  1.if not found the virtual function declaration
-     *  2.if it is replicated declaration
+     * Declare a virtual function overriding,it will handle most errors in following situation:<br/>
+     *  1.if not found the virtual function declaration<br/>
+     *  2.if it is replicated declaration<br/>
      *  3.if its signature is not the same with declaration(parameters,return type)
      * @param name the function name
      * @param mf then function body
@@ -269,17 +269,17 @@ public class Struct extends Type implements Iterable<StructVariable>{
          * Redeclared!
          */
         if(f != baseStruct.getVirtualTable().getVirtualFunction(p)){
-            mf.error("virtual function `" + this.lexeme + "." + f.name + "':overriding has been declared before");
+            mf.error("virtual function `" + this.lexeme + "." + f.getName() + "':overriding has been declared before");
         }
-        if(f.getParaNumber() != mf.getParaNumber()){
-            mf.error("virtual function `" + this.lexeme + "." + f.name + "':parameters number should be "+ f.getParaNumber() + ",but found " + mf.getParaNumber());
+        if(f.getParamSize() != mf.getParamSize()){
+            mf.error("virtual function `" + this.lexeme + "." + f.getName() + "':parameters number should be "+ f.getParamSize() + ",but found " + mf.getParamSize());
         }
-        if(!f.type.isCongruentWith(mf.type)){
-            mf.error("virtual function `" + this.lexeme + "." + f.name + "':return type should be `" + f.type + "',but found `" + mf.type +"'");
+        if(!f.getType().isCongruentWith(mf.getType())){
+            mf.error("virtual function `" + this.lexeme + "." + f.getName() + "':return type should be `" + f.getType() + "',but found `" + mf.getType() +"'");
         }
-        for(int i = 1; i < f.getParaNumber() ;i++ ){
-            if(!f.getParaInfo(i).type.isCongruentWith(mf.getParaInfo(i).type)){
-                mf.error("virtual function `" + this.lexeme + "." + f.name + "':parameter [" + i + "]" + " type is `" +  f.getParaInfo(i).type + "',but found `" +  mf.getParaInfo(i).type + "'");
+        for(int i = 1; i < f.getParamSize() ; i++ ){
+            if(!f.getParamInfo(i).type.isCongruentWith(mf.getParamInfo(i).type)){
+                mf.error("virtual function `" + this.lexeme + "." + f.getName() + "':parameter [" + i + "]" + " type is `" +  f.getParamInfo(i).type + "',but found `" +  mf.getParamInfo(i).type + "'");
             }
         }
         virtualTable.overrideVirtualFunction(p.generation,p.index,mf);
@@ -310,7 +310,7 @@ public class Struct extends Type implements Iterable<StructVariable>{
     }
 
     /**
-     * Set operand overloading by op
+     * Set operand overloading by op<br/>
      * Handled most of errors
      * @param op the operand name
      * @param f the function bind to this op
@@ -324,16 +324,16 @@ public class Struct extends Type implements Iterable<StructVariable>{
         //arith operand
         case '+':case '-':case '*':case '/':case '%':
             /*parameter is at least two(this point,and another struct)*/
-            if(f.paralist.size() != 2){
-                f.error("Operand `" + op  + "' overloading function should just use one parameters,but found `" + f.paralist.size() + "'");
+            if(f.getParamList().size() != 2){
+                f.error("Operand `" + op  + "' overloading function should just use one parameters,but found `" + f.getParamList().size() + "'");
             }
             /*should be the same as the struct*/
-            if(!f.paralist.get(1).type.isCongruentWith(this)){
-                f.error("Operand `" + op  + "' overloading function's parameter should be `" + this + "',but found `" + f.paralist.get(1).type + "'");
+            if(!f.getParamList().get(1).type.isCongruentWith(this)){
+                f.error("Operand `" + op  + "' overloading function's parameter should be `" + this + "',but found `" + f.getParamList().get(1).type + "'");
             }
             /*return type should be the same as the struct*/
-            if(f.type != this){
-                f.error("Operand `" + op + "' overloading' return type should be `"+ this + "',but found `" + f.type + "'");
+            if(f.getType() != this){
+                f.error("Operand `" + op + "' overloading' return type should be `"+ this + "',but found `" + f.getType() + "'");
             }
             break;
         
@@ -360,16 +360,16 @@ public class Struct extends Type implements Iterable<StructVariable>{
         case '<':
         case '>':
             /*parameter is at least two(this point,and another struct)*/
-            if(f.paralist.size() != 2){
-                f.error("Operand `" + op  + "' overloading function should just use one parameters,but found `" + f.paralist.size() + "'");
+            if(f.getParamList().size() != 2){
+                f.error("Operand `" + op  + "' overloading function should just use one parameters,but found `" + f.getParamList().size() + "'");
             }
             /*should be the same as the struct*/
-            if(f.paralist.get(1).type != this){
-                f.error("Operand `" + op  + "' overloading function's parameter should be `" + this + "',but found `" + f.paralist.get(1).type + "'");
+            if(f.getParamList().get(1).type != this){
+                f.error("Operand `" + op  + "' overloading function's parameter should be `" + this + "',but found `" + f.getParamList().get(1).type + "'");
             }
             /*return type should be the same as the struct*/
-            if(f.type != Type.Bool){
-                f.error("Operand `" + op + "' overloading' return type should be `"+ Type.Bool + "',but found `" + f.type + "'");
+            if(f.getType() != Type.Bool){
+                f.error("Operand `" + op + "' overloading' return type should be `"+ Type.Bool + "',but found `" + f.getType() + "'");
             }
             break;
         case Tag.BASIC:
@@ -378,13 +378,13 @@ public class Struct extends Type implements Iterable<StructVariable>{
             } else if(op instanceof Struct && this.isChildOf((Struct)op)){
                 f.error("Type-conversion overloading can't be used for base type conversion:\nnote:" + this + "->" + op);
             }
-            
-            if(f.paralist.size() != 1){
+
+            if(f.getParamList().size() != 1){
                 f.error("Type-conversion overloading operand `" + op + "' shouldn't have any parameter");
             }
             /*return type should be the same as the op*/
-            if(!f.type.isCongruentWith((Type)op)){
-                f.error("Type-conversion overloading(`" + op + "') function should return the same type,but found `" + f.type + "'");
+            if(!f.getType().isCongruentWith((Type)op)){
+                f.error("Type-conversion overloading(`" + op + "') function should return the same type,but found `" + f.getType() + "'");
             }
             
             break;
@@ -392,7 +392,7 @@ public class Struct extends Type implements Iterable<StructVariable>{
             f.error("Can't overload operand `" + op + "'");
             break;
         }
-        return overloadFunctions.put(op,f.name) == null;
+        return overloadFunctions.put(op, f.getName()) == null;
     }
 
     /**
@@ -489,7 +489,7 @@ public class Struct extends Type implements Iterable<StructVariable>{
         }
 
         if(initFunction != null){
-            stringBuilder.append("    //init function\n");
+            stringBuilder.append("    //setBody function\n");
             stringBuilder.append("    def ").append(initFunction.getDescription(false)).append(";\n");
         }
         if (!functionMap.isEmpty()) {

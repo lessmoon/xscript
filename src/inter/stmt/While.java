@@ -39,7 +39,7 @@ public class While extends Stmt{
     @Override
     public Stmt optimize(){
         stmt = stmt.optimize();
-        if(expr == Value.False){/*constant False,it will never happen to run the stmt*/
+        if(expr == Value.False){/*constant False,it will never happen to run the body*/
             return Stmt.Null;
         }
         return this;
