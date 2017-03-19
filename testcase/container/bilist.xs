@@ -1,4 +1,5 @@
 import "content.xs";
+import "sequence.xs";
 import "../lib/utils.xs";
 
 struct binode{
@@ -18,7 +19,7 @@ struct binode{
     }
 }
 
-struct bilist{
+struct List:Sequence{
     binode head;
     binode tail;
 
@@ -38,8 +39,43 @@ struct bilist{
         this.tail.prev.prev.next = this.tail.prev;
     }
 
+    def override void add(Content value){
+        this.push_back(value);
+    }
+    
     def binode front(){
         return this.head.next;
+    }
+
+    def override bool isEmpty(){
+        return this.head.next == this.tail;
+    }
+    
+    def override int size(){
+        int c = 0;
+        for(auto i = this.head.next;i.next != null;i = i.next,c++);
+        return c;
+    }
+    
+    def override Iterator iterator(){
+        return new Iterator(this.head){
+            binode node;
+            def this(binode inode){
+                this.node = inode;
+            }
+            
+            def override void next(){
+                this.node = this.node.next;
+            }
+            
+            def override Content getValue(){
+                return this.node.value;
+            }
+            
+            def override bool hasNext(){
+                return this.node.next.next != null;
+            }
+        };
     }
     
     def binode back(){
@@ -69,4 +105,14 @@ struct bilist{
         }
         sb.append(" ]");
     }
+}
+
+import "collector.xs";
+
+def Collector toList(){
+    return new Collector(){
+        def this(){
+            super(new List());
+        }
+    };
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 
 public abstract class Function {
-    public abstract Value run(List<Value> paras);
+    public abstract Value run(List<Value> args);
     /**
      * Invoked while before importing the model
      * Doing nothing by default.

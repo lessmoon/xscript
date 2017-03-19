@@ -21,8 +21,8 @@ public class SimpleFileOutputStream extends Struct{
     public static class SimpleFileOutputStreamProxy{
         FileOutputStream fileOutputStream;
 
-        @Init(args = {"#.SimpleFile","bool"})
-        @StructMethod(args = {"#.SimpleFile","bool"})
+        @Init(param = {"#.SimpleFile","bool"})
+        @StructMethod(param = {"#.SimpleFile","bool"})
         public void open(StructValue file,Value append) throws IOException {
             if(fileOutputStream != null){
                 fileOutputStream.close();
@@ -31,7 +31,7 @@ public class SimpleFileOutputStream extends Struct{
             fileOutputStream  = new FileOutputStream(((SimpleFile.SimpleFileProxy) file.getExtension()).file,append.valueAs(Boolean.class));
         }
 
-        @StructMethod(args = {"int"})
+        @StructMethod(param = {"int"})
         public void writeInt(Value value) throws IOException {
             fileOutputStream.write(value.valueAs(Integer.class));
         }

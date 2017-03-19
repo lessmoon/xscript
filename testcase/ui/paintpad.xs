@@ -422,7 +422,6 @@ struct Calculator:PaintPad{
  *   |_|_|_|
  *   |_|_|_|
  */
-
 /*
 {
     Graphics g = new Graphics;

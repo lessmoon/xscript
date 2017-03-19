@@ -15,8 +15,8 @@ import symbols.Type;
 import java.io.IOException;
 
 public class Main{
-    public static final int     MAJOR_VERSION       = 1;
-    public static final int     MINOR_VERSION       = 9;
+    public static final int     MAJOR_VERSION       = 2;
+    public static final int     MINOR_VERSION       = 0;
 
     private static void usage(){
         System.out.println(
@@ -31,6 +31,7 @@ public class Main{
             "path       The source file path you want to execute\n"+
             "           There should be only one source file\n"
         );
+
     }
     
     public static void main(String[] args)throws IOException{

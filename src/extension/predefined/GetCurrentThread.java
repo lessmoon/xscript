@@ -17,7 +17,7 @@ public class GetCurrentThread extends Function {
     Struct threadType;
 
     @Override
-    public Value run(List<Value> paras) {
+    public Value run(List<Value> args) {
         StructValue s = new StructValue(threadType);
         SimpleThread.SimpleThreadProxy t = new SimpleThread.SimpleThreadProxy();
         t.thread = Thread.currentThread();

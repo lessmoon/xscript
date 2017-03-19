@@ -21,8 +21,8 @@ public class SimpleFileInputStream extends Struct {
     public static class SimpleFileInputStreamProxy {
         FileInputStream fileInputStream;
 
-        @StructMethod(args = {"#extension.system.SimpleFile"})
-        @Init(args = {"#extension.system.SimpleFile"})
+        @StructMethod(param = {"#extension.system.SimpleFile"})
+        @Init(param = {"#extension.system.SimpleFile"})
         public void open(StructValue file) throws IOException {
             if (fileInputStream != null) {
                 fileInputStream.close();
@@ -45,7 +45,7 @@ public class SimpleFileInputStream extends Struct {
             return new Value(fileInputStream.available());
         }
 
-        @StructMethod(ret = "bigint", args = "bigint")
+        @StructMethod(ret = "bigint", param = "bigint")
         public Value skip(Value size) throws IOException {
             return new Value(BigInteger.valueOf(fileInputStream.skip(size.valueAs(BigInteger.class).longValue())));
         }

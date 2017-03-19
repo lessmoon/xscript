@@ -368,10 +368,12 @@ class DownCastConversion extends Conversion {
     @Override
     public Value getValue(){
         Value v = e.getValue();
-        assert(v.type instanceof Struct);
+        if (v != Value.Null) {
+            assert (v.type instanceof Struct);
         /*runtime check if it is ok to downcast*/
-        if(!tar.isCongruentWith(v.type) && !((Struct)(v.type)).isChildOf(tar)){
-            error("can't cast from `" + v.type + "' to `" + tar + "'");
+            if (!tar.isCongruentWith(v.type) && !((Struct) (v.type)).isChildOf(tar)) {
+                error("can't cast from `" + v.type + "' to `" + tar + "'");
+            }
         }
         return v;
     }

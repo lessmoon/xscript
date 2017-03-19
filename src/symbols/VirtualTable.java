@@ -53,14 +53,18 @@ public class VirtualTable {
     }
 
     public boolean isCompleted(){
+        return findFirstUncompletedFunction() == null;
+    }
+
+    public FunctionBasic findFirstUncompletedFunction(){
         for(List<FunctionBasic> l : vtable){
             for(FunctionBasic m : l){
                 if(!m.isCompleted()){
-                    return false;
+                    return m;
                 }
             }
         }
-        return true;
+        return null;
     }
 
     public void copy(VirtualTable t){

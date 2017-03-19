@@ -13,6 +13,7 @@ native<extension.predefined>{
         def bool interrupt();
         def bigint getThreadId();
         def void join(int time);
+        def bool equals(Thread t);
     };
 
     "GetCurrentThread": Thread getCurrentThread();
@@ -258,7 +259,7 @@ struct ConcurrentQueue {
     AtomicInteger full;
     AtomicInteger empty;
     MutexLock     lock;
-    bilist        list;
+    List        list;
     
     def this(){
         this.full = new AtomicInteger();
@@ -267,7 +268,7 @@ struct ConcurrentQueue {
     
         this.full.set(100);
         this.empty.set(0);
-        this.list = new bilist();
+        this.list = new List();
     }
     
     def void put(Content i){

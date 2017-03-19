@@ -6,7 +6,7 @@ import  "math/Ratio.xs";
 import  "parser/parser.xs";
 import  "container/darray.xs";
 import  "container/hashmap.xs";
-import  "container/list.xs";
+import  "container/priorityqueue.xs";
 import  "ui/paintpad.xs";
 import  "ui/cyclepaintpad.xs";
 import "rpg/parser.xs";
@@ -15,14 +15,14 @@ struct ScrollTextOutput{
     PaintPad x;
     int width,height;
     int[] ids;
-    bilist contents;
+    List contents;
 
     int line;
     
     def this(int width_tile,int height_tile){
         this.width = width_tile;
         this.height = height_tile;
-        this.contents = new bilist();
+        this.contents = new List();
         this.x = new PaintPad("XLand",16*height_tile+20,8*width_tile+20);
         this.ids = new int[height_tile];
         for(int i = 0; i < height_tile;i++){
@@ -141,7 +141,6 @@ struct MyPaintPad:PaintPad{
     def this(){
         super("test",200,200);
         Font f = super.getFont();
-        println(f.getFontName() + " : end");
     }
     
     def override void onClick(int bid){
@@ -228,13 +227,6 @@ struct Game : CyclePaintPad {
     }
 }
 
-{
-    auto game = new Game();
-    game.open();
-    game.start();
-    game.wait();
-}
-
 struct baseA{
     int id;
     
@@ -267,13 +259,6 @@ struct deriveC:baseB{
         return "baseC:" + super.who();
     }
 }
-
-{
-    baseA x = new deriveC(1);
-    
-    println(x);    
-}
-
 
 struct MyXPaintPad:PaintPad{
     int lastx,lasty;
@@ -350,34 +335,6 @@ struct PrintNumber : Runnable {
     }
 }
 
-{
-    Thread t1 = new Thread(new PrintNumber(1));
-    Thread t2 = new Thread(new PrintNumber(2));
-    Thread t3 = new Thread(new PrintNumber(3));
-    t1.start();
-    t2.start();
-    t3.start();
-    int i =0;
-    while(true){
-        println(queue.pop());
-        if(i ++ == 20){
-            t1.interrupt();
-        }
-        if(i > 99){
-            break;
-        }
-    }
-}
-
-{
-   HashMap hm = new HashMap();
-   for(int i = 0; i < 20;i++){
-        hm.set(new StringHashContent(""+rand()),new IntContent(rand()));
-        println("" + i + "\n" + hm);
-   }
-}
-
-
 
 
 def void f2(int b);
@@ -397,18 +354,6 @@ def void f2(int b){
     }
 }
 
-struct llist{
-    int size;
-    def int getSize();
-    def bool isEmpty(){
-        return this.getSize() == 0;
-    }
-}
-
-def int llist.getSize(){
-    return this.size;
-}
-
 {
     int x = time();
     println("Random seed:" + x);
@@ -419,6 +364,66 @@ def int llist.getSize(){
     print("------------------\n");
     print("+   Test Begin   +\n");
     print("------------------\n");
+}
+
+{
+    println("Test for UI the Game");
+    auto game = new Game();
+    game.open();
+    game.start();
+    game.wait();
+}
+
+{
+    println("Test for Anonymous Inner Struct");
+    Sequence x = new List();
+    for(int i = 0;i < 100;i++){
+        x.add(new IntContent(rand()%100));
+    }
+    x.stream().filter(new Consumer{
+        def override Content apply(Content i){
+           return new BoolContent((((IntContent)i).val % 3) == 0);
+        }
+    }).map(new Consumer{
+        def override Content apply(Content i){
+            return new IntContent(((IntContent)i).val *3 );           
+        }
+    }).forEach(new Consumer{
+        def override Content apply(Content i){
+            println( " " + i );
+            return null;
+        }
+    });
+}
+
+{
+
+    println("Test for multi thread");
+    Thread t1 = new Thread(new PrintNumber(1));
+    Thread t2 = new Thread(new PrintNumber(2));
+    Thread t3 = new Thread(new PrintNumber(3));
+    t1.start();
+    t2.start();
+    t3.start();
+    int i =0;
+    while(true){
+        println(queue.pop());
+        if(i ++ == 20){
+            t1.interrupt();
+        }
+        if(i > 99){
+            break;
+        }
+    }
+}
+
+{
+   println("Test for HashMap");
+   HashMap hm = new HashMap();
+   for(int i = 0; i < 20;i++){
+        hm.set(new StringHashContent(""+rand()),new IntContent(rand()));
+        println("" + i + "\n" + hm);
+   }
 }
 
 struct JustOnce:Runnable{
@@ -491,6 +496,7 @@ def void drawClock(PaintPad p,Time t){
             }
         }
     });
+    println("Test UI clock");
     pad.show();
     t.start();
     pad.wait();
@@ -1060,29 +1066,6 @@ struct complex{
     pad.wait();
 }
 
-{
-    /*test code for list union*/
-    list a = create_list() ;
-    //a.init();
-    list b = create_list() ;
-    /*b.init();*/
-    int size = 7;
-    for(int i = 0;i < size ;i++){
-        push_back(a,rand()%31);
-        push_back(b,rand()%31);
-    }
-    println("Test for struct");
-    print("Generating Test Data\n");
-    print("a=");println(list_toString(a));
-    print("b=");println(list_toString(b));
-    
-    print("a U b=");println(list_toString(union_list(a,b)));
-    print("SORT\n");
-    print("sort(a)=\n");
-
-    println(list_toString(qlsort(a,0)));
-}
-
 struct CORD{
     real x;
     real y;
@@ -1096,8 +1079,6 @@ struct CORD{
     }
 }
 
-
-
 {
     println("Test for member functions");
     srand(time());
@@ -1108,9 +1089,6 @@ struct CORD{
     o.init(rand()%25,rand()%25);
     println(o.toString());
 }
-
-
-/*NEEDTEST*/
 
 {
     println("Test for dynamic array sizeof");
@@ -1194,26 +1172,6 @@ def int readint(){
     getchar();
     getchar();
 }
-
-
-/*
-{
-    /*test code for list*/
-/*    println("Test for list");
-    list l ;
-    l.init();
-    srand(time());
-    int size = rand()%50;
-    for(size;size > 0;size--){
-        l.push_front(rand()%9);
-    }
-    println("Original array:");
-    print_list(l);
-    l = qlsort(l);
-    println("Sorted array:");
-    //print_list(l);
-    //print( qlsort(l) + "\n" );
-}*/
 
 
 struct tree_node{

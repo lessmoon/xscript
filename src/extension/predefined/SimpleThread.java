@@ -29,7 +29,7 @@ public class SimpleThread extends Struct {
         final static Position vfPos = new Position(0, 0);
         Thread thread;
 
-        @Init(args = "#.SimpleRunnable")
+        @Init(param = "#.SimpleRunnable")
         public void init(Value r) {
             StructValue runnable = (StructValue) r;
 
@@ -43,7 +43,13 @@ public class SimpleThread extends Struct {
             });
         }
 
-        @StructMethod(args = {"string"})
+        @StructMethod(ret ="bool", param ="$")
+        public Value equals(StructValue r){
+            SimpleThreadProxy ext = (SimpleThreadProxy) r.getExtension();
+            return Value.valueOf(ext.thread.equals(this.thread));
+        }
+        
+        @StructMethod(param = {"string"})
         public void setName(Value name) {
             thread.setName(name.valueAs(String.class));
         }
@@ -68,7 +74,7 @@ public class SimpleThread extends Struct {
             return Value.True;
         }
 
-        @StructMethod(args = "int")
+        @StructMethod(param = "int")
         public Value join(Value time) {
             try {
                 thread.join(time.valueAs(Integer.class));

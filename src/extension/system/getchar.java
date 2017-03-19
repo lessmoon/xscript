@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class getchar extends Function {
-    public Value run(List<Value> paras){
+    public Value run(List<Value> args){
         try{
             return new Value(System.in.read());
         } catch(IOException e){

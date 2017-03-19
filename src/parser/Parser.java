@@ -260,8 +260,9 @@ public class Parser implements TypeTable {
                 continue;
             }
             Struct st = (Struct) (info.getValue());
-            if (st.isInstantiated() && !st.isCompleted()) {
-                error("`" + info.getValue() + "' used but not completed ", st.getFirstInstantiatedLine(),st.getFirstInstantiatedIndex(), st.getFirstInstantiatedFile());
+            FunctionBasic f ;
+            if (st.isInstantiated() && (f=st.getFirstUncompletedFunction()) != null) {
+                error("`" + info.getValue() + "' instantiated but not completed:"+f, st.getFirstInstantiatedLine(),st.getFirstInstantiatedIndex(), st.getFirstInstantiatedFile());
             }
         }
     }
@@ -528,7 +529,7 @@ public class Parser implements TypeTable {
             Token op = null;
             if (check('@')) {
                 if (look.tag == Tag.ID) {
-                    op = getType(look);
+                    op = getType(copymove());
                     if (op == null) {
                         error("type `" + look + "' not found");
                         return;
@@ -1114,7 +1115,14 @@ public class Parser implements TypeTable {
         match(';');
         Expr e2 = (look.tag == ';') ? Value.True : expr();
         match(';');
-        Stmt s3 = (look.tag == ')') ? Stmt.Null : new ExprStmt(expr());
+
+        LinkedSeq s3 = new LinkedSeq();
+
+        if (look.tag != ')') {
+            do {
+                s3.append(new ExprStmt(expr()));
+            } while (check(','));
+        }
         match(')');
         Stmt s = closure();
         top = savedTop;
@@ -1832,8 +1840,9 @@ public class Parser implements TypeTable {
         if(dStruct.getInitialFunction() == null){
             dStruct.defineInitialFunction(base.getInitialFunction());
         }
-        if (!dStruct.isCompleted()) {
-            error("Anonymous inner struct of `" + base + "' is not completed");
+        FunctionBasic f ;
+        if ((f = dStruct.getFirstUncompletedFunction()) != null) {
+            error("Anonymous inner struct of `" + base + "' is not completed:" + f);
         }
         //put the functions
         assert (null == defType(dStruct.getName(), dStruct));

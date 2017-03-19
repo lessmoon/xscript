@@ -33,33 +33,33 @@ public class StringBufferX extends Struct{
         }
         
         @PassThisReference
-        @StructMethod(args={"string"},ret = "$")
+        @StructMethod(param ={"string"},ret = "$")
         public StructValue append(StructValue _this, Value c){
             sb.append(c.valueAs(String.class));
             return _this;
         }
 
-        @StructMethod(args = {"int"})
+        @StructMethod(param = {"int"})
         public void reserve(Value c){
             sb.ensureCapacity(c.valueAs(int.class));
         }
 
         @PassThisReference
-        @StructMethod(args={"char"},ret = "$")
+        @StructMethod(param ={"char"},ret = "$")
         public StructValue appendCharacter(StructValue _this,Value c){
             sb.append(c.valueAs(Character.class));
             return _this;
         }
 
         @PassThisReference
-        @StructMethod(args={"int","int"},ret = "$")
+        @StructMethod(param ={"int","int"},ret = "$")
         public StructValue delete(StructValue _this,Value beg, Value end){
             sb.delete(beg.valueAs(Integer.class),end.valueAs(Integer.class));
             return _this;
         }
 
         @PassThisReference
-        @StructMethod(args={"int","string"},ret="$")
+        @StructMethod(param ={"int","string"},ret="$")
         public StructValue insert(StructValue _this,Value beg, Value str){
             sb.insert(beg.valueAs(Integer.class),str.valueAs(String.class));
             return _this;
@@ -71,7 +71,7 @@ public class StringBufferX extends Struct{
         }
 
         @PassThisReference
-        @StructMethod(args={"int","char"},ret="$")
+        @StructMethod(param ={"int","char"},ret="$")
         public StructValue setCharAt(StructValue _this,Value i, Value c){
             sb.setCharAt(i.valueAs(Integer.class),c.valueAs(Character.class));
             return _this;

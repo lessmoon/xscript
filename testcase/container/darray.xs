@@ -1,6 +1,7 @@
 import"content.xs";
+import"sequence.xs";
 
-struct DynamicArray {
+struct DynamicArray : Sequence{
     int capcity;
     int size;
     Content[] content;
@@ -17,11 +18,45 @@ struct DynamicArray {
     def void clear(){
         this.size = 0;
     }
-    def int size(){
+    
+    def override void add(Content c){
+        this.push_back(c);
+    }
+
+    def override Iterator iterator(){
+        return new Iterator(this){
+            int idx;
+            DynamicArray darray;
+            def this(DynamicArray darray){
+                this.darray = darray;
+                this.idx = -1;
+            }
+            
+            def override void next(){
+                if(this.idx < this.darray.size){
+                    this.idx ++;
+                }
+            }
+            
+            def override bool hasNext(){
+                return this.idx < this.darray.size - 1;
+            }
+            
+            def override Content getValue(){
+                return this.darray.get(this.idx);
+            }
+        };
+    }
+    
+    def override int size(){
         return this.size;
     }
 
     def bool empty(){
+        return this.size == 0;
+    }
+
+    def override bool isEmpty(){
         return this.size == 0;
     }
     
@@ -86,4 +121,14 @@ def void DynamicArray.reset_capcity(int c){
     this.size = min;
     this.capcity = c;
     this.content = array;
+}
+
+import "collector.xs";
+
+def Collector toArray(){
+    return new Collector(){
+        def this(){
+            super(new DynamicArray(10));
+        }
+    };
 }

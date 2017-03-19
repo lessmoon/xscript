@@ -222,7 +222,7 @@ public class ExtensionStructHelper {
         final boolean needPassThisReference = tmp != null && tmp.value();
         int j = needPassThisReference ? 1 : 0;
 
-        final int paraLength = func.args().length;
+        final int paraLength = func.param().length;
         final int argLength = paraLength + j;
 
         final Parameter[] ps = m.getParameters();
@@ -235,7 +235,7 @@ public class ExtensionStructHelper {
                 : "try to bind with static function" + m + " to " + s;
 
         final StackVar[] vars = new StackVar[paraLength];
-        final List<Param> param = checkAndBuildParams(vars,s,m,func.args(), needPassThisReference, typeTable, dic, clazz);
+        final List<Param> param = checkAndBuildParams(vars,s,m,func.param(), needPassThisReference, typeTable, dic, clazz);
 
         final Token funcName = func.value().isEmpty() ? dic.getOrReserve(m.getName()) : dic.getOrReserve(func.value());
 
@@ -338,7 +338,7 @@ public class ExtensionStructHelper {
         PassThisReference tmp = m.getAnnotation(PassThisReference.class);
         final boolean needPassThisReference = tmp != null && tmp.value();
         int j = needPassThisReference ? 1 : 0;//goes for first parameter of implementation methods args bind for s.func arg0(always 0 or 1)
-        final int paraLength = init.args().length;
+        final int paraLength = init.param().length;
         final int argLength = paraLength + j;
         final Parameter[] ps = m.getParameters();
         assert !needPassThisReference || paraLength > 0 && (ps[0].getType() == StructValue.class || ps[0].getType() == Value.class)
@@ -348,7 +348,7 @@ public class ExtensionStructHelper {
 
 
         final StackVar[] vars = new StackVar[paraLength];
-        final List<Param> param = checkAndBuildParams(vars,s,m,init.args(),needPassThisReference,typeTable,dic,clazz);
+        final List<Param> param = checkAndBuildParams(vars,s,m,init.param(),needPassThisReference,typeTable,dic,clazz);
 
         return new InitialFunction(Word.This, param, s, new Stmt() {
                     final StackVar arg0 = new StackVar(Word.This, s, 0, 0);

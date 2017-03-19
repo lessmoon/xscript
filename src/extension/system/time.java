@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 public class time extends Function {
-    public Value run(List<Value> paras){
+    public Value run(List<Value> args){
         BigInteger i = BigInteger.valueOf(new Date().getTime());
         return new Value( i ) ;
     }

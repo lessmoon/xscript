@@ -13,8 +13,8 @@ public class GetTime extends Function {
     public static Token fname = null;
     
     @Override
-    public Value run(List<Value> paras){
-        Value c = paras.get(0);
+    public Value run(List<Value> args){
+        Value c = args.get(0);
         if(c == Value.Null){
             return Value.Null;
         }

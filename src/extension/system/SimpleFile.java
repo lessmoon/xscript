@@ -20,7 +20,7 @@ public class SimpleFile extends Struct {
     public static final class SimpleFileProxy {
         File file;
 
-        @Init(args = "string")
+        @Init(param = "string")
         public void set(Value path) {
             file = new File(path.valueAs(String.class));
         }

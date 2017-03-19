@@ -76,16 +76,16 @@ public class PaintPadX extends Struct {
         @StructMethod(virtual = true)
         public void onClose(){}
 
-        @StructMethod(virtual = true,args = {"int","int","int"})
+        @StructMethod(virtual = true, param = {"int","int","int"})
         public void onMouseClick(Value button, Value x, Value y){}
 
-        @StructMethod(virtual = true,args = {"int"})
+        @StructMethod(virtual = true, param = {"int"})
         public void onClick(Value code){}
 
-        @StructMethod(virtual = true,args = {"int"})
+        @StructMethod(virtual = true, param = {"int"})
         public void onPress(Value code){}
         
-        @StructMethod(args = {"#.SimpleFont"})
+        @StructMethod(param = {"#.SimpleFont"})
         public void setFont(StructValue s){
             this.imp.setMyFont(((SimpleFont.SimpleFontProxy) s.getExtension()).getFont());
         }
@@ -110,78 +110,78 @@ public class PaintPadX extends Struct {
             imp.clear();
         }
 
-        @StructMethod(args = {"string","int","int"},ret="int")
+        @StructMethod(param = {"string","int","int"},ret="int")
         public Value addString(Value str, Value x, Value y){
             return new Value(imp.addString(str.valueAs(String.class),x.valueAs(Integer.class),y.valueAs(Integer.class)));
         }
 
-        @StructMethod(args = {"int","int","int"},ret="int")
+        @StructMethod(param = {"int","int","int"},ret="int")
         public Value addCircle(Value x, Value y, Value radius){
             return new Value(imp.addCircle(x.valueAs(Integer.class),y.valueAs(Integer.class),radius.valueAs(Integer.class)));
         }
 
-        @StructMethod(args = {"int","int","int"},ret="bool")
+        @StructMethod(param = {"int","int","int"},ret="bool")
         public Value setCircle(Value id, Value x, Value y){
             return Value.valueOf(imp.setCircle(id.valueAs(Integer.class),x.valueAs(Integer.class),y.valueAs(Integer.class)));
         }
 
-        @StructMethod(args = {"int"},ret="bool")
+        @StructMethod(param = {"int"},ret="bool")
         public Value setCircleColor(Value id){
             return Value.valueOf(imp.setCircleColor(id.valueAs(Integer.class)));
         }
 
-        @StructMethod(args = {"int","int"},ret="bool")
+        @StructMethod(param = {"int","int"},ret="bool")
         public Value setCircleRadius(Value id, Value radius){
             return Value.valueOf(imp.setCircleRadio(id.valueAs(Integer.class),radius.valueAs(Integer.class)));
         }
 
-        @StructMethod(args = {"int","int","int"})
+        @StructMethod(param = {"int","int","int"})
         public void setBrushColor(Value r, Value g, Value b){
             imp.setBrushColor(r.valueAs(Integer.class),g.valueAs(Integer.class),b.valueAs(Integer.class));
         }
 
-        @StructMethod(args = {"int","int","int","int"},ret = "int")
+        @StructMethod(param = {"int","int","int","int"},ret = "int")
         public Value addLine(Value x1, Value y1, Value x2, Value y2){
             return new Value(imp.addLine(x1.valueAs(Integer.class),y1.valueAs(Integer.class),x2.valueAs(Integer.class),y2.valueAs(Integer.class)));
         }
 
-        @StructMethod(args = {"int","int"},ret = "int")
+        @StructMethod(param = {"int","int"},ret = "int")
         public Value addPoint(Value x, Value y){
             return new Value(imp.addPoint(x.valueAs(Integer.class),y.valueAs(Integer.class)));
         }
 
-        @StructMethod(args={"int","int","int","int","int"},ret="bool")
+        @StructMethod(param ={"int","int","int","int","int"},ret="bool")
         public Value setLine(Value id, Value x1, Value y1, Value x2, Value y2){
             return Value.valueOf(imp.setLine(id.valueAs(Integer.class),x1.valueAs(Integer.class),y1.valueAs(Integer.class)
                     ,x2.valueAs(Integer.class),y2.valueAs(Integer.class)));
         }
-       @StructMethod(args={"int","string"},ret="bool")
+       @StructMethod(param ={"int","string"},ret="bool")
         public Value setString(Value id, Value str){
             return Value.valueOf(imp.setString(id.valueAs(Integer.class),str.valueAs(String.class)));
         }
 
-        @StructMethod(args={"int"},ret="bool")
+        @StructMethod(param ={"int"},ret="bool")
         public Value setLineColor(Value id){
             return Value.valueOf(imp.setLineColor(id.valueAs(Integer.class)));
         }
 
-        @StructMethod(args={"int"},ret="bool")
+        @StructMethod(param ={"int"},ret="bool")
         public Value setStringColor(Value id){
             return Value.valueOf(imp.setStringColor(id.valueAs(Integer.class)));
         }
 
-        @StructMethod(args={"int"},ret="bool")
+        @StructMethod(param ={"int"},ret="bool")
         public Value setPointColor(Value id){
             return Value.valueOf(imp.setPointColor(id.valueAs(Integer.class)));
         }
 
 
-        @StructMethod(args = {"int","int","int"},ret="bool")
+        @StructMethod(param = {"int","int","int"},ret="bool")
         public Value setStringPosition(Value id, Value x, Value y){
             return Value.valueOf(imp.setStringPosition(id.valueAs(Integer.class),x.valueAs(Integer.class),y.valueAs(Integer.class)));
         }
 
-        @StructMethod(args = {"int","int","int"},ret="bool")
+        @StructMethod(param = {"int","int","int"},ret="bool")
         public Value setPoint(Value id, Value x, Value y){
             return Value.valueOf(imp.setPoint(id.valueAs(Integer.class),x.valueAs(Integer.class),y.valueAs(Integer.class)));
         }

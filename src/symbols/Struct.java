@@ -147,6 +147,13 @@ public class Struct extends Type implements Iterable<StructVariable>{
         return (initFunction == null || initFunction.isCompleted())&& virtualTable.isCompleted();
     }
 
+    public FunctionBasic getFirstUncompletedFunction(){
+        if(initFunction != null && ! initFunction.isCompleted()){
+            return initFunction;
+        }
+        return virtualTable.findFirstUncompletedFunction();
+    }
+
     /**
      * Struct D is child of struct B iff<br/>
      *      1.D inherits B directly<br/>
