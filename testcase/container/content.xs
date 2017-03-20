@@ -24,6 +24,7 @@ struct BoolContent:Content{
         this.value = value;
     }
 
+    @string
     def override string toString(){
         return this.value;
     }

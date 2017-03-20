@@ -399,7 +399,10 @@ public class Struct extends Type implements Iterable<StructVariable>{
             f.error("Can't overload operand `" + op + "'");
             break;
         }
-        return overloadFunctions.put(op, f.getName()) == null;
+        //if the function is an override function and the original operand is bound to it,it should be OK
+        Token funcName = overloadFunctions.put(op, f.getName());
+        return funcName == null ||
+                (funcName == f.getName() && getVirtualFunction(funcName) != null);
     }
 
     /**

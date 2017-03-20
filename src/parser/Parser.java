@@ -653,7 +653,7 @@ public class Parser implements TypeTable {
 
         if (op != null) {
             if (!s.addOverloading(op, f)) {
-                error("operand `" + op + "' overloading is redefined");
+                error("operand `" + op + "' overloading is rebound");
             }
         }
 
@@ -668,7 +668,7 @@ public class Parser implements TypeTable {
         hasDecl = true;
         Type savedType = returnType;
         returnType = type();
-        if (check('.')) {//maybe the setBody function for struct defintion
+        if (check('.')) {//may be the init function for struct definition
             if (!(returnType instanceof Struct)) {
                 error("Struct name needed here,but found `" + returnType + "'");
             }
@@ -730,7 +730,7 @@ public class Parser implements TypeTable {
                 int i = 0;
                 for (Param t : f.getParamList()) {
                     if (!t.type.isCongruentWith(l.get(i).type)) {
-                        error("function " + (new Function(name, returnType, l)).toString() + " has different parameterss[" + i + "] types with its former declaration " + f);
+                        error("function " + (new Function(name, returnType, l)).toString() + " has different parameters[" + i + "] types with its former declaration " + f);
                     }
                     i++;
                 }
@@ -760,23 +760,23 @@ public class Parser implements TypeTable {
         }
         InitialFunction f = (InitialFunction) t.getInitialFunction();
         if (f == null) {
-            error("initial function declaration `" + t.getName() + ".[setBody]' not found");
+            error("initial function declaration `" + t.getName() + ".[init]' not found");
             return;
         }
         if (f.isCompleted()) {
-            error("initial function `" + t.getName() + ".[setBody]' redefined");
+            error("initial function `" + t.getName() + ".[init]' redefined");
         }
 
         top.put(Word.This, t);
         List<Param> l = parameters();
         l.add(0, new Param(t, Word.This));
         if (l.size() != f.getParamList().size()) {
-            error("arguments number of function `" + t.getName() + ".[setBody]' doesn't match with its former declaration:expect " + (f.getParamList().size() - 1) + " but found " + (l.size() - 1));
+            error("arguments number of function `" + t.getName() + ".[init]' doesn't match with its former declaration:expect " + (f.getParamList().size() - 1) + " but found " + (l.size() - 1));
         }
 
         for (int i = 1; i < l.size(); i++) {
             if (!l.get(i).type.isCongruentWith(f.getParamList().get(i).type)) {
-                error("function `" + t.getName() + ".[setBody]' has different parameterss[" + (i - 1) + "] type `" + l.get(i).type + "' with its former declaration `" + f.getParamList().get(i).type + "'");
+                error("function `" + t.getName() + ".[init]' has different parameters[" + (i - 1) + "] type `" + l.get(i).type + "' with its former declaration `" + f.getParamList().get(i).type + "'");
             }
         }
         match('{');
@@ -816,7 +816,7 @@ public class Parser implements TypeTable {
         }
         for (int i = 1; i < l.size(); i++) {
             if (!l.get(i).type.isCongruentWith(f.getParamList().get(i).type)) {
-                error("function `" + t.lexeme + "." + name + "' has different parameterss[" + (i - 1) + "] type `" + l.get(i).type + "' with its former declaration `" + f.getParamList().get(i).type + "'");
+                error("function `" + t.lexeme + "." + name + "' has different parameters[" + (i - 1) + "] type `" + l.get(i).type + "' with its former declaration `" + f.getParamList().get(i).type + "'");
             }
         }
         match('{');
@@ -836,11 +836,11 @@ public class Parser implements TypeTable {
                 Token name = look;
                 match(Tag.ID);
                 if (getAutoType(name) != null) {
-                    error("argument `" + name + "' shadows a struct type");
+                    error("parameter `" + name + "' shadows a struct type");
                 }
                 pl.add(new Param(t, name));
                 if (top.put(name, t) != null) {
-                    error("function arguments names have conflict:`" + name.toString() + "'");
+                    error("function parameter names have conflict:`" + name.toString() + "'");
                 }
             } while (check(','));
             match(')');
@@ -1291,7 +1291,7 @@ public class Parser implements TypeTable {
             e = ConversionFactory.getConversion(e, p);
         }
         if (e == null) {//type error
-            error("array setBody error:can't convert `" + tmp.type + "' to `" + p + "'");
+            error("array init error:can't convert `" + tmp.type + "' to `" + p + "'");
         }
         return e;
     }

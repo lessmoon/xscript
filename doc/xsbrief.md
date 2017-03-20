@@ -104,21 +104,22 @@
 		- `def` return-type func-name([param-type param-name,...]);
 * Structure declaration & definition :
 	- Define a structure
+
 		1.  `struct` name;***//pre-declaration***
-		2.  `struct` name:base-name;***//pre-declaration with base struct***
-		2.  `struct` name {
-		2. &emsp;type-name var-name;[...] ***//Member variable declaration***
-		3. &emsp;`def` `this`([param-type param-name,...]);***//Initial function declaration***
-		4. &emsp;`def` `this`([param-type param-name,...]){***//Initial function definition(initial function can just have one for each struct now )***
-		5. &emsp;&emsp;&emsp;&emsp;function-body;
-		6. &emsp;}
-		7. &emsp;`def` return-type func-name([param-type param-name,...]);***//Function declaration***
-		8. &emsp;`def` return-type func-name([param-type param-name,...]){***//Function definition***
-		9. &emsp;&emsp;&emsp;&emsp;function-body;
-		10.	&emsp;&nbsp;}
-		11. &nbsp;}
+		2.  `struct` name:base-name; **//pre-declaration with base struct**
+		3.  `struct` name {
+		4. &emsp;type-name var-name;[...] **//Member variable declaration**
+		5. &emsp;`def` `this`([param-type param-name,...]);***//Initial function declaration***
+		6. &emsp;`def` `this`([param-type param-name,...]){***//Initial function definition(initial function can just have one for each struct now )***
+		7. &emsp;&emsp;&emsp;&emsp;function-body;
+		8. &emsp;}
+		9. &emsp;`def` return-type func-name([param-type param-name,...]);***//Function declaration***
+		10. &emsp;`def` return-type func-name([param-type param-name,...]){***//Function definition***
+		11. &emsp;&emsp;&emsp;&emsp;function-body;
+		12.	&emsp;&nbsp;}
+		13. &nbsp;}
 	- Inheriting and overriding
-		1. Inherite a base structure
+		1. Inherit a base structure
 			- `struct` **derive-name**`:`**base-name**
 		2. Virtual function
 			- `def` `virtual` return-type func-name([param-type param-name,...]) 
@@ -194,7 +195,7 @@
 		- `bigreal`:real larger than RealMax(or ends with '**R**') 
 		- `null`:used for array and struct
 	* Dynamic array allocation:
-		- `new` type [expression];***//expression should be interge***
+		- `new` type [expression];***//expression should be integer***
 		- `new` struct-type;***//struct has no defined initial functions***
 		- `new` struct-type([argument,...]);***//struct has a defined initial function***
 	* Array size getter:(return an integer)
@@ -227,12 +228,12 @@
 					* `param` for parameters' types
 					* `ret` for return type
 					* `virtual` for determining if the function is virtual
-					* `purevirtual` for determining if the function is purevirual,if it is set,the function is also virtual
+					* `purevirtual` for determining if the function is pure virtual,if it is set,the function is also virtual
 				* use annotation `PassThisReference` if you need pass this reference to this native,note that the java method needs an additional arg(typed `Value` or `StructValue`) for this passing in first postion
 				* to refer an extension class type,use class reference
 					* $ stands for this extension class
-					* #.`class-name` stands for relative path native extension class
-					* #`class-name` stantds for absolute path native extension class
+					* \#.`class-name` stands for relative path native extension class
+					* \#`class-name` stands for absolute path native extension class
 					* if you want to return a class extension struct,just use `new StructValue(symbols.Struct.StructPlaceHolder,xxxxx);`,the vm will dynamic cast its type
 * Features in future
 	* Inline function definition:

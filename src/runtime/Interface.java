@@ -16,9 +16,8 @@ public class Interface{
         
         VarTable.pushTop();
         VarTable.pushVar(c);
-        for(Value p : args){
-            VarTable.pushVar(p);
-        }
+
+        args.forEach(VarTable::pushVar);
         //RunStack.invokeFunction(line,filename,f);
         try {
             f.run();
@@ -45,9 +44,7 @@ public class Interface{
 
         VarTable.pushTop();
         VarTable.pushVar(c);
-        for(Value p : args){
-            VarTable.pushVar(p);
-        }
+        args.forEach(VarTable::pushVar);
 
         //RunStack.invokeFunction(line,filename,f);
         try {

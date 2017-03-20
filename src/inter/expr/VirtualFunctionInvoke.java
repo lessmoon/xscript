@@ -9,6 +9,7 @@ import symbols.Struct;
 import symbols.VirtualTable;
 
 import java.util.List;
+import java.util.ListIterator;
 
 public class VirtualFunctionInvoke extends Expr {
     static  final   boolean         IS_DEBUG = false;
@@ -56,9 +57,11 @@ public class VirtualFunctionInvoke extends Expr {
     @Override
     public Expr optimize(){
         /*may have conversion*/
-        for(int i = 0; i < args.size(); i++){
-            args.set(i, args.get(i).optimize());
+        ListIterator<Expr> iter = args.listIterator();
+        while(iter.hasNext()){
+            iter.set(iter.next().optimize());
         }
+
         return this;
     }
 
