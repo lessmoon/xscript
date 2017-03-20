@@ -20,7 +20,7 @@ The language has a c-like way to prommgram,and if you have exprience in C/C++, J
 
 **Dependency** :
 
-1. JDK 8.0+(Lambda expression required.If you need run it on older java version(without lambda supported),please check out [v1.5](tree/v1.5) of this repo.)
+1. JDK 8.0+(Lambda expression required.If you need run it on older java version(without lambda supported),please check out [v1.5](https://github.com/lessmoon/script/tree/v1.5) of this repo.)
 2. All `.cmd` files is for Windows,but you can write similar script on other OS.
 
 If you have any advices,you can fork it and raise a pull request.And also,extension to other language is welcome.
