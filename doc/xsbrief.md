@@ -75,10 +75,10 @@
 	* `if`(bool-type expression) statement
 	* `if`(bool-type expression) `else` statement
 	*  switch statement
-		1. `switch`(expression){**//expression should be int,char or string**
-		2. &emsp;`case` constant-expression:**//expression should be constant**
-		3. &emsp;&emsp;case-body;**//use `break` if jumping out is needed**
-		3. &emsp;`default`:**//default case**
+		1. `switch`(expression){**expression should be int,char or string**
+		2. &emsp;`case` constant-expression:**expression should be constant**
+		3. &emsp;&emsp;case-body;**use `break` if jumping out is needed**
+		3. &emsp;`default`:**default case**
 		4. &emsp;&emsp;case-body;
 		4. }
 	  
@@ -105,16 +105,16 @@
 * Structure declaration & definition :
 	- Define a structure
 
-		1.  `struct` name;***//pre-declaration***
-		2.  `struct` name:base-name; **//pre-declaration with base struct**
+		1.  `struct` name;***pre-declaration***
+		2.  `struct` name:base-name; **pre-declaration with base struct**
 		3.  `struct` name {
-		4. &emsp;type-name var-name;[...] **//Member variable declaration**
-		5. &emsp;`def` `this`([param-type param-name,...]);***//Initial function declaration***
-		6. &emsp;`def` `this`([param-type param-name,...]){***//Initial function definition(initial function can just have one for each struct now )***
+		4. &emsp;type-name var-name;[...] **Member variable declaration**
+		5. &emsp;`def` `this`([param-type param-name,...]);***Initial function declaration***
+		6. &emsp;`def` `this`([param-type param-name,...]){***Initial function definition(can just have one for each struct now )***
 		7. &emsp;&emsp;&emsp;&emsp;function-body;
 		8. &emsp;}
-		9. &emsp;`def` return-type func-name([param-type param-name,...]);***//Function declaration***
-		10. &emsp;`def` return-type func-name([param-type param-name,...]){***//Function definition***
+		9. &emsp;`def` return-type func-name([param-type param-name,...]);***Function declaration***
+		10. &emsp;`def` return-type func-name([param-type param-name,...]){***Function definition***
 		11. &emsp;&emsp;&emsp;&emsp;function-body;
 		12.	&emsp;&nbsp;}
 		13. &nbsp;}
@@ -132,7 +132,7 @@
 		- Definition grammar
 			1.  `struct` name {
 			2.  &emsp;@operand-name
-			3.  &emsp;`def` return-type func-name([param-type param-name,...]);***//Function declaration or definition***
+			3.  &emsp;`def` return-type func-name([param-type param-name,...]);***Function declaration or definition***
 			4.  &nbsp;}
 		- Constraint
 			1. available operands have `+`,`-`,`*`,`/`,`%`,`>`,`<`,`<=`,`>=`, and types(except the self-type and array)
@@ -147,9 +147,9 @@
 		- name can be `this` and `super`,but with `super`,it must have a base struct and this base struct must have implemented this member(function or variable).
 * Load extension
 	1. native\<package-name\>{
-	2. &emsp;["class-name":]return-type func-name ( [param-type param-name,...] );***//load extension functions***
+	2. &emsp;["class-name":]return-type func-name ( [param-type param-name,...] );***load extension functions***
 	3. &emsp;["class-name":]struct something{
-	4. &emsp;&emsp;def this(param-list);***//function declarations(not necessary,but will check the correctness)***
+	4. &emsp;&emsp;def this(param-list);***function declarations(not necessary,but check the correctness)***
 	4. &emsp;};
 	5. }
 * Import source file:
@@ -171,7 +171,7 @@
 		* Syntax:
 			1.  `new` struct-type(arguments){
 			2.  &emsp;&emsp;type var;
-			3.  &emsp;&emsp;`def` `this`(param-list){***//optional,default is from base struct***
+			3.  &emsp;&emsp;`def` `this`(param-list){***optional,default is from base struct***
 			4.  &emsp;&emsp;&emsp;`statements`
 			5.  &emsp;&emsp;}
 			6.  &emsp;&emsp;`def` [`virtual`/`override`] ret-type func-name(param-list){  
@@ -195,9 +195,9 @@
 		- `bigreal`:real larger than RealMax(or ends with '**R**') 
 		- `null`:used for array and struct
 	* Dynamic array allocation:
-		- `new` type [expression];***//expression should be integer***
-		- `new` struct-type;***//struct has no defined initial functions***
-		- `new` struct-type([argument,...]);***//struct has a defined initial function***
+		- `new` type [expression];***expression should be integer***
+		- `new` struct-type;***struct has no defined initial functions***
+		- `new` struct-type([argument,...]);***struct has a defined initial function***
 	* Array size getter:(return an integer)
 		- `sizeof` array-type-expression
 	* Instance check:(return `true` or `false`)
@@ -214,7 +214,7 @@
 		* override methods if need some initialization work before importing
 		* importing
 			1.  `native`<extension.Function>{
-			2.  &emsp;&emsp;["class-name"]:ret-type func-name(param-list);***//the class-name is not necessary,use *func-name* by default***
+			2.  &emsp;&emsp;["class-name"]:ret-type func-name(param-list);***the class-name is not necessary,use *func-name* by default***
 			3. }
 	* java class binding
 		* Inherite **extension.Function**,override **Struct setup(Token sname, Dictionary dic, TypeTable typeTable)** 
