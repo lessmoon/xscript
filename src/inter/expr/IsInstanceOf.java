@@ -17,14 +17,14 @@ public class IsInstanceOf extends Op {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return expr.isChangeable();
     }
 
     void check(){
         if(cmptype instanceof Struct){
             if(expr.type instanceof Struct){
-                if((expr.type).equals(cmptype)){
+                if((expr.type).isCongruentWith(cmptype)){
                     precal = true;
                 } else if(((Struct)expr.type).isChildOf((Struct)cmptype)){
                     precal = true;
@@ -38,7 +38,7 @@ public class IsInstanceOf extends Op {
                 precal = false;
             }
         } else {
-            precal = cmptype.equals(expr.type);
+            precal = cmptype.isCongruentWith(expr.type);
         }
     }
     
@@ -53,15 +53,15 @@ public class IsInstanceOf extends Op {
     }
 
     @Override
-    public Constant getValue(){
-        Constant c = expr.getValue();
+    public Value getValue(){
+        Value c = expr.getValue();
         boolean  value = precal;
         if(haveto){
             assert(c.type instanceof Struct);
             assert(cmptype instanceof Struct);   
-            value = cmptype.equals(c.type)||((Struct)c.type).isChildOf((Struct)cmptype);
+            value = cmptype.isCongruentWith(c.type)||((Struct)c.type).isChildOf((Struct)cmptype);
         }
-        return value?Constant.True:Constant.False;
+        return value? Value.True: Value.False;
     }
 
     @Override

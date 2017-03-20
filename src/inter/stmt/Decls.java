@@ -41,4 +41,9 @@ public class Decls extends Stmt {
         } 
         return sb.toString();
     }
+
+    @Override
+    public void appendToSeq(LinkedSeq s) {
+        decls.forEach(s::appendStmt);
+    }
 }

@@ -21,9 +21,9 @@ public class extime extends extension.Struct {
         Token  mname1 = dic.getOrReserve("hour"),
                mname2 = dic.getOrReserve("minute"),
                mname3 = dic.getOrReserve("second");
-        s.addMemberVariable(mname1,Type.Int);
-        s.addMemberVariable(mname2,Type.Int);
-        s.addMemberVariable(mname3,Type.Int);
+        s.addVariable(mname1,Type.Int);
+        s.addVariable(mname2,Type.Int);
+        s.addVariable(mname3,Type.Int);
         return s;
     }
 }

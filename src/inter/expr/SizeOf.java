@@ -19,7 +19,7 @@ public class SizeOf extends Op{
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return expr.isChangeable();
     }
 
@@ -34,13 +34,13 @@ public class SizeOf extends Op{
     }
 
     @Override
-    public Constant getValue(){
-        Constant c = expr.getValue();
-        if(c == Constant.Null){
+    public Value getValue(){
+        Value c = expr.getValue();
+        if(c == Value.Null){
             error("null pointer error:try to get a null array size");
         }
-        ArrayConst ac = (ArrayConst)c;
-        return new Constant(ac.getSize());
+        ArrayValue ac = (ArrayValue)c;
+        return new Value(ac.getSize());
     }
 
     @Override

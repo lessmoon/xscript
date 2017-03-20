@@ -1,35 +1,30 @@
 native<extension.system>{
-	"extime":struct Time{
-		int hour;
-		int minute;
-		int second;
-	};
-
-	"GetTime":void getTime(Time d);
-
+    "sleep":void sleep(int duration);
 }
 
-native<extension.predefined>{
-    "GetThreadId": bigint getThreadId();
+native<extension.system>{
+    "extime":struct Time{
+        int hour;
+        int minute;
+        int second;
+    };
+
+    "GetTime":void getTime(Time d);
 }
 
 struct MyTime:Time{
 
-	@string
-	def string toString(){
-		return "" + this.hour + ":" + this.minute + ":" + this.second;
-	}
+    @string
+    def string toString(){
+        return "" + this.hour + ":" + this.minute + ":" + this.second;
+    }
 }
 
 native<extension.system>{
     bool PutChar(char c);
     bool print(string str);
-    int  time();
+    bigint  time();
     int  getchar();
-}
-
-native<extension.util>{
-    int  strlen(string len);
 }
 
 def int repeat_print(string s,int c){
@@ -43,6 +38,33 @@ def void println(string s){
     print(s + "\n");
     return;
 }
+
+import "utils.xs";
+
+
+def int readNumber(){
+    StringBuffer l = new StringBuffer();
+    char c;
+    while(!isDigit(c = getchar()));
+
+    do{
+        l.appendCharacter(c);
+    }while(isDigit(c = getchar()));
+    return parseInt(l.toString());
+}
+
+def string readString(){
+    StringBuffer l = new StringBuffer();
+    char c;
+    while(isBlank(c = getchar()));
+
+    do{
+        l.appendCharacter(c);
+    }while(!isEndLine(c = getchar()) );
+    return l.toString();
+}
+
+
 
 struct Timer{
     def void start();
@@ -85,3 +107,4 @@ def void Timer.clear(){
     this.start    = 0;
     this.duration = 0;
 }
+

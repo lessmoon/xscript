@@ -1,4 +1,6 @@
 import "content.xs";
+import "sequence.xs";
+import "../lib/utils.xs";
 
 struct binode{
     binode next;
@@ -11,9 +13,13 @@ struct binode{
         this.prev = prev;
     }
 
+    @string
+    def string toString(){
+        return this.value;
+    }
 }
 
-struct bilist{
+struct List:Sequence{
     binode head;
     binode tail;
 
@@ -33,6 +39,49 @@ struct bilist{
         this.tail.prev.prev.next = this.tail.prev;
     }
 
+    def override void add(Content value){
+        this.push_back(value);
+    }
+    
+    def binode front(){
+        return this.head.next;
+    }
+
+    def override bool isEmpty(){
+        return this.head.next == this.tail;
+    }
+    
+    def override int size(){
+        int c = 0;
+        for(auto i = this.head.next;i.next != null;i = i.next,c++);
+        return c;
+    }
+    
+    def override Iterator iterator(){
+        return new Iterator(this.head){
+            binode node;
+            def this(binode inode){
+                this.node = inode;
+            }
+            
+            def override void next(){
+                this.node = this.node.next;
+            }
+            
+            def override Content getValue(){
+                return this.node.value;
+            }
+            
+            def override bool hasNext(){
+                return this.node.next.next != null;
+            }
+        };
+    }
+    
+    def binode back(){
+        return this.tail.prev;
+    }
+
     def Content pop_front(){
         Content tmp = this.head.next.value;
         this.head.next = this.head.next.next;
@@ -46,4 +95,24 @@ struct bilist{
         this.tail.prev.next = this.tail;
         return tmp;
     }
+    
+    @string
+    def string toString(){
+        StringBuffer sb = new StringBuffer();
+        sb.append("[");
+        for(binode i = this.front();i.next != null;i = i.next){
+            sb.append(" " + i);
+        }
+        sb.append(" ]");
+    }
+}
+
+import "collector.xs";
+
+def Collector toList(){
+    return new Collector(){
+        def this(){
+            super(new List());
+        }
+    };
 }

@@ -19,11 +19,12 @@ public class NewArray extends Op {
         if(t != Type.Int){
             error("Array size can't be `" + size.type + "'");
         }
-        size = ConversionFactory.getConversion(size,Type.Int);
+        if( size.type != Type.Int )
+            size = ConversionFactory.getConversion(size,Type.Int);
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return true;
     }
 
@@ -38,13 +39,13 @@ public class NewArray extends Op {
     }
 
     @Override
-    public Constant getValue(){
-        Constant v = size.getValue();
+    public Value getValue(){
+        Value v = size.getValue();
         int sz = ((Num)(v.op)).value;
         if(sz < 0){
             error("try to allocate `" + type +"' array with negative number:" + sz);
         }
-        return new ArrayConst((Array)type,sz);
+        return new ArrayValue((Array)type,sz);
     }
 
     @Override

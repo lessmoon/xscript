@@ -19,19 +19,22 @@ class Info {
     int         peek;
     String      filename;
     int         line;
+    int offset;
     String      path;
 
-    Info(InputStreamReader i,int p,String f,int l,String pt){
+    Info(InputStreamReader i, int p, String f, int l, int idx, String pt) {
         in = i;
         peek = p;
         filename = f;
         line = l;
+        offset = idx;
         path = pt;
     }
 }
 
 public class Lexer implements Dictionary {
     public static int line = 1;
+    public static int offset = 1;
     public static String filename = "";
     private int peek = ' ';
     private Stack<Info> list = new Stack<>();
@@ -41,7 +44,6 @@ public class Lexer implements Dictionary {
 	 * record the files imported to avoid re-import
 	 */
     private Set<File> importedFiles = new HashSet<>();
-	
 
     private void reserve(Word w) {
         words.put(w.lexeme,w);
@@ -59,7 +61,7 @@ public class Lexer implements Dictionary {
     }
     
     public void error(String s){
-        throw new RuntimeException("Line " + line + " in file `" +  filename + "':\n\t" + s);
+        throw new RuntimeException("in file `" + filename + "' at " + line + ":" + offset + ": \n\t" + s);
     }
 
     public Lexer() {
@@ -104,11 +106,12 @@ public class Lexer implements Dictionary {
     }
 
     private void save(String path){
-        list.push(new Info(in,peek,filename,line,path));
+        list.push(new Info(in, peek, filename, line, offset, path));
     }
 
-    /*
+    /**
      * Save the file name
+     * @param file the file name(relative)
      */
     public void open( String file ) throws IOException {
         /*for the first open*/
@@ -142,11 +145,12 @@ public class Lexer implements Dictionary {
 
         in = new InputStreamReader(new FileInputStream(f));
         line = 1;
+        offset = 1;
         peek = ' ';
         filename = file;
     }
 
-    /*
+    /**
      * Recover the lexer's info,if the stack is 
      * empty,do nothing
      * Return false if the stack is empty,or true
@@ -159,6 +163,7 @@ public class Lexer implements Dictionary {
             in = i.in;
             filename = i.filename;
             line = i.line;
+            offset = i.offset;
             peek = i.peek;
             try{
                 System.setProperty("user.dir",i.path);
@@ -168,9 +173,30 @@ public class Lexer implements Dictionary {
             return true;
         }
     }
-    
+
+    /**
+     * Read new char if present char is c
+     * @param c the condition char
+     * @return if present char is c
+     * @throws IOException check {@linkplain InputStreamReader#read()}
+     */
+    private boolean readIf(int c) throws IOException {
+        if (peek == c) {
+            readch();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean readIfNot(int c) throws IOException {
+        if (peek != c) {
+            readch();
+            return true;
+        }
+        return false;
+    }
+
     private void readch() throws IOException {
-        
         int p = in.read();
         while(p < 0){
             in.close();
@@ -183,6 +209,13 @@ public class Lexer implements Dictionary {
             p = in.read();
         }
         peek = p > 0?(char) p : p;
+        if (peek == '\n') {
+            line++;
+            offset = 0;
+        } else {
+            offset++;
+        }
+
     }
 
    private boolean readch(char c) throws IOException {
@@ -193,38 +226,39 @@ public class Lexer implements Dictionary {
         return true;
     }
 
-
     public Token scan() throws IOException {
-        for(;;readch()){
-            if(peek == '\n') {
-                line++;
-            } else if(Character.isWhitespace(peek)){
-                continue;
-            } else if(peek == '/'){
-                if(readch('*')){
-                    readch();
-                    do{
-                        while(peek != '*'){
-                            if(peek == '\n')
-                                line ++;
-                            readch();
-                        }
+        while (Character.isWhitespace(peek) || peek == '/') {
+            if (readIf('/')) {
+                switch (peek) {
+                    case '*':
                         readch();
-                    }while( peek != '/' );
-                } else if( peek == '/' ){
-                    while(!readch('\n')){}
-                    line++;
-                } else if( peek == '=' ){
-                    peek = ' ';
-                    return Word.divass;
-                } else {
-                    return Word.div;
+                        do {
+                            while (readIfNot('*')) ;
+                            readch();
+                        } while (peek != '/' && peek >= 0);
+                        if (peek < 0) {
+                            error("open block comment util the end");
+                        }
+                        break;
+                    case '/':
+                        while (peek != '\n' && peek >= 0)
+                            readch();
+                        if (peek < 0) {
+                            return Word.EOF;
+                        }
+                        break;
+                    case '=':
+                        peek = ' ';
+                        return Word.divass;
+                    default:
+                        return Word.div;
                 }
-            } else {
-                break;
             }
+            readch();
         }
-
+        if (peek < 0) {
+            return Word.EOF;
+        }
         switch(peek){
             case '&':
                 if(readch('&')) 

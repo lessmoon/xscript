@@ -36,7 +36,7 @@ public class Break extends Stmt {
             x.emit(sizeOfStack);
             Reference<Integer> i  = new Reference<Integer>(x.getCurrentAddress());
             x.emit(JUMPOFF_TO);
-            x.emitIntegerOffsetReference(i,stmt.after);//stmt.after should be reference
+            x.emitIntegerOffsetReference(i,body.after);//body.after should be reference
         }
     */
 }

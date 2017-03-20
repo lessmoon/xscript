@@ -1,0 +1,70 @@
+"jump":"beg"
+<"multiple">
+"set":"tmp_b" "${b}"
+"set":"res" "0"
+<"m_loop">
+"condition":"${tmp_b}" "0" "end_loop"
+"add":"tmp_b" "-1"
+"add":"res" "${a}"
+"jump":"m_loop"
+<"end_loop">
+"jump":"${back}"
+<"beg">
+"set":"back" "ret"
+"print":"Enter a"
+"read":"a"
+"print":"Enter b"
+"read":"b"
+"time":"t_1"
+"jump":"multiple"
+<"ret">
+"time":"t_2"
+"add":"t_2" "-${t_1}"
+"print":"${a} x ${b} = ${res},${t_2}ms"
+"set":"rolename" "John"
+"set":"rolename_spell" "J-O-H-N"
+"print":"Yes!!!Finally!!!"
+"type":"HEY THERE?" "100"
+"type":"Anyone THERE?" "150"
+"type":"'SUP??" "20"
+"print":"THANK GOD!!!"
+"sleep":"200"
+"print":"Could you please help me!"
+"set":"count" "0"
+<"choice">
+"set":"rrrrr" "hungry"
+"choice":"f" "Yes?" "Sorry,I'm busy now."
+"condition": "${f}" "1" "pass"
+"add":"count" "1"
+"condition": "count" "3" "dead"
+"print":"Please reconsider"
+"jump":"choice"
+<"pass">
+"print":"Thank you!!!"
+"print":"I'm in an ice world now.I actually don't know where I am."
+"print":"Even worse,I don't know what happened before this."
+"choice":"f" "What is the last thing you remember?" "What's your name?"
+"condition":"f" "2" "name"
+"print":"I can only remember there was a terrible earthquake."
+"jump":"checkingbag"
+<"name">
+"print":"Ahh...Headache.I don't remember my name!"
+<"checkingbag">
+"print":"Wait...I'm carrying a bag.Maybe I could get some useful information from it."
+"sleep":"2000"
+"print":"Hey I found an ID card"
+"print":"It says:"
+"type":"Dr.${rolename_spell}" "100"
+"print":"So that's it.My name is ${rolename}."
+"print":"And what's your name?"
+"read":"playername"
+"print":"Nice to meet you,$!" "playername"
+"print":"Nice to meet you too,Dr.${rolename}!"
+<"dead">
+"jump":"${rrrrr}"
+<"hungry">
+"type":"Sorry,${rolename} died of starvation!" "200"
+"jump":"end"
+<"cold">
+"type":"Sad,${rolename} froze to death!" "200"
+<"end">

@@ -1,7 +1,7 @@
 package inter.expr;
 
-import lexer.Token;
 import inter.util.Node;
+import lexer.Token;
 import symbols.Type;
 
 public abstract class Expr extends Node {
@@ -9,13 +9,13 @@ public abstract class Expr extends Node {
     public Type type;
     static public final Expr VoidExpr = new Expr(Type.Void,Type.Void){
         @Override
-        boolean isChangeable(){
+        public boolean isChangeable(){
             return true;
         }
 
         @Override
-        public Constant getValue(){
-            return Constant.Null;
+        public Value getValue(){
+            return Value.Null;
         }
 
         @Override
@@ -29,8 +29,8 @@ public abstract class Expr extends Node {
         type = p;
     }
 
-    abstract boolean isChangeable();
-    public abstract Constant getValue();
+    public abstract boolean isChangeable();
+    public abstract Value getValue();
 
     public Expr optimize() {
         return this;

@@ -1,7 +1,7 @@
 package inter.expr;
 
 public class InPipe extends Expr {
-    Constant    value;
+    Value value;
     Expr        expr;
 
     public InPipe(Expr expr){
@@ -34,12 +34,17 @@ public class InPipe extends Expr {
     }
 
     @Override
-    public Constant getValue(){
+    public Value getValue(){
         value = expr.getValue();
         return value;
     }
 
-    public Constant getPipeValue(){
+    @Override
+    public String toString(){
+        return expr.toString();
+    }
+
+    public Value getPipeValue(){
         return value;
     }
 }

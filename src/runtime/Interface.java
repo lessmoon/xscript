@@ -1,24 +1,24 @@
 package runtime;
 
-import inter.expr.Constant;
-import inter.expr.StructConst;
+import inter.expr.StructValue;
+import inter.expr.Value;
 import inter.stmt.FunctionBasic;
 import inter.stmt.ReturnResult;
 import symbols.Position;
+import symbols.Type;
 import symbols.VirtualTable;
 
 import java.util.List;
 
 public class Interface{
-    static public Constant invokeNormalFunctionOfStruct(StructConst c,FunctionBasic f,List<Constant> para){
-        Constant result =  f.type.getInitialValue();
+    static public Value invokeNormalFunctionOfStruct(StructValue c, FunctionBasic f, List<Value> args){
+        Value result =  f.getType().getInitialValue();
         
         VarTable.pushTop();
         VarTable.pushVar(c);
-        for(Constant p : para){
-            VarTable.pushVar(p);
-        }
-        //RunStack.invokeFunction(lexline,filename,f);
+
+        args.forEach(VarTable::pushVar);
+        //RunStack.invokeFunction(line,filename,f);
         try {
             f.run();
         } catch(ReturnResult e){
@@ -28,19 +28,25 @@ public class Interface{
         VarTable.popTop();
         return result;        
     }
-    
-    static public Constant invokeVirtualFunctionOfStruct(StructConst c, Position pos, List<Constant> para){
-        VirtualTable vtable = c.getVirtualTable();
-        FunctionBasic f = vtable.getVirtualFunction(pos);
-        Constant result =  f.type.getInitialValue();
+
+    /**
+     * Invoke virtual function of a struct
+     * NOTE that the {@code args} doesn't include this reference
+     * @param c the struct value
+     * @param pos the virtual table position of this virtual function
+     * @param args the args (except this reference)
+     * @return the ret value or default return value for f.getType(){@linkplain Type#getInitialValue()}
+     */
+    static public Value invokeVirtualFunctionOfStruct(StructValue c, Position pos, List<Value> args){
+        final VirtualTable vtable = c.getVirtualTable();
+        final FunctionBasic f = vtable.getVirtualFunction(pos);
+        Value result =  f.getType().getInitialValue();
 
         VarTable.pushTop();
         VarTable.pushVar(c);
-        for(Constant p : para){
-            VarTable.pushVar(p);
-        }
+        args.forEach(VarTable::pushVar);
 
-        //RunStack.invokeFunction(lexline,filename,f);
+        //RunStack.invokeFunction(line,filename,f);
         try {
             f.run();
         } catch(ReturnResult e){

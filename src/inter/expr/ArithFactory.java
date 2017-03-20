@@ -1,11 +1,12 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
 import inter.stmt.FunctionBasic;
+import lexer.*;
+import symbols.Struct;
+import symbols.Type;
 
-import java.math.BigInteger;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,27 +28,27 @@ class IntArith extends Arith {
         }
     }
     
-    public Constant getValue(){
+    public Value getValue(){
         int lv = ((Num)(expr1.getValue().op)).value;
         int rv = ((Num)(expr2.getValue().op)).value;
-        Constant v = null;
+        Value v = null;
         switch(op.tag){
         case '+':
-            return new Constant(lv + rv);
+            return new Value(lv + rv);
         case '-':
-            return new Constant(lv - rv);
+            return new Value(lv - rv);
         case '*':
-            return new Constant(lv * rv);
+            return new Value(lv * rv);
         case '/':
             try{
-                v = new Constant(lv / rv);
+                v = new Value(lv / rv);
             } catch(RuntimeException e){
                 error(e.getMessage());
             }
             return v;
         case '%':
             try{
-                v = new Constant(lv % rv);
+                v = new Value(lv % rv);
             } catch(RuntimeException e){
                 error(e.getMessage());
             }
@@ -77,27 +78,27 @@ class BigIntArith extends Arith{
         }
     }
     
-    public Constant getValue(){
+    public Value getValue(){
         BigInteger lv = ((BigNum)(expr1.getValue().op)).value;
         BigInteger rv = ((BigNum)(expr2.getValue().op)).value;
-        Constant v = null;
+        Value v = null;
         switch(op.tag){
         case '+':
-            return new Constant(lv.add(rv));
+            return new Value(lv.add(rv));
         case '-':
-            return new Constant(lv.subtract(rv));
+            return new Value(lv.subtract(rv));
         case '*':
-            return new Constant(lv.multiply(rv));
+            return new Value(lv.multiply(rv));
         case '/':
             try{
-                v = new Constant(lv.divide(rv));
+                v = new Value(lv.divide(rv));
             } catch(RuntimeException e){
                 error(e.getMessage());
             }
             return v;
         case '%':
             try{
-                v = new Constant(lv.mod(rv));
+                v = new Value(lv.mod(rv));
             } catch(RuntimeException e){
                 error(e.getMessage());
             }
@@ -125,21 +126,21 @@ class RealArith extends Arith {
         }
     }
     
-    public Constant getValue(){
+    public Value getValue(){
         float lv = ((lexer.Float)(expr1.getValue().op)).value;
         float rv = ((lexer.Float)(expr2.getValue().op)).value;
 
-        Constant v = null;
+        Value v = null;
         switch(op.tag){
         case '+':
-            return new Constant(lv + rv);
+            return new Value(lv + rv);
         case '-':
-            return new Constant(lv - rv);
+            return new Value(lv - rv);
         case '*':
-            return new Constant(lv * rv);
+            return new Value(lv * rv);
         case '/':
             try{
-                v = new Constant(lv / rv);
+                v = new Value(lv / rv);
             } catch(RuntimeException e){
                 error(e.getMessage());
             }
@@ -173,20 +174,20 @@ class BigRealArith extends Arith{
         }
     }
     
-    public Constant getValue(){
+    public Value getValue(){
         BigDecimal lv = ((BigFloat)(expr1.getValue().op)).value;
         BigDecimal rv = ((BigFloat)(expr2.getValue().op)).value;
-        Constant v = null;
+        Value v = null;
         switch(op.tag){
         case '+':
-            return new Constant(lv.add(rv));
+            return new Value(lv.add(rv));
         case '-':
-            return new Constant(lv.subtract(rv));
+            return new Value(lv.subtract(rv));
         case '*':
-            return new Constant(lv.multiply(rv));
+            return new Value(lv.multiply(rv));
         case '/':
             try{
-                v = new Constant(lv.divide(rv,DIVIDE_SCALE,BigDecimal.ROUND_HALF_EVEN));
+                v = new Value(lv.divide(rv,DIVIDE_SCALE,BigDecimal.ROUND_HALF_EVEN));
             } catch(RuntimeException e){
                 error(e.getMessage());
             }
@@ -215,28 +216,28 @@ class CharArith extends Arith {
         }
     }
 
-    public Constant getValue(){
+    public Value getValue(){
         char lv = ((Char)(expr1.getValue().op)).value;
         char rv = ((Char)(expr2.getValue().op)).value;
 
-        Constant v = null;
+        Value v = null;
         switch(op.tag){
         case '+':
-            return new Constant((char)(lv + rv));
+            return new Value((char)(lv + rv));
         case '-':
-            return new Constant((char)(lv - rv));
+            return new Value((char)(lv - rv));
         case '*':
-            return new Constant((char)(lv * rv));
+            return new Value((char)(lv * rv));
         case '/':
             try{
-                v = new Constant((char)(lv / rv));
+                v = new Value((char)(lv / rv));
             } catch(RuntimeException e){
                 error(e.getMessage());
             }
             return v;
         case '%':
             try{
-                v = new Constant((char)(lv % rv));
+                v = new Value((char)(lv % rv));
             } catch(RuntimeException e){
                 error(e.getMessage());
             }
@@ -268,14 +269,14 @@ class StringCat extends Arith {
         expr1 = expr1.optimize();
         expr2 = expr2.optimize();
         if(!expr1.isChangeable()){
-            Constant r = expr1.getValue();
+            Value r = expr1.getValue();
             if(((Str)r.op).value.isEmpty()){
                 return expr2;
             }
             if(!expr2.isChangeable())
                 return this.getValue();
         } else if(!expr2.isChangeable()){
-            Constant r = expr2.getValue();
+            Value r = expr2.getValue();
             if(((Str)r.op).value.isEmpty()){
                 return expr1;
             }
@@ -284,11 +285,11 @@ class StringCat extends Arith {
     }
 
     @Override
-    public Constant getValue(){
-        Constant str1 = expr1.getValue();
-        Constant str2 = expr2.getValue();
+    public Value getValue(){
+        Value str1 = expr1.getValue();
+        Value str2 = expr2.getValue();
         String str = ((Str)(str1.op)).value + ((Str)(str2.op)).value;
-        return new Constant(str);
+        return new Value(str);
     }
 }
 
@@ -307,7 +308,7 @@ public class ArithFactory {
                 
                 if(e2 != null){
                     List<Expr> p = new ArrayList<>();
-                    FunctionBasic f = ((Struct)(e1.type)).getNormalFunction(fName);
+                    FunctionBasic f = ((Struct)(e1.type)).getNaiveFunction(fName);
                     if(f != null){
                         p.add(e1);
                         p.add(e2);

@@ -9,13 +9,13 @@ public abstract class Var extends Expr {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return true;
     }
 
     @Override
-    public abstract Constant getValue();
+    public abstract Value getValue();
     
-    public abstract Constant setValue(Constant v);
+    public abstract Value setValue(Value v);
 
 }

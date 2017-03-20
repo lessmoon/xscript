@@ -18,4 +18,9 @@ The language has a c-like way to prommgram,and if you have exprience in C/C++, J
 7. a **script** language.And this means its GC system is based on JVM.
 8. a language supporting for multi-thread
 
+**Dependency** :
+
+1. JDK 8.0+(Lambda expression required.If you need run it on older java version(without lambda supported),please check out [v1.5](tree/v1.5) of this repo.)
+2. All `.cmd` files is for Windows,but you can write similar script on other OS.
+
 If you have any advices,you can fork it and raise a pull request.And also,extension to other language is welcome.

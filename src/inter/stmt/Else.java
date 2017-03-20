@@ -1,7 +1,7 @@
 package inter.stmt;
 
-import inter.expr.Constant;
 import inter.expr.Expr;
+import inter.expr.Value;
 import symbols.Type;
 
 public class Else extends Stmt {
@@ -18,7 +18,7 @@ public class Else extends Stmt {
     
     @Override
     public void run(){
-        if(expr.getValue() != Constant.False){
+        if(expr.getValue() != Value.False){
             stmt1.run();
         } else {
             stmt2.run();
@@ -28,11 +28,11 @@ public class Else extends Stmt {
     @Override
     public Stmt optimize(){
         stmt2 = stmt2.optimize();
-        if(expr == Constant.False){/*constant False,it will never happen to run the stmt2*/
+        if(expr == Value.False){/*constant False,it will never happen to run the stmt2*/
             return stmt2;
         }
         stmt1 = stmt1.optimize();
-        if(expr == Constant.True){/*it is always true,just remain stmt1 only*/
+        if(expr == Value.True){/*it is always true,just remain stmt1 only*/
             return stmt1;
         }
         return this;

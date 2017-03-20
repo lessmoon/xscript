@@ -8,7 +8,8 @@ public abstract class Rel extends Logical {
         super(tok,x1,x2);
     }
 
-    public Type check(Type p1,Type p2){
+    @Override
+    public Type check(Type p1, Type p2){
         if(p1 == p2)
             return Type.Bool;
         else 

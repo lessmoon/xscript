@@ -11,7 +11,7 @@ public abstract class Conversion extends Expr {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return e.isChangeable();
     }
 
@@ -30,5 +30,5 @@ public abstract class Conversion extends Expr {
         return getClass().getSimpleName() + "(" + e + ")";
     }
 
-    public abstract Constant getValue();
+    public abstract Value getValue();
 }

@@ -1,8 +1,8 @@
 package extension.system;
 
 import extension.Function;
-import inter.expr.Constant;
-import inter.expr.StructConst;
+import inter.expr.StructValue;
+import inter.expr.Value;
 import lexer.Token;
 
 import java.util.Calendar;
@@ -13,16 +13,16 @@ public class GetTime extends Function {
     public static Token fname = null;
     
     @Override
-    public Constant run(List<Constant> paras){
-        Constant c = paras.get(0);
-        if(c == Constant.Null){
-            return Constant.Null;
+    public Value run(List<Value> args){
+        Value c = args.get(0);
+        if(c == Value.Null){
+            return Value.Null;
         }
 		Calendar x = Calendar.getInstance();
-		((StructConst)c).setElement(0,new Constant(x.get(Calendar.HOUR)));
-		((StructConst)c).setElement(1,new Constant(x.get(Calendar.MINUTE)));
-		((StructConst)c).setElement(2,new Constant(x.get(Calendar.SECOND)));
-        return Constant.Null;
+		((StructValue)c).setElement(0,new Value(x.get(Calendar.HOUR)));
+		((StructValue)c).setElement(1,new Value(x.get(Calendar.MINUTE)));
+		((StructValue)c).setElement(2,new Value(x.get(Calendar.SECOND)));
+        return Value.Null;
     }
 
 }

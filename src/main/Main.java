@@ -1,8 +1,9 @@
 package main;
 
 import inter.expr.ArithFactory;
-import inter.expr.ArrayConst;
-import inter.expr.Constant;
+import inter.expr.ArrayValue;
+import inter.expr.Value;
+import inter.stmt.ReturnResult;
 import inter.stmt.Stmt;
 import lexer.Lexer;
 import parser.Parser;
@@ -14,8 +15,8 @@ import symbols.Type;
 import java.io.IOException;
 
 public class Main{
-    public static final int     MAJOR_VERSION       = 1;
-    public static final int     MINOR_VERSION       = 9;
+    public static final int     MAJOR_VERSION       = 2;
+    public static final int     MINOR_VERSION       = 0;
 
     private static void usage(){
         System.out.println(
@@ -30,6 +31,7 @@ public class Main{
             "path       The source file path you want to execute\n"+
             "           There should be only one source file\n"
         );
+
     }
     
     public static void main(String[] args)throws IOException{
@@ -38,10 +40,16 @@ public class Main{
         boolean stmt_opt  = false;
         boolean print_code_translate = false;
         boolean print_func_translate = false;
+        boolean debug_compile = false;
+        boolean debug_runtime = false;
+        boolean debug_struct = false;
         int index = 0 ;
         outer:{
             for(; index < args.length ;index++){
                 switch(args[index]){
+                case "-dbgst":case "-debugstruct":
+                    debug_struct = true;
+                    break;
                 case "-pc":
                     print_code_translate = true;
                     break;
@@ -75,6 +83,14 @@ public class Main{
                 case "-v":
                     System.out.println("Version: xxxscript " + MAJOR_VERSION + "." +  MINOR_VERSION + "\n");
                     return;
+                case "-dbgrt":
+                case "--debugruntime":
+                    debug_runtime = true;
+                    break;
+                case "-dbgcmp":
+                case "--debugcompile":
+                    debug_compile = true;
+                    break;
                 default:
                     if(args[index].charAt(0) == '-'){
                         System.err.println("Unknown option `" + args[index] + "' found.");
@@ -101,15 +117,20 @@ public class Main{
         Parser parser = new Parser(lex,expr_opt,stmt_opt);
         if(print_func_translate)
             parser.enablePrintFuncTranslate();
+        if(debug_struct)
+            parser.enablePrintStruct();
         Stmt s ;
         try {
             s = parser.program();
         } catch (RuntimeException e){
-            e.printStackTrace();
+            if (debug_compile)
+                e.printStackTrace();
             System.err.println("Compile Error:");
             System.err.println(e.getMessage());
             return;
         } catch( IOException e){
+            if (debug_compile)
+                e.printStackTrace();
             System.err.println("Compile Error(IO):");
             System.err.println(e.getMessage());
             return;
@@ -118,12 +139,12 @@ public class Main{
             if(print_code_translate){
                 System.out.print(s.toString());
                 return; 
-            } else if(!print_func_translate) {
+            } else if(!(print_func_translate || debug_struct)) {
                 /* push arguments */
-                ArrayConst a = new ArrayConst(new Array(Type.Str),args.length - index);
+                ArrayValue a = new ArrayValue(new Array(Type.Str),args.length - index);
 
                 for(int i = 0;i + index < args.length;i++){
-                    a.setElement(i,new Constant(args[i + index]));
+                    a.setElement(i,new Value(args[i + index]));
                 }
                 VarTable.pushVar(a);
 
@@ -131,9 +152,12 @@ public class Main{
             } else {
                 return;
             }
-           
-        } catch (RuntimeException e){
-            //e.printStackTrace();
+
+        } catch (ReturnResult res) {
+            System.exit(res.value.valueAs(Integer.class));
+        } catch (RuntimeException e) {
+            if (debug_runtime)
+                e.printStackTrace();
             System.err.println("Runtime Error:");
             RunStack.printStackTrace(e.getMessage());
             return;

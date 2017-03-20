@@ -1,43 +1,82 @@
 native<extension.system>{
-    int open(string fname);
-    int close(int fid);
-    int readch(int fid);
-    int writech(int fid,char c);
+    "SimpleFile":struct SimpleFile{
+        def this(string path);
+        def string getName();
+        def bool canRead();
+        def bool canWrite();
+        def bool isDirectory();
+        def bool isFile();
+        def bool isHidden();
+        def bool exists();
+        def bool mkdir();
+        def bool createNewFile();
+        def SimpleFile getParent();
+    };
+    "SimpleFileInputStream":struct FileInputStream{
+        def this(SimpleFile file);
+        def void open(SimpleFile file);
+        def int readChar();
+        def void close();
+        def bigint skip(bigint i);
+    };
+    "SimpleFileOutputStream":struct FileOutputStream{
+        def this(SimpleFile file,bool append);
+        def void open(SimpleFile file,bool append);
+        def void writeInt(int aInt);
+        def void close();
+        def void flush();
+    };
 }
 
 struct File {
-	string fname;
-	int fid;
+    string fname;
+    SimpleFile file;
+    FileInputStream fis;
+    FileOutputStream fos;
+    
+    def this(){}
 
-	def this(){
-		this.fname = "";
-		this.fid   = -1;
-	}
+    def void close(){
+        if(this.fis != null){
+            this.fis.close();
+        }
+        if(this.fos != null){
+            this.fos.close();
+        }
+        this.file = null;
+    }
+    
+    def bool open(string fname,bool append){
+        this.close();
+        this.fname = fname;
+        this.file = new SimpleFile(this.fname);
+        if(!this.file.exists()){
+            this.file.createNewFile();
+        }
+        if(this.fis == null)
+            this.fis = new FileInputStream(this.file);
+        else
+            this.fis.open(this.file);
+        if(this.fos == null)
+            this.fos = new FileOutputStream(this.file,append);
+        else 
+            this.fos.open(this.file,append);
+    }
 
-	def bool open(string fname){
-		this.fname = fname;
-		return ((this.fid = open(fname)) < 0);
-	}
+    def bool is_open(){
+        return this.file != null;
+    }
 
-	def bool is_open(){
-		return this.fid < 0;
-	}
+    def string file_name(){
+        return this.fname;
+    }
 
-	def string file_name(){
-		return this.fname;
-	}
+    def int readch(){
+        return this.fis.readChar();
+    }
 
-	def int readch(){
-		return readch(this.fid);
-	}
-
-	def void close(){
-		close(this.fid);
-		this.fid   = -1;
-	}
-
-	def void writech(char c){
-		writech(this.fid,c);
-	}
+    def void writech(char c){
+        this.fos.writeInt(c);
+    }
 
 }

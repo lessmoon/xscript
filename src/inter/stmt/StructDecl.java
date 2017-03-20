@@ -1,7 +1,7 @@
 package inter.stmt;
 
-import inter.expr.Constant;
 import inter.expr.Expr;
+import inter.expr.Value;
 import lexer.Token;
 import runtime.VarTable;
 import symbols.Struct;
@@ -20,10 +20,10 @@ public class StructDecl extends Decl {
      * TODO:May be optimized
      */
     public boolean check(int i){
-        if( value == Constant.Null )
+        if( value == Value.Null )
             return type instanceof Struct;
         else
-            return type.equals(value.type) || ((Struct) value.type).isChildOf((Struct)type);
+            return type.isCongruentWith(value.type) || ((Struct) value.type).isChildOf((Struct)type);
     }
 
     @Override

@@ -19,7 +19,7 @@ public class Set extends Expr {
         if( type == null ){
             error("Operand `" + op + "' should be used between " + id.type  + " variable and expression,actually " + id.type + "=" + expr.type);
         }
-        if(!expr.type.equals(type)){
+        if(!expr.type.isCongruentWith(type)){
             expr = ConversionFactory.getConversion(expr,type);
         }
     }
@@ -44,7 +44,7 @@ public class Set extends Expr {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return true;
     }
 
@@ -55,8 +55,8 @@ public class Set extends Expr {
     }
 
     @Override
-    public Constant getValue(){
-        Constant v = expr.getValue();
+    public Value getValue(){
+        Value v = expr.getValue();
         return id.setValue(v);
     }
     

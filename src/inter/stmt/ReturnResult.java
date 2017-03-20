@@ -1,10 +1,10 @@
 package inter.stmt;
 
-import inter.expr.Constant;
+import inter.expr.Value;
 
 public class ReturnResult extends RuntimeException {
-    public final Constant value;
-    public ReturnResult(Constant v){
+    public final Value value;
+    public ReturnResult(Value v){
         value = v;
     }
 }

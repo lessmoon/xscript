@@ -6,18 +6,18 @@ import symbols.Type;
 public abstract class Logical extends Expr {
     Expr expr1;
     Expr expr2;
-    Logical(Token tok,Expr x1,Expr x2){
-        super(tok,null);
+    Logical(Token tok,Expr x1,Expr x2) {
+        super(tok, null);
         expr1 = x1;
         expr2 = x2;
-        type = check(expr1.type,expr2.type);
-        if(type == null) 
-            error("type error");
+        type = check(expr1.type, expr2.type);
+        if (type == null)
+            error("type error:operand `" + tok + "' can't be used between `" + expr1.type + "' and `" + expr2.type + "'");
     }
 
     @Override
-    boolean isChangeable(){
-        return expr1.isChangeable() || expr1.isChangeable();
+    public boolean isChangeable(){
+        return expr1.isChangeable() || expr2.isChangeable();
     }
 
     @Override

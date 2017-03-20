@@ -4,14 +4,15 @@ import extension.ExtensionStructHelper;
 import extension.Struct;
 import extension.annotation.Init;
 import extension.annotation.StructMethod;
-import inter.expr.Constant;
-import inter.expr.StructConst;
+import inter.expr.StructValue;
+import inter.expr.Value;
 import lexer.Token;
 import runtime.Dictionary;
 import runtime.Interface;
 import runtime.TypeTable;
 import symbols.Position;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,16 +27,15 @@ public class SimpleThread extends Struct {
 
     public static class SimpleThreadProxy {
         final static Position vfPos = new Position(0, 0);
-        Thread t;
+        Thread thread;
 
-        @Init(args = "Runnable")
-        public void init(Constant r) {
-            StructConst runnable = (StructConst) r;
+        @Init(param = "#.SimpleRunnable")
+        public void init(Value r) {
+            StructValue runnable = (StructValue) r;
 
-            t = new Thread(() -> {
+            thread = new Thread(() -> {
                 try {
-                    List<Constant> args = new ArrayList<>();
-                    args.add(runnable);
+                    List<Value> args = new ArrayList<>();
                     Interface.invokeVirtualFunctionOfStruct(runnable, vfPos, args);
                 } catch (RuntimeException ignored) {
 
@@ -43,34 +43,55 @@ public class SimpleThread extends Struct {
             });
         }
 
-        @StructMethod(ret = "bool")
-        public Constant start() {
-            try {
-                t.start();
-            } catch (Exception e) {
-                return Constant.False;
-            }
-            return Constant.True;
+        @StructMethod(ret ="bool", param ="$")
+        public Value equals(StructValue r){
+            SimpleThreadProxy ext = (SimpleThreadProxy) r.getExtension();
+            return Value.valueOf(ext.thread.equals(this.thread));
+        }
+        
+        @StructMethod(param = {"string"})
+        public void setName(Value name) {
+            thread.setName(name.valueAs(String.class));
         }
 
-        @StructMethod(args = "int")
-        public Constant join(Constant time) {
-            try {
-                t.join(time.valueAs(Integer.class));
-            } catch (Exception e) {
-                return Constant.False;
-            }
-            return Constant.True;
+        @StructMethod(ret = "string")
+        public Value getName() {
+            return new Value(thread.getName());
+        }
+
+        @StructMethod(ret = "bigint")
+        public Value getThreadId(){
+            return new Value(BigInteger.valueOf(thread.getId()));
         }
 
         @StructMethod(ret = "bool")
-        public Constant interrupt() {
+        public Value start() {
             try {
-                t.interrupt();
+                thread.start();
             } catch (Exception e) {
-                return Constant.False;
+                return Value.False;
             }
-            return Constant.True;
+            return Value.True;
+        }
+
+        @StructMethod(param = "int")
+        public Value join(Value time) {
+            try {
+                thread.join(time.valueAs(Integer.class));
+            } catch (Exception e) {
+                return Value.False;
+            }
+            return Value.True;
+        }
+
+        @StructMethod(ret = "bool")
+        public Value interrupt() {
+            try {
+                thread.interrupt();
+            } catch (Exception e) {
+                return Value.False;
+            }
+            return Value.True;
         }
     }
 }

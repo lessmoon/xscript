@@ -35,3 +35,10 @@ def int qsort(int[] s,int l,int r){
     }
     return 0;
 }
+
+native<extension.math.functions>{
+    "sin":real sin(real theta);
+    "cos":real cos(real theta);
+    "SetSeed":void srand(int seed);
+    "Random":int rand();
+}

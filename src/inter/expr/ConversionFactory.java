@@ -1,11 +1,13 @@
 package inter.expr;
 
-import lexer.*;
-import symbols.*;
 import inter.stmt.FunctionBasic;
+import lexer.*;
+import symbols.Array;
+import symbols.Struct;
+import symbols.Type;
 
-import java.math.BigInteger;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 class NoConversion extends Conversion{
@@ -13,7 +15,7 @@ class NoConversion extends Conversion{
         super(e,null,e.type);
     }
 
-    public Constant getValue(){
+    public Value getValue(){
         return e.getValue();
     }
 }
@@ -24,8 +26,8 @@ class StrConversion extends Conversion{
     }
 
     @Override
-    public Constant getValue(){
-        return new Constant("" + e.getValue());
+    public Value getValue(){
+        return new Value("" + e.getValue());
     }
 }
 
@@ -40,9 +42,9 @@ class BigIntIntConversion extends Conversion{
     }
 
     @Override
-    public Constant getValue(){
-        Constant v = e.getValue();
-        return new Constant(((BigNum)(v.op)).value.intValue());
+    public Value getValue(){
+        Value v = e.getValue();
+        return new Value(((BigNum)(v.op)).value.intValue());
     }
 }
 
@@ -52,9 +54,9 @@ class IntBigIntConversion extends Conversion{
     }
 
     @Override
-    public Constant getValue(){
-        Constant v = e.getValue();
-        return new Constant(BigInteger.valueOf((long)((Num)(v.op)).value));
+    public Value getValue(){
+        Value v = e.getValue();
+        return new Value(BigInteger.valueOf((long)((Num)(v.op)).value));
     }
 }
 
@@ -64,9 +66,9 @@ class BigIntRealConversion extends Conversion{
     }
 
     @Override
-    public Constant getValue(){
-        Constant v = e.getValue();
-        return new Constant(((BigNum)(v.op)).value.floatValue());
+    public Value getValue(){
+        Value v = e.getValue();
+        return new Value(((BigNum)(v.op)).value.floatValue());
     }
 }
 
@@ -76,9 +78,9 @@ class BigIntBigRealConversion extends Conversion{
     }
 
     @Override
-    public Constant getValue(){
-        Constant v = e.getValue();
-        return new Constant(new BigDecimal(((BigNum)(v.op)).value));
+    public Value getValue(){
+        Value v = e.getValue();
+        return new Value(new BigDecimal(((BigNum)(v.op)).value));
     }
 }
 
@@ -88,9 +90,9 @@ class BigRealBigIntConversion extends Conversion{
     }
 
     @Override
-    public Constant getValue(){
-        Constant v = e.getValue();
-        return new Constant((((BigFloat)(v.op)).value).toBigInteger());
+    public Value getValue(){
+        Value v = e.getValue();
+        return new Value((((BigFloat)(v.op)).value).toBigInteger());
     }
 }
 
@@ -100,9 +102,9 @@ class BigRealRealConversion extends Conversion{
     }
 
     @Override
-    public Constant getValue(){
-        Constant v = e.getValue();
-        return new Constant((((BigFloat)(v.op)).value).floatValue());
+    public Value getValue(){
+        Value v = e.getValue();
+        return new Value((((BigFloat)(v.op)).value).floatValue());
     }
 }
 
@@ -112,9 +114,9 @@ class RealBigRealConversion extends Conversion{
     }
     
     @Override
-    public Constant getValue(){
-        Constant v = e.getValue();
-        return new Constant(BigDecimal.valueOf((double)((lexer.Float)(v.op)).value));
+    public Value getValue(){
+        Value v = e.getValue();
+        return new Value(BigDecimal.valueOf((double)((lexer.Float)(v.op)).value));
     }
 }
 
@@ -128,9 +130,9 @@ class IntRealConversion extends Conversion{
         super(e,Type.Real,Type.Real);
     }
 
-    public Constant getValue(){
-        Constant v = e.getValue();
-        return new Constant((float)((Num)(v.op)).value);
+    public Value getValue(){
+        Value v = e.getValue();
+        return new Value((float)((Num)(v.op)).value);
     }
 }
 
@@ -139,9 +141,9 @@ class RealIntConversion extends Conversion{
         super(e,Type.Int,Type.Int);
     }
 
-    public Constant getValue(){
-        Constant v = e.getValue();
-        return new Constant((int)((lexer.Float)(v.op)).value);
+    public Value getValue(){
+        Value v = e.getValue();
+        return new Value((int)((lexer.Float)(v.op)).value);
     }
 }
 
@@ -150,9 +152,9 @@ class CharIntConversion extends Conversion{
         super(e,Type.Int,Type.Int);
     }
 
-    public Constant getValue(){
-        Constant v = e.getValue();
-        return new Constant((int)((Char)(v.op)).value);
+    public Value getValue(){
+        Value v = e.getValue();
+        return new Value((int)((Char)(v.op)).value);
     }
 }
 
@@ -161,9 +163,9 @@ class IntCharConversion extends Conversion{
         super(e,Type.Char,Type.Char);
     }
 
-    public Constant getValue(){
-        Constant v = e.getValue();
-        return new Constant((char)((Num)(v.op)).value);
+    public Value getValue(){
+        Value v = e.getValue();
+        return new Value((char)((Num)(v.op)).value);
     }
 }
 
@@ -339,9 +341,9 @@ class UpperCastConversion extends Conversion{
     }
 
     @Override
-    public Constant getValue(){
-        Constant v = e.getValue();
-        if(v != Constant.Null){
+    public Value getValue(){
+        Value v = e.getValue();
+        if(v != Value.Null){
             assert(v.type instanceof Struct);
         }
         return v;
@@ -364,12 +366,14 @@ class DownCastConversion extends Conversion {
     }
 
     @Override
-    public Constant getValue(){
-        Constant v = e.getValue();
-        assert(v.type instanceof Struct);
+    public Value getValue(){
+        Value v = e.getValue();
+        if (v != Value.Null) {
+            assert (v.type instanceof Struct);
         /*runtime check if it is ok to downcast*/
-        if(!tar.equals(v.type) && !((Struct)(v.type)).isChildOf(tar)){
-            error("can't cast from `" + v.type + "' to `" + tar + "'");
+            if (!tar.isCongruentWith(v.type) && !((Struct) (v.type)).isChildOf(tar)) {
+                error("can't cast from `" + v.type + "' to `" + tar + "'");
+            }
         }
         return v;
     }
@@ -382,7 +386,7 @@ class NullConversion extends Conversion {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return false;
     }
 
@@ -392,8 +396,8 @@ class NullConversion extends Conversion {
     }
 
     @Override
-    public Constant getValue(){
-        assert(e == Constant.Null);
+    public Value getValue(){
+        assert(e == Value.Null);
         return e.getValue();
     }
 }
@@ -420,7 +424,7 @@ public class ConversionFactory {
 
         Expr c = null;
 
-        if(src == Constant.Null){
+        if(src == Value.Null){
             if(t instanceof Array || t instanceof Struct)
                 return new NullConversion(src,t);
         } else if(src.type instanceof Struct){
@@ -436,7 +440,7 @@ public class ConversionFactory {
             Token fname = ((Struct)(src.type)).getOverloading(t);
             if(fname != null){
                 ArrayList<Expr> p = new ArrayList<>();
-                FunctionBasic f = ((Struct)(src.type)).getNormalFunction(fname);
+                FunctionBasic f = ((Struct)(src.type)).getNaiveFunction(fname);
                 if(f != null){
                     p.add(src);
                     c = new FunctionInvoke(f,p);

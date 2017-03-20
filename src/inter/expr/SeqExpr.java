@@ -32,13 +32,13 @@ public class SeqExpr extends Expr {
     }
 
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return left.isChangeable() || right.isChangeable();
     }
 
     @Override
-    public Constant getValue(){
-        Constant c = left.getValue();
+    public Value getValue(){
+        Value c = left.getValue();
         right.getValue();
         return c;
     }

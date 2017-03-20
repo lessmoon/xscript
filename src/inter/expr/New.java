@@ -16,13 +16,13 @@ public class New extends Op {
         return "new " + type.toString();
     }
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return true;
     }
 
     @Override
-    public Constant getValue(){
-        return new StructConst((Struct)type);
+    public Value getValue(){
+        return new StructValue((Struct)type);
     }
 }
 

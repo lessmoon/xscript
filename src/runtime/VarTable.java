@@ -1,40 +1,41 @@
 package runtime;
 
-import inter.expr.Constant;
+import inter.expr.Value;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 class ConstantReference {
-    Constant v;
-    ConstantReference(Constant v){
-        this.v = v;
+    private Value value;
+    ConstantReference(Value value){
+        this.value = value;
+    }
+    public Value getValue(){
+        return value;
+    }
+
+    public Value setValue(Value value) {
+        this.value = value;
+        return value;
     }
 }
 
 public class VarTable {
     static final boolean IS_DEBUG = false;
     static final private List<ConstantReference> globalTable = new ArrayList<>();
-    static final private ThreadLocal<Stack<List<ConstantReference>>> table = new ThreadLocal<Stack<List<ConstantReference>>>() {
-        @Override
-        protected Stack<List<ConstantReference>> initialValue(){
-            return new Stack<>();
-        }
-    };
+    static final private ThreadLocal<Stack<List<ConstantReference>>> table = ThreadLocal.withInitial(Stack::new);
 
     static private int levels(VarTable r){
         return 1;//r.prev==null?1:levels(r.prev) + 1;
     }
 
-    static public List<Constant> getTop(){
-        List<Constant> arr = new ArrayList<>();
+    static public List<Value> getTop(){
+        List<Value> arr = new ArrayList<>();
         if(table.get().empty()){
-            globalTable.forEach(v -> arr.add(v.v));
+            globalTable.stream().map(ConstantReference::getValue).forEach(arr::add);
         } else {
-            table.get().peek().forEach(v -> {
-                arr.add(v.v);
-            });
+            table.get().peek().stream().map(ConstantReference::getValue).forEach(arr::add);
         }
         return arr;
     }
@@ -60,7 +61,7 @@ public class VarTable {
         table.get().push(new ArrayList<>());
     }
 
-    static public void pushVar(Constant v){
+    static public void pushVar(Value v){
         ///*
         if(IS_DEBUG){
             for(int i = 0 ; i < table.get().size() - 1 ; i++)
@@ -75,7 +76,7 @@ public class VarTable {
         }
     }
 
-    static public Constant getVar(int sloff,int offset){
+    static public Value getVar(int sloff, int offset){
         /*
         for(int i = 0 ; i < sloff ; i++)
             System.out.print("  |");
@@ -84,7 +85,7 @@ public class VarTable {
         return getVarAbsolutely(nowlevel - sloff,offset);
     }
 
-    static public Constant setVar(int sloff,int offset,Constant v){
+    static public Value setVar(int sloff, int offset, Value v){
         /*
         for(int i = 0 ; i < sl ; i++)
             System.out.print("  |");
@@ -93,7 +94,7 @@ public class VarTable {
         return setVarAbsolutely(nowlevel - sloff,offset,v);
     }
     
-    static public Constant getVarAbsolutely(int sl,int offset){
+    static public Value getVarAbsolutely(int sl, int offset){
         
         ///*
         if(IS_DEBUG&&false){
@@ -102,10 +103,10 @@ public class VarTable {
             System.out.println("get " + offset );
         }//*/
         List<ConstantReference> c = sl == 0 ? globalTable:table.get().get(sl - 1);
-        return c.get(offset).v;
+        return c.get(offset).getValue();
     }
     
-    static public Constant setVarAbsolutely(int sl,int offset,Constant v){
+    static public Value setVarAbsolutely(int sl, int offset, Value v){
         ///*
         if(IS_DEBUG&&false){
             for(int i = 0 ; i < sl ; i++)
@@ -113,7 +114,6 @@ public class VarTable {
             System.out.println("set " + offset + " = " );
         }//*/
         List<ConstantReference> c = sl == 0 ? globalTable:table.get().get( sl - 1 );
-        c.get(offset).v = v;
-        return v;
+        return c.get(offset).setValue(v);
     }
 }

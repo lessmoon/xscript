@@ -13,11 +13,13 @@ public class VirtualTable {
         vtable = new ArrayList<>();
     }
 
+    private VirtualTable(List<List<FunctionBasic>> vtable){
+        this.vtable = vtable;
+    }
+
     @Override
     public Object clone() {
-        VirtualTable t = new VirtualTable();
-        t.vtable.addAll(vtable.stream().map(ArrayList::new).collect(Collectors.toList()));
-        return t;
+        return new VirtualTable(vtable.stream().map(ArrayList::new).collect(Collectors.toList()));
     }
 
     public void createNewTable(){
@@ -51,14 +53,22 @@ public class VirtualTable {
     }
 
     public boolean isCompleted(){
+        return findFirstUncompletedFunction() == null;
+    }
+
+    public FunctionBasic findFirstUncompletedFunction(){
         for(List<FunctionBasic> l : vtable){
             for(FunctionBasic m : l){
                 if(!m.isCompleted()){
-                    return false;
+                    return m;
                 }
             }
         }
-        return true;
+        return null;
     }
 
+    public void copy(VirtualTable t){
+        vtable.clear();
+        vtable.addAll(t.vtable.stream().map(ArrayList::new).collect(Collectors.toList()));
+    }
 }

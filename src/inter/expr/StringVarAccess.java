@@ -28,7 +28,7 @@ public class StringVarAccess extends Var {
     }
     
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return true;
     }
 
@@ -43,18 +43,18 @@ public class StringVarAccess extends Var {
     }
 
     @Override
-    public Constant getValue(){
+    public Value getValue(){
         int i = ((Num)(index.getValue().op)).value;
         String str = ((Str)(array.getValue().op)).value;
-        return new Constant(str.charAt(i));
+        return new Value(str.charAt(i));
     }
 
     @Override
-    public Constant setValue(Constant c){
+    public Value setValue(Value c){
         int i = ((Num)(index.getValue().op)).value;
         String str = ((Str)(array.getValue().op)).value;
         StringBuilder sb = new StringBuilder(str);
         sb.setCharAt(i,((Char)(c.op)).value);
-        return array.setValue(new Constant(sb.toString()));
+        return array.setValue(new Value(sb.toString()));
     }
 }

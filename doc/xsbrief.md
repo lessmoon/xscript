@@ -89,47 +89,50 @@
 * Function declaration & definition
 	* Definition
 		* Normal function definition
-			1. `def` return-type func-name ( [para-type para-name,...] ){
+			1. `def` return-type func-name ( [param-type param-name,...] ){
 			2. &emsp;&emsp; function-body
 			3. }
 		* Structure's member function definition(can use `this` variable in function body)
-			1. `def` return-type structure-name.func-name ([para-type para-name,...]){
+			1. `def` return-type structure-name.func-name ([param-type param-name,...]){
 			2. &emsp;&emsp;function-body
  			3. }
  		* Stucture's initial function definition(can use `this' variable and use super() function to intitial base struct)
-	 		1. `def` structure-name.`this`([para-type para-name,...]){
+	 		1. `def` structure-name.`this`([param-type param-name,...]){
 	 		2. &emsp;&emsp;function-body
 	 		3. }
 	* Declaration(if not used,no need to implement it)
-		- `def` return-type func-name([para-type para-name,...]);
+		- `def` return-type func-name([param-type param-name,...]);
 * Structure declaration & definition :
 	- Define a structure
-		1.  `struct` name {
-		2. &emsp;type-name var-name;[...] ***//Member variable declaration***
-		3. &emsp;`def` `this`([para-type para-name,...]);***//Initial function declaration***
-		4. &emsp;`def` `this`([para-type para-name,...]){***//Initial function definition(initial function can just have one for each struct now )***
-		5. &emsp;&emsp;&emsp;&emsp;function-body;
-		6. &emsp;}
-		7. &emsp;`def` return-type func-name([para-type para-name,...]);***//Function declaration***
-		8. &emsp;`def` return-type func-name([para-type para-name,...]){***//Function definition***
-		9. &emsp;&emsp;&emsp;&emsp;function-body;
-		10.	&emsp;&nbsp;}
-		11. &nbsp;}
+
+		1.  `struct` name;***//pre-declaration***
+		2.  `struct` name:base-name; **//pre-declaration with base struct**
+		3.  `struct` name {
+		4. &emsp;type-name var-name;[...] **//Member variable declaration**
+		5. &emsp;`def` `this`([param-type param-name,...]);***//Initial function declaration***
+		6. &emsp;`def` `this`([param-type param-name,...]){***//Initial function definition(initial function can just have one for each struct now )***
+		7. &emsp;&emsp;&emsp;&emsp;function-body;
+		8. &emsp;}
+		9. &emsp;`def` return-type func-name([param-type param-name,...]);***//Function declaration***
+		10. &emsp;`def` return-type func-name([param-type param-name,...]){***//Function definition***
+		11. &emsp;&emsp;&emsp;&emsp;function-body;
+		12.	&emsp;&nbsp;}
+		13. &nbsp;}
 	- Inheriting and overriding
-		1. Inherite a base structure
+		1. Inherit a base structure
 			- `struct` **derive-name**`:`**base-name**
 		2. Virtual function
-			- `def` `virtual` return-type func-name([para-type para-name,...]) 
+			- `def` `virtual` return-type func-name([param-type param-name,...]) 
 		3. Override function
-			- `def` `override` return-type func-name([para-type para-name,...]) 
+			- `def` `override` return-type func-name([param-type param-name,...]) 
 		4. Override function must be virtual function in base struct
-		5. If a struct(or its father) defined a pure virtual function(declared but no definition),it is not instantiable
+		5. If a struct(or its base struct) defined a pure virtual function(declared but no definition),it is not instantiable
 		6. initial function shouldn't be `virtual`,and so it can't use `override`
 	- Operand overloading
 		- Definition grammar
 			1.  `struct` name {
 			2.  &emsp;@operand-name
-			3.  &emsp;`def` return-type func-name([para-type para-name,...]);***//Function declaration or definition***
+			3.  &emsp;`def` return-type func-name([param-type param-name,...]);***//Function declaration or definition***
 			4.  &nbsp;}
 		- Constraint
 			1. available operands have `+`,`-`,`*`,`/`,`%`,`>`,`<`,`<=`,`>=`, and types(except the self-type and array)
@@ -144,9 +147,11 @@
 		- name can be `this` and `super`,but with `super`,it must have a base struct and this base struct must have implemented this member(function or variable).
 * Load extension
 	1. native\<package-name\>{
-	2. &emsp;["class-name":]return-type func-name ( [para-type para-name,...] );***//load extension functions***
-	3. &emsp;["class-name":]def struct something{};
-	4. }
+	2. &emsp;["class-name":]return-type func-name ( [param-type param-name,...] );***//load extension functions***
+	3. &emsp;["class-name":]struct something{
+	4. &emsp;&emsp;def this(param-list);***//function declarations(not necessary,but will check the correctness)***
+	4. &emsp;};
+	5. }
 * Import source file:
 	- `import` "file-path";
 * Expressions:
@@ -162,6 +167,20 @@
 	* expression (`+`,`-`,`*`,`/`,`%`) expression(`%` for `int` & `char`)
 		- expression (`==`,`!=`,`>`,`>=`,`<`,`<=`) expression
 		- bool-type expression (`&&`,`||`) bool-type  expression
+	* Anonymous inner struct
+		* Syntax:
+			1.  `new` struct-type(arguments){
+			2.  &emsp;&emsp;type var;
+			3.  &emsp;&emsp;`def` `this`(param-list){***//optional,default is from base struct***
+			4.  &emsp;&emsp;&emsp;`statements`
+			5.  &emsp;&emsp;}
+			6.  &emsp;&emsp;`def` [`virtual`/`override`] ret-type func-name(param-list){  
+			7.  &emsp;&emsp;&emsp;`statements`
+	        8.  &emsp;&emsp;} 
+			9.  }
+		* Notation:
+			1. can't capture variables from outter environments,use initital function instead
+			2. initialization function will inherit from base class directly by default
 	* Variable declaration
 		- Basic-type var-name\[,...] (var-name must begin with one of [a-zA-Z_])
 		- Basic-type var-name = initial-value\[,...](with initial-value)
@@ -176,7 +195,7 @@
 		- `bigreal`:real larger than RealMax(or ends with '**R**') 
 		- `null`:used for array and struct
 	* Dynamic array allocation:
-		- `new` type [expression];***//expression should be interge***
+		- `new` type [expression];***//expression should be integer***
 		- `new` struct-type;***//struct has no defined initial functions***
 		- `new` struct-type([argument,...]);***//struct has a defined initial function***
 	* Array size getter:(return an integer)
@@ -188,6 +207,34 @@
 		- `_file_`:  file name of the source file
 		- `_version_`: compiler version(major-version * 100 + minor-version)
 		- `_args_`: command line arguments(runtime variable)
+* Extension from native environment
+	* java function binding
+		* Inherite **extension.Function**
+		* override methods:**Value run(List<Value> arguments)* `arguments` is from runtime invocations
+		* override methods if need some initialization work before importing
+		* importing
+			1.  `native`<extension.Function>{
+			2.  &emsp;&emsp;["class-name"]:ret-type func-name(param-list);***//the class-name is not necessary,use *func-name* by default***
+			3. }
+	* java class binding
+		* Inherite **extension.Function**,override **Struct setup(Token sname, Dictionary dic, TypeTable typeTable)** 
+		* and then there comes 2 ways to do ex-struct definition
+			* compose a struct by coding(it feels very bad)
+			* compose a struct by class **ExtensionStructHelper**
+				* use annotation `Init` for struct initialization function
+					* `param` for parameters' types
+				* use annotation `StructMethod` for struct member function
+					* `value` for function name,java method name by default
+					* `param` for parameters' types
+					* `ret` for return type
+					* `virtual` for determining if the function is virtual
+					* `purevirtual` for determining if the function is pure virtual,if it is set,the function is also virtual
+				* use annotation `PassThisReference` if you need pass this reference to this native,note that the java method needs an additional arg(typed `Value` or `StructValue`) for this passing in first postion
+				* to refer an extension class type,use class reference
+					* $ stands for this extension class
+					* \#.`class-name` stands for relative path native extension class
+					* \#`class-name` stands for absolute path native extension class
+					* if you want to return a class extension struct,just use `new StructValue(symbols.Struct.StructPlaceHolder,xxxxx);`,the vm will dynamic cast its type
 * Features in future
 	* Inline function definition:
-		- `def` return-type func-name([para-type para-name,...]) = expression;
+		- `def` return-type func-name([param-type param-name,...]) = expression;

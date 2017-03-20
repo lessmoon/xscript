@@ -8,8 +8,8 @@ import java.lang.annotation.Target;
 /**
  * Created by lessmoon on 2016/8/18.
  */
-@Target(value = ElementType.METHOD)
-@Retention(value = RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Init {
-     String[] args() default {};
+     String[] param() default {};
 }

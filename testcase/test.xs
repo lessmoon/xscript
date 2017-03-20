@@ -1,17 +1,229 @@
 import  "lib/file.xs";
 import  "lib/system.xs";
+import  "lib/concurrent.xs";
 import  "math/Math.xs";
 import  "math/Ratio.xs";
 import  "parser/parser.xs";
 import  "container/darray.xs";
 import  "container/hashmap.xs";
-import  "container/list.xs";
+import  "container/priorityqueue.xs";
+import  "ui/paintpad.xs";
+import  "ui/cyclepaintpad.xs";
+import "rpg/parser.xs";
 
-native<extension.ui>{
-    "PaintPadX":struct PaintPad{
-        def this(string name,int width,int height);
-        def int addString(string str,int x,int y);
-    };
+struct ScrollTextOutput{
+    PaintPad x;
+    int width,height;
+    int[] ids;
+    List contents;
+
+    int line;
+    
+    def this(int width_tile,int height_tile){
+        this.width = width_tile;
+        this.height = height_tile;
+        this.contents = new List();
+        this.x = new PaintPad("XLand",16*height_tile+20,8*width_tile+20);
+        this.ids = new int[height_tile];
+        for(int i = 0; i < height_tile;i++){
+           this.ids[i] = this.x.addString("",10,16*i+20);
+        }
+        this.line = 0;
+    }
+
+    def void update(){
+        if(this.line >= this.height){
+            auto beg = this.contents.front();
+            for(int i = this.height - 1;i >= 0 ;i--){
+                this.x.setString(this.ids[i],beg.value);
+                beg = beg.next;
+            }
+        } else {
+            int i = 0;
+            for(auto iter = this.contents.back();iter.prev != null;iter = iter.prev){
+                this.x.setString(this.ids[i],iter.value);
+                i++;
+            }
+        }
+    }
+
+    def void addString(string str,int r,int p,int g){
+        int len = strlen(str);
+        
+        if(len > this.width){
+            StringBuffer sb1 = new StringBuffer();
+            sb1.append(str);
+            sb1.delete(this.width-1,len - 1);
+            this.contents.push_front(new StringContent(sb1.toString()));
+            len -= this.width;
+            int i = this.width;
+            this.line ++;
+            do{
+                StringBuffer sb = new StringBuffer();
+                for(int j = 0;j < this.width && len > 0;j++){
+                    sb.append(str[i + j]);
+                    len--;
+                }
+                this.contents.push_front(new StringContent(sb.toString()));
+                i += this.width;
+                this.line++;
+            }while(len > 0);
+        } else {
+            this.contents.push_front(new StringContent(str));
+            this.line++;
+        }
+    }
+    
+    def void addCharacter(char c,int r,int p,int g){
+        if(this.contents.front() == null){
+            this.contents.push_front(new StringContent(c));
+        }
+    }
+
+    def void changeLine(){
+        this.line ++;
+    }
+
+    def void open(){
+        this.x.show();
+    }
+    
+    def void close(){
+        this.x.close();
+    }
+    
+    def void wait(){
+        this.x.wait();
+    }
+}
+
+struct base;
+struct derive:base;
+struct base{
+    def virtual base getBase();
+}
+
+struct rrr{
+    def void test(derive d){
+        d.getBase();
+    }
+} 
+
+struct derive:base{
+    def void test();
+}
+
+{
+    RPGParser p = new RPGParser();
+    RPGRuntime r = new RPGRuntime(p);
+    r.registerFunction("sleep",new Sleep);
+    r.registerFunction("condition",new Cond);
+    r.registerFunction("jump",new Jump);
+    r.registerFunction("choice",new Choice);
+    r.registerFunction("set",new Set);
+    r.registerFunction("print",new Print);
+    r.registerFunction("type",new StopPrint);
+    r.registerFunction("open",new Open);
+    r.registerFunction("add",new RPGAdd);
+    r.registerFunction("read",new TypeString);
+    r.registerFunction("case",new RPGCase);
+    r.registerFunction("time",new RPGTime);
+    r.open("test");
+    //r.run();
+}
+
+int[] r = {3243,545};
+
+int x = 80,y = 170,width = 40;
+
+struct MyPaintPad:PaintPad{
+    def this(){
+        super("test",200,200);
+        Font f = super.getFont();
+    }
+    
+    def override void onClick(int bid){
+        super.onClick(bid);
+        switch(bid){
+        case 37:
+           x-=10;
+           break;
+        case 39:
+           x+=10;
+           break;
+        case 27:
+           this.close();
+           break;
+        default:
+           println(bid);
+        }
+    }
+    
+    def override void onPress(int bid){
+        this.onClick(bid);
+    }
+}
+
+struct Game : CyclePaintPad {
+    int cid;
+    real x;
+    real y;
+    real v_x;
+    real v_y;
+    int lid;
+    
+    def this(){
+        super(new MyPaintPad(),1);
+        this.cid = this.pad.addCircle(50,50,10);
+        this.pad.setBrushColor(0,255,255);
+        this.lid = this.pad.addLine(x,y,width+x,y);
+       
+        this.pad.setBrushColor(0,0,255);
+        this.pad.addLine(10,10,10,190);
+        this.pad.addLine(10,10,190,10);
+        this.pad.addLine(10,190,190,190);
+        this.pad.addLine(190,10,190,190);
+        this.v_x = 0.05;
+        this.v_y = 0.1;
+        this.x = 55;
+        this.y = 55;
+    }
+    
+    def override void run(){
+        this.x += this.v_x;
+        this.y += this.v_y;
+        //collision detection
+     
+        if(this.x <= 5 || this.x >= 185){
+            this.v_x = -this.v_x;
+        }
+        if(this.y <= 5 || this.y >= 185){
+            this.v_y = -this.v_y;
+        }
+        if( x < 10 ){
+           x = 10;
+        }
+        if( x > 150){
+           x = 150;
+        }
+        
+        if(this.y >= y && this.x >= x && this.x <= x + width){
+            this.v_y = -this.v_y;
+        }
+        
+        this.pad.setLine(this.lid,x,y,width+x,y);
+        
+        this.pad.setCircle(this.cid,this.x,this.y);
+        super.run();
+    }
+    
+    def void open(){
+        this.pad.show();
+    }
+
+    def void wait(){
+        this.pad.wait();
+    }
 }
 
 struct baseA{
@@ -47,14 +259,7 @@ struct deriveC:baseB{
     }
 }
 
-{
-    baseA x = new deriveC(1);
-    
-    println(x);
-}
-
-
-struct MyPaintPad:PaintPad{
+struct MyXPaintPad:PaintPad{
     int lastx,lasty;
 
     def this(string name,int width,int height){
@@ -84,79 +289,6 @@ struct MyPaintPad:PaintPad{
     }
 }
 
-{
-
-}
-
-native<extension.system>{
-    "sleep":void sleep(int duration);
-}
-
-struct Runnable {
-    def virtual void run();
-}
-
-native<extension.predefined>{
-    "SimpleThread":struct Thread{
-        def this(Runnable r);
-        def bool start();
-    };
-
-    "MutexLock":struct MutexLock{
-        def this();
-        def bool tryLock();
-        def bool wait();
-        def bool release();
-    };
-}
-
-struct Condition{
-    def virtual bool isTrue();
-}
-
-
-
-struct Schedule : Runnable{
-    int internal;
-    Condition cond;
-    Runnable run; 
-    
-    def this(int internal,Condition cond,Runnable run){
-        this.internal = internal;
-        this.cond     = cond;
-        this.run      = run;
-    }
-    
-    def override void run(){
-        while(this.cond.isTrue()){
-            sleep(this.internal);
-            this.run.run();
-        }
-    }
-}
-
-struct RepeatSchedule : Condition{
-    def override bool isTrue(){
-        return true;
-    }
-}
-
-struct Timer2 {
-    Thread thread;
-    
-    def this(Runnable run,int internal){
-        this.thread = new Thread(new Schedule(internal,new RepeatSchedule,run));
-    }
-    
-    def void start(){
-        this.thread.start();
-    }
-    
-    def void stop(){
-        this.thread.interrupt();
-    }
-}
-
 struct PrintCount : Runnable{
     int i;
     def this(){
@@ -167,139 +299,7 @@ struct PrintCount : Runnable{
     }
 }
 
-struct AtomicInteger{
-    int value;
-    MutexLock lock;
-
-    def this(){
-        this.value = 0;
-        this.lock = new MutexLock();
-    }
-
-    def int getAndSet(int value){
-        this.lock.wait();
-        auto res = this.value;
-        this.value = value;
-        this.lock.release();
-        return res;
-    }
-
-    def int setAndGet(int value){
-        this.getAndSet(value);
-        return value;
-    }
-
-    def int incrementAndGet(){
-        this.lock.wait();
-        auto res = ++ this.value ;
-        this.lock.release();
-        return res;
-    }
-
-    def void waitAndDecrement(int min){
-        bool ok = false;
-        do{
-            this.lock.wait();
-            if(this.value > min){
-               -- this.value;
-               ok = true;
-            }
-            this.lock.release();
-        }while(!ok);
-    }
-    
-    def void waitAndIncrement(int max){
-        bool ok = false;
-        do{
-            this.lock.wait();
-            if(this.value < max){
-               ++ this.value;
-               ok = true;
-            }
-            this.lock.release();
-        }while(!ok);
-    }
-    
-    def int getAndIncrement(){
-        return this.incrementAndGet() - 1;
-    }
-
-    def int decrementAndGet(){
-        this.lock.wait();
-        auto res = -- this.value ;
-        this.lock.release();
-        return res;
-    }
-
-    def int getAndDecrement(){
-        return this.decrementAndGet() + 1;
-    }
-
-    def int get(){
-        this.lock.wait();
-        auto res = this.value;
-        this.lock.release();
-        return res;
-    }
-
-    def void set(int value){
-        this.lock.wait();
-        this.value = value;
-        this.lock.release();
-    }
-
-    @int
-    def int toInt(){
-        return this.get();
-    }
-
-    @string
-    def string toString(){
-        return this.toInt();
-    }
-}
-
 AtomicInteger value = new AtomicInteger();
-
-import "container/bilist.xs";
-
-struct ConcurrentQueue {
-    AtomicInteger full;
-    AtomicInteger empty;
-    MutexLock     lock;
-    bilist        list;
-    
-    def this(){
-        this.full = new AtomicInteger();
-        this.empty = new AtomicInteger();
-        this.lock = new MutexLock();
-    
-        this.full.set(100);
-        this.empty.set(0);
-        this.list = new bilist();
-    }
-    
-    def void put(Content i){
-        this.full.waitAndDecrement(0);
-        this.lock.wait();   
-        this.list.push_back(i);
-        this.lock.release();
-        this.empty.incrementAndGet();
-    }
-    
-    def Content pop(){
-        this.empty.waitAndDecrement(0);
-        this.lock.wait();
-        Content res = this.list.pop_front();
-        this.lock.release();
-        this.full.incrementAndGet();
-        return res;
-    }
-    
-    def int size(){
-        return this.empty.get();
-    }
-}
 
 struct PairContent2 : Content {
     int id;
@@ -311,7 +311,7 @@ struct PairContent2 : Content {
     }
     
     def override string toString(){
-        return ""+ this.id + ":" + this.value;
+        return "" + this.id + ":" + this.value;
     }
 }
 
@@ -333,124 +333,6 @@ struct PrintNumber : Runnable {
     }
 }
 
-struct AsyncRunnable : Runnable{
-    Content value;
-    
-    def virtual Content get();
-    
-    def override void run(){
-        this.value = this.get();
-    }
-}
-
-struct Future {
-    Thread t;
-    AsyncRunnable r;
-    
-    def this(AsyncRunnable r){
-        this.t = new Thread(r);
-        this.r = r;
-        this.t.start();
-    }
-    
-    def Content get(){
-        this.t.join(0);
-        return this.r.value;
-    }
-}
-
-{
-    Thread t1 = new Thread(new PrintNumber(1));
-    Thread t2 = new Thread(new PrintNumber(2));
-    Thread t3 = new Thread(new PrintNumber(3));
-    t1.start();
-    t2.start();
-    t3.start();
-    int i =0;
-    while(true){
-        println(queue.pop());
-        if(i ++ == 20){
-            t1.interrupt();
-        }
-    }
-}
-
-
-native<extension.predefined>{
-    "TestStruct":struct NTVSTRT{
-        string id;
-        def virtual string getId();
-    };
-}
-
-struct MyStruct : NTVSTRT{
-    def override string getId(){
-        return "hello," + this.id ;
-    }
-
-    def virtual void setId(string id){
-        this.id = id;
-    }
-}
-
-import  "ui/paintpad.xs";
-
-
-native<extension.math>{
-    real sin(real theta);
-	real cos(real theta);
-    "SetSeed":void srand(int seed);
-    "Random":int rand();
-}
-
-
-struct StringHashContent : HashContent {
-    string val;
-    def this(string val){
-        this.val = val;
-    }
-
-    def override int hash(){
-        int v = 0;
-        int len   = strlen(this.val) ;
-        for(int i = 0;i < len;i++){
-            v += this.val[i];
-        }
-        return v;
-    }
-
-    def override string toString(){
-        return this.val;
-    }
-
-    def override bool equals(HashContent x){
-        return this.val == ((StringHashContent)x).val;
-    }
-}
-
-
-struct IntValueContent : ValueContent{
-    int val;
-    def this(int val){
-        this.val = val;
-    }
-    
-    def override string toString(){
-        return (string)(this.val);
-    }
-}
-
-{
-   HashMap hm = new HashMap();
-   for(int i = 0; i < 20;i++){
-        hm.set(new StringHashContent(""+rand()),new IntValueContent(rand()));
-        println("" + i + "\n" + hm);
-   }
-}
-
-
-
-
 def void f2(int b);
 
 def void f1(int a){
@@ -466,19 +348,6 @@ def void f2(int b){
     if(b > 10){
         return;
     }
-    f1(b+1);
-}
-
-struct llist{
-    int size;
-    def int getSize();
-    def bool isEmpty(){
-        return this.getSize() == 0;
-    }
-}
-
-def int llist.getSize(){
-    return this.size;
 }
 
 {
@@ -493,63 +362,167 @@ def int llist.getSize(){
     print("------------------\n");
 }
 
-real PI = 3.141592654;
-
-def void drawHand(int v,real theta,int len,int r,int g,int b){
-	real arctheta = theta * 2 * PI;
-	int x = cos(arctheta) * len;
-	int y = sin(arctheta) * len;
-	setBrushColor(r,g,b);
-	addLine(150,150,150+x,y+150);
-}
-
-def void drawClock(Time t){
-	for(int i = 1 ; i < 13;i++){
-		real arctheta = ((real)i-3)/6 * PI;
-		int x = cos(arctheta) * 140;
-		int y = sin(arctheta) * 140;
-		addString("" + i,150 + x,150+y);
-	}
-
-	drawHand(t.hour,((real)t.hour-3) / 12,70,0,0,255);
-	drawHand(t.minute,((real)t.minute-15) / 60,110,0,255,0);
-	drawHand(t.second,((real)t.second-15) / 60,130,255,0,0);
+{
+    println("Test for UI the Game");
+    auto game = new Game();
+    game.open();
+    game.start();
+    game.wait();
 }
 
 {
-	MyTime t = new MyTime;
-	println(t);
-	
-	//openPadWithName(300,300,"ClockInXScript");
-	//while(true){
-		//println(t);
-		//getTime(t);
-		//clearPad();
-		//drawClock(t);
-		//paint();
-		//sleep(500);
-	//}
-	
+    println("Test for Anonymous Inner Struct");
+    Sequence x = new List();
+    for(int i = 0;i < 100;i++){
+        x.add(new IntContent(rand()%100));
+    }
+    println("Test");
+    x.forEach(new Consumer{
+        def override Content apply(Content i){
+            print( " " + i);
+            return null;
+        }
+    });
+    println("\nTest2");
+    
+    x.stream().filter(new Consumer{
+        def override Content apply(Content i){
+           return new BoolContent((((IntContent)i).val % 3) == 0);
+        }
+    }).map(new Consumer{
+        def override Content apply(Content i){
+            return new IntContent(((IntContent)i).val *3 );           
+        }
+    }).sort(new Comparator{
+        def override int compare(Content a,Content b){
+            return ((IntContent)b).val - ((IntContent)a).val;
+        }
+    }).forEach(new Consumer{
+        def override Content apply(Content i){
+            print( " " + i );
+            return null;
+        }
+    });
+
+    println("\nTest2 end");
+}
+
+{
+    println("Test for multi thread");
+    Thread t1 = new Thread(new PrintNumber(1));
+    Thread t2 = new Thread(new PrintNumber(2));
+    Thread t3 = new Thread(new PrintNumber(3));
+    t1.start();
+    t2.start();
+    t3.start();
+    int i =0;
+    while(true){
+        println(queue.pop());
+        if(i ++ == 20){
+            t1.interrupt();
+        }
+        if(i > 99){
+            break;
+        }
+    }
+}
+
+{
+   println("Test for HashMap");
+   HashMap hm = new HashMap();
+   for(int i = 0; i < 20;i++){
+        hm.set(new StringHashContent(""+rand()),new IntContent(rand()));
+        println("" + i + "\n" + hm);
+   }
+}
+
+struct JustOnce:Runnable{
+    def override void run(){
+        Thread t = getCurrentThread();
+        for(int i =0;i < 10;i++){
+            print("["+t.getThreadId()+"]:" + i + " will stop\n");
+            t.interrupt();
+        }
+    }
+}
+
+/*
+{
+    println("Test for Thread type");
+    JustOnce i = new JustOnce;
+    Thread t = new Thread(i);
+    int beg = time();
+    print(beg);
+    t.start();
+    t.join(0);
+    int end = time();
+    print(end);
+    print("join time:"+(end-beg)+"\n");
+}
+*/
+real PI = 3.141592654;
+
+def void drawHand(PaintPad p,int v,real theta,int len,int r,int g,int b){
+    real arctheta = theta * 2 * PI;
+    int x = cos(arctheta) * len;
+    int y = sin(arctheta) * len;
+    p.setBrushColor(r,g,b);
+    p.addLine(150,150,150+x,y+150);
+}
+
+def void drawClock(PaintPad p,Time t){
+    for(int i = 1 ; i < 13;i++){
+        real arctheta = ((real)i-3)/6 * PI;
+        int x = cos(arctheta) * 140;
+        int y = sin(arctheta) * 140;
+        p.addString("" + i,150 + x,150+y);
+    }
+
+    drawHand(p,t.hour,((real)t.hour-3) / 12  + ((real)t.minute)/ 60 / 12 ,70,0,0,255);
+    drawHand(p,t.minute,((real)t.minute-15) / 60,110,0,255,0);
+    drawHand(p,t.second,((real)t.second-15) / 60,130,255,0,0);
+}
+
+{
+
+    PaintPad pad = new PaintPad("ClockInXScript",300,300);
+    
+    Thread t = new Thread(new Runnable(pad){
+        PaintPad p;
+        def this(PaintPad p){
+            this.p = p;
+        }
+        
+        def override void run(){
+            MyTime t = new MyTime;
+            println(t);
+            while(true){
+                println(t);
+                getTime(t);
+                this.p.clear();
+                drawClock(this.p,t);
+                this.p.redraw();
+                sleep(500);
+            }
+        }
+    });
+    println("Test UI clock");
+    pad.show();
+    t.start();
+    pad.wait();
+    t.interrupt();
 }
 
 {
     println("Test for array initial list");
     int[][] x = {{23,52},{25,64+78},{54},{}};
     for(int i = 0 ; i < sizeof x;i++){
-		for(int j = 0 ; j < sizeof x[i];j++){
-			print(" " + x[i][j]);
-		}
-		print("\n");
-	}
+        for(int j = 0 ; j < sizeof x[i];j++){
+            print(" " + x[i][j]);
+        }
+        print("\n");
+    }
 }
-
-{
-    println("Test for predefined struct");
-    MyStruct s = new MyStruct;
-    s.setId(25);
-    println(s.getId());
-}
-
 
 struct shape{
     string name;
@@ -608,11 +581,12 @@ struct rectangle : square {
     hh.init("rectangle");
     shape[] h = new shape[2];
     h[0] = dd;
+    
     h[1] = hh;
     dd.setWidth(10);
     hh.setWidth(4);
     hh.setLength(15);
-    
+   
     for(int i = 0 ; i < sizeof h;i++){
         println("draw a " + h[i]);
         h[i].draw();
@@ -622,20 +596,11 @@ struct rectangle : square {
     }
 }
 
-def string readLine(){
-    string l = "";
-    char c;
-    while((c = getchar()) != '\n' ){
-        l+=c;
-    }
-    return l;
-}
-
-def void drawRectangle(int x,int y,int w,int h){
-    addLine(x,y,x+w,y);
-    addLine(x,y,x,y+h);
-    addLine(x,y+h,x+w,y+h);
-    addLine(x+w,y,x+w,y+h);
+def void drawRectangle(PaintPad p,int x,int y,int w,int h){
+    p.addLine(x,y,x+w,y);
+    p.addLine(x,y,x,y+h);
+    p.addLine(x,y+h,x+w,y+h);
+    p.addLine(x+w,y,x+w,y+h);
     
 }
     int WIDTH = 50;
@@ -643,107 +608,60 @@ def void drawRectangle(int x,int y,int w,int h){
     int TILE_WIDTH = 10;
     int CHESS_WIDTH = 8;
 /*CHESS PLAYING*/
-def void drawChessPad(int x,int y)
+def void drawChessPad(PaintPad p,int x,int y)
 {
-    clearPad();
-    setBrushColor(0,0,0);
+    p.clear();
+    p.setBrushColor(0,0,0);
     for(int i = 0;i <= WIDTH;i++){
         //println("x " + i + ":" + TILE_WIDTH*i+","+HEIGHT*TILE_WIDTH);
-        addLine(TILE_WIDTH*i,0,TILE_WIDTH*i,HEIGHT*TILE_WIDTH);
+        p.addLine(TILE_WIDTH*i,0,TILE_WIDTH*i,HEIGHT*TILE_WIDTH);
     }
     for(int i = 0;i <= HEIGHT;i++){
         //println("y " + i + ":" + TILE_WIDTH*i+","+WIDTH*TILE_WIDTH);
-        addLine(0,TILE_WIDTH*i,WIDTH*TILE_WIDTH,TILE_WIDTH*i);
+        p.addLine(0,TILE_WIDTH*i,WIDTH*TILE_WIDTH,TILE_WIDTH*i);
     }
-    setBrushColor(255,0,0);
+    p.setBrushColor(255,0,0);
     int co = (TILE_WIDTH - CHESS_WIDTH)/2;
-    drawRectangle(x*TILE_WIDTH+co,y*TILE_WIDTH+co,CHESS_WIDTH,CHESS_WIDTH);
+    drawRectangle(p,x*TILE_WIDTH+co,y*TILE_WIDTH+co,CHESS_WIDTH,CHESS_WIDTH);
 
-    paint();
+    p.redraw();
 }
 
-struct KeyboardAdapter: EventCallback{
-    int x;
-    int y;
-    def override bool callback(int id){
-        switch(id){
-        case 'W':case 'w':
-            this.y--;
-            break;
-        case 'S':case 's':
-            this.y++;
-            break;
-        case 'A':case 'a':
-            this.x--;
-            break;
-        case 'D':case 'd':
-            this.x++;
-            break;
-        case ' ':case 'e':
-            return false;
-        }
-        drawChessPad(this.x,this.y);
-        return true;
-    }
-}
 
-struct MouseAdapter:MouseEventCallback{
-    int count;
-    def override bool callback(int x,int y){
-        println("" + x + "," + y);
-        int newX = x/TILE_WIDTH;
-        int newY = y/TILE_WIDTH;
-        drawChessPad(newX,newY);
-        return --this.count != 0;
-    }
-} 
-
-{
-    println("Test for chess pad");
-    openPadWithName(WIDTH*TILE_WIDTH+1,HEIGHT*TILE_WIDTH+1,"Chess");
-    KeyboardAdapter kba = new KeyboardAdapter;
-    kba.x = WIDTH/2;
-    kba.y = HEIGHT/2;
-    drawChessPad(kba.x,kba.y);
-    if(!loopForKeyboard(kba)){
-        println("error occurred");
+struct ChessPad:PaintPad{
+    def this(string name,int w,int h){
+        super(name,w,h);
     }
     
-    println("End test for the keyboard");
-    println("Test for mouse adapter");
-    MouseAdapter ma = new MouseAdapter;
-    ma.count = 10;
-    if(!loopForMouse(ma)){
-        println("err occured");
+    def override void onClick(int id){
+        
     }
-    println("end for the mouse");
-    clearPad();
-    closePad();
 }
 
+
 /*CELL SIMULATION*/
-def void drawWorld(bool[][] worldmap)
+def void drawWorld(PaintPad p,bool[][] worldmap)
 {
-    clearPad();
-    setBrushColor(0,0,0);
+    p.clear();
+    p.setBrushColor(0,0,0);
     //println("Line " + _line_ + ":" + TILE_WIDTH);
     for(int i = 0;i <= WIDTH;i++){
         //println("x " + i + ":" + TILE_WIDTH*i+","+HEIGHT*TILE_WIDTH);
-        addLine(TILE_WIDTH*i,0,TILE_WIDTH*i,HEIGHT*TILE_WIDTH);
+        p.addLine(TILE_WIDTH*i,0,TILE_WIDTH*i,HEIGHT*TILE_WIDTH);
     }
     for(int i = 0;i <= HEIGHT;i++){
         //println("y " + i + ":" + TILE_WIDTH*i+","+WIDTH*TILE_WIDTH);
-        addLine(0,TILE_WIDTH*i,WIDTH*TILE_WIDTH,TILE_WIDTH*i);
+        p.addLine(0,TILE_WIDTH*i,WIDTH*TILE_WIDTH,TILE_WIDTH*i);
     }
-    setBrushColor(255,0,0);
+    p.setBrushColor(255,0,0);
     int co = (TILE_WIDTH - CHESS_WIDTH)/2;
     for(int x = 0;x < WIDTH;x++){
         for(int y = 0;y < HEIGHT;y++){
             if(worldmap[x][y])
-                drawRectangle(x*TILE_WIDTH+co,y*TILE_WIDTH+co,CHESS_WIDTH,CHESS_WIDTH);
+                drawRectangle(p,x*TILE_WIDTH+co,y*TILE_WIDTH+co,CHESS_WIDTH,CHESS_WIDTH);
         }
     }
-    paint();
+    p.redraw();
 }
 
 def bool isAlive(bool[][] src,int x,int y){
@@ -807,10 +725,10 @@ def void calMap(bool[][] src,bool[][] tar){
     }
 }
 
-def void GameOfLife(int max)
+def void GameOfLife()
 {
     //println("Line " + _line_ + ":" + TILE_WIDTH);
-    openPadWithName(WIDTH*TILE_WIDTH+1,HEIGHT*TILE_WIDTH+1,"GameOfLife");
+    auto pad = new PaintPad("Game Of Life",WIDTH*TILE_WIDTH+1,HEIGHT*TILE_WIDTH+1);
     //println("Line " + _line_ + ":" + TILE_WIDTH);
     bool[][] world,world1 = new bool[][WIDTH],
              world2 = new bool[][WIDTH];
@@ -818,6 +736,7 @@ def void GameOfLife(int max)
         world1[i] = new bool[HEIGHT];
         world2[i] = new bool[HEIGHT];
     }
+    
     srand(time());
     int sum = rand()%(WIDTH*HEIGHT);
     
@@ -829,24 +748,42 @@ def void GameOfLife(int max)
         }while(world1[x][y]);
         world1[x][y] = true;
     }
-    drawWorld(world1);
+    drawWorld(pad,world1);
+    pad.show();
     sleep(200);
     //println("Line " + _line_ + ":" + TILE_WIDTH);
-    while(max-- > 0){
-        calMap(world1,world2);
-        world = world2;
-        world2 = world1;
-        world1 = world;
-        drawWorld(world);
-        sleep(200);
-    }
-    clearPad();
-    closePad();
+    Thread t = new Thread(new Runnable(world,world1,world2,pad){
+        bool[][] world,world1,world2;
+        PaintPad pad;
+        def this(bool[][] world,bool[][] world1,
+                 bool[][] world2,PaintPad pad){
+            this.world = world;
+            this.world1 = world1;
+            this.world2 = world2;
+            this.pad = pad;
+        }
+    
+        def override void run(){
+            while(true){
+                calMap(this.world1,this.world2);
+                this.world = this.world2;
+                this.world2 = this.world1;
+                this.world1 = this.world;
+                drawWorld(this.pad,this.world);
+                sleep(500);
+            }
+        }
+    });
+    pad.show();
+    t.start();
+    pad.wait();
+    t.interrupt();
+    pad.close();
 }
 
 {
     println("Test for Game of Life");
-    GameOfLife(1000);
+    GameOfLife();
 }
 
 {
@@ -854,7 +791,9 @@ def void GameOfLife(int max)
     parser p = new parser;
     lexer l = new lexer;
     //print("Enter the function you want to draw:f(x)=");
-    string s = "(x/10-10)*(x/10-20)";
+    string s;
+    s = readString();
+    
     l.init(s);
     p.init(l);
     Var v = p.getVar();
@@ -863,26 +802,24 @@ def void GameOfLife(int max)
     /*draw a red line*/
     int last_x = -10000;
     int last_y = -10000;
-    setBrushColor(255,0,0);
+    auto pad = new PaintPad("Parser",600,800);
+    pad.setBrushColor(255,0,0);
     for (real x = 300; x > -300; x -= 1) {
         v.setValue(x);
         int y = e.getValue();
-        addPoint(x + 300 ,-y + 240);
+        pad.addPoint(x + 300 ,-y + 240);
         if(last_x > -10000){
-            addLine(last_x,last_y,x+300,-y+240);
+            pad.addLine(last_x,last_y,x+300,-y+240);
         }
         last_x = x+300;
         last_y = -y+240;
     }
     println("drawing function line of f(x)=" + s);
-    setBrushColor(0,0,0);
-    addLine(0,240,600,240);
-    addLine(300,0,300,480);
-    openPad(600,480);
-    paint();
-    getchar();
-    getchar();
-    closePad();
+    pad.setBrushColor(0,0,0);
+    pad.addLine(0,240,600,240);
+    pad.addLine(300,0,300,480);
+    pad.show();
+    pad.wait();
 }
 
 
@@ -983,11 +920,11 @@ struct complex{
     case 2:
         println("Wrong!");
         break;
+        println("default Wrong!");
     case 'a':
         println("Correct!");
         break;
     default:
-        println("Wrong!");
     }
 }
 
@@ -1022,26 +959,40 @@ struct complex{
 
 {
     println("Test for animated painting");
-    openPad(600,480);
-    setBrushColor(255,0,0);
-    int x,y;
-    for(real off = 0;off < 1;off += 0.01 ){
-        for(real theta = 0; theta <= 3.14 * 2 + 0.01;theta += 0.01){
-            x = theta * 100 + (-314 + 300);
-            y =  - sin(theta + off) * 100 + 240;
-            addPoint(x,y);
+    auto pad = new PaintPad("animated",500,800);
+    pad.setBrushColor(255,0,0);
+    
+    pad.show();
+    Thread t = new Thread(new Runnable(pad){
+        PaintPad pad;
+        def this(PaintPad pad){
+            this.pad = pad;
         }
-        paint();
-        sleep(56);
-        clearPad();
-    }
-    closePad();
+    
+        def override void run(){
+            int x,y;
+            for(real off = 0;;off += 0.01 ){
+                for(real theta = 0; theta <= 3.14 * 2 + 0.01;theta += 0.01){
+                    x = theta * 100 + (-314 + 300);
+                    y =  - sin(theta + off) * 100 + 240;
+                    this.pad.addPoint(x,y);
+                }
+                this.pad.redraw();
+                sleep(56);
+                this.pad.clear();
+            }
+        }
+    });
+    
+    t.start();
+    pad.wait();
+    t.interrupt();
 }
 
 {
     println("Test for basic painting");
-    
-    setBrushColor(25,25,255);
+    PaintPad pad = new PaintPad("basic",480,600);
+    pad.setBrushColor(25,25,255);
     {
         real x,y;int a = 20,b = 20;
         real x_m,y_m;
@@ -1056,16 +1007,17 @@ struct complex{
             y += 240;
             y_m += 240;
             if(x < 600 && y < 480 && x > 0 && y > 0){
-                addPoint(x,y);
-                addPoint(x,y_m);
-                addPoint(x_m,y);
-                addPoint(x_m,y_m);
+                pad.addPoint(x,y);
+                pad.addPoint(x,y_m);
+                pad.addPoint(x_m,y);
+                pad.addPoint(x_m,y_m);
             }
         }
     }
-   
+  
     /*draw a red heart*/
-    setBrushColor(255,0,0);
+    
+    pad.setBrushColor(255,0,0);
     for (real y = 1.5; y > -1.5; y -= 0.01) {
         real min = 1.5;
         real max = -1.5;
@@ -1078,19 +1030,19 @@ struct complex{
                     max = x;
             } else {
                 if(min <= max){
-                    addLine(min*100 + 300  - 100,-y*100 + 240 - 80,max*100 + 300  - 100,-y*100 + 240 - 80);
+                    pad.addLine(min*100 + 300  - 100,-y*100 + 240 - 80,max*100 + 300  - 100,-y*100 + 240 - 80);
                     min = 1.5;
                     max = -15;
                 }
             }
         }
         if(min <= max){
-            addLine(min*100 + 300  - 100,-y*100 + 240 - 80,max*100 + 300  - 100,-y*100 + 240 - 80);
+            pad.addLine(min*100 + 300  - 100,-y*100 + 240 - 80,max*100 + 300  - 100,-y*100 + 240 - 80);
         }
     }
     
     /*draw a green round*/
-    setBrushColor(0,255,0);
+    pad.setBrushColor(0,255,0);
     real r = 100.0;
     for (int y = -r; y < r; y ++ ) {
         int min = r;
@@ -1104,50 +1056,24 @@ struct complex{
                     max = x;
             } else {
                 if(min <= max){
-                    addLine(min + 300 + 100 ,-y + 240 + 100,max + 300 + 100,-y + 240 + 100);
+                    pad.addLine(min + 300 + 100 ,-y + 240 + 100,max + 300 + 100,-y + 240 + 100);
                     min = r;
                     max = -r;
                 }
             }
         }
         if(min <= max){
-            addLine(min + 300 + 100 ,-y + 240 + 100,max + 300 + 100,-y + 240 + 100);
+            pad.addLine(min + 300 + 100 ,-y + 240 + 100,max + 300 + 100,-y + 240 + 100);
         }
     }
     
     
-    setBrushColor(0,0,0);
-    addLine(0,240,600,240);
-    addLine(300,0,300,480);
-    openPad(600,480);
-    paint();
-    
-    getchar();
-    getchar();
-    closePad();
-}
+    pad.setBrushColor(0,0,0);
+    pad.addLine(0,240,600,240);
+    pad.addLine(300,0,300,480);
+    pad.show();
 
-{
-    /*test code for list union*/
-    list a = create_list() ;
-    //a.init();
-    list b = create_list() ;
-    /*b.init();*/
-    int size = 7;
-    for(int i = 0;i < size ;i++){
-        push_back(a,rand()%31);
-        push_back(b,rand()%31);
-    }
-    println("Test for struct");
-    print("Generating Test Data\n");
-    print("a=");println(list_toString(a));
-    print("b=");println(list_toString(b));
-    
-    print("a U b=");println(list_toString(union_list(a,b)));
-    print("SORT\n");
-    print("sort(a)=\n");
-
-    println(list_toString(qlsort(a,0)));
+    pad.wait();
 }
 
 struct CORD{
@@ -1163,8 +1089,6 @@ struct CORD{
     }
 }
 
-
-
 {
     println("Test for member functions");
     srand(time());
@@ -1175,9 +1099,6 @@ struct CORD{
     o.init(rand()%25,rand()%25);
     println(o.toString());
 }
-
-
-/*NEEDTEST*/
 
 {
     println("Test for dynamic array sizeof");
@@ -1261,26 +1182,6 @@ def int readint(){
     getchar();
     getchar();
 }
-
-
-/*
-{
-    /*test code for list*/
-/*    println("Test for list");
-    list l ;
-    l.init();
-    srand(time());
-    int size = rand()%50;
-    for(size;size > 0;size--){
-        l.push_front(rand()%9);
-    }
-    println("Original array:");
-    print_list(l);
-    l = qlsort(l);
-    println("Sorted array:");
-    //print_list(l);
-    //print( qlsort(l) + "\n" );
-}*/
 
 
 struct tree_node{
@@ -1432,22 +1333,23 @@ def int printarray(int[] arr,int len){
 
 {
     println("Test for file write");
-    int fid= open("t.txt");
+    File f = new File();
+    f.open("t.txt",false);
     println("write to file " + "t.txt");
     
     for (char y = 'a'; y <= 'z'; y++) {
-        writech(fid,y);
+        f.writech(y);
         int i = y;
         string x = ((string)i);
-        writech(fid,':');
+        f.writech(':');
         for(int i = 0 ; i < strlen(x);i++)
-            writech(fid,x[i]);
+            f.writech(x[i]);
         if( y != 'z'){
-            writech(fid,'\r');
-            writech(fid,'\n');
+            f.writech('\r');
+            f.writech('\n');
         }
     }
-    close(fid);
+    f.close();
 }
 
 def int max(int a,int b){

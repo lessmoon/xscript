@@ -1,7 +1,7 @@
 package inter.stmt;
 
 import inter.expr.Expr;
-import inter.expr.Constant;
+import inter.expr.Value;
 import symbols.Type;
 
 public class While extends Stmt{
@@ -22,7 +22,7 @@ public class While extends Stmt{
 
     @Override
     public void run(){
-        while(expr.getValue() != Constant.False){
+        while(expr.getValue() != Value.False){
             try{
                 stmt.run();
             }catch(RuntimeException e){
@@ -39,7 +39,7 @@ public class While extends Stmt{
     @Override
     public Stmt optimize(){
         stmt = stmt.optimize();
-        if(expr == Constant.False){/*constant False,it will never happen to run the stmt*/
+        if(expr == Value.False){/*constant False,it will never happen to run the body*/
             return Stmt.Null;
         }
         return this;

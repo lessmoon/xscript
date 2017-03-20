@@ -19,19 +19,19 @@ public class Condition extends Expr {
         if(type == null){
             error("bad conversion between " + t.type + " and " + f.type);
         }
-        if(t.type.equals(type))
+        if(!t.type.isCongruentWith(type))
             iftrue = ConversionFactory.getConversion(t,type);
-        if(f.type.equals(type))
+        if(!f.type.isCongruentWith(type))
             iffalse = ConversionFactory.getConversion(f,type);
     }
     
     @Override
-    boolean isChangeable(){
+    public boolean isChangeable(){
         if(cond.isChangeable())
             return true;
         else {
             cond = cond.getValue();/*don't calculate twice*/
-            return cond != Constant.False?iftrue.isChangeable():iffalse.isChangeable();
+            return cond != Value.False?iftrue.isChangeable():iffalse.isChangeable();
         }
     }
 
@@ -48,8 +48,8 @@ public class Condition extends Expr {
     } 
 
     @Override
-    public Constant getValue(){
-        return cond.getValue() != Constant.False?iftrue.getValue():iffalse.getValue();
+    public Value getValue(){
+        return cond.getValue() != Value.False?iftrue.getValue():iffalse.getValue();
     }
 	
 	@Override

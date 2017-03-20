@@ -10,7 +10,7 @@ public abstract class Unary extends Op{
         //type = Type.max(Type.Int,expr.type);
     }
 
-    boolean isChangeable(){
+    public boolean isChangeable(){
         return expr.isChangeable();
     }
 

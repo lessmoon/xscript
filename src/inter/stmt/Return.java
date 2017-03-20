@@ -15,7 +15,7 @@ public class Return extends Stmt {
     }
 
     public void check(Type t){
-        if(!t.equals(expr.type)) {
+        if(!t.isCongruentWith(expr.type)) {
             expr = ConversionFactory.getConversion(expr,t);
         }
     }
