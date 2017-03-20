@@ -2,6 +2,7 @@ package parser;
 
 import inter.expr.*;
 import inter.stmt.*;
+import inter.util.Node;
 import inter.util.Param;
 import lexer.*;
 import runtime.LoadFunc;
@@ -479,8 +480,9 @@ public class Parser implements TypeTable {
         Token name = look;
         match(Tag.ID);
         Struct s = (Struct) getType(name);
-        final boolean isPreDecl = !(s == null || s.isClosed());
-
+        final boolean hasDeclared = s != null;
+        final boolean isPreDecl = hasDeclared && !s.isClosed();//it is predeclared but not defined before,we just define it or just declare it again
+        final boolean isDeclaration = hasDeclared && s.isClosed();// Declaration was defined before,we can only just declared it again
         if (check(':')) {
             Token base = look;
             match(Tag.ID);
@@ -488,7 +490,7 @@ public class Parser implements TypeTable {
             if (b == null) {
                 error("base struct `" + base + "' not found");
             }
-            if (isPreDecl) {
+            if (s != null) {//it is declared before we just check if it matched the signature
                 if (s.getBaseStruct() == null) {
                     error("declared struct `" + s + "' has no base struct,but found `" + base + "'");
                 } else if (!s.getBaseStruct().isCongruentWith(b)) {
@@ -498,21 +500,23 @@ public class Parser implements TypeTable {
                 s = new Struct(name, (Struct) b);
             }
         } else {
-            if (!isPreDecl) {
+            if (s == null) {//it is not declared before
                 s = new Struct(name);
             } else if (s.getBaseStruct() != null) {
                 error("declared struct `" + s + "' has a base struct `" + s.getBaseStruct() + "',but not found in this definition");
             }
         }
-
-        if (!isPreDecl) {
-            checkNamespace(name, "struct");
+        //now s is a new strut ready to be filled
+        if (!hasDeclared) {
             defType(name, s);
         }
 
         dStruct = s;
         if (check(';')) {
             return;
+        }
+        if(isDeclaration){
+            error("struct `" + name +"' redefined");
         }
         parseStructBody(s);
         s.iteratorDerivedStruct().forEachRemaining(Struct::copyBase);
@@ -1503,7 +1507,7 @@ public class Parser implements TypeTable {
             if (f == null) {
                 f = s.getVirtualFunction(mname);
                 if (f == null)
-                    error("member function `" + mname + "' not found");
+                    error("member function " + s + ".`" + mname + "' not found");
                 fUsed.add(f);
                 /*Pass `this' reference as the first argument*/
                 if (isSuperCalled) {
@@ -1641,20 +1645,21 @@ public class Parser implements TypeTable {
                     return new NewArray(l, t, e);
                 } else {// it is `new' struct
                     if (t instanceof Struct) {
+                        Node line = new Node();
                         List<Expr> args = null;
                         if (look.tag == '(') {//has initial function
                             args = arguments();
-                        } else {
-                            if (null != ((Struct) t).getInitialFunction()) {
-                                error("`" + t + "' has a defined initial function");
-                            }
                         }
                         if (look.tag == '{') {
                             t = anonymousInnerStruct((Struct) t);
                         }
+                        if (args == null && null != ((Struct) t).getInitialFunction()) {
+                            line.error("`" + t + "' has a defined initial function");
+                        }
+
                         ((Struct) t).setInstantiated(Lexer.line, Lexer.offset, Lexer.filename);
                         if (!((Struct) t).isClosed()) {
-                            error("try to instantiate a struct `" + t + "' which is not closed yet");
+                            line.error("try to instantiate a struct `" + t + "' which is not closed yet");
                         }
                         Expr eNew = new New(l, (Struct) t);
                         if (args != null){
@@ -1664,7 +1669,7 @@ public class Parser implements TypeTable {
                             args.add(0, init);
                             FunctionBasic f = ((Struct) t).getInitialFunction();
                             if (f == null) {
-                                error("`" + t + "' doesn't have an initial function");
+                                line.error("`" + t + "' doesn't have an initial function");
                             }
                             eNew = new SeqExpr(Word.This, eNew, new FunctionInvoke(f, args));
                         }

@@ -1,33 +1,16 @@
-struct Comparable{}
-
-struct IntComparable : Comparable{
-    int value;
-    
-    def this(int value){
-        this.value = value;
-    }
-}
-
-struct StringComparable : Comparable{
-    string value;
-    
-    def this(string value){
-        this.value = value;
-    }
-    
-}
-
+import"../container/content.xs";
 struct Comparator{
-    def virtual int check(Comparable a,Comparable b);
+    def virtual int compare(Content a,Content b);
 }
 
-def void sortArray(Comparable[] s,int l,int r,Comparator less){
+def void sortArray(Content[] s,int l,int r,Comparator less){
     while (l < r){
-        int i = l, j = r, x = s[l];  
+        int i = l, j = r;
+        auto x = s[l];  
         while (i < j){  
-            while(i < j && less.check(s[j],x)>=0) j--;   
+            while(i < j && less.compare(s[j],x)>=0) j--;   
             if(i < j) s[i++] = s[j];  
-            while(i < j && less.check(s[i],x)<0) i++;
+            while(i < j && less.compare(s[i],x)<0) i++;
             if(i < j) s[j--] = s[i];
         }
         s[i] = x;  

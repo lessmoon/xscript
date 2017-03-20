@@ -226,7 +226,6 @@ public class Lexer implements Dictionary {
         return true;
     }
 
-
     public Token scan() throws IOException {
         while (Character.isWhitespace(peek) || peek == '/') {
             if (readIf('/')) {

@@ -78,9 +78,8 @@ struct ScrollTextOutput{
         if(this.contents.front() == null){
             this.contents.push_front(new StringContent(c));
         }
-        
     }
-    
+
     def void changeLine(){
         this.line ++;
     }
@@ -290,7 +289,6 @@ struct MyXPaintPad:PaintPad{
     }
 }
 
-
 struct PrintCount : Runnable{
     int i;
     def this(){
@@ -335,8 +333,6 @@ struct PrintNumber : Runnable {
     }
 }
 
-
-
 def void f2(int b);
 
 def void f1(int a){
@@ -380,6 +376,15 @@ def void f2(int b){
     for(int i = 0;i < 100;i++){
         x.add(new IntContent(rand()%100));
     }
+    println("Test");
+    x.forEach(new Consumer{
+        def override Content apply(Content i){
+            print( " " + i);
+            return null;
+        }
+    });
+    println("\nTest2");
+    
     x.stream().filter(new Consumer{
         def override Content apply(Content i){
            return new BoolContent((((IntContent)i).val % 3) == 0);
@@ -388,16 +393,21 @@ def void f2(int b){
         def override Content apply(Content i){
             return new IntContent(((IntContent)i).val *3 );           
         }
+    }).sort(new Comparator{
+        def override int compare(Content a,Content b){
+            return ((IntContent)b).val - ((IntContent)a).val;
+        }
     }).forEach(new Consumer{
         def override Content apply(Content i){
-            println( " " + i );
+            print( " " + i );
             return null;
         }
     });
+
+    println("\nTest2 end");
 }
 
 {
-
     println("Test for multi thread");
     Thread t1 = new Thread(new PrintNumber(1));
     Thread t2 = new Thread(new PrintNumber(2));

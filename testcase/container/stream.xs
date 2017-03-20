@@ -4,13 +4,25 @@ import "collector.xs";
 struct Consumer{
     def virtual Content apply(Content c);
 }
+
+def void Sequence.forEach(Consumer c){
+    auto i = this.iterator();
+    while(i.hasNext()){
+        i.next();
+        c.apply(i.getValue());
+    }
+}
+
+struct Comparator;
+
 struct Stream{
     def Stream filter(Consumer c);
     def void forEach(Consumer c);
     def Stream map(Consumer c);
     def Sequence reduce(Collector c);
-
+    def int count();
     def virtual Iterator next();
+    def Stream sort(Comparator c);
 }
 
 struct TransformStream:Stream{
@@ -79,6 +91,15 @@ def void Stream.forEach(Consumer action){
     while((c = this.next()) != null){
         action.apply(c.getValue());
     }
+}
+
+def int Stream.count(){
+    int i = 0;
+    Iterator c;
+    while((c = this.next()) != null){
+        i++;
+    }
+    return i;
 }
 
 def Sequence Stream.reduce(Collector collector){

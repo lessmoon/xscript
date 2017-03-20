@@ -5,7 +5,7 @@ struct PriorityQueue:Sequence{
     int size;
     int capacity;
     Comparable[] contents;
-
+   
     def this(){
         this.size = 0;
         this.capacity = 15;
@@ -17,7 +17,7 @@ struct PriorityQueue:Sequence{
         this.contents[i]= this.contents[j];
         this.contents[j]= tmp;
     }
-              
+    
     def Comparable top(){
         return this.contents[1];
     }
@@ -162,6 +162,35 @@ struct PriorityQueue:Sequence{
     }
 }
 
+
+import "stream.xs";
+import "../lib/sort.xs";
+
+struct ComparableProxy : Comparable{
+    Comparator compare;
+    Content value;
+    def this(Content value,Comparator compare){
+        this.value = value;
+        this.compare = compare;
+    }
+    
+    def override bool less(Comparable b){
+        return this.compare.compare(this.value,((ComparableProxy)b).value)<0;
+    }
+    
+    def override string toString(){
+        return this.value;
+    }
+};
+
+def Stream Stream.sort(Comparator c){
+    Iterator i;
+    Sequence queue = new PriorityQueue();
+    while((i = this.next()) != null){
+        queue.add(new ComparableProxy(i.getValue(),c));
+    }
+    return queue.stream();
+}
 
 def Collector toPriorityQueue(){
     return new Collector(){
