@@ -16,7 +16,8 @@ The language has a c-like way to prommgram,and if you have exprience in C/C++, J
 5. a **convenient** language.It has a lot of built-in types:`int`,`char`,`bool`,`string`,`real`,and even `bigint`,`bigreal`.
 6. an **object oriented** language.It supports for inheriting.You can write RTTI codes-because it supports operator `instanceof`.
 7. a **script** language.And this means its GC system is based on JVM.
-8. a language supporting for multi-thread
+8. a language supporting for multi-thread.
+9. a language supporting for anonymouse inner struct.
 
 **Dependency** :
 
