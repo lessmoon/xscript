@@ -130,7 +130,7 @@ struct derive:base{
     r.registerFunction("time",new RPGTime);
     r.open("test");
     //r.run();
-}
+   }
 
 int[] r = {3243,545};
 

@@ -1507,7 +1507,7 @@ public class Parser implements TypeTable {
             if (f == null) {
                 f = s.getVirtualFunction(mname);
                 if (f == null)
-                    error("member function " + s + ".`" + mname + "' not found");
+                    error("member function `" + s + "." + mname + "' not found");
                 fUsed.add(f);
                 /*Pass `this' reference as the first argument*/
                 if (isSuperCalled) {

@@ -32,11 +32,11 @@
 "print":"Could you please help me!"
 "set":"count" "0"
 <"choice">
-"set":"rrrrr" "hungry"
+"set":"death" "hungry"
 "choice":"f" "Yes?" "Sorry,I'm busy now."
 "condition": "${f}" "1" "pass"
 "add":"count" "1"
-"condition": "count" "3" "dead"
+"condition": "${count}" "3" "dead"
 "print":"Please reconsider"
 "jump":"choice"
 <"pass">
@@ -44,7 +44,7 @@
 "print":"I'm in an ice world now.I actually don't know where I am."
 "print":"Even worse,I don't know what happened before this."
 "choice":"f" "What is the last thing you remember?" "What's your name?"
-"condition":"f" "2" "name"
+"condition":"${f}" "2" "name"
 "print":"I can only remember there was a terrible earthquake."
 "jump":"checkingbag"
 <"name">
@@ -61,7 +61,7 @@
 "print":"Nice to meet you,$!" "playername"
 "print":"Nice to meet you too,Dr.${rolename}!"
 <"dead">
-"jump":"${rrrrr}"
+"jump":"${death}"
 <"hungry">
 "type":"Sorry,${rolename} died of starvation!" "200"
 "jump":"end"
