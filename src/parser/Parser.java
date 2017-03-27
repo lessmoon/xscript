@@ -48,7 +48,7 @@ public class Parser implements TypeTable {
     private int nowLevel = 0;
     private Set<FunctionBasic> fUsed = new HashSet<>();
     private boolean PRINT_FUNC_TRANSLATE = false;
-    private List<StackVar> capturedVars = null;
+    private List<Var> capturedVars = new ArrayList<>();
     private int anonymousInnerStructId = 0;
 
 
@@ -540,6 +540,11 @@ public class Parser implements TypeTable {
                     }
                 } else {
                     op = copymove();
+                }
+
+                //array binding
+                if(op.tag == '[' || op.tag == ']'){
+                    op = Word.array;
                 }
 
                 if (op.tag == Tag.BASIC && look.tag == '[') {
@@ -1538,12 +1543,20 @@ public class Parser implements TypeTable {
                 e = new StringAccess(e, loc);
             }
             return e;
-        }
-
-		/*
-         * update:remove the judge that e must be a variable
-		 */
-        if (!(e.type instanceof Array)) {
+        } else if (e.type instanceof Struct) {
+            Struct s = (Struct) e.type;
+            Token overloading = s.getOverloading(Word.array);
+            if (overloading == null) {
+                error("struct `" + s.getName() + "' overloading function for operand `" + Word.array + "' not found!");
+            }
+            FunctionBasic f = s.getVirtualFunction(overloading);
+            if (f != null) {
+                return new VirtualFunctionInvoke(e, f, new ArrayList<>());
+            }
+            f = s.getNaiveFunction(overloading);
+            assert f != null;
+            return new FunctionInvoke(f, Arrays.asList(e, loc));
+        } else if (!(e.type instanceof Array)) {//update:remove the judge that e must be a variable
             error("operand `[]` should be used for array type or string,not for " + e.type);
         }
 
@@ -1833,7 +1846,7 @@ public class Parser implements TypeTable {
      * }
      */
     private Struct anonymousInnerStruct(Struct base) throws IOException {
-        List<StackVar> savedCaptures = capturedVars;
+        List<Var> savedCaptures = capturedVars;
         capturedVars = new ArrayList<>();
         int savedLastFunctionLevel = lastFunctionLevel;
         lastFunctionLevel = top.level;

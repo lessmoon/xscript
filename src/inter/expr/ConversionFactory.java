@@ -9,6 +9,7 @@ import symbols.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 
 class NoConversion extends Conversion{
     NoConversion(Expr e){
@@ -439,7 +440,7 @@ public class ConversionFactory {
 
             Token fname = ((Struct)(src.type)).getOverloading(t);
             if(fname != null){
-                ArrayList<Expr> p = new ArrayList<>();
+                List<Expr> p = new ArrayList<>();
                 FunctionBasic f = ((Struct)(src.type)).getNaiveFunction(fname);
                 if(f != null){
                     p.add(src);

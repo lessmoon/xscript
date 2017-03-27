@@ -52,7 +52,7 @@ struct RuntimeBasic {
     }
     
     def string getVar(string varname){    
-        return ((StringContent)this.varMap.get( new StringHashContent(varname)).value);
+        return ((StringContent)this.varMap[new StringHashContent(varname)].value);
     }
     
     def void setVar(string varname,string val){
@@ -60,7 +60,7 @@ struct RuntimeBasic {
     }
     
     def void jump(string label){
-        auto l = (IntContent) this.labelMap.get(new StringHashContent(label)).value;
+        auto l = (IntContent) this.labelMap[new StringHashContent(label)].value;
         this.index = (int)l - 1;
     }
     
@@ -69,7 +69,7 @@ struct RuntimeBasic {
     }
     
     def Function getFunction(string funcname){
-       return (Function)this.functionMap.get(new StringHashContent(funcname)).value;
+       return (Function)this.functionMap[new StringHashContent(funcname)].value;
     }
     
     def void registerFunction(string funcname,Function function){
@@ -182,7 +182,7 @@ struct Runtime:RuntimeBasic{
     }
     
     def override void step(){
-        ((Instruction)this.instructions.get(this.index)).run(this);
+        ((Instruction)this.instructions[this.index]).run(this);
         this.index++;
     }
 }

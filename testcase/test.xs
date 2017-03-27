@@ -19,7 +19,7 @@ struct ScrollTextOutput{
 
     int line;
     
-    def this(int width_tile,int height_tile){
+    def this( int width_tile,int height_tile ){
         this.width = width_tile;
         this.height = height_tile;
         this.contents = new List();
@@ -129,8 +129,8 @@ struct derive:base{
     r.registerFunction("case",new RPGCase);
     r.registerFunction("time",new RPGTime);
     r.open("test");
-    //r.run();
-   }
+    r.run();
+}
 
 int[] r = {3243,545};
 
@@ -440,7 +440,7 @@ struct JustOnce:Runnable{
     def override void run(){
         Thread t = getCurrentThread();
         for(int i =0;i < 10;i++){
-            print("["+t.getThreadId()+"]:" + i + " will stop\n");
+            print("[" + t.getThreadId() + "]:" + i + " will stop\n");
             t.interrupt();
         }
     }

@@ -11,7 +11,7 @@ def int gcd(int a,int b){
 struct Ratio{
     int num;
     int den;
-
+    
     def Ratio reduce(){
         int f = gcd(this.num,this.den);
         this.num /= f;
@@ -62,7 +62,7 @@ struct Ratio{
         r.reduce();
         this.reduce();
         return this.num == r.num && this.den == r.den;
-    }    
+    }
     
     @string
     def string toString(){

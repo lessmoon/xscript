@@ -91,6 +91,7 @@ struct HashMap{
         this.size = 0;
     }
     
+    @[
     def HashPair get(HashContent key){
         HashMapNode p = this.map[key.hash()%this.capcity];
         for(;p != null;p = p.next){
@@ -131,7 +132,7 @@ struct HashMap{
 
         return null;
     }
-    
+
     @string
     def string toString(){
         StringBuffer buf = new StringBuffer();

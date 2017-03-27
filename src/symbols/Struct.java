@@ -343,7 +343,15 @@ public class Struct extends Type implements Iterable<StructVariable>{
                 f.error("Operand `" + op + "' overloading' return type should be `"+ this + "',but found `" + f.getType() + "'");
             }
             break;
-        
+        case Tag.ARRAY:
+            if(f.getParamList().size() != 2){
+                f.error("Operand `" + op  + "' overloading function should just use one parameters,but found `" + f.getParamList().size() + "'");
+            }
+
+            if(f.getType() == Type.Void){//must have return.
+                f.error("Operand `" + op  + "' overloading function should not return `" + Type.Void + "'");
+            }
+            break;
         /*
          * NOTE:
          * recursively calling risk:

@@ -13,7 +13,7 @@ def void sortArray(Content[] s,int l,int r,Comparator less){
             while(i < j && less.compare(s[i],x)<0) i++;
             if(i < j) s[j--] = s[i];
         }
-        s[i] = x;  
+        s[i] = x;
         sortArray(s, l, i - 1,less);
         l++;
     }
