@@ -24,6 +24,7 @@ public class StructMemberAccess extends Var {
         StructVariable variable = ((Struct)(value.type)).getVariable(member);
         if( variable == null ){
             error("can't find member `" + member + "' in " + value.type);
+            return -1;//avoiding warning
         }
         type = variable.type;
         return variable.index;
@@ -60,7 +61,17 @@ public class StructMemberAccess extends Var {
         StructValue s = (StructValue)c;
         return s.setElement(index,v);
     }
-    
+
+    @Override
+    public String shortName() {
+        if(member.toString().startsWith("@")) {//outer captures
+            return member.toString().substring(1);
+        } else {
+            return value.shortName() + "." +  member;
+        }
+    }
+
+    @Override
     public String toString(){
         return value.toString() + ".[" + index + "]" + member;
     }

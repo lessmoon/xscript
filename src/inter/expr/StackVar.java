@@ -31,4 +31,16 @@ public class StackVar extends Var {
     public String toString(){
         return "$$" + op + "["+ stackLevel +","+ stackOffset +"]";
     }
+
+    @Override
+    public boolean equals(Object o){
+        return this == o ||
+                o instanceof StackVar && ((StackVar) o).offset == offset && ((StackVar) o).stackLevel == stackLevel && ((StackVar) o).type.isCongruentWith(this.type);
+    }
+
+    @Override
+    public int hashCode(){
+        //NOTE:Type should join the hash code computing,because it is not necessary to be same hashCode between two same types
+        return this.stackLevel << 7 | this.offset;
+    }
 }

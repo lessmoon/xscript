@@ -70,6 +70,11 @@ public class ArrayVar extends Var {
     }
 
     @Override
+    public String shortName(){
+        return toString();
+    }
+
+    @Override
     public String toString(){
         return array.toString() + "[" + loc.toString() + "]";
     }

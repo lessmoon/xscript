@@ -30,4 +30,10 @@ public class AbsoluteVar extends StackVar {
     public String toString(){
         return "$"+op+"["+ stackLevel +","+ stackOffset +"]";
     }
+
+    @Override
+    public boolean equals(Object o){
+        return super.equals(o) && (o instanceof AbsoluteVar);
+    }
+
 }

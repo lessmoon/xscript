@@ -1,4 +1,3 @@
-
 import "content.xs";
 
 struct HashPair{

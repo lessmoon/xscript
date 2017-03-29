@@ -48,7 +48,7 @@ public class Parser implements TypeTable {
     private int nowLevel = 0;
     private Set<FunctionBasic> fUsed = new HashSet<>();
     private boolean PRINT_FUNC_TRANSLATE = false;
-    private List<Var> capturedVars = new ArrayList<>();
+    private Set<Token> capturedVars = new HashSet<>();
     private int anonymousInnerStructId = 0;
 
 
@@ -1608,7 +1608,19 @@ public class Parser implements TypeTable {
                     }
                 }
                 if (ee.stacklevel <= lastFunctionLevel && ee.stacklevel != 0) {
-                    error("anonymous variable capture is not supported now:found variable `" + tmp + "'");
+                    Token identifier = lex.getOrReserve("@" + name);
+                    StructVariable var = dStruct.getVariable(identifier);
+                    if (var == null) {
+                        assert dStruct.addVariable(identifier, ee.type) == null;
+                        var = dStruct.getVariable(identifier);
+                        assert capturedVars.add(name);
+                    }
+
+                    assert var.type.isCongruentWith(ee.type);
+                    //error("anonymous variable capture is not supported now:found variable `" + tmp + "'");
+                    EnvEntry this_ = top.get(Word.This);
+                    //todo:TEST
+                    return new StructMemberAccess(new StackVar(tmp, dStruct, top.level - this_.stacklevel , this_.offset), identifier).readOnly();
                 }
                 return ee.stacklevel == 0 ? new AbsoluteVar(tmp, t, 0, ee.offset) : new StackVar(tmp, t, top.level - ee.stacklevel, ee.offset);
             case Tag.NULL:
@@ -1667,7 +1679,11 @@ public class Parser implements TypeTable {
                             t = anonymousInnerStruct((Struct) t);
                         }
                         if (args == null && null != ((Struct) t).getInitialFunction()) {
-                            line.error("`" + t + "' has a defined initial function");
+                            if (((Struct) t).getInitialFunction().getParamSize() != 1) {//
+                                assert ((Struct) t).getInitialFunction().getParamSize() > 1;
+                                line.error("`" + t + "' has a defined initial function");
+                            }
+                            args = new ArrayList<>();
                         }
 
                         ((Struct) t).setInstantiated(Lexer.line, Lexer.offset, Lexer.filename);
@@ -1846,8 +1862,8 @@ public class Parser implements TypeTable {
      * }
      */
     private Struct anonymousInnerStruct(Struct base) throws IOException {
-        List<Var> savedCaptures = capturedVars;
-        capturedVars = new ArrayList<>();
+        Set<Token> savedCaptures = capturedVars;
+        capturedVars = new HashSet<>();
         int savedLastFunctionLevel = lastFunctionLevel;
         lastFunctionLevel = top.level;
         Struct savedDStruct = this.dStruct;
@@ -1855,9 +1871,56 @@ public class Parser implements TypeTable {
         dStruct = ais;
         //starts with a '{' and ends with a matched '}'
         parseStructBody(dStruct);
+
+
         if(dStruct.getInitialFunction() == null){
             dStruct.defineInitialFunction(base.getInitialFunction());
         }
+
+        if (dStruct.getInitialFunction() == null && !capturedVars.isEmpty()) {
+            dStruct.defineInitialFunction(new InitialFunction(Word.This, Collections.singletonList(new Param(dStruct, Word.This)), dStruct, new LinkedSeq()));
+        }
+        if (!capturedVars.isEmpty()) {
+            InitialFunction init = (InitialFunction) dStruct.getInitialFunction();
+            LinkedSeq body = new LinkedSeq();
+            final Var arg0 = new StackVar(Word.This, dStruct, 0, 0);
+
+            for (Token name : capturedVars) {
+                EnvEntry ee = top.get(name);
+                assert ee != null;
+                if (ee.stacklevel != 0) {
+
+                    Token identifier = lex.getOrReserve("@" + name);
+                    if (ee.stacklevel <= savedLastFunctionLevel) {//outer nested inner struct
+                        assert savedDStruct != null;//todo:
+                        StructVariable var = savedDStruct.getVariable(identifier);
+                        if (var == null) {
+                            savedDStruct.addVariable(identifier, ee.type);
+                            var = savedDStruct.getVariable(identifier);
+                            assert savedCaptures.add(name);
+                        }
+
+                        assert var.type.isCongruentWith(ee.type);
+
+                        EnvEntry outerThis_ = top.get(Word.This);
+
+                        body.append(new ExprStmt(new inter.expr.Set(Word.ass,
+                                new StructMemberAccess(arg0, identifier),
+                                new StructMemberAccess(new StackVar(Word.This, savedDStruct, top.level - outerThis_.stacklevel + 1, outerThis_.offset), identifier).readOnly())));
+                    } else {//the recursive exit gate
+                        body.append(new ExprStmt(new inter.expr.Set(Word.ass,
+                                new StructMemberAccess(arg0, identifier),
+                                //NOTE : this code is running in an initial function so we need add an extra level
+                                new StackVar(name, ee.type, top.level - ee.stacklevel + 1, ee.offset).readOnly())));
+                    }
+                }
+            }
+
+            body.append(init.getBody());
+            init.setBody(body);
+            printFunctionDefinition(init, body);
+        }
+
         FunctionBasic f ;
         if ((f = dStruct.getFirstUncompletedFunction()) != null) {
             error("Anonymous inner struct of `" + base + "' is not completed:" + f);

@@ -10,7 +10,12 @@ public class Set extends Expr {
     public Set(Token tok,Expr i,Expr x){
         super(tok,null);
         if(!(i instanceof Var)){
-            error("Operand `" + op + "' should be used between variable and expression");
+            if(i instanceof ReadOnlyWrap){
+                error("variable `" + i.shortName() + "' is not writable!");
+            } else {
+                error("Operand `" + op + "' should be used between variable and expression");
+            }
+            return;//avoiding warning
         }
 
         id = (Var)i;

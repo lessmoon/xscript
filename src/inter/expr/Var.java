@@ -18,4 +18,8 @@ public abstract class Var extends Expr {
     
     public abstract Value setValue(Value v);
 
+    @Override
+    public Expr readOnly(){
+        return new ReadOnlyWrap(this);
+    }
 }

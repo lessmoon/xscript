@@ -18,7 +18,7 @@ public class Node {
     }
 
     public void error(String s){
-        throw new RuntimeException("in file `" +  filename + " at " + line + ":" + offset +"':\n\t" + s);
+        throw new RuntimeException("in file `" +  filename + "' at " + line + ":" + offset +":\n\t" + s);
     }
     
     public void warning(String s){
