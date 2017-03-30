@@ -34,6 +34,7 @@ public class Struct extends Type implements Iterable<StructVariable>{
     private boolean needCopyBase;
     private  Value[] instanceMemoryTemplate;
     private int firstInstantiatedIndex;
+    private final Struct[] inheritMap;
 
     public Struct(Token name){
         super(name.toString(),Tag.BASIC, Value.Null);
@@ -44,6 +45,7 @@ public class Struct extends Type implements Iterable<StructVariable>{
         overloadFunctions = new HashMap<>();
         baseSize = 0;
         needCopyBase = false;
+        inheritMap = new Struct[0];
     }
 
     public Struct(Token name,Struct baseStruct){
@@ -56,6 +58,9 @@ public class Struct extends Type implements Iterable<StructVariable>{
         virtualFunctionPositionMap = new HashMap<>(baseStruct.virtualFunctionPositionMap);
         overloadFunctions = new HashMap<>(baseStruct.overloadFunctions);
         baseSize = baseStruct.countVariables();
+        inheritMap = new Struct[baseStruct.inheritMap.length + 1];
+        System.arraycopy(baseStruct.inheritMap, 0, inheritMap, 0, baseStruct.inheritMap.length);
+        inheritMap[baseStruct.inheritMap.length] = baseStruct;
     }
 
     public void copyBase(){
@@ -162,13 +167,8 @@ public class Struct extends Type implements Iterable<StructVariable>{
      * @return true if the struct is a child struct of {@code struct}
      */
     public boolean isChildOf(Struct struct){
-        Struct f = this.baseStruct;
-        while(f != null){
-            if(struct == f)
-                return true;
-            f = f.baseStruct;
-        }
-        return false;
+        return inheritMap.length > struct.inheritMap.length
+                && inheritMap[struct.inheritMap.length] == struct;
     }
 
     public final Token getName(){
@@ -507,13 +507,12 @@ public class Struct extends Type implements Iterable<StructVariable>{
         }
 
         if(initFunction != null){
-            stringBuilder.append("    //setBody function\n");
+            stringBuilder.append("    //init function\n");
             stringBuilder.append("    def ").append(initFunction.getDescription(false)).append(";\n");
         }
         if (!functionMap.isEmpty()) {
             stringBuilder.append("    //functions\n");
-            functionMap.entrySet()
-                    .forEach(sv -> stringBuilder.append("    def ").append(sv.getValue().getDescription(false)).append(";\n"));
+            functionMap.forEach((key, value) -> stringBuilder.append("    def ").append(value.getDescription(false)).append(";\n"));
         }
         if (virtualTable.getGenerations() > 0) {
             Stream<Position> positionStream = virtualFunctionPositionMap.values().stream().filter(pos -> virtualTable.getVirtualFunction(pos).isCompleted());

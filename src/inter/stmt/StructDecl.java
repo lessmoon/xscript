@@ -16,9 +16,6 @@ public class StructDecl extends Decl {
         }
     }
 
-    /*
-     * TODO:May be optimized
-     */
     public boolean check(int i){
         if( value == Value.Null )
             return type instanceof Struct;

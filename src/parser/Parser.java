@@ -1619,7 +1619,6 @@ public class Parser implements TypeTable {
                     assert var.type.isCongruentWith(ee.type);
                     //error("anonymous variable capture is not supported now:found variable `" + tmp + "'");
                     EnvEntry this_ = top.get(Word.This);
-                    //todo:TEST
                     return new StructMemberAccess(new StackVar(tmp, dStruct, top.level - this_.stacklevel , this_.offset), identifier).readOnly();
                 }
                 return ee.stacklevel == 0 ? new AbsoluteVar(tmp, t, 0, ee.offset) : new StackVar(tmp, t, top.level - ee.stacklevel, ee.offset);
@@ -1794,7 +1793,6 @@ public class Parser implements TypeTable {
     }
 
     /**
-     * TODO:capture the outer variables
      * {
      * .....
      * <p>
@@ -1892,7 +1890,7 @@ public class Parser implements TypeTable {
 
                     Token identifier = lex.getOrReserve("@" + name);
                     if (ee.stacklevel <= savedLastFunctionLevel) {//outer nested inner struct
-                        assert savedDStruct != null;//todo:
+                        assert savedDStruct != null;
                         StructVariable var = savedDStruct.getVariable(identifier);
                         if (var == null) {
                             savedDStruct.addVariable(identifier, ee.type);

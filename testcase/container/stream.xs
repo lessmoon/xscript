@@ -63,14 +63,10 @@ struct MapStream:TransformStream{
     def override Iterator next(){
         auto iter = this.of.next();
         if(iter != null){
-            iter = new Iterator(this.mapper.apply(iter.getValue())){
-                            Content value;
-                            def this(Content value){
-                                this.value = value;
-                            }
-                            
+            auto value = this.mapper.apply(iter.getValue());
+            iter = new Iterator(){
                             def override Content getValue(){
-                                return this.value;
+                                return value;
                             }
                     };
         }
