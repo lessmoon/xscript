@@ -32,6 +32,10 @@ native<extension.predefined>{
     };
 }
 
+struct MyRunnable:Runnable{
+    def default override void run();
+}
+
 struct Trigger {
     MyTrigger imp;
     

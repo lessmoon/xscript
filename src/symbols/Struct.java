@@ -10,16 +10,16 @@ import lexer.Word;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class Struct extends Type implements Iterable<StructVariable>{
-    public static final Struct StructPlaceHolder  = new Struct(new Word("#StructPlaceHolder#",Tag.ID));
-    private final Map<Token,StructVariable> variableMap = new HashMap<>();
+public class Struct extends Type implements Iterable<StructVariable> {
+    public static final Struct StructPlaceHolder = new Struct(new Word("#StructPlaceHolder#", Tag.ID));
+    private final Map<Token, StructVariable> variableMap = new HashMap<>();
     /*store normal functions*/
-    private final HashMap<Token,FunctionBasic> functionMap = new HashMap<>();
+    private final HashMap<Token, FunctionBasic> functionMap = new HashMap<>();
     /*<k,v> => <operand,func_name>*/
     private final Token name;
-    private final Map<Token,Token> overloadFunctions;
+    private final Map<Token, Token> overloadFunctions;
     /*store virtual functions*/
-    private final Map<Token,Position> virtualFunctionPositionMap;
+    private final Map<Token, Position> virtualFunctionPositionMap;
     private final VirtualTable virtualTable;
     private FunctionBasic initFunction = null;
     private boolean hasDefinedVirtualFunction = false;
@@ -32,12 +32,24 @@ public class Struct extends Type implements Iterable<StructVariable>{
     private String firstInstantiatedFile = "";
     private boolean closed = false;
     private boolean needCopyBase;
-    private  Value[] instanceMemoryTemplate;
+    private Value[] instanceMemoryTemplate;
     private int firstInstantiatedIndex;
     private final Struct[] inheritMap;
 
-    public Struct(Token name){
-        super(name.toString(),Tag.BASIC, Value.Null);
+    public Token getDefaultFunctionName() {
+        return defaultFunctionName;
+    }
+
+    public void setDefaultFunctionName(Token defaultFunctionName) {
+        assert (this.defaultFunctionName == null || defaultFunctionName == this.defaultFunctionName);
+        this.defaultFunctionName = defaultFunctionName;
+        assert(this.getVirtualFunction(defaultFunctionName) != null);
+    }
+
+    private Token defaultFunctionName;
+
+    public Struct(Token name) {
+        super(name.toString(), Tag.BASIC, Value.Null);
         this.name = name;
         baseStruct = null;
         virtualTable = new VirtualTable();
@@ -46,10 +58,11 @@ public class Struct extends Type implements Iterable<StructVariable>{
         baseSize = 0;
         needCopyBase = false;
         inheritMap = new Struct[0];
+        defaultFunctionName = null;
     }
 
-    public Struct(Token name,Struct baseStruct){
-        super(name.toString(),Tag.BASIC, Value.Null);
+    public Struct(Token name, Struct baseStruct) {
+        super(name.toString(), Tag.BASIC, Value.Null);
         this.name = name;
         this.baseStruct = baseStruct;
         baseStruct.addDerivedStruct(this);
@@ -61,10 +74,11 @@ public class Struct extends Type implements Iterable<StructVariable>{
         inheritMap = new Struct[baseStruct.inheritMap.length + 1];
         System.arraycopy(baseStruct.inheritMap, 0, inheritMap, 0, baseStruct.inheritMap.length);
         inheritMap[baseStruct.inheritMap.length] = baseStruct;
+        defaultFunctionName = baseStruct.defaultFunctionName;
     }
 
-    public void copyBase(){
-        if(needCopyBase) {
+    public void copyBase() {
+        if (needCopyBase) {
             virtualTable.copy(baseStruct.getVirtualTable());
             virtualFunctionPositionMap.clear();
             virtualFunctionPositionMap.putAll(baseStruct.virtualFunctionPositionMap);
@@ -76,7 +90,7 @@ public class Struct extends Type implements Iterable<StructVariable>{
     }
 
     public Struct close() {
-        if ( !closed  ) {
+        if (!closed) {
             if (baseStruct != null && !baseStruct.isClosed()) {
                 throw new RuntimeException("base struct `" + baseStruct + "' of `" + this + "' is not closed yet");
             }
@@ -86,41 +100,43 @@ public class Struct extends Type implements Iterable<StructVariable>{
         return this;
     }
 
-    public void addDerivedStruct(Struct s){
-        assert s != null&&s.getBaseStruct() == this;
+    public void addDerivedStruct(Struct s) {
+        assert s != null && s.getBaseStruct() == this;
         this.derivedStructSet.add(s);
     }
 
-    public Iterator<Struct> iteratorDerivedStruct(){
+    public Iterator<Struct> iteratorDerivedStruct() {
         return this.derivedStructSet.iterator();
     }
 
     /**
      * Create memory space for new instance of this struct,each variable has been initialized<br/>
      * The memory map is arranged order by the defined position as following:<br/>
-     *       _________________________<br/>
-     *      |     Base Struct Map    |<br/>
-     *      |________________________|<br/>
-     *      |  1st defined variable  |<br/>
-     *      |________________________|<br/>
-     *      |  nth defined variable  |<br/>
-     *      |________________________|
+     * _________________________<br/>
+     * |     Base Struct Map    |<br/>
+     * |________________________|<br/>
+     * |  1st defined variable  |<br/>
+     * |________________________|<br/>
+     * |  nth defined variable  |<br/>
+     * |________________________|
+     *
      * @return the instance memory created
      */
-    public Value[] createInstanceMemory(){
-        if(instanceMemoryTemplate == null){
+    public Value[] createInstanceMemory() {
+        if (instanceMemoryTemplate == null) {
             instanceMemoryTemplate = new Value[countVariables()];
             Struct t = this;
-            do{
+            do {
                 t.forEach(i -> instanceMemoryTemplate[i.index] = i.type.getInitialValue());
-            }while((t = t.getBaseStruct()) != null);
+            } while ((t = t.getBaseStruct()) != null);
         }
         return instanceMemoryTemplate.clone();
     }
+
     /**
      * A struct is closed iff:<br/>
-     *   1.Its base struct is closed<br/>
-     *   2.All of its variables and its functions has been DECLARED(not DEFINED).
+     * 1.Its base struct is closed<br/>
+     * 2.All of its variables and its functions has been DECLARED(not DEFINED).
      */
     public boolean isClosed() {
         return this.closed;
@@ -128,32 +144,34 @@ public class Struct extends Type implements Iterable<StructVariable>{
 
     /**
      * Check if this struct still need copy base struct's variables table's information<br/>
-     *  Because the base struct may not be closed {@see #isClosed} when this struct is pre-declared
+     * Because the base struct may not be closed {@see #isClosed} when this struct is pre-declared
+     *
      * @return if this struct need copy base
      */
-    public boolean needCopyBase(){
+    public boolean needCopyBase() {
         return needCopyBase;
     }
 
     /**
      * @return a constant reference of the VariableMap.values()
      */
-    public Collection<StructVariable> getStructVariables(){
+    public Collection<StructVariable> getStructVariables() {
         return Collections.unmodifiableCollection(variableMap.values());
     }
 
     /**
      * A struct is completed iff<br/>
-     *  1.it has no initial function or its initial function is defined already<br/>
-     *  2. it has no virtual functions or its all virtual function has been defined
+     * 1.it has no initial function or its initial function is defined already<br/>
+     * 2. it has no virtual functions or its all virtual function has been defined
+     *
      * @return if the struct is completed
      */
-    public boolean isCompleted(){
-        return (initFunction == null || initFunction.isCompleted())&& virtualTable.isCompleted();
+    public boolean isCompleted() {
+        return (initFunction == null || initFunction.isCompleted()) && virtualTable.isCompleted();
     }
 
-    public FunctionBasic getFirstUncompletedFunction(){
-        if(initFunction != null && ! initFunction.isCompleted()){
+    public FunctionBasic getFirstUncompletedFunction() {
+        if (initFunction != null && !initFunction.isCompleted()) {
             return initFunction;
         }
         return virtualTable.findFirstUncompletedFunction();
@@ -161,44 +179,46 @@ public class Struct extends Type implements Iterable<StructVariable>{
 
     /**
      * Struct D is child of struct B iff<br/>
-     *      1.D inherits B directly<br/>
-     *      2.Base struct of D is child of struct B
+     * 1.D inherits B directly<br/>
+     * 2.Base struct of D is child of struct B
+     *
      * @param struct the struct type to compare with
      * @return true if the struct is a child struct of {@code struct}
      */
-    public boolean isChildOf(Struct struct){
+    public boolean isChildOf(Struct struct) {
         return inheritMap.length > struct.inheritMap.length
                 && inheritMap[struct.inheritMap.length] == struct;
     }
 
-    public final Token getName(){
+    public final Token getName() {
         return name;
     }
 
     @Override
-    public boolean isBuiltInType(){
+    public boolean isBuiltInType() {
         return false;
     }
 
-    public FunctionBasic getInitialFunction(){
+    public FunctionBasic getInitialFunction() {
         return initFunction;
     }
 
     /**
      * Define the struct initial function
+     *
      * @param f the initial functions
      */
-    public void defineInitialFunction(FunctionBasic f){
-        if(initFunction != null){
+    public void defineInitialFunction(FunctionBasic f) {
+        if (initFunction != null) {
             f.error("initial function of `" + this + "' has been defined");
         }
         initFunction = f;
     }
-    
+
     /**
      * @return the virtual function position in the virtualTable or null if it doesn't exist
      */
-    public Position getVirtualFunctionPosition(Token name){
+    public Position getVirtualFunctionPosition(Token name) {
         return virtualFunctionPositionMap.get(name);
     }
 
@@ -206,41 +226,43 @@ public class Struct extends Type implements Iterable<StructVariable>{
      * @param name the variable name
      * @return the type of the member named name or null if it doesn't exist
      */
-    public StructVariable getVariable(Token name){
+    public StructVariable getVariable(Token name) {
         StructVariable t = variableMap.get(name);
-        return (t != null || baseStruct ==null)?t: baseStruct.getVariable(name);
+        return (t != null || baseStruct == null) ? t : baseStruct.getVariable(name);
     }
 
     /**
      * Add a member variable,if the name is occupied return previous variable or null
-     * @param name  the variable name
+     *
+     * @param name the variable name
      * @param type the member variable type
      * @return previous member variable if it has conflict definition
      */
-    public StructVariable addVariable(Token name, Type type){
-        StructVariable x  ;
-        if(baseStruct != null){
-           x = baseStruct.getVariable(name);
-           if(x != null){
+    public StructVariable addVariable(Token name, Type type) {
+        StructVariable x;
+        if (baseStruct != null) {
+            x = baseStruct.getVariable(name);
+            if (x != null) {
                 return x;
-           }
+            }
         }
-        return variableMap.put(name,new StructVariable(type, countVariables()));
+        return variableMap.put(name, new StructVariable(type, countVariables()));
     }
 
     /**
      * Define a virtual function.This function will handle conflicts when it shadows a naive function({@link #addNaiveFunction(Token, FunctionBasic)})
+     *
      * @param name the virtual function's name
-     * @param mf the member function body
+     * @param mf   the member function body
      * @return the position of the virtual function
      */
     public Position defineVirtualFunction(Token name, FunctionBasic mf) {
-        if(!hasDefinedVirtualFunction){
+        if (!hasDefinedVirtualFunction) {
             virtualTable.createNewTable();
             hasDefinedVirtualFunction = true;
         }
         FunctionBasic f = getFunction(name);
-        if(f != null){
+        if (f != null) {
             mf.error("virtual function `" + mf + "' shadows a function `" + f + "'");
         }
 
@@ -250,54 +272,56 @@ public class Struct extends Type implements Iterable<StructVariable>{
         return p;
     }
 
-    public FunctionBasic getVirtualFunction(Token name){
+    public FunctionBasic getVirtualFunction(Token name) {
         Position p = virtualFunctionPositionMap.get(name);
-        return p==null?null: virtualTable.getVirtualFunction(p.generation,p.index);
+        return p == null ? null : virtualTable.getVirtualFunction(p.generation, p.index);
     }
 
     /**
      * Declare a virtual function overriding,it will handle most errors in following situation:<br/>
-     *  1.if not found the virtual function declaration<br/>
-     *  2.if it is replicated declaration<br/>
-     *  3.if its signature is not the same with declaration(parameters,return type)
+     * 1.if not found the virtual function declaration<br/>
+     * 2.if it is replicated declaration<br/>
+     * 3.if its signature is not the same with declaration(parameters,return type)
+     *
      * @param name the function name
-     * @param mf then function body
+     * @param mf   then function body
      */
-    public void overrideVirtualFunction(Token name,FunctionBasic mf){
+    public void overrideVirtualFunction(Token name, FunctionBasic mf) {
         Position p = virtualFunctionPositionMap.get(name);
         /*it is not a virtual function of base */
-        if(p == null || p.generation > virtualTable.getGenerations() - 1){
-            mf.error("override error:virtual function declaration `"  + this.lexeme + "." + name + "' not found");
+        if (p == null || p.generation > virtualTable.getGenerations() - 1) {
+            mf.error("override error:virtual function declaration `" + this.lexeme + "." + name + "' not found");
             return;//avoid warning
         }
         FunctionBasic f = virtualTable.getVirtualFunction(p);
-        assert(f != null);
+        assert (f != null);
         /*
          * Redeclared!
          */
-        if(f != baseStruct.getVirtualTable().getVirtualFunction(p)){
+        if (f != baseStruct.getVirtualTable().getVirtualFunction(p)) {
             mf.error("virtual function `" + this.lexeme + "." + f.getName() + "':overriding has been declared before");
         }
-        if(f.getParamSize() != mf.getParamSize()){
-            mf.error("virtual function `" + this.lexeme + "." + f.getName() + "':parameters number should be "+ f.getParamSize() + ",but found " + mf.getParamSize());
+        if (f.getParamSize() != mf.getParamSize()) {
+            mf.error("virtual function `" + this.lexeme + "." + f.getName() + "':parameters number should be " + f.getParamSize() + ",but found " + mf.getParamSize());
         }
-        if(!f.getType().isCongruentWith(mf.getType())){
-            mf.error("virtual function `" + this.lexeme + "." + f.getName() + "':return type should be `" + f.getType() + "',but found `" + mf.getType() +"'");
+        if (!f.getType().isCongruentWith(mf.getType())) {
+            mf.error("virtual function `" + this.lexeme + "." + f.getName() + "':return type should be `" + f.getType() + "',but found `" + mf.getType() + "'");
         }
-        for(int i = 1; i < f.getParamSize() ; i++ ){
-            if(!f.getParamInfo(i).type.isCongruentWith(mf.getParamInfo(i).type)){
-                mf.error("virtual function `" + this.lexeme + "." + f.getName() + "':parameter [" + i + "]" + " type is `" +  f.getParamInfo(i).type + "',but found `" +  mf.getParamInfo(i).type + "'");
+        for (int i = 1; i < f.getParamSize(); i++) {
+            if (!f.getParamInfo(i).type.isCongruentWith(mf.getParamInfo(i).type)) {
+                mf.error("virtual function `" + this.lexeme + "." + f.getName() + "':parameter [" + i + "]" + " type is `" + f.getParamInfo(i).type + "',but found `" + mf.getParamInfo(i).type + "'");
             }
         }
-        virtualTable.overrideVirtualFunction(p.generation,p.index,mf);
+        virtualTable.overrideVirtualFunction(p.generation, p.index, mf);
     }
 
     /**
      * get a function by name(search in both naive and virtual functions declared in this struct definition body)
+     *
      * @param name the function name
      * @return the function or null if it doesn't exist
      */
-    public FunctionBasic getDeclaredFunction(Token name){
+    public FunctionBasic getDeclaredFunction(Token name) {
         FunctionBasic f = getFunction(name);
         /*
          * The function of this struct doesn't exist
@@ -308,50 +332,58 @@ public class Struct extends Type implements Iterable<StructVariable>{
 
     /**
      * Get a function by name
+     *
      * @param name the function name
      * @return the functions
      */
-    private FunctionBasic getFunction(Token name){
+    private FunctionBasic getFunction(Token name) {
         FunctionBasic f = getVirtualFunction(name);
-        return f != null?f:getNaiveFunction(name);
+        return f != null ? f : getNaiveFunction(name);
     }
 
     /**
      * Set operand overloading by op<br/>
      * Handled most of errors
+     *
      * @param op the operand name
-     * @param f the function bind to this op
+     * @param f  the function bind to this op
      * @return true if it is not redefined or false
      */
-    public boolean addOverloading(Token op,FunctionBasic f){
+    public boolean addOverloading(Token op, FunctionBasic f) {
         /*
          * should operand be inheritable?
          */
-        switch(op.tag){
-        //arith operand
-        case '+':case '-':case '*':case '/':case '%':
+        switch (op.tag) {
+            case Tag.BRACKETS:
+                break;
+            //arith operand
+            case '+':
+            case '-':
+            case '*':
+            case '/':
+            case '%':
             /*parameter is at least two(this point,and another struct)*/
-            if(f.getParamList().size() != 2){
-                f.error("Operand `" + op  + "' overloading function should just use one parameters,but found `" + f.getParamList().size() + "'");
-            }
+                if (f.getParamList().size() != 2) {
+                    f.error("Operand `" + op + "' overloading function should just use one parameters,but found `" + f.getParamList().size() + "'");
+                }
             /*should be the same as the struct*/
-            if(!f.getParamList().get(1).type.isCongruentWith(this)){
-                f.error("Operand `" + op  + "' overloading function's parameter should be `" + this + "',but found `" + f.getParamList().get(1).type + "'");
-            }
+                if (!f.getParamList().get(1).type.isCongruentWith(this)) {
+                    f.error("Operand `" + op + "' overloading function's parameter should be `" + this + "',but found `" + f.getParamList().get(1).type + "'");
+                }
             /*return type should be the same as the struct*/
-            if(f.getType() != this){
-                f.error("Operand `" + op + "' overloading' return type should be `"+ this + "',but found `" + f.getType() + "'");
-            }
-            break;
-        case Tag.ARRAY:
-            if(f.getParamList().size() != 2){
-                f.error("Operand `" + op  + "' overloading function should just use one parameters,but found `" + f.getParamList().size() + "'");
-            }
+                if (f.getType() != this) {
+                    f.error("Operand `" + op + "' overloading' return type should be `" + this + "',but found `" + f.getType() + "'");
+                }
+                break;
+            case Tag.ARRAY:
+                if (f.getParamList().size() != 2) {
+                    f.error("Operand `" + op + "' overloading function should just use one parameters,but found `" + f.getParamList().size() + "'");
+                }
 
-            if(f.getType() == Type.Void){//must have return.
-                f.error("Operand `" + op  + "' overloading function should not return `" + Type.Void + "'");
-            }
-            break;
+                if (f.getType() == Type.Void) {//must have return.
+                    f.error("Operand `" + op + "' overloading function should not return `" + Type.Void + "'");
+                }
+                break;
         /*
          * NOTE:
          * recursively calling risk:
@@ -367,45 +399,45 @@ public class Struct extends Type implements Iterable<StructVariable>{
          *          ......
          *   }
          */
-        //relational operand
-        //case Tag.NE://!=
-        //case Tag.EQ://==
-        case Tag.GE://>=
-        case Tag.LE://<=
-        case '<':
-        case '>':
+            //relational operand
+            //case Tag.NE://!=
+            //case Tag.EQ://==
+            case Tag.GE://>=
+            case Tag.LE://<=
+            case '<':
+            case '>':
             /*parameter is at least two(this point,and another struct)*/
-            if(f.getParamList().size() != 2){
-                f.error("Operand `" + op  + "' overloading function should just use one parameters,but found `" + f.getParamList().size() + "'");
-            }
+                if (f.getParamList().size() != 2) {
+                    f.error("Operand `" + op + "' overloading function should just use one parameters,but found `" + f.getParamList().size() + "'");
+                }
             /*should be the same as the struct*/
-            if(f.getParamList().get(1).type != this){
-                f.error("Operand `" + op  + "' overloading function's parameter should be `" + this + "',but found `" + f.getParamList().get(1).type + "'");
-            }
+                if (f.getParamList().get(1).type != this) {
+                    f.error("Operand `" + op + "' overloading function's parameter should be `" + this + "',but found `" + f.getParamList().get(1).type + "'");
+                }
             /*return type should be the same as the struct*/
-            if(f.getType() != Type.Bool){
-                f.error("Operand `" + op + "' overloading' return type should be `"+ Type.Bool + "',but found `" + f.getType() + "'");
-            }
-            break;
-        case Tag.BASIC:
-            if(op == this ){
-                f.error("Type-conversion overloading can't be used for self conversion\nnote:" + this + "->" + this);
-            } else if(op instanceof Struct && this.isChildOf((Struct)op)){
-                f.error("Type-conversion overloading can't be used for base type conversion:\nnote:" + this + "->" + op);
-            }
+                if (f.getType() != Type.Bool) {
+                    f.error("Operand `" + op + "' overloading' return type should be `" + Type.Bool + "',but found `" + f.getType() + "'");
+                }
+                break;
+            case Tag.BASIC:
+                if (op == this) {
+                    f.error("Type-conversion overloading can't be used for self conversion\nnote:" + this + "->" + this);
+                } else if (op instanceof Struct && this.isChildOf((Struct) op)) {
+                    f.error("Type-conversion overloading can't be used for base type conversion:\nnote:" + this + "->" + op);
+                }
 
-            if(f.getParamList().size() != 1){
-                f.error("Type-conversion overloading operand `" + op + "' shouldn't have any parameter");
-            }
+                if (f.getParamList().size() != 1) {
+                    f.error("Type-conversion overloading operand `" + op + "' shouldn't have any parameter");
+                }
             /*return type should be the same as the op*/
-            if(!f.getType().isCongruentWith((Type)op)){
-                f.error("Type-conversion overloading(`" + op + "') function should return the same type,but found `" + f.getType() + "'");
-            }
-            
-            break;
-        default:
-            f.error("Can't overload operand `" + op + "'");
-            break;
+                if (!f.getType().isCongruentWith((Type) op)) {
+                    f.error("Type-conversion overloading(`" + op + "') function should return the same type,but found `" + f.getType() + "'");
+                }
+
+                break;
+            default:
+                f.error("Can't overload operand `" + op + "'");
+                break;
         }
         //if the function is an override function and the original operand is bound to it,it should be OK
         Token funcName = overloadFunctions.put(op, f.getName());
@@ -415,64 +447,69 @@ public class Struct extends Type implements Iterable<StructVariable>{
 
     /**
      * Get operand overloading by operand
+     *
      * @param op the overloading name
      * @return the function bind to the operand
      */
-    public Token getOverloading(Token op){
+    public Token getOverloading(Token op) {
         return overloadFunctions.get(op);
     }
 
     /**
      * Add naive function which means it is not virtual
-     * @throws RuntimeException when the {@param function} has conflicts with others
+     *
      * @param functionName the function name
-     * @param function  the function body
+     * @param function     the function body
      * @return null if it has no conflicts
+     * @throws RuntimeException when the {@param function} has conflicts with others
      */
-    public FunctionBasic addNaiveFunction(Token functionName, FunctionBasic function){
+    public FunctionBasic addNaiveFunction(Token functionName, FunctionBasic function) {
         FunctionBasic f2 = getFunction(functionName);
-        if(f2 != null){
-           function.error("function `" +  function + "' has a conflict name with a function `" + f2 +"'");
+        if (f2 != null) {
+            function.error("function `" + function + "' has a conflict name with a function `" + f2 + "'");
         }
-        f2 = functionMap.put(functionName,function);
-        assert(f2 == null);
+        f2 = functionMap.put(functionName, function);
+        assert (f2 == null);
         return null;
     }
 
     /**
      * Get naive function by name
+     *
      * @param functionName the function name
      * @return the function
      */
-    public FunctionBasic getNaiveFunction(Token functionName){
+    public FunctionBasic getNaiveFunction(Token functionName) {
         FunctionBasic f = functionMap.get(functionName);
-        return (f != null || baseStruct == null)?f: baseStruct.getNaiveFunction(functionName);
+        return (f != null || baseStruct == null) ? f : baseStruct.getNaiveFunction(functionName);
     }
 
-    public VirtualTable getVirtualTable(){
+    public VirtualTable getVirtualTable() {
         return virtualTable;
     }
 
-    public Struct getBaseStruct(){
+    public Struct getBaseStruct() {
         return baseStruct;
     }
 
     /**
      * Count all variable include variables defined in this struct
+     *
      * @return number of all member variables
      */
-    public int countVariables(){
+    public int countVariables() {
         return baseSize + variableMap.size();
     }
 
     /**
      * Record where(file and line) the struct is first instantiated
+     *
      * @param fil the line number
      * @param fii the line offset
      * @param fif the file name
      */
-    public void setInstantiated(int fil, int fii, String fif){
-        if(!instantiated){
+    public void setInstantiated(int fil, int fii, String fif) {
+        if (!instantiated) {
             instantiated = true;
             firstInstantiatedFile = fif;
             firstInstantiatedLine = fil;
@@ -480,11 +517,11 @@ public class Struct extends Type implements Iterable<StructVariable>{
         }
     }
 
-    public boolean isInstantiated(){
+    public boolean isInstantiated() {
         return instantiated;
     }
-    
-    public int getFirstInstantiatedLine(){
+
+    public int getFirstInstantiatedLine() {
         return firstInstantiatedLine;
     }
 
@@ -492,7 +529,7 @@ public class Struct extends Type implements Iterable<StructVariable>{
         return firstInstantiatedIndex;
     }
 
-    public String getFirstInstantiatedFile(){
+    public String getFirstInstantiatedFile() {
         return firstInstantiatedFile;
     }
 
@@ -506,7 +543,7 @@ public class Struct extends Type implements Iterable<StructVariable>{
                     .forEach(sv -> stringBuilder.append("    ").append(sv.getValue().type).append(" ").append(sv.getKey()).append(";\n"));
         }
 
-        if(initFunction != null){
+        if (initFunction != null) {
             stringBuilder.append("    //init function\n");
             stringBuilder.append("    def ").append(initFunction.getDescription(false)).append(";\n");
         }
@@ -537,12 +574,12 @@ public class Struct extends Type implements Iterable<StructVariable>{
 
     /**
      * Iterator of the variables
+     *
      * @return struct variable iterator
      */
     @Override
     public Iterator<StructVariable> iterator() {
         return getStructVariables().iterator();
     }
-
 
 }

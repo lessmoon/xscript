@@ -274,7 +274,7 @@ public class ExtensionStructHelper {
                 functionBodyWithReturn((StructValue) arg0.getValue(),argLength,needPassThisReference,vars,returnType,m, retFlag,s);
             }
         };
-        return new MemberFunction(funcName, returnType, body, param, s);
+        return new MemberFunction(funcName, returnType, param, s, body);
     }
 
     /**

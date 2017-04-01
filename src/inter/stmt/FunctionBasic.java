@@ -28,7 +28,6 @@ public abstract class FunctionBasic extends Stmt {
         paramList = new ArrayList<>(p);
     }
 
-
     public Param getParamInfo(int i) {
         return getParamList().get(i);
     }

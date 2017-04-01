@@ -212,7 +212,6 @@ struct Game : CyclePaintPad {
         }
         
         this.pad.setLine(this.lid,x,y,width+x,y);
-        
         this.pad.setCircle(this.cid,this.x,this.y);
         super.run();
     }
@@ -384,25 +383,11 @@ def void f2(int b){
         }
     });
     println("\nTest2");
-    x.stream().filter(new Consumer{
-        def override Content apply(Content i){
-           return new BoolContent((((IntContent)i).val % 4) == 0);
-        }
-    }).map(new Consumer{
-        def override Content apply(Content i){
-            return new IntContent(((IntContent)i).val * 4);           
-        }
-    }).sort(new Comparator{
-        def override int compare(Content a,Content b){
-            return ((IntContent)b).val - ((IntContent)a).val;
-        }
-    }).forEach(new Consumer{
-        def override Content apply(Content i){
-            print( " " + i );
-            return null;
-        }
-    });
-
+    x.stream()
+    .filter(new Consumer^(i)->new BoolContent((((IntContent)i).val % 4) == 0))
+    .map(new Consumer^(i)->new IntContent(((IntContent)i).val * 4))
+    .sort(new Comparator^(a,b)->((IntContent)b).val - ((IntContent)a).val)
+    .forEach(new Consumer^(i)->{print( " " + i );});
     println("\nTest2 end");
 }
 
@@ -486,20 +471,19 @@ def void drawClock(PaintPad p,Time t){
 
     PaintPad pad = new PaintPad("ClockInXScript",300,300);
     
-    Thread t = new Thread(new Runnable{
-        def override void run(){
-            MyTime t = new MyTime;
-            println(t);
-            while(true){
-                println(t);
-                getTime(t);
-                pad.clear();
-                drawClock(pad,t);
-                pad.redraw();
-                sleep(500);
-            }
-        }
-    });
+    Thread t = new Thread(
+                    new MyRunnable->{
+                        MyTime t = new MyTime;
+                        println(t);
+                        while(true){
+                            println(t);
+                            getTime(t);
+                            pad.clear();
+                            drawClock(pad,t);
+                            pad.redraw();
+                            sleep(500);
+                        }
+                    });
     println("Test UI clock");
     pad.show();
     t.start();
@@ -746,21 +730,20 @@ def void GameOfLife()
     pad.show();
     sleep(200);
     //println("Line " + _line_ + ":" + TILE_WIDTH);
-    Thread t = new Thread(new Runnable{
-        def override void run(){
-            auto w = world;
-            auto w1 = world1;
-            auto w2 = world2;
-            while(true){
-                calMap(w1,w2);
-                w = w2;
-                w2 = w1;
-                w1 = w;
-                drawWorld(pad,w);
-                sleep(500);
-            }
-        }
-    });
+    Thread t = new Thread(
+                    new MyRunnable->{
+                        auto w = world;
+                        auto w1 = world1;
+                        auto w2 = world2;
+                        while(true){
+                            calMap(w1,w2);
+                            w = w2;
+                            w2 = w1;
+                            w1 = w;
+                            drawWorld(pad,w);
+                            sleep(500);
+                        }
+                    });
     pad.show();
     t.start();
     pad.wait();
@@ -948,8 +931,7 @@ struct complex{
     pad.setBrushColor(255,0,0);
     
     pad.show();
-    Thread t = new Thread(new Runnable{
-        def override void run(){
+    Thread t = new Thread(new MyRunnable->{
             int x,y;
             for(real off = 0;;off += 0.01 ){
                 for(real theta = 0; theta <= 3.14 * 2 + 0.01;theta += 0.01){
@@ -961,8 +943,7 @@ struct complex{
                 sleep(56);
                 pad.clear();
             }
-        }
-    });
+        });
     
     t.start();
     pad.wait();

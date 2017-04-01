@@ -2,6 +2,7 @@ package inter.expr;
 
 import lexer.Token;
 import runtime.VarTable;
+import symbols.EnvEntry;
 import symbols.Type;
 
 public class StackVar extends Var {
@@ -42,5 +43,13 @@ public class StackVar extends Var {
     public int hashCode(){
         //NOTE:Type should join the hash code computing,because it is not necessary to be same hashCode between two same types
         return this.stackLevel << 7 | this.offset;
+    }
+
+    public static StackVar stackVar(Token id, EnvEntry ee,int toplevel){
+        return stackVar(id,ee.type,ee.stacklevel,ee.offset,toplevel);
+    }
+
+    public static StackVar stackVar(Token id,Type type,int stackLevel,int stackOffset,int toplevel){
+        return stackLevel == 0 ? new AbsoluteVar(id, type, 0, stackOffset) : new StackVar(id, type, toplevel - stackLevel, stackOffset);
     }
 }

@@ -8,6 +8,7 @@ struct Collector{
     def virtual Sequence collect(){
         return this.seq;
     }
+
     def virtual void feed(Content c){
         this.seq.add(c);
     }

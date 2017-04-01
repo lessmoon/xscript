@@ -1,6 +1,6 @@
 import"../container/content.xs";
 struct Comparator{
-    def virtual int compare(Content a,Content b);
+    def default virtual int compare(Content a,Content b);
 }
 
 def void sortArray(Content[] s,int l,int r,Comparator less){
