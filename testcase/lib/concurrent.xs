@@ -4,7 +4,7 @@ import "../container/content.xs";
 native<extension.predefined>{
 
     "SimpleRunnable":struct Runnable{
-        def virtual void run();
+        def default virtual void run();
     };
 
     "SimpleThread":struct Thread{
@@ -30,10 +30,6 @@ native<extension.predefined>{
         def void triggerAll();
         def bool wait();
     };
-}
-
-struct MyRunnable:Runnable{
-    def default override void run();
 }
 
 struct Trigger {

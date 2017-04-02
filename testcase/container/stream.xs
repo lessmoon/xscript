@@ -6,6 +6,13 @@ struct Consumer{
     def default virtual Content apply(Content c);
 }
 
+def void Iterator.forEachRemained(Consumer action){
+    while(this.hasNext()){
+        this.next();
+        action(this.getValue());
+    }
+}
+
 def void Sequence.forEach(Consumer c){
     auto i = this.iterator();
     while(i.hasNext()){
@@ -22,9 +29,10 @@ struct Stream{
     def Stream map(Consumer c);
     def Sequence reduce(Collector c);
     def int count();
-    def virtual Iterator next();
+    def default virtual Iterator next();
     def Stream sort(Comparator c);
     def Stream skip(int c);
+    def Stream reverse();
 }
 
 struct TransformStream:Stream{
@@ -65,12 +73,7 @@ struct MapStream:TransformStream{
     def override Iterator next(){
         auto iter = this.of.next();
         if(iter != null){
-            auto value = this.mapper.apply(iter.getValue());
-            iter = new Iterator(){
-                            def override Content getValue(){
-                                return value;
-                            }
-                    };
+            iter = new Iterator -> this.mapper.apply(iter.getValue());
         }
         return iter;
     }
@@ -135,6 +138,16 @@ def Stream Sequence.stream(){
     return new SequenceStream(this);
 }
 
+def Stream Iterator.stream(){
+    return new Stream -> {
+        if(this.hasNext()){
+            this.next();
+            return this;
+        }
+        return null;
+    };
+}
+
 struct RangeStream:Stream{
     int i;
     int end;
@@ -146,8 +159,8 @@ struct RangeStream:Stream{
     
     def override Iterator next(){
         if(this.i < this.end){
-            auto tmp = ++this.i;
-            return new Iterator->new IntContent(tmp);
+            this.i ++;
+            return new Iterator -> new IntContent(this.i);
         }
         return null;
     }

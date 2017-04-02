@@ -107,6 +107,15 @@ struct List:Sequence{
     }
 }
 
+def Stream Stream.reverse(){
+    List s = new List;
+    Iterator i;
+    while((i = this.next()) != null){
+        s.push_front(i.getValue());
+    }
+    return s.stream();
+}
+
 import "collector.xs";
 
 def Collector toList(){

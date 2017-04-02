@@ -278,27 +278,31 @@ public class ExtensionStructHelper {
     }
 
     /**
-     * build a struct from class c,c must have a no arg constructor
+     * build a given struct body from class c,c must have a no arg constructor
      *
      * @param c         the class
      * @param dic       the dictionary
      * @param typeTable the type table
-     * @param name      the struct name
+     * @param s         the struct
      * @param <T>       the Type
      * @return the struct
      */
-    public static <T> symbols.Struct buildStructFromClass(Class<T> c, Dictionary dic,
-                                                          TypeTable typeTable, Token name, boolean needDefaultInit) {
+    public static <T> symbols.Struct buildStructFromClass(Class<T> c,Dictionary dic,TypeTable typeTable,
+                                                          final symbols.Struct s,boolean needDefaultInit){
         final Method[] methods = c.getMethods();
 
-        symbols.Struct s = new symbols.Struct(name);
         for (final Method m : methods) {
             final StructMethod methodAnnotation = m.getAnnotation(StructMethod.class);
             if (methodAnnotation != null) {
                 FunctionBasic f = getMemberFunction(m, c, dic, typeTable, s);
                 if (methodAnnotation.virtual() || methodAnnotation.purevirtual()) {
                     s.defineVirtualFunction(f.getName(), f);
+                    if(methodAnnotation._default()){
+                        assert s.getDefaultFunctionName() == null || s.getDefaultFunctionName() == f.getName():"default function is already set:" + s.getDefaultFunctionName();
+                        s.setDefaultFunctionName(f.getName());
+                    }
                 } else {
+                    assert !methodAnnotation._default():"default function should be virtual:" + f.getName();
                     s.addNaiveFunction(f.getName(), f);
                 }
             }
@@ -314,8 +318,22 @@ public class ExtensionStructHelper {
         if (needDefaultInit && s.getInitialFunction() == null) {
             s.defineInitialFunction(getDefaultInitialFunction(c, dic, typeTable, s));
         }
-
         return s;
+    }
+
+    /**
+     * build a struct from class c,c must have a no arg constructor
+     * @see #buildStructFromClass(Class, Dictionary, TypeTable, symbols.Struct, boolean)
+     * @param c         the class
+     * @param dic       the dictionary
+     * @param typeTable the type table
+     * @param name      the struct name
+     * @param <T>       the Type
+     * @return the struct
+     */
+    public static <T> symbols.Struct buildStructFromClass(Class<T> c, Dictionary dic,
+                                                          TypeTable typeTable, Token name, boolean needDefaultInit) {
+        return buildStructFromClass(c,dic,typeTable,new symbols.Struct(name),needDefaultInit);
     }
 
 

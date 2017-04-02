@@ -387,7 +387,7 @@ def void f2(int b){
     new RangeStream(1,100)
         .filter(new Consumer^i->new BoolContent(0==((int)(IntContent)i)%4))
         .forEach(new Consumer^i->{println(i);});
-    
+
     println("\nTest2");
     x.stream()
      .filter(new Consumer^(i)->new BoolContent((((IntContent)i).val % 4) == 0))
@@ -477,9 +477,9 @@ def void drawClock(PaintPad p,Time t){
 {
 
     PaintPad pad = new PaintPad("ClockInXScript",300,300);
-    
+
     Thread t = new Thread(
-                    new MyRunnable->{
+                    new Runnable->{
                         MyTime t = new MyTime;
                         println(t);
                         while(true){
@@ -738,7 +738,7 @@ def void GameOfLife()
     sleep(200);
     //println("Line " + _line_ + ":" + TILE_WIDTH);
     Thread t = new Thread(
-                    new MyRunnable->{
+                    new Runnable->{
                         auto w = world;
                         auto w1 = world1;
                         auto w2 = world2;
@@ -938,7 +938,7 @@ struct complex{
     pad.setBrushColor(255,0,0);
     
     pad.show();
-    Thread t = new Thread(new MyRunnable->{
+    Thread t = new Thread(new Runnable->{
             int x,y;
             for(real off = 0;;off += 0.01 ){
                 for(real theta = 0; theta <= 3.14 * 2 + 0.01;theta += 0.01){

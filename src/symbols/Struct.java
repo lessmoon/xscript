@@ -14,7 +14,7 @@ public class Struct extends Type implements Iterable<StructVariable> {
     public static final Struct StructPlaceHolder = new Struct(new Word("#StructPlaceHolder#", Tag.ID));
     private final Map<Token, StructVariable> variableMap = new HashMap<>();
     /*store normal functions*/
-    private final HashMap<Token, FunctionBasic> functionMap = new HashMap<>();
+    private final Map<Token, FunctionBasic> functionMap = new HashMap<>();
     /*<k,v> => <operand,func_name>*/
     private final Token name;
     private final Map<Token, Token> overloadFunctions;
@@ -556,7 +556,7 @@ public class Struct extends Type implements Iterable<StructVariable> {
             if (positionStream.count() > 0) {
                 positionStream = virtualFunctionPositionMap.values().stream().filter(pos -> virtualTable.getVirtualFunction(pos).isCompleted());
                 stringBuilder.append("    //virtual functions\n");
-                positionStream.forEach(pos -> stringBuilder.append("    def virtual ").append(virtualTable.getVirtualFunction(pos).getDescription(false)).append(";\n"));
+                positionStream.forEach(pos -> stringBuilder.append("    def ").append(virtualTable.getVirtualFunction(pos).getName()==defaultFunctionName?"default":"").append( " virtual ").append(virtualTable.getVirtualFunction(pos).getDescription(false)).append(";\n"));
             }
         }
         if (virtualTable.getGenerations() > 0) {
@@ -564,7 +564,7 @@ public class Struct extends Type implements Iterable<StructVariable> {
             if (positionStream.count() > 0) {
                 positionStream = virtualFunctionPositionMap.values().stream().filter(pos -> !virtualTable.getVirtualFunction(pos).isCompleted());
                 stringBuilder.append("    //pure virtual functions\n");
-                positionStream.forEach(pos -> stringBuilder.append("    def virtual ").append(virtualTable.getVirtualFunction(pos).getDescription(false)).append(";\n"));
+                positionStream.forEach(pos -> stringBuilder.append("    def ").append(virtualTable.getVirtualFunction(pos).getName()==defaultFunctionName?"default":"").append(" virtual ").append(virtualTable.getVirtualFunction(pos).getDescription(false)).append(";\n"));
             }
         }
 

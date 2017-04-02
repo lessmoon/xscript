@@ -85,7 +85,7 @@ public class Lexer implements Dictionary {
         reserve( new Word("virtual",Tag.VIRTUAL));
         reserve( new Word("override",Tag.OVERRIDE));
         reserve( new Word("instanceof",Tag.INSTOF));
-        
+
         reserve( Word.True );
         reserve( Word.False );
         reserve( Word.This );
@@ -304,8 +304,12 @@ public class Lexer implements Dictionary {
                 else if(peek == '='){
                     peek = ' ';
                     return Word.minass;
-                }else
+                }else if(peek == '>') {
+                    peek = ' ';
+                    return Word.arrow;
+                } else{
                     return Word.min;
+                }
             case '*':
                 if(readch('='))
                     return Word.multass;

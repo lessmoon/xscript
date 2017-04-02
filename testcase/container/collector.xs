@@ -5,6 +5,7 @@ struct Collector{
     def this(Sequence s){
         this.seq = s;
     }
+
     def virtual Sequence collect(){
         return this.seq;
     }
