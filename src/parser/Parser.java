@@ -634,7 +634,7 @@ public class Parser implements TypeTable {
     private Function innerFunctionDeclaration(Struct s, Token op) throws IOException {
         int flag = 0;
         boolean isDefaultSet = false;
-        if(check(Tag.DEFAULT)){
+        if (check(Tag.DEFAULT)) {
             isDefaultSet = true;
         }
 
@@ -661,14 +661,14 @@ public class Parser implements TypeTable {
         } else if (flag == Tag.OVERRIDE) {
             s.overrideVirtualFunction(fname, f);
         } else {
-            if(isDefaultSet) {
+            if (isDefaultSet) {
                 error("function `" + f + "' is default but not virtual");
             }
             s.addNaiveFunction(fname, f);
         }
 
-        if(isDefaultSet){
-            if (s.getDefaultFunctionName() != null && s.getDefaultFunctionName() != fname){
+        if (isDefaultSet) {
+            if (s.getDefaultFunctionName() != null && s.getDefaultFunctionName() != fname) {
                 error("function `" + s.getVirtualFunction(s.getDefaultFunctionName()) + "' is already default");
             }
             s.setDefaultFunctionName(fname);
@@ -1691,12 +1691,15 @@ public class Parser implements TypeTable {
                         Node line = new Node();
                         List<Expr> args = null;
                         boolean isLambda = false;
+
                         if (look.tag == '(') {//has initial function
                             args = arguments();
                         } else if (look.tag == '^' || look.tag == '-') {
                             //new T^(params)->{stmt}:ambiguous: ternary operator ?:
                             //new T^(params)->expr
                             //new T->{stmt};
+                            //new T`param ->{stmt}
+                            //new T`param -> expr
                             //new T->expression;
                             t = lambdaExpression((Struct) t);
                             isLambda = true;
@@ -1777,7 +1780,7 @@ public class Parser implements TypeTable {
     }
 
     private Expr invocation(Token id) throws IOException {
-        FunctionBasic f = null;
+        FunctionBasic f;
         List<Expr> args = arguments();
         if (id == Word.Super) {
             Struct fs;
@@ -1928,19 +1931,19 @@ public class Parser implements TypeTable {
         Struct savedDStruct = dStruct;
         Struct lambda = new Struct(lex.getOrReserve("lambda$" + base.getName() + "#" + (anonymousInnerStructId++) + Lexer.line + Lexer.offset), base);
         dStruct = lambda;
-        //^(params)->{stmt}
-        //^(params)->expr
-        //->{stmt};
-        //->expression;
+        //^(params)\
+        //^(params) \ -> {stmt}
+        //`param    / -> expression
+        // empty  /
         List<Param> params = new ArrayList<>();
-        params.add(new Param(dStruct, Word.This));
+        params.add(new Param(dStruct, Word.This));//shadow this;
         Iterator<Param> paramIterator = f.getParamList().iterator();
         assert paramIterator.hasNext();
         paramIterator.next();//this reference
         switch (copymove().tag) {
             case '^':
-                match('(');
-                if (!check(')')) {
+                final boolean flag = check('(');
+                if (!(flag && check(')'))) {
                     do {
                         Token id = look;
                         match(Tag.ID);
@@ -1952,17 +1955,21 @@ public class Parser implements TypeTable {
                         }
                         Param p = paramIterator.next();
                         params.add(new Param(p.type, id));
-                    } while (check(','));
-                    match(')');
-                    // NOTE:Ignoring useless parameter is permitted,
-                    // but we still need to push and occupy the stack space
-                    paramIterator.forEachRemaining(p -> params.add(new Param(p.type, lex.getOrReserve("#" + p.name))));
+                    } while (flag && check(','));
+                    if(flag) {
+                        match(')');
+                    }
                 }
                 match('-');
             case '-':
                 match('>');
                 break;
+            default:
+                error("unexpected ");
         }
+        // NOTE:Ignoring useless parameter is permitted,
+        // but we still need to push and occupy the stack space
+        paramIterator.forEachRemaining(p -> params.add(new Param(p.type, lex.getOrReserve("#" + p.name))));
         Type savedReturnType = returnType;
         returnType = f.getType();
         Stmt body = parseLambdaExpressionBody(params);
@@ -1976,7 +1983,7 @@ public class Parser implements TypeTable {
         return lambda;
     }
 
-    public Stmt parseLambdaExpressionBody(List<Param> parameters) throws IOException {
+    private Stmt parseLambdaExpressionBody(List<Param> parameters) throws IOException {
         Env savedEnv = top;
         top = new Env(top);
         boolean savedHasDecl = hasDecl;

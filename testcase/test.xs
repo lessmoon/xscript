@@ -382,12 +382,19 @@ def void f2(int b){
             return null;
         }
     });
+    println("");
+    
+    new RangeStream(1,100)
+        .filter(new Consumer^i->new BoolContent(0==((int)(IntContent)i)%4))
+        .forEach(new Consumer^i->{println(i);});
+    
     println("\nTest2");
     x.stream()
-    .filter(new Consumer^(i)->new BoolContent((((IntContent)i).val % 4) == 0))
-    .map(new Consumer^(i)->new IntContent(((IntContent)i).val * 4))
-    .sort(new Comparator^(a,b)->((IntContent)b).val - ((IntContent)a).val)
-    .forEach(new Consumer^(i)->{print( " " + i );});
+     .filter(new Consumer^(i)->new BoolContent((((IntContent)i).val % 4) == 0))
+     .map(new Consumer^(i)->new IntContent(((IntContent)i).val * 4))
+     .sort(new Comparator^(a,b)->((IntContent)b).val - ((IntContent)a).val)
+     .forEach(new Consumer^(i)->{print( " " + i );});
+
     println("\nTest2 end");
 }
 
@@ -944,7 +951,7 @@ struct complex{
                 pad.clear();
             }
         });
-    
+
     t.start();
     pad.wait();
     t.interrupt();

@@ -110,5 +110,5 @@ struct Iterator{
     def virtual void next(){}
     def virtual bool hasNext(){return false;}
     @Content
-    def virtual Content getValue();
+    def default virtual Content getValue();
 }

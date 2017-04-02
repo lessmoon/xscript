@@ -134,3 +134,21 @@ struct SequenceStream:Stream{
 def Stream Sequence.stream(){
     return new SequenceStream(this);
 }
+
+struct RangeStream:Stream{
+    int i;
+    int end;
+    
+    def this(int beg,int end){
+        this.i = beg;
+        this.end = end;
+    }
+    
+    def override Iterator next(){
+        if(this.i < this.end){
+            auto tmp = ++this.i;
+            return new Iterator->new IntContent(tmp);
+        }
+        return null;
+    }
+}
