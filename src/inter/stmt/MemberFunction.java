@@ -13,7 +13,7 @@ public class MemberFunction extends StructFunction {
         super(n, t, p, sn);
     }
 
-    public MemberFunction(Token n, Type t, Stmt s, List<Param> p, Struct sn) {
+    public MemberFunction(Token n, Type t, List<Param> p, Struct sn, Stmt s) {
         super(n, t, p, sn, s);
     }
 

@@ -46,6 +46,7 @@ src/inter/expr/Op.java
 src/inter/expr/Or.java
 src/inter/expr/OutPipe.java
 src/inter/expr/PostUnaryFactory.java
+src/inter/expr/ReadOnlyWrap.java
 src/inter/expr/Rel.java
 src/inter/expr/RelFactory.java
 src/inter/expr/SeqExpr.java

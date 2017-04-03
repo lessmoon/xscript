@@ -48,9 +48,9 @@ public class Parser implements TypeTable {
     private int nowLevel = 0;
     private Set<FunctionBasic> fUsed = new HashSet<>();
     private boolean PRINT_FUNC_TRANSLATE = false;
-    private List<StackVar> capturedVars = null;
+    private Set<Token> capturedVars = new HashSet<>();
     private int anonymousInnerStructId = 0;
-
+    private boolean isInLambda = false;//is it is in lambda,this ref and super ref is not supported
 
     public Parser(Lexer l) throws IOException {
         this(l, false, false);
@@ -105,11 +105,11 @@ public class Parser implements TypeTable {
         PRINT_FUNC_TRANSLATE = true;
     }
 
-    public void enablePrintStruct(){
+    public void enablePrintStruct() {
         PRINT_STRUCT = true;
     }
 
-    public void disablePrintStruct(){
+    public void disablePrintStruct() {
         PRINT_STRUCT = false;
     }
 
@@ -134,10 +134,10 @@ public class Parser implements TypeTable {
     }
 
     public void error(String s) throws RuntimeException {
-        error(s,null);
+        error(s, null);
     }
 
-    public void error(String s,Throwable cause){
+    public void error(String s, Throwable cause) {
         error(s, Lexer.line, Lexer.offset, Lexer.filename, cause);
     }
 
@@ -146,7 +146,7 @@ public class Parser implements TypeTable {
     }
 
     public void error(String s, int l, int offset, String f, Throwable e) throws RuntimeException {
-        if(e == null)
+        if (e == null)
             throw new RuntimeException(" in file `" + f + "' at line " + l + ":" + offset + ":\n\t" + s);
         else
             throw new RuntimeException(" in file `" + f + "' at line " + l + ":" + offset + ":\n\t" + s, e);
@@ -229,9 +229,9 @@ public class Parser implements TypeTable {
         }
 
         checkFunctionCompletion();
-        if(PRINT_STRUCT){
-            typeTable.forEach((id,t)->{
-                if(t instanceof Struct){
+        if (PRINT_STRUCT) {
+            typeTable.forEach((id, t) -> {
+                if (t instanceof Struct) {
                     System.out.println(((Struct) t).getDescription());
                 }
             });
@@ -246,12 +246,12 @@ public class Parser implements TypeTable {
         table.getAllFunctions().stream()
                 .filter(FunctionBasic::used)
                 .filter(FunctionBasic::isNotCompleted)
-                .forEach(b -> error("function `" + b + "' used but not completed ", b.line,b.offset, b.filename));
+                .forEach(b -> error("function `" + b + "' used but not completed ", b.line, b.offset, b.filename));
 
         fUsed.stream()
                 .filter(FunctionBasic::used)
                 .filter(FunctionBasic::isNotCompleted)
-                .forEach(b -> error("function `" + b + "' used but not completed ", b.line,b.offset, b.filename));
+                .forEach(b -> error("function `" + b + "' used but not completed ", b.line, b.offset, b.filename));
 
         /*
          * check if there is a struct that is pure virtual but declared
@@ -261,9 +261,9 @@ public class Parser implements TypeTable {
                 continue;
             }
             Struct st = (Struct) (info.getValue());
-            FunctionBasic f ;
-            if (st.isInstantiated() && (f=st.getFirstUncompletedFunction()) != null) {
-                error("`" + info.getValue() + "' instantiated but not completed:"+f, st.getFirstInstantiatedLine(),st.getFirstInstantiatedIndex(), st.getFirstInstantiatedFile());
+            FunctionBasic f;
+            if (st.isInstantiated() && (f = st.getFirstUncompletedFunction()) != null) {
+                error("`" + info.getValue() + "' instantiated but not completed:" + f, st.getFirstInstantiatedLine(), st.getFirstInstantiatedIndex(), st.getFirstInstantiatedFile());
             }
         }
     }
@@ -299,9 +299,13 @@ public class Parser implements TypeTable {
                     }
                     move();
                 } else {
-                    boolean isVirtual = (check(Tag.OVERRIDE) || check(Tag.VIRTUAL));
+                    final boolean isDefault = check(Tag.DEFAULT);
+                    final boolean isVirtual = (check(Tag.OVERRIDE) || check(Tag.VIRTUAL));
                     Type returnType = type();
                     Token fname = look;
+                    if(isDefault && s.getDefaultFunctionName() != fname){
+                        error("function `" +s +"."+fname +"' is not default actually");
+                    }
                     if (defined.contains(fname)) {
                         error("found redeclared function " + s + "." + fname);
                     }
@@ -309,7 +313,7 @@ public class Parser implements TypeTable {
                     match(Tag.ID);
                     f = isVirtual ? s.getVirtualFunction(fname) : s.getNaiveFunction(fname);
                     if (f == null) {
-                        error("`" + s + "' has no" + (isVirtual?" virtual ":" ") + "function `" + fname + "'");
+                        error("`" + s + "' has no" + (isVirtual ? " virtual " : " ") + "function `" + fname + "'");
                         return;
                     }
                     if (!returnType.isCongruentWith(f.getType())) {
@@ -338,17 +342,17 @@ public class Parser implements TypeTable {
                 Token varName = look;
                 match(Tag.ID);
                 match(';');
-                if(defined.contains(varName)){
+                if (defined.contains(varName)) {
                     error("member " + s + "." + varName + " redeclared");
                 }
                 defined.add(varName);
                 StructVariable t1 = s.getVariable(varName);
-                if(t1 == null){
+                if (t1 == null) {
                     error("member " + s + "." + varName + " does not actually exists");
                     return;//forbidden warning
                 }
                 if (!t1.type.isCongruentWith(t)) {
-                    error("type of member " + s + "." + varName + "does not match actually[expect:`" + t1 + "',but found:`"+ t + "']");
+                    error("type of member " + s + "." + varName + "does not match actually[expect:`" + t1 + "',but found:`" + t + "']");
                 }
             }
         }
@@ -392,8 +396,8 @@ public class Parser implements TypeTable {
                 Struct s;
                 try {
                     s = LoadStruct.loadStruct(sb.toString(), clazzName, name, this.lex, this);
-                }catch (Exception e){
-                    error("failed to load extension struct `" + sb.toString() + "." + clazzName + "'",e);
+                } catch (Exception e) {
+                    error("failed to load extension struct `" + sb.toString() + "." + clazzName + "'", e);
                     return;
                 }
                 checkNamespace(s.getName(), "struct");
@@ -408,9 +412,9 @@ public class Parser implements TypeTable {
                     }
                     if (s.getBaseStruct() != b) {
                         if (s.getBaseStruct() == null) {
-                            error("native struct `" + s.getName() + "' has no father");
+                            error("native struct `" + s.getName() + "' has no base");
                         } else {
-                            error("native struct `" + s.getName() + "' has a different father (`" + s.getBaseStruct() + "') with declaration here(`" + b + "')");
+                            error("native struct `" + s.getName() + "' has a different base (`" + s.getBaseStruct() + "') with declaration here(`" + b + "')");
                         }
                     }
                 }
@@ -446,7 +450,7 @@ public class Parser implements TypeTable {
                 try {
                     f = LoadFunc.loadFunc(t, sb.toString(), clazzName, name, pl, this.lex, this);
                 } catch (Exception e) {
-                    error("failed to load extension function `" + sb.toString() + "." + clazzName + "'",e);
+                    error("failed to load extension function `" + sb.toString() + "." + clazzName + "'", e);
                 }
                 if (!table.addFunc(name, f)) {
                     error("function name has conflict:" + name);
@@ -515,8 +519,8 @@ public class Parser implements TypeTable {
         if (check(';')) {
             return;
         }
-        if(isDeclaration){
-            error("struct `" + name +"' redefined");
+        if (isDeclaration) {
+            error("struct `" + name + "' redefined");
         }
         parseStructBody(s);
         s.iteratorDerivedStruct().forEachRemaining(Struct::copyBase);
@@ -540,6 +544,17 @@ public class Parser implements TypeTable {
                     }
                 } else {
                     op = copymove();
+                }
+
+                switch (op.tag) {
+                    case '[':
+                    case ']'://array binding
+                        op = Word.array;
+                        break;
+                    case '(':
+                    case ')'://functor
+                        op = Word.brackets;
+                        break;
                 }
 
                 if (op.tag == Tag.BASIC && look.tag == '[') {
@@ -623,13 +638,16 @@ public class Parser implements TypeTable {
 
     private Function innerFunctionDeclaration(Struct s, Token op) throws IOException {
         int flag = 0;
+        boolean isDefaultSet = false;
+        if (check(Tag.DEFAULT)) {
+            isDefaultSet = true;
+        }
 
         if (check(Tag.VIRTUAL)) {
             flag = Tag.VIRTUAL;
         } else if (check(Tag.OVERRIDE)) {
             flag = Tag.OVERRIDE;
         }
-
 
         returnType = type();
         Token fname = look;
@@ -648,9 +666,18 @@ public class Parser implements TypeTable {
         } else if (flag == Tag.OVERRIDE) {
             s.overrideVirtualFunction(fname, f);
         } else {
+            if (isDefaultSet) {
+                error("function `" + f + "' is default but not virtual");
+            }
             s.addNaiveFunction(fname, f);
         }
 
+        if (isDefaultSet) {
+            if (s.getDefaultFunctionName() != null && s.getDefaultFunctionName() != fname) {
+                error("function `" + s.getVirtualFunction(s.getDefaultFunctionName()) + "' is already default");
+            }
+            s.setDefaultFunctionName(fname);
+        }
         if (op != null) {
             if (!s.addOverloading(op, f)) {
                 error("operand `" + op + "' overloading is rebound");
@@ -795,7 +822,7 @@ public class Parser implements TypeTable {
         Function f = (Function) t.getDeclaredFunction(name);
         if (f == null) {
             error("member function declaration `" + t.lexeme + "." + name + "' not found ");
-            return ;
+            return;
         }
         /*
          * NOTE:type.isCongruentWith doesn't conclude
@@ -873,11 +900,11 @@ public class Parser implements TypeTable {
     }
 
     private Stmt stmts() throws IOException {
-        if(look.tag == '}') return Stmt.Null;
+        if (look.tag == '}') return Stmt.Null;
         LinkedSeq seq = new LinkedSeq();
         do {
             seq.append(stmt());
-        }while (look.tag != '}');
+        } while (look.tag != '}');
         return seq;
     }
 
@@ -1093,6 +1120,7 @@ public class Parser implements TypeTable {
      * 6.RecoverStack;<br/>
      * if it breaks,it will go to 6<br/>
      * if it continues,it will goto 5
+     *
      * @return the loop statement
      */
     private Stmt forloop() throws IOException {
@@ -1155,7 +1183,8 @@ public class Parser implements TypeTable {
 
     /**
      * For loop declaration parsing,supporting following syntax:([]for option,supposing that it should be declaration here)<br/>
-     *     type id1[=?][,id2...]
+     * type id1[=?][,id2...]
+     *
      * @return the declarations statement
      * @throws IOException when io fails,{@linkplain #move()}
      */
@@ -1238,10 +1267,10 @@ public class Parser implements TypeTable {
     private Expr initiallist(Array p) throws IOException {
         /*
          * initlist -> {list}
-		 * list -> element | list,element
-		 * element -> Expr | initlist
-		 * Constraint:in `Y -> Y,B',Type Y must match with B
-		 */
+        * list -> element | list,element
+        * element -> Expr | initlist
+        * Constraint:in `Y -> Y,B',Type Y must match with B
+        */
         match('{');
         Expr e = list(p.of);
         match('}');
@@ -1280,8 +1309,8 @@ public class Parser implements TypeTable {
                 e = initiallist((Array) p);
             } else {
                 //TODO:details
-                error("too many dimensions than the array declaration");
-                return null;
+                error("exceeded initializing dimensions of the array declaration");
+                return null;//avoiding warning
             }
         } else {
             e = expr();
@@ -1358,7 +1387,7 @@ public class Parser implements TypeTable {
         return ENABLE_EXPR_OPT ? e.optimize() : e;
     }
 
-    private Expr rawExpr() throws IOException{
+    private Expr rawExpr() throws IOException {
         return assign();
     }
 
@@ -1425,7 +1454,7 @@ public class Parser implements TypeTable {
         }
         return e;
     }
-    
+
     public Expr add() throws IOException {
         Expr l = mult();
         while (look.tag == '+' || look.tag == '-') {
@@ -1504,8 +1533,14 @@ public class Parser implements TypeTable {
                 error("member function is for struct,not for `" + e.type + "'");
             Struct s = (Struct) (e.type);
             FunctionBasic f = s.getNaiveFunction(mname);
-            if (f == null) {
+            if (f != null) {
+                fUsed.add(f);
+                /*Pass `this' reference as the first argument*/
+                args.add(0, e);
+                return new FunctionInvoke(f, args);
+            } else {
                 f = s.getVirtualFunction(mname);
+
                 if (f == null)
                     error("member function `" + s + "." + mname + "' not found");
                 fUsed.add(f);
@@ -1515,11 +1550,6 @@ public class Parser implements TypeTable {
                     return new FunctionInvoke(f, args);
                 }
                 return new VirtualFunctionInvoke(e, f, args);
-            } else {
-                fUsed.add(f);
-                /*Pass `this' reference as the first argument*/
-                args.add(0, e);
-                return new FunctionInvoke(f, args);
             }
         }
         return new StructMemberAccess(e, mname);
@@ -1538,12 +1568,20 @@ public class Parser implements TypeTable {
                 e = new StringAccess(e, loc);
             }
             return e;
-        }
-
-		/*
-         * update:remove the judge that e must be a variable
-		 */
-        if (!(e.type instanceof Array)) {
+        } else if (e.type instanceof Struct) {
+            Struct s = (Struct) e.type;
+            Token overloading = s.getOverloading(Word.array);
+            if (overloading == null) {
+                error("struct `" + s.getName() + "' overloading function for operand `" + Word.array + "' not found!");
+            }
+            FunctionBasic f = s.getVirtualFunction(overloading);
+            if (f != null) {
+                return new VirtualFunctionInvoke(e, f, new ArrayList<>());
+            }
+            f = s.getNaiveFunction(overloading);
+            assert f != null;
+            return new FunctionInvoke(f, Arrays.asList(e, loc));
+        } else if (!(e.type instanceof Array)) {//update:remove the judge that e must be a variable
             error("operand `[]` should be used for array type or string,not for " + e.type);
         }
 
@@ -1565,6 +1603,9 @@ public class Parser implements TypeTable {
                 }
                 Token name = tmp;
                 if (tmp == Word.Super) { //This IS a kind of super!
+                    if(isInLambda){
+                        error(Word.Super + " is not allowed in lambda expression");
+                    }
                     isSuperCalled = true;
                     name = Word.This;
                 }
@@ -1594,10 +1635,22 @@ public class Parser implements TypeTable {
                         error("`" + ee.type + "' has no super struct defined");
                     }
                 }
+                //handle the captures
                 if (ee.stacklevel <= lastFunctionLevel && ee.stacklevel != 0) {
-                    error("anonymous variable capture is not supported now:found variable `" + tmp + "'");
+                    Token identifier = lex.getOrReserve("@" + name);
+                    StructVariable var = dStruct.getVariable(identifier);
+                    if (var == null) {
+                        assert dStruct.addVariable(identifier, ee.type) == null;
+                        var = dStruct.getVariable(identifier);
+                        assert capturedVars.add(name);
+                    }
+
+                    assert var.type.isCongruentWith(ee.type);
+                    //error("anonymous variable capture is not supported now:found variable `" + tmp + "'");
+                    EnvEntry this_ = top.get(isInLambda?Word.HiddenThis:Word.This);
+                    return new StructMemberAccess(new StackVar(tmp, dStruct, top.level - this_.stacklevel, this_.offset), identifier).readOnly();
                 }
-                return ee.stacklevel == 0 ? new AbsoluteVar(tmp, t, 0, ee.offset) : new StackVar(tmp, t, top.level - ee.stacklevel, ee.offset);
+                return StackVar.stackVar(tmp, t, ee.stacklevel, ee.offset, top.level);
             case Tag.NULL:
                 move();
                 return Value.Null;
@@ -1647,14 +1700,30 @@ public class Parser implements TypeTable {
                     if (t instanceof Struct) {
                         Node line = new Node();
                         List<Expr> args = null;
+                        boolean isLambda = false;
+
                         if (look.tag == '(') {//has initial function
                             args = arguments();
+                        } else if (look.tag == '^' || look.tag == Tag.ARROW) {
+                            //new T^(params)->{stmt}
+                            //new T^(params)->expr
+                            //new T->{stmt};
+                            //new T`param ->{stmt}
+                            //new T`param -> expr
+                            //new T->expression;
+                            t = lambdaExpression((Struct) t);
+                            isLambda = true;
                         }
-                        if (look.tag == '{') {
+                        //new T{}
+                        if (look.tag == '{' && !isLambda) {
                             t = anonymousInnerStruct((Struct) t);
                         }
                         if (args == null && null != ((Struct) t).getInitialFunction()) {
-                            line.error("`" + t + "' has a defined initial function");
+                            if (((Struct) t).getInitialFunction().getParamSize() != 1) {//
+                                assert ((Struct) t).getInitialFunction().getParamSize() > 1;
+                                line.error("`" + t + "' has a defined initial function");
+                            }
+                            args = new ArrayList<>();
                         }
 
                         ((Struct) t).setInstantiated(Lexer.line, Lexer.offset, Lexer.filename);
@@ -1662,7 +1731,7 @@ public class Parser implements TypeTable {
                             line.error("try to instantiate a struct `" + t + "' which is not closed yet");
                         }
                         Expr eNew = new New(l, (Struct) t);
-                        if (args != null){
+                        if (args != null) {
                             InPipe ipNew = new InPipe(eNew);
                             eNew = ipNew;
                             Expr init = new OutPipe(ipNew);
@@ -1746,8 +1815,22 @@ public class Parser implements TypeTable {
         } else {
             f = table.getFuncType(id);
             if (f == null) {
-                error("function `" + id + "' not found.");
+                final EnvEntry ee = top.get(id);
+                if (ee != null && ee.type instanceof Struct) {
+                    Token overloading = ((Struct) ee.type).getOverloading(Word.brackets);
+                    if (overloading != null) {
+                        f = ((Struct) ee.type).getVirtualFunction(overloading);
+                        if (f != null) {
+                            return new VirtualFunctionInvoke(StackVar.stackVar(id, ee, top.level), f, args);
+                        }
+                        f = ((Struct) ee.type).getNaiveFunction(overloading);
+                        args.add(0, StackVar.stackVar(id, ee, top.level));
+                    }
+                }
             }
+        }
+        if (f == null) {
+            error("function `" + id + "' not found.");
         }
         return new FunctionInvoke(f, args);
     }
@@ -1764,96 +1847,182 @@ public class Parser implements TypeTable {
         return p;
     }
 
-    /**
-     * TODO:capture the outer variables
-     * {
-     * .....
-     * <p>
-     * 1.Simplest situation:
-     * new Comparator(){
-     * def override int apply(int a,int b){
-     * return a-b;
-     * }
-     * };
-     * <p>
-     * This is very easy to handle:treat it as a normal definition.
-     * <p>
-     * 2.Complicated:
-     * new Comparator(dic){
-     * Array dic;
-     * def void this(Array dic){
-     * this.dic = dic;
-     * }
-     * <p>
-     * def override int apply(int a,int b){
-     * return this.dic.get(a)>this.dic.get(b);
-     * }
-     * };
-     * <p>
-     * This is also easy.Just like 1.
-     * <p>
-     * 3.With captured variable:
-     * int baseline;
-     * <p>
-     * new Filter(){
-     * def override bool check(Content a){
-     * return ((IntContent)a).value > baseline;
-     * }
-     * };
-     * A variable is rather a capture than a standard stack var when:
-     * 1.This variable is not in global environment.
-     * 2.This variables stack level is smaller than {@linkplain #lastFunctionLevel}
-     * It's obvious that we should replace the variable reference as a member of anonymousInnerStruct.
-     * We just define it as a defStruct variable(using name("cap#"+name)).Then replace this variable as this.cap#name
-     * And we define a default constructor which initialize the capture variables with the value of stack var for this struct.If the struct already have a constructor,
-     * we just put the stmt as new Stmt(init,already)
-     * 4.Full version:
-     * int baseline;
-     * int max;
-     * new Filter(){
-     * Filter lowerBound;
-     * <p>
-     * def this(){
-     * this.lowerBound = new Filter(){
-     * <p>
-     * def override bool check(Content a){
-     * int v = ((IntContent)a).value;
-     * return v > baseline;
-     * }
-     * };
-     * }
-     * <p>
-     * def override bool check(Content a){
-     * int v = ((IntContent)a).value;
-     * return v < max && this.lowerBound.check(a);
-     * }
-     * };
-     * <p>
-     * Just combine 1 and 3.
-     * }
-     */
+    private void generateCaptures(Struct savedDStruct, Set<Token> savedCaptures, int savedLastFunctionLevel,
+                                  boolean savedIsInLambda) {
+        symbols.Struct base = dStruct.getBaseStruct();
+        if (dStruct.getInitialFunction() == null) {
+            dStruct.defineInitialFunction(base.getInitialFunction());
+        }
+
+        if (dStruct.getInitialFunction() == null && !capturedVars.isEmpty()) {
+            dStruct.defineInitialFunction(new InitialFunction(Word.This, Collections.singletonList(new Param(dStruct, Word.This)), dStruct, new LinkedSeq()));
+        }
+        if (!capturedVars.isEmpty()) {
+            InitialFunction init = (InitialFunction) dStruct.getInitialFunction();
+            LinkedSeq body = new LinkedSeq();
+            final Var arg0 = new StackVar(Word.This, dStruct, 0, 0);
+
+            for (Token name : capturedVars) {
+                EnvEntry ee = top.get(name);
+                assert ee != null;
+                if (ee.stacklevel != 0) {
+
+                    Token identifier = lex.getOrReserve("@" + name);
+                    if (ee.stacklevel <= savedLastFunctionLevel) {//outer nested inner struct
+                        assert savedDStruct != null;
+                        StructVariable var = savedDStruct.getVariable(identifier);
+                        if (var == null) {
+                            savedDStruct.addVariable(identifier, ee.type);
+                            var = savedDStruct.getVariable(identifier);
+                            assert savedCaptures.add(name);
+                        }
+
+                        assert var.type.isCongruentWith(ee.type);
+
+                        EnvEntry outerThis_ = top.get(savedIsInLambda ? Word.HiddenThis : Word.This);
+
+                        body.append(new ExprStmt(new inter.expr.Set(Word.ass,
+                                new StructMemberAccess(arg0, identifier),
+                                new StructMemberAccess(new StackVar(Word.This, savedDStruct, top.level - outerThis_.stacklevel + 1, outerThis_.offset), identifier).readOnly())));
+                    } else {//the recursive exit gate
+                        body.append(new ExprStmt(new inter.expr.Set(Word.ass,
+                                new StructMemberAccess(arg0, identifier),
+                                //NOTE : this code is running in an initial function so we need add an extra level
+                                new StackVar(name, ee.type, top.level - ee.stacklevel + 1, ee.offset).readOnly())));
+                    }
+                }
+            }
+
+            body.append(init.getBody());
+            init.setBody(body);
+            printFunctionDefinition(init, body);
+        }
+    }
+
     private Struct anonymousInnerStruct(Struct base) throws IOException {
-        List<StackVar> savedCaptures = capturedVars;
-        capturedVars = new ArrayList<>();
+        Set<Token> savedCaptures = capturedVars;
+        capturedVars = new HashSet<>();
         int savedLastFunctionLevel = lastFunctionLevel;
         lastFunctionLevel = top.level;
-        Struct savedDStruct = this.dStruct;
-        Struct ais = new Struct(lex.getOrReserve("AISof" + base.getName() + "#" + (anonymousInnerStructId++) + Lexer.line + Lexer.offset), base);
+        Struct savedDStruct = dStruct;
+        boolean savedIsInLambda = isInLambda;
+        isInLambda = false;
+        final Struct ais = new Struct(lex.getOrReserve("nested$" + base.getName() + "#" + (anonymousInnerStructId++) + Lexer.line + Lexer.offset), base);
         dStruct = ais;
         //starts with a '{' and ends with a matched '}'
         parseStructBody(dStruct);
-        if(dStruct.getInitialFunction() == null){
-            dStruct.defineInitialFunction(base.getInitialFunction());
-        }
-        FunctionBasic f ;
+
+        generateCaptures(savedDStruct, savedCaptures, savedLastFunctionLevel,savedIsInLambda);
+
+        FunctionBasic f;
         if ((f = dStruct.getFirstUncompletedFunction()) != null) {
             error("Anonymous inner struct of `" + base + "' is not completed:" + f);
         }
+        isInLambda = savedIsInLambda;
         //put the functions
         assert (null == defType(dStruct.getName(), dStruct));
         this.dStruct = savedDStruct;
         lastFunctionLevel = savedLastFunctionLevel;
         capturedVars = savedCaptures;
         return ais;
+    }
+
+
+    private Struct lambdaExpression(Struct base) throws IOException {
+        if (base.getInitialFunction() != null && base.getInitialFunction().getParamSize() != 1) {
+            error("lambda expression needs no initial function or without parameters");
+        }
+
+        FunctionBasic f = base.getVirtualFunction(base.getDefaultFunctionName());
+        if (f == null) {
+            error("default function not found for struct `" + base.getName() + "'");
+            return base;//avoiding warning
+        }
+        Set<Token> savedCaptures = capturedVars;
+        capturedVars = new HashSet<>();
+        int savedLastFunctionLevel = lastFunctionLevel;
+        lastFunctionLevel = top.level;
+        Struct savedDStruct = dStruct;
+        boolean savedIsInLambda = isInLambda;
+        isInLambda = true;
+        Struct lambda = new Struct(lex.getOrReserve("lambda$" + base.getName() + "#" + (anonymousInnerStructId++) + Lexer.line + Lexer.offset), base);
+        dStruct = lambda;
+        //^(params)\
+        //^(params) \ -> {stmt}
+        //`param    / -> expression
+        // empty  /
+        List<Param> params = new ArrayList<>();
+        params.add(new Param(dStruct, Word.HiddenThis));//shadow this
+        Iterator<Param> paramIterator = f.getParamList().iterator();
+        assert paramIterator.hasNext();
+        paramIterator.next();//this reference
+        switch (look.tag) {
+            case '^':
+                move();
+                final boolean flag = check('(');
+                if (!(flag && check(')'))) {
+                    do {
+                        Token id = look;
+                        match(Tag.ID);
+                        if (getAutoType(id) != null) {
+                            error("parameter `" + id + "' shadows a struct type");
+                        }
+                        if (!paramIterator.hasNext()) {
+                            error("unexpected parameter `" + id + "'[" + params.size() + "]");
+                        }
+                        Param p = paramIterator.next();
+                        params.add(new Param(p.type, id));
+                    } while (flag && check(','));
+                    if(flag) {
+                        match(')');
+                    }
+                }
+            case Tag.ARROW:
+                match(Tag.ARROW);
+                break;
+            default:
+                error("unexpected ");
+        }
+        // NOTE:Ignoring useless parameter is permitted,
+        // but we still need to push and occupy the stack space
+        paramIterator.forEachRemaining(p -> params.add(new Param(p.type, lex.getOrReserve("$" + p.name))));
+        Type savedReturnType = returnType;
+        returnType = f.getType();
+        Stmt body = parseLambdaExpressionBody(params);
+        returnType = savedReturnType;
+        MemberFunction function = new MemberFunction(f.getName(), f.getType(), params, dStruct, body);
+        dStruct.overrideVirtualFunction(f.getName(), function);
+        printFunctionDefinition(function,body);
+        generateCaptures(savedDStruct, savedCaptures, savedLastFunctionLevel,savedIsInLambda);
+        dStruct.close();
+        assert (null == defType(dStruct.getName(), dStruct));
+        isInLambda = savedIsInLambda;
+        dStruct = savedDStruct;
+        lastFunctionLevel = savedLastFunctionLevel;
+        capturedVars = savedCaptures;
+        return lambda;
+    }
+
+    private Stmt parseLambdaExpressionBody(List<Param> parameters) throws IOException {
+        Env savedEnv = top;
+        top = new Env(top);
+        boolean savedHasDecl = hasDecl;
+        hasDecl = true;
+        parameters.forEach(p -> {
+            if (top.put(p.name, p.type) != null) {
+                error("lambda expression parameters redeclared:`" + p.name + "'");
+            }
+        });
+        final Stmt s;
+        if (check('{')) {
+            s = body();
+            match('}');
+        } else {
+            s = new Return(expr(), returnType, 0);
+        }
+
+        hasDecl = savedHasDecl;
+        top = savedEnv;
+        return s;
     }
 }

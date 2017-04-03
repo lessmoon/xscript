@@ -4,7 +4,7 @@ import "../container/content.xs";
 native<extension.predefined>{
 
     "SimpleRunnable":struct Runnable{
-        def virtual void run();
+        def default virtual void run();
     };
 
     "SimpleThread":struct Thread{

@@ -17,8 +17,12 @@ public class Node {
         offset = Lexer.offset;
     }
 
+    public static void error(String s,String filename,int line,int offset){
+        throw new RuntimeException("in file `" +  filename + "' at " + line + ":" + offset +":\n\t" + s);
+    }
+
     public void error(String s){
-        throw new RuntimeException("in file `" +  filename + " at " + line + ":" + offset +"':\n\t" + s);
+        error(s,filename,line,offset);
     }
     
     public void warning(String s){

@@ -17,7 +17,7 @@ public class SimpleRunnable extends Struct{
     }
 
     public static class SimpleRunnableProxy{
-        @StructMethod(purevirtual = true)
+        @StructMethod(purevirtual = true,_default = true)
         public void run(){}
     }
 }

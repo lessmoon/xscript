@@ -9,3 +9,33 @@ code = function-definition|struct-definition|statement;
 statement = declaration | control-flow-statement | data-flow-statement;
 var = var-id | namespace-name::var;
 function-invoke = function-name() | namspace-name::function-invoke;
+2.reflection by extension(need bootstraps)
+  Function{
+    string getName();
+    int getParameterSize();
+    Struct getBaseStruct();
+    Struct getParameterType(int i);
+    Object invoke(Object[] args);
+    string getDescription();
+  }
+
+  Parser{
+    void parse(string file);
+    Function loadFunction(string funcName);
+    Struct loadStruct(string funcName);
+  }
+
+  Struct{
+    Object newInstance(Object[] args);
+    Struct isChildOf(Struct t);
+    Function getFunction(string name);
+    Struct getMember(string name);
+  }
+
+  parser.parse("dd.xs");
+  Function f = parser.loadFunction("functionName");
+  Object return = f.invoke(args[]);//null return null
+  Struct s = parser.loadStruct("");
+  auto b = s.getBaseStruct("aa");
+  Object s = s.newInstance(args[]);
+3.pre-declaration for no base struct specified(struct a;actually a inherited from b)

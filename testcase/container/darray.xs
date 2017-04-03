@@ -11,6 +11,8 @@ struct DynamicArray : Sequence{
     def Content last();
     def void push_back(Content c);
     def void pop_back();
+
+    @[
     def Content get(int i);
     def Content set(int i,Content c);
     def void reset_capcity(int c);

@@ -29,6 +29,7 @@ struct BoolContent:Content{
         return this.value;
     }
     
+    @bool
     def override bool toBool(){
         return this.value;
     }
@@ -106,9 +107,14 @@ struct StringHashContent:HashContent{
     }
 }
 
+struct Consumer;
+struct Stream;
+
 struct Iterator{
     def virtual void next(){}
     def virtual bool hasNext(){return false;}
     @Content
-    def virtual Content getValue();
+    def default virtual Content getValue();
+    def void forEachRemained(Consumer action);
+    def Stream stream();
 }

@@ -11,5 +11,5 @@ public class Tag {
         ARRAY   = 285 , DEF     = 286 , RETURN  = 287 , NATIVE  = 288 , STRUCT  = 289 , 
         IMPORT  = 290 , CONTINUE= 291 , NEW     = 292 , SIZEOF  = 293 , SWITCH  = 294 , 
         CASE    = 295 , DEFAULT = 296 , BIGFLOAT= 297 , BIGNUM  = 298 , OVERRIDE = 299,
-        VIRTUAL = 300 , INSTOF  = 301 , NULL  = 302   ,AUTO = 303;
+        VIRTUAL = 300 , INSTOF  = 301 , NULL  = 302   ,AUTO = 303,BRACKETS = 304 , ARROW=305;
 }

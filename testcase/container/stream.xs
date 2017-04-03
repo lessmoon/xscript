@@ -2,7 +2,15 @@ import "sequence.xs";
 import "collector.xs";
 
 struct Consumer{
-    def virtual Content apply(Content c);
+    @(
+    def default virtual Content apply(Content c);
+}
+
+def void Iterator.forEachRemained(Consumer action){
+    while(this.hasNext()){
+        this.next();
+        action(this.getValue());
+    }
 }
 
 def void Sequence.forEach(Consumer c){
@@ -21,8 +29,10 @@ struct Stream{
     def Stream map(Consumer c);
     def Sequence reduce(Collector c);
     def int count();
-    def virtual Iterator next();
+    def default virtual Iterator next();
     def Stream sort(Comparator c);
+    def Stream skip(int c);
+    def Stream reverse();
 }
 
 struct TransformStream:Stream{
@@ -63,16 +73,7 @@ struct MapStream:TransformStream{
     def override Iterator next(){
         auto iter = this.of.next();
         if(iter != null){
-            iter = new Iterator(this.mapper.apply(iter.getValue())){
-                            Content value;
-                            def this(Content value){
-                                this.value = value;
-                            }
-                            
-                            def override Content getValue(){
-                                return this.value;
-                            }
-                    };
+            iter = new Iterator -> this.mapper.apply(iter.getValue());
         }
         return iter;
     }
@@ -89,7 +90,7 @@ def Stream Stream.map(Consumer c){
 def void Stream.forEach(Consumer action){
     Iterator c;
     while((c = this.next()) != null){
-        action.apply(c.getValue());
+        action(c.getValue());
     }
 }
 
@@ -110,6 +111,13 @@ def Sequence Stream.reduce(Collector collector){
     return collector.collect();
 }
 
+def Stream Stream.skip(int i){
+    while(i-->0){
+        this.next();
+    }
+    return this;
+}
+
 struct SequenceStream:Stream{
     Iterator iterator;
 
@@ -128,4 +136,32 @@ struct SequenceStream:Stream{
 
 def Stream Sequence.stream(){
     return new SequenceStream(this);
+}
+
+def Stream Iterator.stream(){
+    return new Stream -> {
+        if(this.hasNext()){
+            this.next();
+            return this;
+        }
+        return null;
+    };
+}
+
+struct RangeStream:Stream{
+    int i;
+    int end;
+    
+    def this(int beg,int end){
+        this.i = beg;
+        this.end = end;
+    }
+    
+    def override Iterator next(){
+        if(this.i < this.end){
+            this.i ++;
+            return new Iterator -> new IntContent(this.i);
+        }
+        return null;
+    }
 }

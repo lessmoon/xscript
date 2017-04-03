@@ -35,7 +35,15 @@ public abstract class Expr extends Node {
     public Expr optimize() {
         return this;
     }
-    
+
+    public Expr readOnly(){
+        return this;
+    }
+
+    public String shortName(){
+        return op.toString();
+    }
+
     @Override
     public String toString(){
         return getClass().getSimpleName();

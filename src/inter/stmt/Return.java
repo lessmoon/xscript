@@ -40,10 +40,10 @@ public class Return extends Stmt {
         throw r;
     }
 
-	@Override
-	public boolean isLastStmt(){
-		return true;
-	}
+    @Override
+    public boolean isLastStmt(){
+        return true;
+    }
     
     /*
         void emitBinaryCode(BinaryCode x){

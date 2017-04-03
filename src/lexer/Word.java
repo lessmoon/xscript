@@ -14,6 +14,8 @@ public class Word extends  Token {
         This    =   new Word("this",Tag.ID),
         struct  =   new Word("{}",Tag.STRUCT),
         array   =   new Word("[]",Tag.ARRAY),
+        brackets = new Word("()", Tag.BRACKETS),
+        arrow = new Word("->", Tag.ARROW),
         and     =   new Word("&&",Tag.AND),     or  = new Word("||",Tag.OR),
         eq      =   new Word("==",Tag.EQ),      ne  = new Word("!=",Tag.NE),
         le      =   new Word("<=",Tag.LE),      ge  = new Word(">=",Tag.GE),
@@ -28,5 +30,5 @@ public class Word extends  Token {
         dec     =   new Word("--",Tag.DEC),     True    = new Word("true",Tag.TRUE),
         False   =   new Word("false",Tag.FALSE),args    = new Word("_args_",Tag.ID),
         Null    =   new Word("null",Tag.NULL),Auto = new Word("auto",Tag.ID),
-        EOF     =   new Word( "eof",-1);
+        EOF = new Word("eof", -1), HiddenThis = new Word("this", Tag.ID);
 }
