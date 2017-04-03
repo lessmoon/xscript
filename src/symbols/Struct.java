@@ -562,7 +562,7 @@ public class Struct extends Type implements Iterable<StructVariable> {
             if (positionStream.count() > 0) {
                 positionStream = virtualFunctionPositionMap.values().stream().filter(pos -> virtualTable.getVirtualFunction(pos).isCompleted());
                 stringBuilder.append("    //virtual functions\n");
-                positionStream.forEach(pos -> stringBuilder.append("    def ").append(virtualTable.getVirtualFunction(pos).getName()==defaultFunctionName?"default":"").append( " virtual ").append(virtualTable.getVirtualFunction(pos).getDescription(false)).append(";\n"));
+                positionStream.forEach(pos -> stringBuilder.append("    def ").append(virtualTable.getVirtualFunction(pos).getName()==defaultFunctionName?"default ":"").append( "virtual ").append(virtualTable.getVirtualFunction(pos).getDescription(false)).append(";\n"));
             }
         }
         if (virtualTable.getGenerations() > 0) {
@@ -570,7 +570,7 @@ public class Struct extends Type implements Iterable<StructVariable> {
             if (positionStream.count() > 0) {
                 positionStream = virtualFunctionPositionMap.values().stream().filter(pos -> !virtualTable.getVirtualFunction(pos).isCompleted());
                 stringBuilder.append("    //pure virtual functions\n");
-                positionStream.forEach(pos -> stringBuilder.append("    def ").append(virtualTable.getVirtualFunction(pos).getName()==defaultFunctionName?"default":"").append(" virtual ").append(virtualTable.getVirtualFunction(pos).getDescription(false)).append(";\n"));
+                positionStream.forEach(pos -> stringBuilder.append("    def ").append(virtualTable.getVirtualFunction(pos).getName()==defaultFunctionName?" default ":"").append("virtual ").append(virtualTable.getVirtualFunction(pos).getDescription(false)).append(";\n"));
             }
         }
 
