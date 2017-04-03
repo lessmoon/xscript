@@ -473,6 +473,19 @@ def void drawClock(PaintPad p,Time t){
     drawHand(p,t.second,((real)t.second-15) / 60,130,255,0,0);
 }
 
+def void drawClockReal(PaintPad p,real hour,real minute,real second){
+    for(int i = 1 ; i < 13;i++){
+        real arctheta = ((real)i-3)/6 * PI;
+        int x = cos(arctheta) * 140;
+        int y = sin(arctheta) * 140;
+        p.addString("" + i,150 + x,150+y);
+    }
+
+    drawHand(p,hour,(hour-3) / 12  + (minute)/ 60 / 12  + (second)/ 60 /60 / 12 ,70,0,0,255);
+    drawHand(p,minute,(minute-15) / 60 +(second)/ 60 /60,110,0,255,0);
+    drawHand(p,second,(second-15) / 60,130,255,0,0);
+}
+
 {
 
     PaintPad pad = new PaintPad("ClockInXScript",300,300);
@@ -480,14 +493,29 @@ def void drawClock(PaintPad p,Time t){
     Thread t = new Thread(
                     new Runnable->{
                         MyTime t = new MyTime;
-                        println(t);
+                        getTime(t);
+                        real h = t.hour;
+                        real m = t.minute;
+                        real s = t.second;
                         while(true){
-                            println(t);
-                            getTime(t);
+                            if(s > 59.5){
+                                s = 0;
+                                m += 1;
+                                println(""+h+":"+m+":"+s);
+                            } 
+                            if(m > 59.5){
+                                m = 0;
+                                h += 1;
+                            }
+                            if(h > 23.5){
+                                h = 0;
+                            }
+                            
                             pad.clear();
-                            drawClock(pad,t);
+                            drawClockReal(pad,h,m,s);
                             pad.redraw();
-                            sleep(500);
+                            sleep(20);
+                            s += 0.02;
                         }
                     });
     println("Test UI clock");

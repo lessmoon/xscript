@@ -3,6 +3,7 @@ package symbols;
 import inter.expr.Value;
 import inter.stmt.FunctionBasic;
 import inter.stmt.MemberFunction;
+import inter.util.Node;
 import lexer.Tag;
 import lexer.Token;
 import lexer.Word;
@@ -211,6 +212,11 @@ public class Struct extends Type implements Iterable<StructVariable> {
     public void defineInitialFunction(FunctionBasic f) {
         if (initFunction != null) {
             f.error("initial function of `" + this + "' has been defined");
+        }
+        //it is instantiated before incorrectly
+        if(isInstantiated()){
+            Node.error("instantiated struct `" + this.getName() + "' has a defined initial function:" + f.getDescription(false),
+                    firstInstantiatedFile,firstInstantiatedLine,firstInstantiatedIndex);
         }
         initFunction = f;
     }
