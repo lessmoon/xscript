@@ -1943,7 +1943,7 @@ public class Parser implements TypeTable {
         int savedLastFunctionLevel = lastFunctionLevel;
         lastFunctionLevel = top.level;
         Struct savedDStruct = dStruct;
-        boolean savedIsInlambda = isInLambda;
+        boolean savedIsInLambda = isInLambda;
         isInLambda = true;
         Struct lambda = new Struct(lex.getOrReserve("lambda$" + base.getName() + "#" + (anonymousInnerStructId++) + Lexer.line + Lexer.offset), base);
         dStruct = lambda;
@@ -1993,10 +1993,10 @@ public class Parser implements TypeTable {
         MemberFunction function = new MemberFunction(f.getName(), f.getType(), params, dStruct, body);
         dStruct.overrideVirtualFunction(f.getName(), function);
         printFunctionDefinition(function,body);
-        generateCaptures(savedDStruct, savedCaptures, savedLastFunctionLevel,savedIsInlambda);
+        generateCaptures(savedDStruct, savedCaptures, savedLastFunctionLevel,savedIsInLambda);
         dStruct.close();
         assert (null == defType(dStruct.getName(), dStruct));
-        isInLambda = savedIsInlambda;
+        isInLambda = savedIsInLambda;
         dStruct = savedDStruct;
         lastFunctionLevel = savedLastFunctionLevel;
         capturedVars = savedCaptures;

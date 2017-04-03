@@ -379,11 +379,10 @@ def void f2(int b){
     x.forEach(new Consumer{
         def override Content apply(Content i){
             print( " " + i);
-            return null;
         }
     });
     println("");
-    
+
     new RangeStream(1,100)
         .filter(new Consumer^i->new BoolContent(0==((int)(IntContent)i)%4))
         .forEach(new Consumer^i->{println(i);});
@@ -469,8 +468,8 @@ def void drawClock(PaintPad p,Time t){
         p.addString("" + i,150 + x,150+y);
     }
 
-    drawHand(p,t.hour,((real)t.hour-3) / 12  + ((real)t.minute)/ 60 / 12 ,70,0,0,255);
-    drawHand(p,t.minute,((real)t.minute-15) / 60,110,0,255,0);
+    drawHand(p,t.hour,((real)t.hour-3) / 12  + ((real)t.minute)/ 60 / 12  + ((real)t.second)/ 60 /60 / 12 ,70,0,0,255);
+    drawHand(p,t.minute,((real)t.minute-15) / 60 +((real)t.second)/ 60 /60,110,0,255,0);
     drawHand(p,t.second,((real)t.second-15) / 60,130,255,0,0);
 }
 
