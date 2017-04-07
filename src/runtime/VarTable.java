@@ -21,7 +21,8 @@ class ConstantReference {
     }
 }
 
-public class VarTable {
+public enum VarTable {
+    ;
     static final boolean IS_DEBUG = false;
     static final private List<ConstantReference> globalTable = new ArrayList<>();
     static final private ThreadLocal<Stack<List<ConstantReference>>> table = ThreadLocal.withInitial(Stack::new);

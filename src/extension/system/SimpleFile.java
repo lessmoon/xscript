@@ -6,7 +6,6 @@ import extension.annotation.Init;
 import extension.annotation.StructMethod;
 import inter.expr.StructValue;
 import inter.expr.Value;
-import lexer.Token;
 import runtime.Dictionary;
 import runtime.TypeTable;
 
@@ -90,7 +89,7 @@ public class SimpleFile extends Struct {
     }
 
     @Override
-    public symbols.Struct setup(Token sname, Dictionary dic, TypeTable typeTable) {
-        return ExtensionStructHelper.buildStructFromClass(SimpleFileProxy.class,dic,typeTable,sname,false);
+    public symbols.Struct setup(symbols.Struct struct, Dictionary dic, TypeTable typeTable) {
+        return ExtensionStructHelper.buildStructFromClass(SimpleFileProxy.class,dic,typeTable,struct,false);
     }
 }

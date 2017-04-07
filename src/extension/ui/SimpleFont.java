@@ -5,7 +5,6 @@ import extension.Struct;
 import extension.annotation.Init;
 import extension.annotation.StructMethod;
 import inter.expr.Value;
-import lexer.Token;
 import runtime.Dictionary;
 import runtime.TypeTable;
 
@@ -17,8 +16,8 @@ import java.awt.*;
 public class SimpleFont extends Struct {
 
     @Override
-    public symbols.Struct setup(Token sname, Dictionary dic, TypeTable typeTable) {
-        return ExtensionStructHelper.buildStructFromClass(SimpleFontProxy.class,dic,typeTable,sname,false);
+    public symbols.Struct setup(symbols.Struct struct, Dictionary dic, TypeTable typeTable) {
+        return ExtensionStructHelper.buildStructFromClass(SimpleFontProxy.class,dic,typeTable,struct,false);
     }
 
     public static class SimpleFontProxy{

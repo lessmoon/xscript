@@ -700,33 +700,33 @@ struct PaintPadX{
     def this(string name,int width,int height);
     //functions
     def void open();
-    def void redraw();
-    def void setBrushColor(int arg0,int arg1,int arg2);
-    def bool setCircle(int arg0,int arg1,int arg2);
-    def bool setStringColor(int arg0);
-    def bool setCircleRadius(int arg0,int arg1);
-    def bool setString(int arg0,string arg1);
-    def void close();
-    def bool setLine(int arg0,int arg1,int arg2,int arg3,int arg4);
-    def Font getFont();
     def void clearString();
-    def bool setPointColor(int arg0);
-    def void clearPointAndLine();
     def int addCircle(int arg0,int arg1,int arg2);
+    def Font getFont();
+    def int addPoint(int arg0,int arg1);
+    def int addString(string arg0,int arg1,int arg2);
+    def bool setCircleColor(int arg0);
+    def void close();
     def void setFont(Font arg0);
     def bool setStringPosition(int arg0,int arg1,int arg2);
-    def int addPoint(int arg0,int arg1);
-    def bool setLineColor(int arg0);
-    def void clear();
-    def bool setPoint(int arg0,int arg1,int arg2);
-    def bool setCircleColor(int arg0);
-    def int addString(string arg0,int arg1,int arg2);
+    def void redraw();
     def int addLine(int arg0,int arg1,int arg2,int arg3);
+    def bool setCircle(int arg0,int arg1,int arg2);
+    def bool setPoint(int arg0,int arg1,int arg2);
+    def bool setString(int arg0,string arg1);
+    def void clearPointAndLine();
+    def bool setStringColor(int arg0);
+    def bool setCircleRadius(int arg0,int arg1);
+    def void clear();
+    def bool setLine(int arg0,int arg1,int arg2,int arg3,int arg4);
+    def void setBrushColor(int arg0,int arg1,int arg2);
+    def bool setLineColor(int arg0);
+    def bool setPointColor(int arg0);
     //virtual functions
     def virtual void onClose();
     def virtual void onClick(int arg0);
-    def virtual void onMouseClick(int arg0,int arg1,int arg2);
     def virtual void onPress(int arg0);
+    def virtual void onMouseClick(int arg0,int arg1,int arg2);
 }
 struct PaintPad : PaintPadX{
     //variables
@@ -773,18 +773,18 @@ struct Graphics{
     def Point getCenter();
     def Color getBrushColor();
     def void clear();
-    def void setBrushColor(Color c);
     def void wait();
     def void setCenter(Point center);
+    def void setBrushColor(Color c);
     def void close();
     def void transite(Point offset);
     def void init(PaintPad pad,int width,int height);
     //virtual functions
+    def virtual int addPoint(Point p);
+    def virtual int addString(Point pos,string text);
     def virtual int setPoint(int id,Point p);
     def virtual int setString(int id,Point pos,string text);
-    def virtual int addString(Point pos,string text);
     def virtual void draw();
-    def virtual int addPoint(Point p);
     def virtual void addRect(Point o,int width,int height);
     def virtual void show();
 }
@@ -824,8 +824,8 @@ struct Button{
     def this(string text,int id,Color c);
     //functions
     def void add(Graphics g);
-    def void setString(Graphics g,string text);
     def void onclick(Graphics g,Screen scr,cal_state cs);
+    def void setString(Graphics g,string text);
 }
 struct Region{
     //variables
@@ -1107,9 +1107,9 @@ struct ScrollTextOutput{
     def void open();
     def void update();
     def void wait();
+    def void addString(string str,int r,int p,int g);
     def void close();
     def void addCharacter(char c,int r,int p,int g);
-    def void addString(string str,int r,int p,int g);
     def void changeLine();
 }
 struct base{

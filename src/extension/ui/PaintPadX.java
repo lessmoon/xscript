@@ -203,20 +203,20 @@ public class PaintPadX extends Struct {
     }
 
     @Override
-    public symbols.Struct setup(Token sname, Dictionary dic, TypeTable typeTable) {
-        symbols.Struct s = ExtensionStructHelper.buildStructFromClass(PadProxy.class,dic,typeTable,sname,false);
-        final Position onClick = s.getVirtualFunctionPosition(dic.getOrReserve("onClick")),
-                onMouseClick = s.getVirtualFunctionPosition(dic.getOrReserve("onMouseClick")),
-                onPress = s.getVirtualFunctionPosition(dic.getOrReserve("onPress")),
-                onClose = s.getVirtualFunctionPosition(dic.getOrReserve("onClose"));
+    public symbols.Struct setup(symbols.Struct struct, Dictionary dic, TypeTable typeTable) {
+        ExtensionStructHelper.buildStructFromClass(PadProxy.class,dic,typeTable,struct,false);
+        final Position onClick = struct.getVirtualFunctionPosition(dic.getOrReserve("onClick")),
+                onMouseClick = struct.getVirtualFunctionPosition(dic.getOrReserve("onMouseClick")),
+                onPress = struct.getVirtualFunctionPosition(dic.getOrReserve("onPress")),
+                onClose = struct.getVirtualFunctionPosition(dic.getOrReserve("onClose"));
         List<Param> paramList = new ArrayList<>();
-        paramList.add(new Param(s,Word.This));
+        paramList.add(new Param(struct,Word.This));
         paramList.add(new Param(Type.Str,dic.getOrReserve("name")));
         paramList.add(new Param(Type.Int,dic.getOrReserve("width")));
         paramList.add(new Param(Type.Int,dic.getOrReserve("height")));
 
-        s.defineInitialFunction(new InitialFunction(Word.This, paramList, s, new Stmt(){
-                    final StackVar arg0 = new StackVar(Word.This,s,0,0);
+        struct.defineInitialFunction(new InitialFunction(Word.This, paramList, struct, new Stmt(){
+                    final StackVar arg0 = new StackVar(Word.This,struct,0,0);
                     final StackVar arg1 = new StackVar(dic.getOrReserve("name"),Type.Str,0,1);
                     final StackVar arg2 = new StackVar(dic.getOrReserve("width"), Type.Int,0,2);
                     final StackVar arg3 = new StackVar(dic.getOrReserve("height"),Type.Int,0,3);
@@ -226,7 +226,7 @@ public class PaintPadX extends Struct {
                         PadProxy.init(arg0.getValue(),arg1.getValue(),arg2.getValue(),arg3.getValue(),onClick,onMouseClick,onClose,onPress);
                     }
                 }));
-        return s;
+        return struct;
     }
 
 }

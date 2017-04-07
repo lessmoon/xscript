@@ -6,7 +6,6 @@ import extension.annotation.Init;
 import extension.annotation.StructMethod;
 import inter.expr.StructValue;
 import inter.expr.Value;
-import lexer.Token;
 import runtime.Dictionary;
 import runtime.TypeTable;
 
@@ -49,7 +48,7 @@ public class SimpleFileOutputStream extends Struct{
 
 
     @Override
-    public symbols.Struct setup(Token sname, Dictionary dic, TypeTable typeTable) {
-        return ExtensionStructHelper.buildStructFromClass(SimpleFileOutputStreamProxy.class,dic,typeTable,sname,true);
+    public symbols.Struct setup(symbols.Struct struct, Dictionary dic, TypeTable typeTable) {
+        return ExtensionStructHelper.buildStructFromClass(SimpleFileOutputStreamProxy.class,dic,typeTable,struct,true);
     }
 }

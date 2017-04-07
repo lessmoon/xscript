@@ -18,7 +18,8 @@ class Entry{
     }
 }
 
-public class RunStack {
+public enum RunStack {
+    ;
     static private final ThreadLocal<Stack<Entry>> run_stack = ThreadLocal.withInitial(Stack::new);
     static private final int MAX_STACK_SIZE     = 128;
     static private final int PRINT_SIZE         = 15;

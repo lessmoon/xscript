@@ -189,6 +189,7 @@ public class ExtensionStructHelper {
      */
     private static <T> Type getType(String typeStr, symbols.Struct s, Dictionary dic, TypeTable typeTable, Class<T> clazz) {
         Type t;
+        //todo:parse array type
         if (typeStr.isEmpty()) {
             t = Type.Void;
         } else if (typeStr.startsWith("#.")) {
@@ -226,7 +227,7 @@ public class ExtensionStructHelper {
         final int argLength = paraLength + j;
 
         final Parameter[] ps = m.getParameters();
-        assert !needPassThisReference || paraLength > 0 && (ps[0].getType() == StructValue.class || ps[0].getType() == Value.class)
+        assert !needPassThisReference || ps.length > 0 && (ps[0].getType().equals(StructValue.class) || ps[0].getType().equals( Value.class ))
                 : "Annotation `" + PassThisReference.class.getSimpleName() + "' requires first parameter to be `" + Value.class.getSimpleName() + "' or `" + StructValue.class.getSimpleName() + "' in " + m;
 
         assert argLength == m.getParameterCount()
@@ -359,7 +360,7 @@ public class ExtensionStructHelper {
         final int paraLength = init.param().length;
         final int argLength = paraLength + j;
         final Parameter[] ps = m.getParameters();
-        assert !needPassThisReference || paraLength > 0 && (ps[0].getType() == StructValue.class || ps[0].getType() == Value.class)
+        assert !needPassThisReference || ps.length > 0 && (ps[0].getType() == StructValue.class || ps[0].getType() == Value.class)
                 : "Annotation `" + PassThisReference.class.getSimpleName() + "' requires first parameter to be `" + Value.class.getSimpleName() + "' or `" + StructValue.class.getSimpleName() + "' in " + m;
         assert argLength == m.getParameterCount() : "setBody function for " + s.toString() + "'s parameter length not matched";
         assert !Modifier.isStatic(m.getModifiers());

@@ -7,7 +7,6 @@ import extension.annotation.PassThisReference;
 import extension.annotation.StructMethod;
 import inter.expr.StructValue;
 import inter.expr.Value;
-import lexer.Token;
 import runtime.Dictionary;
 import runtime.TypeTable;
 
@@ -84,7 +83,7 @@ public class StringBufferX extends Struct{
    }
 
     @Override
-    public symbols.Struct setup(Token sname, Dictionary dic, TypeTable typeTable) {
-        return ExtensionStructHelper.buildStructFromClass(StringBufferXProxy.class,dic,typeTable,sname,true);
+    public symbols.Struct setup(symbols.Struct struct, Dictionary dic, TypeTable typeTable) {
+        return ExtensionStructHelper.buildStructFromClass(StringBufferXProxy.class,dic,typeTable,struct,true);
     }
 }

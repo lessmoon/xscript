@@ -3,6 +3,9 @@ package inter.expr;
 import lexer.Word;
 import symbols.Array;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ArrayValue extends Value {
     public  final int size;
     private final Value[] arr;
@@ -42,6 +45,10 @@ public class ArrayValue extends Value {
     public boolean isChangeable(){
         /*array reference is not changeable*/
         return true;
+    }
+
+    public List<Value> toList(){
+        return Arrays.asList(this.arr);
     }
 
     @Override

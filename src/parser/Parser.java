@@ -393,39 +393,46 @@ public class Parser implements TypeTable {
                     clazzName = name.toString();
                 }
 
-                Struct s;
-                try {
-                    s = LoadStruct.loadStruct(sb.toString(), clazzName, name, this.lex, this);
-                } catch (Exception e) {
-                    error("failed to load extension struct `" + sb.toString() + "." + clazzName + "'", e);
-                    return;
-                }
-                checkNamespace(s.getName(), "struct");
-                defType(s.getName(), s);
-
+                Type b = null;
                 if (check(':')) {
                     Token base = look;
                     match(Tag.ID);
-                    Type b = getType(base);
+                    b = getType(base);
                     if (b == null) {
                         error("base struct `" + base + "' not found");
                     }
-                    if (s.getBaseStruct() != b) {
-                        if (s.getBaseStruct() == null) {
-                            error("native struct `" + s.getName() + "' has no base");
-                        } else {
-                            error("native struct `" + s.getName() + "' has a different base (`" + s.getBaseStruct() + "') with declaration here(`" + b + "')");
-                        }
+                }
+
+                Struct s;
+                final boolean firstDeclared = LoadStruct.getBoundStructOfClass(sb.toString(), clazzName) == null;
+                if (check('{')) {
+                    try {
+                        s = LoadStruct.loadStruct(sb.toString(), clazzName, name, this.lex, this);
+                    } catch (Exception e) {
+                        error("failed to load extension struct `" + sb.toString() + "." + clazzName + "'", e);
+                        return;
+                    }
+                    if(firstDeclared) {
+                        checkNamespace(s.getName(), "struct");
+                        defType(s.getName(), s);
+                    }
+                    checkExtensionDefinintion(s);
+                } else {//pre declare
+                    s = LoadStruct.preDeclare(sb.toString(), clazzName, name, this.lex, this);
+                    if(firstDeclared) {
+                        checkNamespace(s.getName(), "struct");
+                        defType(s.getName(), s);
                     }
                 }
 
-                if (check('{')) {
-                    /*
-                     * Declaration of the the struct
-                     * It does't check now by ignoring all character util '}'
-                     */
-                    checkExtensionDefinintion(s);
+                if (s.getBaseStruct() != b) {
+                    if (s.getBaseStruct() == null) {
+                        error("native struct `" + s.getName() + "' has no base");
+                    } else {
+                        error("native struct `" + s.getName() + "' has a different base (`" + s.getBaseStruct() + "') with declaration here(`" + b + "')");
+                    }
                 }
+
             } else {
                 pl = new ArrayList<>();
 
