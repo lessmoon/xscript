@@ -10,6 +10,7 @@ import  "container/priorityqueue.xs";
 import  "ui/paintpad.xs";
 import  "ui/cyclepaintpad.xs";
 import "rpg/parser.xs";
+import "reflection/reflect.xs";
 
 struct ScrollTextOutput{
     PaintPad x;

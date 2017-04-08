@@ -9,6 +9,8 @@ src/extension/predefined/MutexLock.java
 src/extension/predefined/SimpleRunnable.java
 src/extension/predefined/SimpleThread.java
 src/extension/predefined/Trigger.java
+src/extension/reflection/Root.java
+src/extension/reflection/StructType.java
 src/extension/Struct.java
 src/extension/system/extime.java
 src/extension/system/getchar.java

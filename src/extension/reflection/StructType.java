@@ -3,7 +3,6 @@ package extension.reflection;
 
 import extension.ExtensionStructHelper;
 import extension.Struct;
-import extension.annotation.Init;
 import extension.annotation.StructMethod;
 import inter.expr.ArrayValue;
 import inter.expr.StructValue;
@@ -20,12 +19,25 @@ public class StructType extends Struct {
     public static class StructTypeProxy{
         symbols.Struct type;
 
-        @Init
-        public void init(){
-            type = null;
+        public StructTypeProxy(){
+            this.type = null;
         }
 
-        @StructMethod(ret = "#.Root",param = "Object[]")
+        public StructTypeProxy(symbols.Struct type){
+            this.type = type;
+        }
+
+        @StructMethod(ret = "bool",param="$")
+        public Value isChildOf(StructValue b){
+            return Value.valueOf(type.isChildOf(((StructTypeProxy)b.getExtension()).type));
+        }
+
+        @StructMethod(ret = "bool",param="$")
+        public Value equals(StructValue b){
+            return Value.valueOf(type.isCongruentWith(((StructTypeProxy)b.getExtension()).type));
+        }
+
+        @StructMethod(ret = "#.Root",param = "#.Root[]")
         public Value newInstance(ArrayValue args){
             if(type == null){
                 return Value.Null;
@@ -45,10 +57,15 @@ public class StructType extends Struct {
             }
             return s;
         }
+
+        @StructMethod(ret = "string")
+        public Value getName(){
+            return new Value(type.getName().toString());
+        }
     }
 
     @Override
     public symbols.Struct setup(symbols.Struct struct, Dictionary dic, TypeTable typeTable) {
-        return ExtensionStructHelper.buildStructFromClass(StructTypeProxy.class,dic,typeTable,struct,false);
+        return ExtensionStructHelper.buildStructFromClass(StructTypeProxy.class,dic,typeTable,struct,true);
     }
 }

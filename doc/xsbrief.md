@@ -156,7 +156,8 @@
 * Load extension
 	1. native\<package-name\>{
 	2. &emsp;["class-name":]return-type func-name ( [param-type param-name,...] );***load extension functions***
-	3. &emsp;["class-name":]struct something{
+	3. &emsp;["class-name":]struct struct-name; ***extension struct pre-declaration***
+	4. &emsp;["class-name":]struct struct-name{
 	4. &emsp;&emsp;def this(param-list);***function declarations(not necessary,but check the correctness)***
 	4. &emsp;};
 	5. }
