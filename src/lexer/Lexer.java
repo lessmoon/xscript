@@ -399,6 +399,8 @@ public class Lexer implements Dictionary {
                     return new Str(filename);
                 case "_version_": /*version*/
                     return new Num(Main.MAJOR_VERSION * 100 + Main.MINOR_VERSION);
+                case "_isMain_":/*is in main file*/
+                    return list.empty()?Word.True:Word.False;
             }
             Word w = (Word)words.get(s);
             if(w != null)

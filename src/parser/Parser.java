@@ -157,14 +157,15 @@ public class Parser implements TypeTable {
     }
 
     private void warning(String s, int l, String f) {
-        if (enableWarning)
+        if (enableWarning) {
             System.err.println("line " + l + " in file `" + f + "':\n\t" + s);
+        }
     }
 
     private void match(char t) throws IOException {
-        if (look.tag == t)
+        if (look.tag == t) {
             move();
-        else {
+        } else {
             if (look.tag == -1) {
                 error("unexpected end of file");
             }
@@ -173,9 +174,9 @@ public class Parser implements TypeTable {
     }
 
     private void match(int t) throws IOException {
-        if (look.tag == t)
+        if (look.tag == t) {
             move();
-        else {
+        } else {
             if (look.tag == -1) {
                 error("unexpected end of file");
             }
@@ -282,7 +283,7 @@ public class Parser implements TypeTable {
         move();
     }
 
-    private void checkExtensionDefinintion(Struct s) throws IOException {
+    private void checkExtensionDefinition(Struct s) throws IOException {
         Set<Token> defined = new HashSet<>();
         while (!check('}')) {
             if (check(Tag.DEF)) {//inner function declaration;
@@ -416,7 +417,7 @@ public class Parser implements TypeTable {
                         checkNamespace(s.getName(), "struct");
                         defType(s.getName(), s);
                     }
-                    checkExtensionDefinintion(s);
+                    checkExtensionDefinition(s);
                 } else {//pre declare
                     s = LoadStruct.preDeclare(sb.toString(), clazzName, name, this.lex, this);
                     if(firstDeclared) {
@@ -1699,9 +1700,8 @@ public class Parser implements TypeTable {
                     } while (check('['));
 
                     if (e == null) {
-                        error("unknown array allocation size:" + t);
+                        return initiallist((Array) t);
                     }
-
                     return new NewArray(l, t, e);
                 } else {// it is `new' struct
                     if (t instanceof Struct) {
