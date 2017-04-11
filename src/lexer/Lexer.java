@@ -59,7 +59,15 @@ public class Lexer implements Dictionary {
         }
         return s;
     }
-    
+
+    public static boolean isHex(int p) {
+        return Character.isDigit(p) || (p >= 'a' && p <= 'f') || (p >= 'A' && p <= 'F');
+    }
+
+    public static boolean isOct(int p) {
+        return p >= '0' && p <= '7';
+    }
+
     public void error(String s){
         throw new RuntimeException("in file `" + filename + "' at " + line + ":" + offset + ": \n\t" + s);
     }
@@ -86,12 +94,14 @@ public class Lexer implements Dictionary {
         reserve( new Word("override",Tag.OVERRIDE));
         reserve( new Word("instanceof",Tag.INSTOF));
 
+
         reserve( Word.True );
         reserve( Word.False );
         reserve( Word.This );
         reserve( Word.Super );
         reserve( Word.Null );
         reserve( Word.Auto );
+        reserve(Word.Const);
 
         reserve( Type.Int );
         reserve( Type.Char );
@@ -329,13 +339,35 @@ public class Lexer implements Dictionary {
 
         if(Character.isDigit(peek)){
             BigInteger v = BigInteger.ZERO;
-            //int v = 0;
-            do{
-                //v = 10 * v + Character.digit(peek,10);
-                v = v.multiply(BigInteger.TEN).add(BigInteger.valueOf(Character.digit(peek,10)));
-                readch();
-            }while(Character.isDigit(peek));
-            if(peek != '.'){
+            boolean isHexOrOct = false;
+            if (readIf('0')) {
+                if (readIf('x')) {//hex
+                    if (!isHex(peek)) {
+                        error("expect hex digits");
+                    }
+                    isHexOrOct = true;
+                    do {
+                        //v = 16 * v + Character.digit(peek,16);
+                        v = v.shiftLeft(4).add(BigInteger.valueOf(Character.digit(peek, 16)));
+                        readch();
+                    } while (isHex(peek));
+                } else {//oct
+                    while (isOct(peek)) {
+                        isHexOrOct = true;
+                        //v = 8 * v + Character.digit(peek,8);
+                        v = v.shiftLeft(3).add(BigInteger.valueOf(Character.digit(peek, 8)));
+                        readch();
+                    }
+                }
+            } else {
+                do {
+                    //v = 10 * v + Character.digit(peek,10);
+                    v = v.multiply(BigInteger.TEN).add(BigInteger.valueOf(Character.digit(peek, 10)));
+                    readch();
+                } while (Character.isDigit(peek));
+            }
+
+            if(peek != '.' || isHexOrOct){
                 switch(peek){
                 case 'R':
                     peek = ' ';

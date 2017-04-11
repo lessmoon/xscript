@@ -4,6 +4,8 @@ package inter.expr;
  * Created by lessmoon on 2017/3/28.
  */
 
+import symbols.Type;
+
 /**
  * Make an expression const(read-only)
  */
@@ -11,7 +13,11 @@ public class ReadOnlyWrap extends Expr {
     private Expr variable;
 
     public ReadOnlyWrap(Expr variable) {
-        super(variable.op, variable.type);
+        this(variable,variable.type);
+    }
+
+    public ReadOnlyWrap(Expr variable, Type type){
+        super(variable.op,type);
         this.variable = variable;
     }
 

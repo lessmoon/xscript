@@ -1,5 +1,6 @@
 package symbols;
 
+import inter.expr.Value;
 import lexer.Token;
 
 import java.util.HashMap;
@@ -23,6 +24,10 @@ public class Env {
 
     public EnvEntry put(Token w,Type t){
         return table.put(w,new EnvEntry(t,level,table.size()));
+    }
+
+    public EnvEntry put(Token w, Type t, boolean isConst, Value init){
+        return table.put(w,new EnvEntry(t,level,table.size(),isConst,init));
     }
 
     public EnvEntry get(Token w){

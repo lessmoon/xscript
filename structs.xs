@@ -48,68 +48,6 @@ struct File{
     def bool is_open();
     def int readch();
 }
-struct Object{
-    //init function
-    def this();
-    //functions
-    def StructType getType();
-}
-struct StructType{
-    //init function
-    def this();
-    //functions
-    def string getName();
-    def bool isChildOf(StructType arg0);
-    def bool equals(StructType arg0);
-    def Object newInstance(Object[] arg0);
-}
-struct JNClass{
-    //init function
-    def this(string arg0);
-    //functions
-    def bool isAssignableFrom(JNClass arg0);
-    def bool isInstance(JNObject arg0);
-    def string getName();
-    def JNMethod getMethod(string arg0,JNClass[] arg1);
-    def bool isNull();
-    def bool equals(JNClass arg0);
-    def JNObject newInstance(JNObject[] arg0);
-}
-struct JNMethod{
-    //init function
-    def this();
-    //functions
-    def string getName();
-    def JNClass getReturnType();
-    def JNObject invoke(JNObject arg0,JNObject[] arg1);
-}
-struct JNObject{
-    //init function
-    def this();
-    //functions
-    def JNObject newBoolean(bool arg0);
-    def string toString();
-    def JNObject newString(string arg0);
-    def bigreal castDouble();
-    def JNObject newCharacter(char arg0);
-    def string castString();
-    def bigreal castBigReal();
-    def JNClass getClass();
-    def JNObject Null();
-    def JNObject newFloat(real arg0);
-    def JNObject newLong(int arg0);
-    def int castInt();
-    def JNObject newBigInteger(bigint arg0);
-    def char castChar();
-    def bigint castBigInt();
-    def JNObject newInteger(int arg0);
-    def bool isNull();
-    def real castReal();
-    def bool castBool();
-    def bigint castLong();
-    def JNObject newBigDecimal(bigreal arg0);
-    def JNObject newDouble(real arg0);
-}
 struct Time{
     //variables
     int hour;
@@ -124,25 +62,87 @@ struct StringBuffer{
     //init function
     def this();
     //functions
+    def StringBuffer appendCharacter(char arg0);
     def string toString();
+    def StringBuffer insert(int arg0,string arg1);
     def StringBuffer append(string arg0);
     def StringBuffer reverse();
-    def void reserve(int arg0);
-    def StringBuffer setCharAt(int arg0,char arg1);
     def StringBuffer delete(int arg0,int arg1);
-    def StringBuffer appendCharacter(char arg0);
-    def StringBuffer insert(int arg0,string arg1);
+    def StringBuffer setCharAt(int arg0,char arg1);
+    def void reserve(int arg0);
 }
 struct Timer{
     //variables
     int duration;
     int start;
     //functions
-    def void start();
-    def int getDuration();
     def void clear();
-    def void pause();
+    def int getDuration();
     def void resume();
+    def void pause();
+    def void start();
+}
+struct Object{
+    //init function
+    def this();
+    //functions
+    def StructType getType();
+}
+struct StructType{
+    //init function
+    def this();
+    //functions
+    def bool equals(StructType arg0);
+    def string getName();
+    def Object newInstance(Object[] arg0);
+    def bool isChildOf(StructType arg0);
+}
+struct JNClass{
+    //init function
+    def this(string arg0);
+    //functions
+    def bool equals(JNClass arg0);
+    def bool isAssignableFrom(JNClass arg0);
+    def string getName();
+    def JNObject newInstance(JNObject[] arg0);
+    def bool isInstance(JNObject arg0);
+    def bool isNull();
+    def JNMethod getMethod(string arg0,JNClass[] arg1);
+}
+struct JNMethod{
+    //init function
+    def this();
+    //functions
+    def JNClass getReturnType();
+    def string getName();
+    def JNObject invoke(JNObject arg0,JNObject[] arg1);
+}
+struct JNObject{
+    //init function
+    def this();
+    //functions
+    def JNClass getClass();
+    def string toString();
+    def string castString();
+    def JNObject newBigInteger(bigint arg0);
+    def JNObject newFloat(real arg0);
+    def char castChar();
+    def JNObject newLong(int arg0);
+    def bool isNull();
+    def JNObject newInteger(int arg0);
+    def JNObject Null();
+    def JNObject newString(string arg0);
+    def JNObject newDouble(real arg0);
+    def JNObject newBoolean(bool arg0);
+    def bigint castLong();
+    def JNObject newCharacter(char arg0);
+    def int castInt();
+    def bigreal castBigReal();
+    def JNObject newBigDecimal(bigreal arg0);
+    def bool castBool();
+    def real castReal();
+    def bigint castBigInt();
+    def bigreal castDouble();
 }
 struct Content{
     //virtual functions
@@ -185,8 +185,8 @@ struct IntContent : Comparable{
     def int toInt();
     //virtual functions
     def virtual string toString();
-    def virtual bool less(Comparable a);
     def virtual bool toBool();
+    def virtual bool less(Comparable a);
 }
 struct StringContent : Content{
     //variables
@@ -206,26 +206,26 @@ struct StringHashContent : HashContent{
     def this(string value);
     //virtual functions
     def virtual string toString();
-    def virtual bool equals(HashContent c);
     def virtual bool toBool();
+    def virtual bool equals(HashContent c);
     def virtual int hash();
 }
 struct Consumer{
     //pure virtual functions
-    def  default virtual Content apply(Content c);
+    def default virtual Content apply(Content c);
 }
 struct Stream{
     //functions
-    def int count();
-    def Stream reverse();
     def Sequence reduce(Collector c);
-    def Stream map(Consumer c);
-    def Stream skip(int c);
+    def Stream reverse();
     def void forEach(Consumer c);
-    def Stream filter(Consumer c);
     def Stream sort(Comparator c);
+    def Stream filter(Consumer c);
+    def Stream skip(int c);
+    def int count();
+    def Stream map(Consumer c);
     //pure virtual functions
-    def  default virtual Iterator next();
+    def default virtual Iterator next();
 }
 struct Iterator{
     //functions
@@ -235,38 +235,38 @@ struct Iterator{
     def virtual void next();
     def virtual bool hasNext();
     //pure virtual functions
-    def  default virtual Content getValue();
+    def default virtual Content getValue();
 }
 struct Runnable{
     //pure virtual functions
-    def  default virtual void run();
+    def default virtual void run();
 }
 struct Thread{
     //init function
     def this(Runnable arg0);
     //functions
+    def bool equals(Thread arg0);
+    def void join(int arg0);
+    def string getName();
+    def bool interrupt();
+    def void setName(string arg0);
     def bigint getThreadId();
     def bool start();
-    def string getName();
-    def void setName(string arg0);
-    def void join(int arg0);
-    def bool interrupt();
-    def bool equals(Thread arg0);
 }
 struct MutexLock{
     //init function
     def this();
     //functions
-    def bool wait();
     def bool tryLock();
     def bool release();
+    def bool wait();
 }
 struct MyTrigger{
     //init function
     def this();
     //functions
-    def void triggerAll();
     def bool wait();
+    def void triggerAll();
 }
 struct Trigger{
     //variables
@@ -274,8 +274,8 @@ struct Trigger{
     //init function
     def this();
     //functions
-    def void triggerAll();
     def void wait();
+    def void triggerAll();
 }
 struct Condition{
     //pure virtual functions
@@ -301,8 +301,8 @@ struct Timer2{
     //init function
     def this(Runnable run,int interval);
     //functions
-    def void start();
     def void stop();
+    def void start();
 }
 struct Timer2Adapter : Runnable{
     //variables
@@ -310,8 +310,8 @@ struct Timer2Adapter : Runnable{
     //init function
     def this(int interval);
     //functions
-    def void start();
     def void stop();
+    def void start();
     //virtual functions
     def default virtual void run();
 }
@@ -323,17 +323,17 @@ struct AtomicInteger{
     //init function
     def this();
     //functions
-    def string toString();
-    def void waitAndDecrement(int min);
-    def int get();
-    def int incrementAndGet();
-    def int setAndGet(int value);
-    def int getAndSet(int value);
-    def int getAndIncrement();
-    def int getAndDecrement();
     def void waitAndIncrement(int max);
+    def string toString();
+    def int setAndGet(int value);
+    def int incrementAndGet();
+    def int getAndIncrement();
     def int decrementAndGet();
+    def int get();
+    def void waitAndDecrement(int min);
+    def int getAndSet(int value);
     def void set(int value);
+    def int getAndDecrement();
 }
 struct Lock{
     //pure virtual functions
@@ -371,10 +371,10 @@ struct Sequence{
     def virtual Stream stream();
     def virtual void forEach(Consumer c);
     //pure virtual functions
-    def virtual int size();
-    def virtual Iterator iterator();
-    def virtual void add(Content c);
     def virtual bool isEmpty();
+    def virtual void add(Content c);
+    def virtual Iterator iterator();
+    def virtual int size();
 }
 struct Collector{
     //variables
@@ -387,7 +387,7 @@ struct Collector{
 }
 struct Comparator{
     //pure virtual functions
-    def  default virtual int compare(Content a,Content b);
+    def default virtual int compare(Content a,Content b);
 }
 struct TransformStream : Stream{
     //variables
@@ -395,7 +395,7 @@ struct TransformStream : Stream{
     //init function
     def this(Stream of);
     //pure virtual functions
-    def  default virtual Iterator next();
+    def default virtual Iterator next();
 }
 struct FilterStream : TransformStream{
     //variables
@@ -420,9 +420,9 @@ struct lambda$Iterator#07634 : Iterator{
     //init function
     def this();
     //virtual functions
-    def virtual void next();
-    def default virtual Content getValue();
     def virtual bool hasNext();
+    def default virtual Content getValue();
+    def virtual void next();
 }
 struct SequenceStream : Stream{
     //variables
@@ -455,9 +455,9 @@ struct lambda$Iterator#216334 : Iterator{
     //init function
     def this();
     //virtual functions
-    def virtual void next();
-    def default virtual Content getValue();
     def virtual bool hasNext();
+    def default virtual Content getValue();
+    def virtual void next();
 }
 struct binode{
     //variables
@@ -484,12 +484,12 @@ struct List : Sequence{
     def binode front();
     def void push_back(Content value);
     //virtual functions
-    def virtual int size();
-    def virtual Iterator iterator();
     def virtual Stream stream();
-    def virtual void add(Content value);
-    def virtual void forEach(Consumer c);
     def virtual bool isEmpty();
+    def virtual void forEach(Consumer c);
+    def virtual void add(Content value);
+    def virtual Iterator iterator();
+    def virtual int size();
 }
 struct nested$Iterator#36139 : Iterator{
     //variables
@@ -497,16 +497,16 @@ struct nested$Iterator#36139 : Iterator{
     //init function
     def this(binode inode);
     //virtual functions
-    def virtual void next();
-    def default virtual Content getValue();
     def virtual bool hasNext();
+    def default virtual Content getValue();
+    def virtual void next();
 }
 struct nested$Collector#412227 : Collector{
     //init function
     def this();
     //virtual functions
-    def virtual Sequence collect();
     def virtual void feed(Content c);
+    def virtual Sequence collect();
 }
 struct ConcurrentQueue{
     //variables
@@ -517,9 +517,9 @@ struct ConcurrentQueue{
     //init function
     def this();
     //functions
-    def int size();
     def void put(Content i);
     def Content pop();
+    def int size();
 }
 struct point{
     //variables
@@ -531,14 +531,14 @@ struct Ratio{
     int num;
     int den;
     //functions
-    def string toString();
-    def Ratio div(Ratio r);
-    def void init(int num,int den);
-    def Ratio mult(Ratio r);
     def bool equals(Ratio r);
+    def string toString();
+    def void init(int num,int den);
+    def Ratio sub(Ratio r);
     def Ratio reduce();
     def Ratio add(Ratio r);
-    def Ratio sub(Ratio r);
+    def Ratio div(Ratio r);
+    def Ratio mult(Ratio r);
 }
 struct Expr{
     //pure virtual functions
@@ -603,8 +603,8 @@ struct lexer{
     char peek;
     string poly;
     //functions
-    def Token scan();
     def void init(string poly);
+    def Token scan();
     def void readch();
 }
 struct parser{
@@ -614,12 +614,12 @@ struct parser{
     Var xVar;
     //functions
     def void init(lexer l);
-    def Expr mult();
-    def void next();
-    def Var getVar();
     def Expr term();
-    def Expr add();
+    def void next();
     def Expr expr();
+    def Expr add();
+    def Expr mult();
+    def Var getVar();
 }
 struct DynamicArray : Sequence{
     //variables
@@ -629,24 +629,24 @@ struct DynamicArray : Sequence{
     //init function
     def this(int size);
     //functions
+    def Content last();
     def string toString();
+    def void clear();
     def Content get(int i);
+    def void reset_capcity(int c);
     def Content first();
     def void pop_back();
-    def void reset_capcity(int c);
-    def bool empty();
-    def int capcity();
-    def void clear();
-    def void push_back(Content c);
-    def Content last();
     def Content set(int i,Content c);
+    def int capcity();
+    def void push_back(Content c);
+    def bool empty();
     //virtual functions
-    def virtual int size();
-    def virtual Iterator iterator();
     def virtual Stream stream();
-    def virtual void add(Content c);
-    def virtual void forEach(Consumer c);
     def virtual bool isEmpty();
+    def virtual void forEach(Consumer c);
+    def virtual void add(Content c);
+    def virtual Iterator iterator();
+    def virtual int size();
 }
 struct nested$Iterator#52934 : Iterator{
     //variables
@@ -655,16 +655,16 @@ struct nested$Iterator#52934 : Iterator{
     //init function
     def this(DynamicArray darray);
     //virtual functions
-    def virtual void next();
-    def default virtual Content getValue();
     def virtual bool hasNext();
+    def default virtual Content getValue();
+    def virtual void next();
 }
 struct nested$Collector#613127 : Collector{
     //init function
     def this();
     //virtual functions
-    def virtual Sequence collect();
     def virtual void feed(Content c);
+    def virtual Sequence collect();
 }
 struct HashPair{
     //variables
@@ -692,13 +692,13 @@ struct HashMap{
     //init function
     def this();
     //functions
-    def int size();
     def string toString();
-    def HashPair get(HashContent key);
-    def void rehash(int newcapcity);
     def void clear();
+    def HashPair get(HashContent key);
     def HashPair set(HashContent key,Content val);
+    def void rehash(int newcapcity);
     def HashPair remove(HashContent key);
+    def int size();
 }
 struct PriorityQueue : Sequence{
     //variables
@@ -709,18 +709,18 @@ struct PriorityQueue : Sequence{
     def this();
     //functions
     def string toString();
+    def Comparable top();
     def void clear();
+    def Comparable pop();
     def void swap(int i,int j);
     def void push(Comparable e);
-    def Comparable top();
-    def Comparable pop();
     //virtual functions
-    def virtual int size();
-    def virtual Iterator iterator();
     def virtual Stream stream();
-    def virtual void add(Content c);
-    def virtual void forEach(Consumer c);
     def virtual bool isEmpty();
+    def virtual void forEach(Consumer c);
+    def virtual void add(Content c);
+    def virtual Iterator iterator();
+    def virtual int size();
 }
 struct nested$Iterator#712131 : Iterator{
     //variables
@@ -729,9 +729,9 @@ struct nested$Iterator#712131 : Iterator{
     //init function
     def this(PriorityQueue q);
     //virtual functions
-    def virtual void next();
-    def default virtual Content getValue();
     def virtual bool hasNext();
+    def default virtual Content getValue();
+    def virtual void next();
 }
 struct ComparableProxy : Comparable{
     //variables
@@ -741,15 +741,15 @@ struct ComparableProxy : Comparable{
     def this(Content value,Comparator compare);
     //virtual functions
     def virtual string toString();
-    def virtual bool less(Comparable b);
     def virtual bool toBool();
+    def virtual bool less(Comparable b);
 }
 struct nested$Collector#819627 : Collector{
     //init function
     def this();
     //virtual functions
-    def virtual Sequence collect();
     def virtual void feed(Content c);
+    def virtual Sequence collect();
 }
 struct Font{
     //init function
@@ -762,33 +762,33 @@ struct PaintPadX{
     def this(string name,int width,int height);
     //functions
     def void open();
-    def int addString(string arg0,int arg1,int arg2);
-    def void redraw();
-    def void clearPointAndLine();
-    def bool setLineColor(int arg0);
-    def bool setStringPosition(int arg0,int arg1,int arg2);
-    def bool setPointColor(int arg0);
-    def void close();
-    def bool setCircleRadius(int arg0,int arg1);
-    def Font getFont();
-    def void clear();
-    def int addLine(int arg0,int arg1,int arg2,int arg3);
     def bool setCircleColor(int arg0);
-    def int addCircle(int arg0,int arg1,int arg2);
-    def void setBrushColor(int arg0,int arg1,int arg2);
-    def void setFont(Font arg0);
-    def bool setLine(int arg0,int arg1,int arg2,int arg3,int arg4);
-    def void clearString();
+    def int addString(string arg0,int arg1,int arg2);
+    def Font getFont();
+    def bool setPointColor(int arg0);
     def bool setPoint(int arg0,int arg1,int arg2);
-    def bool setCircle(int arg0,int arg1,int arg2);
-    def bool setStringColor(int arg0);
     def int addPoint(int arg0,int arg1);
+    def void close();
+    def bool setCircle(int arg0,int arg1,int arg2);
+    def void setBrushColor(int arg0,int arg1,int arg2);
+    def void clearPointAndLine();
+    def bool setStringPosition(int arg0,int arg1,int arg2);
+    def void clear();
+    def int addCircle(int arg0,int arg1,int arg2);
+    def void clearString();
+    def void redraw();
+    def void setFont(Font arg0);
+    def bool setCircleRadius(int arg0,int arg1);
     def bool setString(int arg0,string arg1);
+    def bool setStringColor(int arg0);
+    def bool setLine(int arg0,int arg1,int arg2,int arg3,int arg4);
+    def bool setLineColor(int arg0);
+    def int addLine(int arg0,int arg1,int arg2,int arg3);
     //virtual functions
     def virtual void onPress(int arg0);
+    def virtual void onClose();
     def virtual void onClick(int arg0);
     def virtual void onMouseClick(int arg0,int arg1,int arg2);
-    def virtual void onClose();
 }
 struct PaintPad : PaintPadX{
     //variables
@@ -799,8 +799,8 @@ struct PaintPad : PaintPadX{
     def void wait();
     def void show();
     //virtual functions
-    def virtual void onPress(int arg0);
     def virtual void onClick(int arg0);
+    def virtual void onPress(int arg0);
     def virtual void onMouseClick(int arg0,int arg1,int arg2);
     def virtual void onClose();
 }
@@ -812,8 +812,8 @@ struct Point{
     def this(int x,int y);
     //functions
     def void init(int x,int y);
-    def Point add(Point p);
     def Point sub(Point p);
+    def Point add(Point p);
 }
 struct Color{
     //variables
@@ -832,23 +832,23 @@ struct Graphics{
     DynamicArray rects;
     PaintPad pad;
     //functions
-    def Point getCenter();
     def void init(PaintPad pad,int width,int height);
-    def void wait();
-    def void close();
     def void clear();
-    def Color getBrushColor();
-    def void setBrushColor(Color c);
     def void setCenter(Point center);
     def void transite(Point offset);
+    def Color getBrushColor();
+    def void close();
+    def void wait();
+    def Point getCenter();
+    def void setBrushColor(Color c);
     //virtual functions
     def virtual void addRect(Point o,int width,int height);
     def virtual int addString(Point pos,string text);
     def virtual int setPoint(int id,Point p);
-    def virtual void draw();
     def virtual int addPoint(Point p);
-    def virtual int setString(int id,Point pos,string text);
     def virtual void show();
+    def virtual int setString(int id,Point pos,string text);
+    def virtual void draw();
 }
 struct Screen{
     //variables
@@ -857,11 +857,11 @@ struct Screen{
     //init function
     def this();
     //functions
-    def string getContent();
-    def void appendText(Graphics g,string text);
     def void clear(Graphics g);
-    def void add(Graphics g);
     def void setText(Graphics g,string text);
+    def void add(Graphics g);
+    def void appendText(Graphics g,string text);
+    def string getContent();
 }
 struct cal_state{
     //variables
@@ -885,9 +885,9 @@ struct Button{
     //init function
     def this(string text,int id,Color c);
     //functions
-    def void onclick(Graphics g,Screen scr,cal_state cs);
     def void add(Graphics g);
     def void setString(Graphics g,string text);
+    def void onclick(Graphics g,Screen scr,cal_state cs);
 }
 struct Region{
     //variables
@@ -927,8 +927,8 @@ struct Calculator : PaintPad{
     //init function
     def this(string title,int width,int height,EventPool pool,Graphics g,Screen scr);
     //virtual functions
-    def virtual void onPress(int arg0);
     def virtual void onClick(int arg0);
+    def virtual void onPress(int arg0);
     def virtual void onMouseClick(int bid,int x,int y);
     def virtual void onClose();
 }
@@ -946,8 +946,8 @@ struct Function : Content{
     def void procedure(Runtime r,string[] args);
     //virtual functions
     def virtual string toString();
-    def virtual string preprocessArg(Runtime r,string arg);
     def virtual bool toBool();
+    def virtual string preprocessArg(Runtime r,string arg);
     //pure virtual functions
     def virtual void run(Runtime r,string[] args);
 }
@@ -960,12 +960,12 @@ struct RuntimeBasic{
     //init function
     def this();
     //functions
+    def void setVar(string varname,string val);
     def void jump(string label);
     def void sleep(int second);
     def Function getFunction(string funcname);
-    def void setVar(string varname,string val);
-    def string getVar(string varname);
     def void registerFunction(string funcname,Function function);
+    def string getVar(string varname);
     //pure virtual functions
     def virtual void open(string filename);
     def virtual void step();
@@ -976,10 +976,10 @@ struct Runtime : RuntimeBasic{
     //init function
     def this();
     //functions
+    def void addInstructions2(string function,string[] args);
     def void addInstructions(Instruction i);
     def void addLable(string label);
     def bool isEnd();
-    def void addInstructions2(string function,string[] args);
     def void clearInstructions();
     //virtual functions
     def virtual void step();
@@ -1031,9 +1031,9 @@ struct RPGLexer{
     def this();
     //functions
     def void open(string filename);
-    def RPGToken scan();
     def bool check(int c);
     def void close();
+    def RPGToken scan();
     def void readch();
 }
 struct RPGParser{
@@ -1043,14 +1043,14 @@ struct RPGParser{
     //init function
     def this();
     //functions
-    def void statement(Runtime r);
+    def void parse(string file,Runtime r);
+    def Instruction instruction();
     def bool check(int id);
     def string value();
-    def void move();
-    def void parse(string file,Runtime r);
     def void match(int id);
-    def Instruction instruction();
     def string[] args();
+    def void statement(Runtime r);
+    def void move();
     def void error(string msg);
 }
 struct RPGRuntime : Runtime{
@@ -1067,93 +1067,113 @@ struct RPGRuntime : Runtime{
 struct Sleep : Function{
     //virtual functions
     def virtual string toString();
+    def virtual bool toBool();
     def virtual string preprocessArg(Runtime r,string arg);
     def virtual void run(Runtime r,string[] args);
-    def virtual bool toBool();
 }
 struct Choice : Function{
     //virtual functions
     def virtual string toString();
+    def virtual bool toBool();
     def virtual string preprocessArg(Runtime r,string arg);
     def virtual void run(Runtime r,string[] args);
-    def virtual bool toBool();
 }
 struct Set : Function{
     //virtual functions
     def virtual string toString();
+    def virtual bool toBool();
     def virtual string preprocessArg(Runtime r,string arg);
     def virtual void run(Runtime r,string[] args);
-    def virtual bool toBool();
 }
 struct Cond : Function{
     //virtual functions
     def virtual string toString();
+    def virtual bool toBool();
     def virtual string preprocessArg(Runtime r,string arg);
     def virtual void run(Runtime r,string[] args);
-    def virtual bool toBool();
 }
 struct Select : Function{
     //virtual functions
     def virtual string toString();
+    def virtual bool toBool();
     def virtual string preprocessArg(Runtime r,string arg);
     def virtual void run(Runtime r,string[] args);
-    def virtual bool toBool();
 }
 struct Print : Function{
     //virtual functions
     def virtual string toString();
+    def virtual bool toBool();
     def virtual string preprocessArg(Runtime r,string arg);
     def virtual void run(Runtime r,string[] args);
-    def virtual bool toBool();
 }
 struct StopPrint : Function{
     //virtual functions
     def virtual string toString();
+    def virtual bool toBool();
     def virtual string preprocessArg(Runtime r,string arg);
     def virtual void run(Runtime r,string[] args);
-    def virtual bool toBool();
 }
 struct Jump : Function{
     //virtual functions
     def virtual string toString();
+    def virtual bool toBool();
     def virtual string preprocessArg(Runtime r,string arg);
     def virtual void run(Runtime r,string[] args);
-    def virtual bool toBool();
 }
 struct TypeString : Function{
     //virtual functions
     def virtual string toString();
+    def virtual bool toBool();
     def virtual string preprocessArg(Runtime r,string arg);
     def virtual void run(Runtime r,string[] args);
-    def virtual bool toBool();
 }
 struct RPGTime : Function{
     //virtual functions
     def virtual string toString();
+    def virtual bool toBool();
     def virtual string preprocessArg(Runtime r,string arg);
     def virtual void run(Runtime r,string[] args);
-    def virtual bool toBool();
 }
 struct RPGAdd : Function{
     //virtual functions
     def virtual string toString();
+    def virtual bool toBool();
     def virtual string preprocessArg(Runtime r,string arg);
     def virtual void run(Runtime r,string[] args);
-    def virtual bool toBool();
 }
 struct RPGCase : Function{
     //virtual functions
     def virtual string toString();
+    def virtual bool toBool();
     def virtual string preprocessArg(Runtime r,string arg);
     def virtual void run(Runtime r,string[] args);
-    def virtual bool toBool();
 }
 struct Open : Function{
     //virtual functions
     def virtual string toString();
+    def virtual bool toBool();
     def virtual string preprocessArg(Runtime r,string arg);
     def virtual void run(Runtime r,string[] args);
-    def virtual bool toBool();
+}
+struct act{
+    //pure virtual functions
+    def default virtual void run();
+}
+struct lambda$act#102627 : act{
+    //variables
+    int @r;
+    //init function
+    def this();
+    //virtual functions
+    def default virtual void run();
+}
+struct lambda$act#92323 : act{
+    //variables
+    int @r;
+    //init function
+    def this();
+    //virtual functions
+    def default virtual void run();
 }
 struct ScrollTextOutput{
     //variables
@@ -1168,10 +1188,10 @@ struct ScrollTextOutput{
     //functions
     def void addString(string str,int r,int p,int g);
     def void open();
-    def void wait();
     def void close();
-    def void addCharacter(char c,int r,int p,int g);
+    def void wait();
     def void changeLine();
+    def void addCharacter(char c,int r,int p,int g);
     def void update();
 }
 struct base{
@@ -1192,8 +1212,8 @@ struct MyPaintPad : PaintPad{
     //init function
     def this();
     //virtual functions
-    def virtual void onPress(int bid);
     def virtual void onClick(int bid);
+    def virtual void onPress(int bid);
     def virtual void onMouseClick(int arg0,int arg1,int arg2);
     def virtual void onClose();
 }
@@ -1240,8 +1260,8 @@ struct MyXPaintPad : PaintPad{
     //init function
     def this(string name,int width,int height);
     //virtual functions
-    def virtual void onPress(int arg0);
     def virtual void onClick(int code);
+    def virtual void onPress(int arg0);
     def virtual void onMouseClick(int code,int x,int y);
     def virtual void onClose();
 }
@@ -1271,31 +1291,31 @@ struct PrintNumber : Runnable{
     //virtual functions
     def default virtual void run();
 }
-struct nested$Consumer#938027 : Consumer{
+struct nested$Consumer#1139827 : Consumer{
     //virtual functions
     def default virtual Content apply(Content i);
 }
-struct lambda$Consumer#1038829 : Consumer{
+struct lambda$Consumer#1240629 : Consumer{
     //virtual functions
     def default virtual Content apply(Content i);
 }
-struct lambda$Consumer#1138930 : Consumer{
+struct lambda$Consumer#1340730 : Consumer{
     //virtual functions
     def default virtual Content apply(Content i);
 }
-struct lambda$Consumer#1239326 : Consumer{
+struct lambda$Consumer#1441126 : Consumer{
     //virtual functions
     def default virtual Content apply(Content i);
 }
-struct lambda$Consumer#1339423 : Consumer{
+struct lambda$Consumer#1541223 : Consumer{
     //virtual functions
     def default virtual Content apply(Content i);
 }
-struct lambda$Comparator#1439526 : Comparator{
+struct lambda$Comparator#1641326 : Comparator{
     //virtual functions
     def default virtual int compare(Content a,Content b);
 }
-struct lambda$Consumer#1539627 : Consumer{
+struct lambda$Consumer#1741427 : Consumer{
     //virtual functions
     def default virtual Content apply(Content i);
 }
@@ -1303,7 +1323,7 @@ struct JustOnce : Runnable{
     //virtual functions
     def default virtual void run();
 }
-struct lambda$Runnable#1649734 : Runnable{
+struct lambda$Runnable#1851534 : Runnable{
     //variables
     PaintPad @pad;
     //init function
@@ -1340,14 +1360,13 @@ struct ChessPad : PaintPad{
     //init function
     def this(string name,int w,int h);
     //virtual functions
-    def virtual void onPress(int arg0);
     def virtual void onClick(int id);
+    def virtual void onPress(int arg0);
     def virtual void onMouseClick(int arg0,int arg1,int arg2);
     def virtual void onClose();
 }
-struct lambda$Runnable#1777134 : Runnable{
+struct lambda$Runnable#1978934 : Runnable{
     //variables
-    bool[][] @world;
     bool[][] @world1;
     bool[][] @world2;
     PaintPad @pad;
@@ -1365,7 +1384,7 @@ struct complex{
     def bool isGreaterThan(complex c);
     def complex add(complex x);
 }
-struct lambda$Runnable#1897140 : Runnable{
+struct lambda$Runnable#2098940 : Runnable{
     //variables
     PaintPad @pad;
     //init function

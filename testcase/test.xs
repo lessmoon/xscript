@@ -9,8 +9,9 @@ import  "container/hashmap.xs";
 import  "container/priorityqueue.xs";
 import  "ui/paintpad.xs";
 import  "ui/cyclepaintpad.xs";
-import "rpg/parser.xs";
-import "reflection/reflect.xs";
+import  "rpg/parser.xs";
+import  "reflection/reflect.xs";
+import  "lib/keymap.xs";
 
 struct ScrollTextOutput{
     PaintPad x;
@@ -20,7 +21,7 @@ struct ScrollTextOutput{
 
     int line;
     
-    def this( int width_tile,int height_tile ){
+    def this( const int width_tile,const int height_tile ){
         this.width = width_tile;
         this.height = height_tile;
         this.contents = new List();
@@ -146,13 +147,13 @@ struct MyPaintPad:PaintPad{
     def override void onClick(int bid){
         super.onClick(bid);
         switch(bid){
-        case 37:
+        case VK_LEFT:case VK_A:
            x-=10;
            break;
-        case 39:
+        case VK_RIGHT:case VK_D:
            x+=10;
            break;
-        case 27:
+        case VK_ESCAPE:
            this.close();
            break;
         default:
@@ -743,19 +744,19 @@ def void calMap(bool[][] src,bool[][] tar){
 def void GameOfLife()
 {
     //println("Line " + _line_ + ":" + TILE_WIDTH);
-    auto pad = new PaintPad("Game Of Life",WIDTH*TILE_WIDTH+1,HEIGHT*TILE_WIDTH+1);
+    const auto pad = new PaintPad("Game Of Life",WIDTH*TILE_WIDTH+1,HEIGHT*TILE_WIDTH+1);
     //println("Line " + _line_ + ":" + TILE_WIDTH);
-    bool[][] world,world1 = new bool[][WIDTH],
+    const bool[][] world = null ,world1 = new bool[][WIDTH],
              world2 = new bool[][WIDTH];
     for(int i = 0 ; i < WIDTH;i++){
         world1[i] = new bool[HEIGHT];
         world2[i] = new bool[HEIGHT];
     }
-    
+
     srand(time());
     int sum = rand()%(WIDTH*HEIGHT);
     
-    for(int i = 0;i<sum;i++){
+    for(int i = 0;i < sum;i++){
         int x,y;
         do{
             x = rand()%WIDTH;
