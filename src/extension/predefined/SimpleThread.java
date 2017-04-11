@@ -6,7 +6,6 @@ import extension.annotation.Init;
 import extension.annotation.StructMethod;
 import inter.expr.StructValue;
 import inter.expr.Value;
-import lexer.Token;
 import runtime.Dictionary;
 import runtime.Interface;
 import runtime.TypeTable;
@@ -21,8 +20,8 @@ import java.util.List;
  */
 public class SimpleThread extends Struct {
     @Override
-    public symbols.Struct setup(Token sname, Dictionary dic, TypeTable typeTable) {
-        return ExtensionStructHelper.buildStructFromClass(SimpleThreadProxy.class, dic, typeTable, sname, false);
+    public symbols.Struct setup(symbols.Struct struct, Dictionary dic, TypeTable typeTable) {
+        return ExtensionStructHelper.buildStructFromClass(SimpleThreadProxy.class, dic, typeTable, struct, false);
     }
 
     public static class SimpleThreadProxy {

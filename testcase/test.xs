@@ -9,7 +9,9 @@ import  "container/hashmap.xs";
 import  "container/priorityqueue.xs";
 import  "ui/paintpad.xs";
 import  "ui/cyclepaintpad.xs";
-import "rpg/parser.xs";
+import  "rpg/parser.xs";
+import  "reflection/reflect.xs";
+import  "lib/keymap.xs";
 
 struct ScrollTextOutput{
     PaintPad x;
@@ -19,7 +21,7 @@ struct ScrollTextOutput{
 
     int line;
     
-    def this( int width_tile,int height_tile ){
+    def this( const int width_tile,const int height_tile ){
         this.width = width_tile;
         this.height = height_tile;
         this.contents = new List();
@@ -107,7 +109,7 @@ struct rrr{
     def void test(derive d){
         d.getBase();
     }
-} 
+}
 
 struct derive:base{
     def void test();
@@ -145,13 +147,13 @@ struct MyPaintPad:PaintPad{
     def override void onClick(int bid){
         super.onClick(bid);
         switch(bid){
-        case 37:
+        case VK_LEFT:case VK_A:
            x-=10;
            break;
-        case 39:
+        case VK_RIGHT:case VK_D:
            x+=10;
            break;
-        case 27:
+        case VK_ESCAPE:
            this.close();
            break;
         default:
@@ -468,7 +470,8 @@ def void drawClock(PaintPad p,Time t){
         p.addString("" + i,150 + x,150+y);
     }
 
-    drawHand(p,t.hour,((real)t.hour-3) / 12  + ((real)t.minute)/ 60 / 12  + ((real)t.second)/ 60 /60 / 12 ,70,0,0,255);
+    drawHand(p,t.hour,((real)t.hour-3) / 12  + ((real)t.minute)/ 60 / 12  
+                        + ((real)t.second)/ 60 /60 / 12 ,70,0,0,255);
     drawHand(p,t.minute,((real)t.minute-15) / 60 +((real)t.second)/ 60 /60,110,0,255,0);
     drawHand(p,t.second,((real)t.second-15) / 60,130,255,0,0);
 }
@@ -481,7 +484,8 @@ def void drawClockReal(PaintPad p,real hour,real minute,real second){
         p.addString("" + i,150 + x,150+y);
     }
 
-    drawHand(p,hour,(hour-3) / 12  + (minute)/ 60 / 12  + (second)/ 60 /60 / 12 ,70,0,0,255);
+    drawHand(p,hour,(hour-3) / 12  + (minute)/ 60 / 12  
+                            + (second)/ 60 /60 / 12 ,70,0,0,255);
     drawHand(p,minute,(minute-15) / 60 +(second)/ 60 /60,110,0,255,0);
     drawHand(p,second,(second-15) / 60,130,255,0,0);
 }
@@ -740,19 +744,19 @@ def void calMap(bool[][] src,bool[][] tar){
 def void GameOfLife()
 {
     //println("Line " + _line_ + ":" + TILE_WIDTH);
-    auto pad = new PaintPad("Game Of Life",WIDTH*TILE_WIDTH+1,HEIGHT*TILE_WIDTH+1);
+    const auto pad = new PaintPad("Game Of Life",WIDTH*TILE_WIDTH+1,HEIGHT*TILE_WIDTH+1);
     //println("Line " + _line_ + ":" + TILE_WIDTH);
-    bool[][] world,world1 = new bool[][WIDTH],
+    const bool[][] world = null ,world1 = new bool[][WIDTH],
              world2 = new bool[][WIDTH];
     for(int i = 0 ; i < WIDTH;i++){
         world1[i] = new bool[HEIGHT];
         world2[i] = new bool[HEIGHT];
     }
-    
+
     srand(time());
     int sum = rand()%(WIDTH*HEIGHT);
     
-    for(int i = 0;i<sum;i++){
+    for(int i = 0;i < sum;i++){
         int x,y;
         do{
             x = rand()%WIDTH;
@@ -1025,14 +1029,16 @@ struct complex{
                     max = x;
             } else {
                 if(min <= max){
-                    pad.addLine(min*100 + 300  - 100,-y*100 + 240 - 80,max*100 + 300  - 100,-y*100 + 240 - 80);
+                    pad.addLine(min*100 + 300  - 100,-y*100 + 240 - 80,
+                                max*100 + 300 - 100,-y*100 + 240 - 80);
                     min = 1.5;
                     max = -15;
                 }
             }
         }
         if(min <= max){
-            pad.addLine(min*100 + 300  - 100,-y*100 + 240 - 80,max*100 + 300  - 100,-y*100 + 240 - 80);
+            pad.addLine(min*100 + 300  - 100,-y*100 + 240 - 80,
+                        max*100 + 300  - 100,-y*100 + 240 - 80);
         }
     }
     
@@ -1051,7 +1057,8 @@ struct complex{
                     max = x;
             } else {
                 if(min <= max){
-                    pad.addLine(min + 300 + 100 ,-y + 240 + 100,max + 300 + 100,-y + 240 + 100);
+                    pad.addLine(min + 300 + 100 ,-y + 240 + 100,
+                                max + 300 + 100,-y + 240+100);
                     min = r;
                     max = -r;
                 }
@@ -1422,7 +1429,8 @@ def string lsstring(string str,char c,int i){
 }
 
 def string quicksort(string str){
-    return strlen(str) <= 1?str:quicksort(lsstring(str,str[0],1)) + str[0] + quicksort(gestring(str,str[0],1));
+    return strlen(str) <= 1?str
+    :quicksort(lsstring(str,str[0],1)) + str[0] + quicksort(gestring(str,str[0],1));
 }
 
 {

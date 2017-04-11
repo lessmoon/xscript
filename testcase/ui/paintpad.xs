@@ -46,7 +46,7 @@ struct PaintPad:PaintPadX{
 
     def this(string name,int width,int height){
         super(name,width,height);
-		this.t = new Trigger();
+        this.t = new Trigger();
     }
 
     def void show(){

@@ -2,7 +2,7 @@ import "system.xs";
 import "../container/content.xs";
 
 native<extension.predefined>{
-
+    
     "SimpleRunnable":struct Runnable{
         def default virtual void run();
     };

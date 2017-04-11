@@ -157,14 +157,15 @@ public class Parser implements TypeTable {
     }
 
     private void warning(String s, int l, String f) {
-        if (enableWarning)
+        if (enableWarning) {
             System.err.println("line " + l + " in file `" + f + "':\n\t" + s);
+        }
     }
 
     private void match(char t) throws IOException {
-        if (look.tag == t)
+        if (look.tag == t) {
             move();
-        else {
+        } else {
             if (look.tag == -1) {
                 error("unexpected end of file");
             }
@@ -173,9 +174,9 @@ public class Parser implements TypeTable {
     }
 
     private void match(int t) throws IOException {
-        if (look.tag == t)
+        if (look.tag == t) {
             move();
-        else {
+        } else {
             if (look.tag == -1) {
                 error("unexpected end of file");
             }
@@ -282,7 +283,7 @@ public class Parser implements TypeTable {
         move();
     }
 
-    private void checkExtensionDefinintion(Struct s) throws IOException {
+    private void checkExtensionDefinition(Struct s) throws IOException {
         Set<Token> defined = new HashSet<>();
         while (!check('}')) {
             if (check(Tag.DEF)) {//inner function declaration;
@@ -393,39 +394,46 @@ public class Parser implements TypeTable {
                     clazzName = name.toString();
                 }
 
-                Struct s;
-                try {
-                    s = LoadStruct.loadStruct(sb.toString(), clazzName, name, this.lex, this);
-                } catch (Exception e) {
-                    error("failed to load extension struct `" + sb.toString() + "." + clazzName + "'", e);
-                    return;
-                }
-                checkNamespace(s.getName(), "struct");
-                defType(s.getName(), s);
-
+                Type b = null;
                 if (check(':')) {
                     Token base = look;
                     match(Tag.ID);
-                    Type b = getType(base);
+                    b = getType(base);
                     if (b == null) {
                         error("base struct `" + base + "' not found");
                     }
-                    if (s.getBaseStruct() != b) {
-                        if (s.getBaseStruct() == null) {
-                            error("native struct `" + s.getName() + "' has no base");
-                        } else {
-                            error("native struct `" + s.getName() + "' has a different base (`" + s.getBaseStruct() + "') with declaration here(`" + b + "')");
-                        }
+                }
+
+                Struct s;
+                final boolean firstDeclared = LoadStruct.getBoundStructOfClass(sb.toString(), clazzName) == null;
+                if (check('{')) {
+                    try {
+                        s = LoadStruct.loadStruct(sb.toString(), clazzName, name, this.lex, this);
+                    } catch (Exception e) {
+                        error("failed to load extension struct `" + sb.toString() + "." + clazzName + "'", e);
+                        return;
+                    }
+                    if(firstDeclared) {
+                        checkNamespace(s.getName(), "struct");
+                        defType(s.getName(), s);
+                    }
+                    checkExtensionDefinition(s);
+                } else {//pre declare
+                    s = LoadStruct.preDeclare(sb.toString(), clazzName, name, this.lex, this);
+                    if(firstDeclared) {
+                        checkNamespace(s.getName(), "struct");
+                        defType(s.getName(), s);
                     }
                 }
 
-                if (check('{')) {
-                    /*
-                     * Declaration of the the struct
-                     * It does't check now by ignoring all character util '}'
-                     */
-                    checkExtensionDefinintion(s);
+                if (s.getBaseStruct() != b) {
+                    if (s.getBaseStruct() == null) {
+                        error("native struct `" + s.getName() + "' has no base");
+                    } else {
+                        error("native struct `" + s.getName() + "' has a different base (`" + s.getBaseStruct() + "') with declaration here(`" + b + "')");
+                    }
                 }
+
             } else {
                 pl = new ArrayList<>();
 
@@ -627,7 +635,7 @@ public class Parser implements TypeTable {
         if (op != null) {
             error("initial function can't be overloaded");
         }
-        top.put(Word.This, s);
+        top.put(Word.This, s,true,null);
         match(Tag.ID);
         List<Param> l = parameters();
         l.add(0, new Param(s, Word.This));
@@ -657,7 +665,7 @@ public class Parser implements TypeTable {
         }
 
         /*pass `this' reference as the first argument*/
-        top.put(Word.This, s);
+        top.put(Word.This, s,true,null);
         List<Param> l = parameters();
         l.add(0, new Param(s, Word.This));
         Function f = new MemberFunction(fname, returnType, l, s);
@@ -794,7 +802,7 @@ public class Parser implements TypeTable {
             error("initial function `" + t.getName() + ".[init]' redefined");
         }
 
-        top.put(Word.This, t);
+        top.put(Word.This, t,true,null);
         List<Param> l = parameters();
         l.add(0, new Param(t, Word.This));
         if (l.size() != f.getParamList().size()) {
@@ -835,7 +843,7 @@ public class Parser implements TypeTable {
             error("member function `" + t.lexeme + "." + name + "' redefined");
         }
 
-        top.put(Word.This, t);
+        top.put(Word.This, t,true,null);
         List<Param> l = parameters();
         l.add(0, new Param(t, Word.This));
         if (l.size() != f.getParamList().size()) {
@@ -859,6 +867,7 @@ public class Parser implements TypeTable {
         match('(');
         if (!check(')')) {
             do {
+                boolean isConst = check(Tag.CONST);
                 Type t = type();
                 Token name = look;
                 match(Tag.ID);
@@ -866,7 +875,7 @@ public class Parser implements TypeTable {
                     error("parameter `" + name + "' shadows a struct type");
                 }
                 pl.add(new Param(t, name));
-                if (top.put(name, t) != null) {
+                if (top.put(name, t,isConst,null) != null) {
                     error("function parameter names have conflict:`" + name.toString() + "'");
                 }
             } while (check(','));
@@ -914,6 +923,7 @@ public class Parser implements TypeTable {
         Stmt savedStmt = Stmt.Enclosing, savedBreak = Stmt.BreakEnclosing;
         int savedLastIterationLevel = lastIterationLevel,
                 savedLastBreakFatherLevel = lastBreakFatherLevel;
+        boolean isConst = false;
         switch (look.tag) {
             case ';':
                 move();
@@ -987,10 +997,16 @@ public class Parser implements TypeTable {
             case '{':
                 s = block();
                 break;
+            case Tag.CONST:
+                move();
+                isConst = true;
             case Tag.ID:
                 Type t = getAutoType(look);
             /*check if it is just a variable*/
                 if (t == null) {
+                    if (isConst) {
+                        error("`" + Word.Const + "' expects type but found expression `" + look + "'");
+                    }
                     s = new ExprStmt(expr());
                     match(';');
                     break;
@@ -998,12 +1014,12 @@ public class Parser implements TypeTable {
             /*or it should be variable definition*/
             case Tag.BASIC:
                 if (hasDecl) {
-                    s = decls();
+                    s = decls(isConst);
                 } else {
                     top = new Env(top);
                     nowLevel++;
                     hasDecl = true;
-                    s = new Seq(Stmt.PushStack, decls());
+                    s = new Seq(Stmt.PushStack, decls(isConst));
                 }
                 break;
             case Tag.SWITCH:
@@ -1209,11 +1225,15 @@ public class Parser implements TypeTable {
                 error("variable `" + tok + "' shadows a struct type");
             }
             if (check('=')) {
-                e = expr();
+                e = rawExpr();
             }
             if (p == Type.Auto) {//just infer once,every variable's type depends on 1st expr;
                 p = inferType(tok, e);
             }
+            if(ENABLE_EXPR_OPT && e != null){
+                e = e.optimize();
+            }
+
             top.put(tok, p);
 
             s.addDecl(Decl.getDecl(tok, p, e));
@@ -1222,7 +1242,7 @@ public class Parser implements TypeTable {
         return s;
     }
 
-    private Decls decls() throws IOException {
+    private Decls decls(boolean isConst) throws IOException {
         Decls s = new Decls();
         Expr e;
         //while( look.tag == Tag.BASIC){
@@ -1247,7 +1267,7 @@ public class Parser implements TypeTable {
                 if (p instanceof Array && look.tag == '{') {
                     e = initiallist((Array) p);
                 } else {
-                    e = expr();
+                    e = rawExpr();//infer type(can't infer type of null after optimized)
                 }
             }
 
@@ -1255,7 +1275,19 @@ public class Parser implements TypeTable {
                 p = inferType(tok, e);
             }
 
-            top.put(tok, p);
+            if(ENABLE_EXPR_OPT&&e != null) {
+                e = e.optimize();
+            }
+
+            if (isConst && e == null) {
+                error("`" + Word.Const + "' expect initial expression");
+                return null;//avoiding warning
+            }
+            Value value = null;
+            if(isConst && !e.isChangeable()){
+                value = e.getValue();
+            }
+            top.put(tok, p,isConst,value);
 
             s.addDecl(Decl.getDecl(tok, p, e));
         } while (check(','));
@@ -1593,7 +1625,7 @@ public class Parser implements TypeTable {
     }
 
     private Expr factor() throws IOException {
-
+        Expr e;
         switch (look.tag) {
             case Tag.ID:
                 Token tmp = copymove();
@@ -1635,6 +1667,9 @@ public class Parser implements TypeTable {
                         error("`" + ee.type + "' has no super struct defined");
                     }
                 }
+                if(ee.isReadOnly && ee.initValue != null){
+                    return new ReadOnlyWrap(ee.initValue,ee.type);//warp it in case
+                }
                 //handle the captures
                 if (ee.stacklevel <= lastFunctionLevel && ee.stacklevel != 0) {
                     Token identifier = lex.getOrReserve("@" + name);
@@ -1650,7 +1685,8 @@ public class Parser implements TypeTable {
                     EnvEntry this_ = top.get(isInLambda?Word.HiddenThis:Word.This);
                     return new StructMemberAccess(new StackVar(tmp, dStruct, top.level - this_.stacklevel, this_.offset), identifier).readOnly();
                 }
-                return StackVar.stackVar(tmp, t, ee.stacklevel, ee.offset, top.level);
+                e = StackVar.stackVar(tmp, t, ee.stacklevel, ee.offset, top.level);
+                return ee.isReadOnly?e.readOnly():e;
             case Tag.NULL:
                 move();
                 return Value.Null;
@@ -1681,7 +1717,7 @@ public class Parser implements TypeTable {
                 }
                 //match('>');
                 if (check('[')) {
-                    Expr e = null;
+                    e = null;
                     do {
                         if (!check(']')) {
                             e = rawExpr();
@@ -1692,9 +1728,8 @@ public class Parser implements TypeTable {
                     } while (check('['));
 
                     if (e == null) {
-                        error("unknown array allocation size:" + t);
+                        return initiallist((Array) t);
                     }
-
                     return new NewArray(l, t, e);
                 } else {// it is `new' struct
                     if (t instanceof Struct) {

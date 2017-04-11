@@ -4,7 +4,6 @@ import extension.ExtensionStructHelper;
 import extension.Struct;
 import extension.annotation.StructMethod;
 import inter.expr.Value;
-import lexer.Token;
 import runtime.Dictionary;
 import runtime.TypeTable;
 
@@ -14,8 +13,8 @@ import runtime.TypeTable;
 public class Trigger extends Struct {
 
     @Override
-    public symbols.Struct setup(Token sname, Dictionary dic, TypeTable typeTable) {
-        return ExtensionStructHelper.buildStructFromClass(TriggerProxy.class, dic, typeTable, sname, true);
+    public symbols.Struct setup(symbols.Struct struct, Dictionary dic, TypeTable typeTable) {
+        return ExtensionStructHelper.buildStructFromClass(TriggerProxy.class, dic, typeTable, struct, true);
     }
 
     public static class TriggerProxy {

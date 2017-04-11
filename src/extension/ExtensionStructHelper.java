@@ -98,11 +98,13 @@ public class ExtensionStructHelper {
                     if (returnType instanceof symbols.Struct && ret.type instanceof symbols.Struct) {
                         if (retFlag) {
                             //fix the type dynamically
-                            StructValue r = new StructValue(s);
-                            r.setExtension(((StructValue) ret).getExtension());
-                            ret = r;
+                            if(!((symbols.Struct) ret.type).isChildOf((symbols.Struct) returnType)) {
+                                StructValue r = new StructValue((symbols.Struct) returnType);
+                                r.setExtension(((StructValue) ret).getExtension());
+                                ret = r;
+                            }
                         } else if (!((symbols.Struct) ret.type).isChildOf((symbols.Struct) returnType)) {
-                            throw new RuntimeException("error return type[ " + ret.type + "] expect:" + returnType);
+                            throw new RuntimeException("error return type[ " + ret.type + " ]expect:" + returnType);
                         }
                     }
                 } else {
@@ -164,49 +166,86 @@ public class ExtensionStructHelper {
     }
 
     /**
-     * Get type by {@param typeStr}
+     * Get type by {@code typeStr}
      * The type is either Basic type(int,real,string,bool,void,bigreal and bigint) or Struct type.
-     * NOTE:Array type is not supported yet.
+     * todo:Array type is not tested yet.
      * Some special case:
-     *     1.Type strings starting with "#" means find struct bound by the class named by the substring after #
-     *     2.Type string starting with "#." means relatively searching the class(based on package of the class)
-     *     3.Type string equaling "$" means the struct bound to the class
-     *  e.g:
-     *      "int" -> Type.Int
-     *      "Runnable" -> Struct Runnable
-     *      In context of class {@linkplain extension.system.SimpleFileInputStream},
-     *      "$" -> The struct bound to the class {@linkplain extension.system.SimpleFileInputStream}
-     *      "#extension.system.SimpleFile" -> The struct bound to the class SimpleFile,note that full name of class {@linkplain extension.system.SimpleFile}
-     *      "#.SimpleFile" -> search in package extension.system(where the {@linkplain extension.system.SimpleFileInputStream} is located)
+     * 1.Type strings starting with "#" means find struct bound by the class named by the substring after #
+     * 2.Type string starting with "#." means relatively searching the class(based on package of the class)
+     * 3.Type string equaling "$" means the struct bound to the class
+     * e.g:
+     * "int" -> Type.Int
+     * "Runnable" -> Struct Runnable
+     * In context of class {@linkplain extension.system.SimpleFileInputStream},
+     * "$" -> The struct bound to the class {@linkplain extension.system.SimpleFileInputStream}
+     * "#extension.system.SimpleFile" -> The struct bound to the class SimpleFile,note that full name of class {@linkplain extension.system.SimpleFile}
+     * "#.SimpleFile" -> search in package extension.system(where the {@linkplain extension.system.SimpleFileInputStream} is located)
      *
-     * @param typeStr the type string
-     * @param s the struct
-     * @param dic the token dictionary
+     * @param typeStr   the type string
+     * @param s         the struct
+     * @param dic       the token dictionary
      * @param typeTable the type table
-     * @param clazz the class bound to the {@param s}
-     * @param <T> the type
+     * @param clazz     the class bound to the {@param s}
+     * @param <T>       the type
      * @return the type
      */
     private static <T> Type getType(String typeStr, symbols.Struct s, Dictionary dic, TypeTable typeTable, Class<T> clazz) {
         Type t;
+        /*
+         *  Syntax:
+         *    Type -> BasicType | BasicType Array
+         *    BasicType -> ID|#.ID.PATH|#PATH|$PATH
+         *    Array -> [] | [] Array
+         *    PATH  -> ID | ID.PATH
+         */
+        typeStr = typeStr.trim();
         if (typeStr.isEmpty()) {
             t = Type.Void;
-        } else if (typeStr.startsWith("#.")) {
-            Package p = clazz.getPackage();
-            t = LoadStruct.getBoundStructOfClass(p.getName() + "." + typeStr.substring(2));
-        } else if (typeStr.startsWith("#")) {
-            t = LoadStruct.getBoundStructOfClass(typeStr.substring(1));
-        } else if (typeStr.equals("$")) {
-            t = s;
-        } else {
-            t = typeTable.getType(dic.getOrReserve(typeStr));
+        }
+        int beg = 0;
+        switch (typeStr.charAt(beg)) {
+            case '#':
+                String prefix = "";
+                ++beg;
+                assert (beg < typeStr.length());
+                if (typeStr.charAt(beg) == '.') {
+                    ++beg;
+                    Package p = clazz.getPackage();
+                    prefix = p.getName() + ".";
+                }
+                int left = beg;
+                while (beg < typeStr.length() && typeStr.charAt(beg) != '[') {
+                    ++beg;
+                }
+                String clazzPath = typeStr.substring(left, beg);
+                t = LoadStruct.getBoundStructOfClass(prefix + clazzPath);
+                break;
+            case '$':
+                t = s;
+                ++beg;
+                break;
+            default:
+                while (beg < typeStr.length() && typeStr.charAt(beg) != '[') {
+                    ++beg;
+                }
+                t = typeTable.getType(dic.getOrReserve(typeStr.substring(0, beg)));
+        }
+        if (t == null) {
+            return null;
         }
 
+        while (beg < typeStr.length() && typeStr.charAt(beg) == '[') {
+            beg++;
+            assert beg < typeStr.length() && typeStr.charAt(beg) == ']';
+            t = new Array(t);
+            beg++;
+        }
         return t;
     }
 
     /**
      * build a function from method m
+     *
      * @param m         the method to use
      * @param clazz     the class built from
      * @param dic       the dictionary
@@ -226,7 +265,7 @@ public class ExtensionStructHelper {
         final int argLength = paraLength + j;
 
         final Parameter[] ps = m.getParameters();
-        assert !needPassThisReference || paraLength > 0 && (ps[0].getType() == StructValue.class || ps[0].getType() == Value.class)
+        assert !needPassThisReference || ps.length > 0 && (ps[0].getType().equals(StructValue.class) || ps[0].getType().equals(Value.class))
                 : "Annotation `" + PassThisReference.class.getSimpleName() + "' requires first parameter to be `" + Value.class.getSimpleName() + "' or `" + StructValue.class.getSimpleName() + "' in " + m;
 
         assert argLength == m.getParameterCount()
@@ -235,13 +274,13 @@ public class ExtensionStructHelper {
                 : "try to bind with static function" + m + " to " + s;
 
         final StackVar[] vars = new StackVar[paraLength];
-        final List<Param> param = checkAndBuildParams(vars,s,m,func.param(), needPassThisReference, typeTable, dic, clazz);
+        final List<Param> param = checkAndBuildParams(vars, s, m, func.param(), needPassThisReference, typeTable, dic, clazz);
 
         final Token funcName = func.value().isEmpty() ? dic.getOrReserve(m.getName()) : dic.getOrReserve(func.value());
 
         final Type returnType = getType(func.ret(), s, dic, typeTable, clazz);
 
-        assert (returnType != null): "return type `" + func.ret() + "` for " + s + "." + funcName + " is not valid";
+        assert (returnType != null) : "return type `" + func.ret() + "` for " + s + "." + funcName + " is not valid";
         assert (returnType == Type.Void || Value.class.isAssignableFrom(m.getReturnType())) ://check if the return type
                 "return type `" + m.getReturnType() + "' of " + m.getName() + " is not assignable to " + Value.class.getSimpleName() + " and declared return is not void";
 
@@ -263,7 +302,7 @@ public class ExtensionStructHelper {
 
             @Override
             public void run() {
-                functionBodyNoReturn((StructValue) arg0.getValue(),argLength,needPassThisReference,vars,m);
+                functionBodyNoReturn((StructValue) arg0.getValue(), argLength, needPassThisReference, vars, m);
             }
         } : new Stmt() {
             final StackVar arg0 = new StackVar(Word.This, s, 0, 0);
@@ -271,7 +310,7 @@ public class ExtensionStructHelper {
 
             @Override
             public void run() {
-                functionBodyWithReturn((StructValue) arg0.getValue(),argLength,needPassThisReference,vars,returnType,m, retFlag,s);
+                functionBodyWithReturn((StructValue) arg0.getValue(), argLength, needPassThisReference, vars, returnType, m, retFlag, s);
             }
         };
         return new MemberFunction(funcName, returnType, param, s, body);
@@ -287,8 +326,8 @@ public class ExtensionStructHelper {
      * @param <T>       the Type
      * @return the struct
      */
-    public static <T> symbols.Struct buildStructFromClass(Class<T> c,Dictionary dic,TypeTable typeTable,
-                                                          final symbols.Struct s,boolean needDefaultInit){
+    public static <T> symbols.Struct buildStructFromClass(Class<T> c, Dictionary dic, TypeTable typeTable,
+                                                          final symbols.Struct s, boolean needDefaultInit) {
         final Method[] methods = c.getMethods();
 
         for (final Method m : methods) {
@@ -297,12 +336,12 @@ public class ExtensionStructHelper {
                 FunctionBasic f = getMemberFunction(m, c, dic, typeTable, s);
                 if (methodAnnotation.virtual() || methodAnnotation.purevirtual()) {
                     s.defineVirtualFunction(f.getName(), f);
-                    if(methodAnnotation._default()){
-                        assert s.getDefaultFunctionName() == null || s.getDefaultFunctionName() == f.getName():"default function is already set:" + s.getDefaultFunctionName();
+                    if (methodAnnotation._default()) {
+                        assert s.getDefaultFunctionName() == null || s.getDefaultFunctionName() == f.getName() : "default function is already set:" + s.getDefaultFunctionName();
                         s.setDefaultFunctionName(f.getName());
                     }
                 } else {
-                    assert !methodAnnotation._default():"default function should be virtual:" + f.getName();
+                    assert !methodAnnotation._default() : "default function should be virtual:" + f.getName();
                     s.addNaiveFunction(f.getName(), f);
                 }
             }
@@ -323,17 +362,18 @@ public class ExtensionStructHelper {
 
     /**
      * build a struct from class c,c must have a no arg constructor
-     * @see #buildStructFromClass(Class, Dictionary, TypeTable, symbols.Struct, boolean)
+     *
      * @param c         the class
      * @param dic       the dictionary
      * @param typeTable the type table
      * @param name      the struct name
      * @param <T>       the Type
      * @return the struct
+     * @see #buildStructFromClass(Class, Dictionary, TypeTable, symbols.Struct, boolean)
      */
     public static <T> symbols.Struct buildStructFromClass(Class<T> c, Dictionary dic,
                                                           TypeTable typeTable, Token name, boolean needDefaultInit) {
-        return buildStructFromClass(c,dic,typeTable,new symbols.Struct(name),needDefaultInit);
+        return buildStructFromClass(c, dic, typeTable, new symbols.Struct(name), needDefaultInit);
     }
 
 
@@ -359,29 +399,29 @@ public class ExtensionStructHelper {
         final int paraLength = init.param().length;
         final int argLength = paraLength + j;
         final Parameter[] ps = m.getParameters();
-        assert !needPassThisReference || paraLength > 0 && (ps[0].getType() == StructValue.class || ps[0].getType() == Value.class)
+        assert !needPassThisReference || ps.length > 0 && (ps[0].getType() == StructValue.class || ps[0].getType() == Value.class)
                 : "Annotation `" + PassThisReference.class.getSimpleName() + "' requires first parameter to be `" + Value.class.getSimpleName() + "' or `" + StructValue.class.getSimpleName() + "' in " + m;
         assert argLength == m.getParameterCount() : "setBody function for " + s.toString() + "'s parameter length not matched";
         assert !Modifier.isStatic(m.getModifiers());
 
 
         final StackVar[] vars = new StackVar[paraLength];
-        final List<Param> param = checkAndBuildParams(vars,s,m,init.param(),needPassThisReference,typeTable,dic,clazz);
+        final List<Param> param = checkAndBuildParams(vars, s, m, init.param(), needPassThisReference, typeTable, dic, clazz);
 
         return new InitialFunction(Word.This, param, s, new Stmt() {
-                    final StackVar arg0 = new StackVar(Word.This, s, 0, 0);
+            final StackVar arg0 = new StackVar(Word.This, s, 0, 0);
 
-                    @Override
-                    public void run() {
-                        StructValue s1 = (StructValue) arg0.getValue();
-                        try {
-                            s1.setExtension(clazz.newInstance());
-                        } catch (InstantiationException | IllegalAccessException e) {
-                            throw new RuntimeException(e);
-                        }
-                        functionBodyNoReturn(s1,argLength,needPassThisReference,vars,m);
-                    }
-                });
+            @Override
+            public void run() {
+                StructValue s1 = (StructValue) arg0.getValue();
+                try {
+                    s1.setExtension(clazz.newInstance());
+                } catch (InstantiationException | IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+                functionBodyNoReturn(s1, argLength, needPassThisReference, vars, m);
+            }
+        });
     }
 
     /**

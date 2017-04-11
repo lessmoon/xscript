@@ -11,13 +11,12 @@ public class extime extends extension.Struct {
      * return the struct defined by the java code
      */
     @Override
-    public Struct setup(Token sname, Dictionary dic, TypeTable typeTable) {
+    public Struct setup(Struct s, Dictionary dic, TypeTable typeTable) {
        /*
          * struct {
          *      def virtual void callback(int id);
          * }
          */
-        final symbols.Struct s = new symbols.Struct(sname);
         Token  mname1 = dic.getOrReserve("hour"),
                mname2 = dic.getOrReserve("minute"),
                mname3 = dic.getOrReserve("second");

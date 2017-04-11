@@ -3,14 +3,15 @@
 ### Keyword List: ###
 <table>
 <tr><td>_file_</td><td>_line_</td><td>_version_</td><td>bigint</td><td>bigreal</td></tr>
-<tr><td>bool</td><td>break</td><td>case</td><td>char</td><td>continue</td></tr>
-<tr><td>def</td><td>default</td><td>do</td><td>else</td><td>false</td></tr>
-<tr><td>for</td><td>if</td><td>import</td><td>instanceof</td><td>int</td></tr>
-<tr><td>native</td><td>new</td><td>null</td><td>override</td><td>real</td></tr>
-<tr><td>return</td><td>sizeof</td><td>string</td><td>struct</td><td>super</td></tr>
-<tr><td>switch</td><td>this</td><td>true</td><td>virtual</td><td>while</td></tr>
-<tr></tr>
+<tr><td>bool</td><td>break</td><td>case</td><td>char</td><td>const</td></tr>
+<tr><td>continue</td><td>def</td><td>default</td><td>do</td><td>else</td></tr>
+<tr><td>false</td><td>for</td><td>if</td><td>import</td><td>instanceof</td></tr>
+<tr><td>int</td><td>native</td><td>new</td><td>null</td><td>override</td></tr>
+<tr><td>real</td><td>return</td><td>sizeof</td><td>string</td><td>struct</td></tr>
+<tr><td>super</td><td>switch</td><td>this</td><td>true</td><td>virtual</td></tr>
+<tr><td>while</td></tr>
 </table>
+
 
 
 ### Basic Types: ###
@@ -156,7 +157,8 @@
 * Load extension
 	1. native\<package-name\>{
 	2. &emsp;["class-name":]return-type func-name ( [param-type param-name,...] );***load extension functions***
-	3. &emsp;["class-name":]struct something{
+	3. &emsp;["class-name":]struct struct-name; ***extension struct pre-declaration***
+	4. &emsp;["class-name":]struct struct-name{
 	4. &emsp;&emsp;def this(param-list);***function declarations(not necessary,but check the correctness)***
 	4. &emsp;};
 	5. }
@@ -202,7 +204,7 @@
 	      
 	* Variable declaration
 		- Basic-type var-name\[,...] (var-name must begin with one of [a-zA-Z_])
-		- Basic-type var-name = initial-value\[,...](with initial-value)
+		- [const] Basic-type var-name = initial-value\[,...](with initial-value)
 		- Basic-type []... var-name\[,...](for array declaration)
 	* Constant:
 		- `int`:only decimal integer is supported(ends with '**i**' or less than IntMax)
@@ -215,6 +217,7 @@
 		- `null`:used for array and struct
 	* Dynamic array allocation:
 		- `new` type [expression];***expression should be integer***
+		- `new` type[]{ **init-list** };***array with initialization***
 		- `new` struct-type;***struct has no defined initial functions***
 		- `new` struct-type([argument,...]);***struct has a defined initial function***
 	* Array size getter:(return an integer)

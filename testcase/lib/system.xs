@@ -64,8 +64,6 @@ def string readString(){
     return l.toString();
 }
 
-
-
 struct Timer{
     def void start();
     def void pause();
@@ -108,3 +106,10 @@ def void Timer.clear(){
     this.duration = 0;
 }
 
+import"../reflection/reflect.xs";
+
+auto cThread = new JNClass("java.lang.Thread");
+auto mSleep = cThread.getMethod("sleep",new JNClass[]{new JNClass("long")});
+def void reflectSleep(int i){
+    mSleep.invoke(jnObject.Null(),new JNObject[]{jnObject.newLong(i)});
+}
