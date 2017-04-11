@@ -16,7 +16,7 @@ import java.io.IOException;
 
 public class Main{
     public static final int     MAJOR_VERSION       = 2;
-    public static final int     MINOR_VERSION       = 0;
+    public static final int     MINOR_VERSION       = 1;
 
     private static void usage(){
         System.out.println(
