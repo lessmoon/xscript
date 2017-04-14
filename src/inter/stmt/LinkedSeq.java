@@ -25,8 +25,9 @@ public class LinkedSeq extends Stmt {
         stmts.add(s);
     }
 
-    public void append(Stmt s) {
+    public LinkedSeq append(Stmt s) {
         s.appendToSeq(this);
+        return this;
     }
 
     /**

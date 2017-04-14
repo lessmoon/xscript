@@ -8,6 +8,26 @@ def int abs(int a){
     return a > 0? a : -a;
 }
 
+def int square(int a){
+    return a * a;
+}
+
+def bigreal sqrt(bigreal n){
+    bigreal a = n/2;
+    for(int i = 0;i < 40;i++){
+        a = (n/a+a)/2;
+    }
+    return a;
+}
+
+def int max(int a,int b){
+    return a > b? a:b;
+}
+
+def int min(int a,int b){
+    return a < b?a:b;
+}
+
 //def int srand(int v){
 //    return RAND_SEED = v;
 //}

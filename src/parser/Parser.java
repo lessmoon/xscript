@@ -1323,11 +1323,11 @@ public class Parser implements TypeTable {
         InPipe in = new InPipe(arrdefine);
         OutPipe out = new OutPipe(in);
         if (!init_list.isEmpty()) {
-            initseq = new inter.expr.Set(Word.ass, new ArrayVar(out, p, new Value(0)), init_list.get(0));
+            initseq = new inter.expr.Set(Word.assign, new ArrayVar(out, p, new Value(0)), init_list.get(0));
         }
 
         for (int i = 1; i < init_list.size(); i++) {
-            initseq = new SeqExpr(Word.array, initseq, new inter.expr.Set(Word.ass, new ArrayVar(out, p, new Value(i)), init_list.get(i)));
+            initseq = new SeqExpr(Word.array, initseq, new inter.expr.Set(Word.assign, new ArrayVar(out, p, new Value(i)), init_list.get(i)));
         }
         //for each initseq
         return initseq == Value.Null ? arrdefine : new SeqExpr(Word.array, in, initseq);
@@ -1884,16 +1884,10 @@ public class Parser implements TypeTable {
 
     private void generateCaptures(Struct savedDStruct, Set<Token> savedCaptures, int savedLastFunctionLevel,
                                   boolean savedIsInLambda) {
-        symbols.Struct base = dStruct.getBaseStruct();
-        if (dStruct.getInitialFunction() == null) {
-            dStruct.defineInitialFunction(base.getInitialFunction());
-        }
 
-        if (dStruct.getInitialFunction() == null && !capturedVars.isEmpty()) {
-            dStruct.defineInitialFunction(new InitialFunction(Word.This, Collections.singletonList(new Param(dStruct, Word.This)), dStruct, new LinkedSeq()));
-        }
+
         if (!capturedVars.isEmpty()) {
-            InitialFunction init = (InitialFunction) dStruct.getInitialFunction();
+
             LinkedSeq body = new LinkedSeq();
             final Var arg0 = new StackVar(Word.This, dStruct, 0, 0);
 
@@ -1916,11 +1910,11 @@ public class Parser implements TypeTable {
 
                         EnvEntry outerThis_ = top.get(savedIsInLambda ? Word.HiddenThis : Word.This);
 
-                        body.append(new ExprStmt(new inter.expr.Set(Word.ass,
+                        body.append(new ExprStmt(new inter.expr.Set(Word.assign,
                                 new StructMemberAccess(arg0, identifier),
                                 new StructMemberAccess(new StackVar(Word.This, savedDStruct, top.level - outerThis_.stacklevel + 1, outerThis_.offset), identifier).readOnly())));
                     } else {//the recursive exit gate
-                        body.append(new ExprStmt(new inter.expr.Set(Word.ass,
+                        body.append(new ExprStmt(new inter.expr.Set(Word.assign,
                                 new StructMemberAccess(arg0, identifier),
                                 //NOTE : this code is running in an initial function so we need add an extra level
                                 new StackVar(name, ee.type, top.level - ee.stacklevel + 1, ee.offset).readOnly())));
@@ -1928,9 +1922,39 @@ public class Parser implements TypeTable {
                 }
             }
 
-            body.append(init.getBody());
-            init.setBody(body);
+            InitialFunction init = (InitialFunction) dStruct.getInitialFunction();
+
+            if(init == null){
+                symbols.Struct base = dStruct.getBaseStruct();
+                InitialFunction baseInit = (InitialFunction) base.getInitialFunction();
+                if(baseInit != null){//inherit from base struct
+                    init = new InitialFunction(Word.This,baseInit.getParamList(),dStruct);
+
+                    final List<Expr> args = new ArrayList<>();
+                    int i = 0;
+                    for (Param param : baseInit.getParamList()) {
+                        args.add(new StackVar(param.name, param.type, 0,i++));
+                    }
+                    final LinkedSeq fbody = new LinkedSeq();
+                    fbody.append(new ExprStmt(new FunctionInvoke(baseInit,args)))//super(args)
+                         .append(body);//captures
+                    init.setBody(fbody);
+                } else {//define a initialization function to deal with captures
+                    init = new InitialFunction(Word.This, Collections.singletonList(new Param(dStruct, Word.This)), dStruct, body);
+                }
+                dStruct.defineInitialFunction(init);
+            } else {//captures
+                init.setBody(body.append(init.getBody()));
+            }
             printFunctionDefinition(init, body);
+        } else {//No captures here
+            if (dStruct.getInitialFunction() == null) {//reuse the base's initial function
+                symbols.Struct base = dStruct.getBaseStruct();
+                FunctionBasic i = base.getInitialFunction();
+                if (i != null) {
+                    dStruct.defineInitialFunction(i);
+                }
+            }
         }
     }
 

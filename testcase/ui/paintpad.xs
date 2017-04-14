@@ -80,6 +80,11 @@ struct Point{
         this.y = y;
     }
 
+    @string
+    def string toString(){
+        return "[" + this.x + "," + this.y + "]";
+    }
+    
     @+
     def Point add(Point p){
         return new Point(this.x + p.x,this.y + p.y);
@@ -88,6 +93,10 @@ struct Point{
     @-
     def Point sub(Point p){
         return new Point(this.x - p.x,this.y - p.y);
+    }
+
+    def int dot(Point p){
+        return p.x*this.x + p.y*this.y;
     }
 }
 
@@ -339,6 +348,52 @@ struct Button{
 }
 
 struct Region{
+    def virtual bool contains(Point p);
+    def virtual bool isCollisionWith(Region b){
+        return false;
+    }
+    
+    @string
+    def virtual string toString(){
+        return "";
+    }
+}
+
+struct RoundRegion : Region{
+    Point o;
+    int   radius;
+    
+    def this(Point o,int radius){
+        this.o = o;
+        this.radius = radius;
+    }
+
+    def override bool contains(Point p){
+        int x = p.x - this.o.x;
+        int y = p.y - this.o.y;
+        return x*x + y*y <= this.radius * this.radius;
+    }
+    
+    def override bool isCollisionWith(const Region b){
+        if(b instanceof RoundRegion){
+            const auto c = (RoundRegion) b;
+            auto o_x = c.o.x - this.o.x;
+            auto o_y = c.o.y - this.o.y;
+            auto o_x_2 = o_x * o_x;
+            auto o_y_2 = o_y * o_y;
+            const auto r  = c.radius + this.radius;
+            return  o_x_2 + o_y_2 <= r * r;
+        }
+        return b.isCollisionWith(this);
+    }
+    
+    @string
+    def override string toString(){
+        return "round" + this.o.toString() + ":" + this.radius;
+    }
+}
+
+struct RectRegion : Region{
     Point o;
     int width,height;
 
@@ -348,10 +403,48 @@ struct Region{
         this.height = height;
     }
     
-    def bool contains(Point p){
+    def override bool contains(Point p){
         Point o = this.o;
         return p.x >= o.x && p.x <= o.x + this.width
                 && p.y >= o.y && p.y <= o.y+ this.height;
+    }
+    
+    def override bool isCollisionWith(const Region b){
+        if(b instanceof RectRegion){
+            const auto h = (RectRegion) b;
+            const auto x1 = this.o.x,x2 = h.o.x,
+                       x1_ = this.o.x + this.width,x2_ = this.o.x + h.width,
+                       y1 = this.o.y,y2 = h.o.y,
+                       y1_ = this.o.y + this.height,y2_ = this.o.y + h.height;
+            
+            return !(x1 > x2_ || x2 > x1_||y1 > y2_ || y2 > y1_);
+        } else if (b instanceof RoundRegion){
+            const auto h    = (RoundRegion) b;
+            const auto x1   = this.o.x,
+                       x1_  = this.o.x + this.width,
+                       y1   = this.o.y,
+                       y1_  = this.o.y + this.height;
+            auto p = new Point(h.o.x,h.o.y);           
+            p.x = abs(2*p.x-(x1+x1_));
+            p.y = abs(2*p.y-(y1+y1_));
+            p = p.sub(new Point(this.width,this.height));
+            if(p.x < 0){
+                p.x = 0;
+            }
+
+            if(p.y < 0){
+                p.y = 0;
+            }
+
+            return p.x * p.x + p.y * p.y <= 4 * h.radius * h.radius;
+        } else {
+            return b.isCollisionWith(this);
+        }
+    }
+    
+    @string
+    def override string toString(){
+        return "rectangle" + this.o.toString() + ":" + this.width + "," + this.height;
     }
 }
 
@@ -413,6 +506,52 @@ struct Calculator:PaintPad{
     }
 }
 
+import "../math/Math.xs";
+
+if(_isMain_){
+    
+    const auto width =600,height = 800;
+    
+    const auto x = new PaintPad("region",width,height){
+        int i;
+        Point p;
+        Region r;
+
+        def this(string title,int width,int height){
+            super(title,width,height);
+            this.i = 0;
+        }
+
+        def override void onMouseClick(int bid,int x,int y){
+            switch(this.i){
+            case  0:
+                this.p = new Point(x,y);
+                this.addPoint(x,y);
+                break;
+            case  1:
+                addRect(this,x,y,this.p.x - x, this.p.y - y);
+                this.r = new RectRegion(new Point(min(x,this.p.x),min(this.p.y,y)),abs(this.p.x - x), abs(this.p.y - y));
+                break;
+            case  2:
+                this.p = new Point(x,y);
+                this.addPoint(x,y);
+                break;
+            case  3:
+                Point r = new Point(x,y).sub(this.p);
+                const int radius = sqrt(r.dot(r));
+                this.addCircle(this.p.x - radius,this.p.y - radius,radius * 2);
+                println("isCollisionWith:"+this.r.isCollisionWith(new RoundRegion(this.p,radius)));
+                break;
+            }
+            this.redraw();
+            this.i ++;
+            this.i %= 4;
+        }
+    };
+    x.show();
+    x.wait();
+}
+
 
 /*
  *    _____
@@ -422,8 +561,7 @@ struct Calculator:PaintPad{
  *   |_|_|_|
  *   |_|_|_|
  */
-/*
-{
+if(_isMain_){
     Graphics g = new Graphics;
     EventPool ep = new EventPool();
     Screen scr = new Screen();
@@ -444,15 +582,15 @@ struct Calculator:PaintPad{
        switch(i%4){
        case 0:
         o = o + new Point(0,20);
-        ep.addListener(new Region(new Point(o.x,o.y),20,20),bs[i]);
+        ep.addListener(new RectRegion(new Point(o.x,o.y),20,20),bs[i]);
         break;
        case 1:case 2:
         o = o + new Point(20,0);
-        ep.addListener(new Region(new Point(o.x,o.y),20,20),bs[i]);
+        ep.addListener(new RectRegion(new Point(o.x,o.y),20,20),bs[i]);
         break;
        case 3:
         o = o + new Point(20,0);
-        ep.addListener(new Region(new Point(o.x,o.y),20,20),bs[i]);
+        ep.addListener(new RectRegion(new Point(o.x,o.y),20,20),bs[i]);
         o = o + new Point(-60,0);
         break;
        }
@@ -484,4 +622,4 @@ struct Calculator:PaintPad{
     //g.show();
     //g.draw();
     //g.wait();
-}*/
+}

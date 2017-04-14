@@ -28,7 +28,6 @@ native<extension.reflection>{
         def bool equals(JNClass type);
         def bool isAssignableFrom(JNClass type);
         def bool isInstance(JNObject object);
-        def JNClass 
     };
 
     struct JNMethod{

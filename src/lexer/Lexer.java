@@ -284,7 +284,7 @@ public class Lexer implements Dictionary {
                 if(readch('='))
                     return Word.eq;
                 else
-                    return Word.ass;
+                    return Word.assign;
             case '!':
                 if(readch('='))
                     return Word.ne;
