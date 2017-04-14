@@ -33,6 +33,8 @@ struct Stream{
     def Stream sort(Comparator c);
     def Stream skip(int c);
     def Stream reverse();
+    def bool anyMatch(Consumer c);
+    def bool allMatch(Consumer c);
 }
 
 struct TransformStream:Stream{
@@ -92,6 +94,26 @@ def void Stream.forEach(Consumer action){
     while((c = this.next()) != null){
         action(c.getValue());
     }
+}
+
+def bool Stream.anyMatch(Consumer action){
+    Iterator c;
+    while((c = this.next()) != null){
+        if((bool)(BoolContent)action(c.getValue())){
+            return true;
+        }
+    }
+    return false;
+}
+
+def bool Stream.allMatch(Consumer action){
+    Iterator c;
+    while((c = this.next()) != null){
+        if(!(bool)(BoolContent)action(c.getValue())){
+            return false;
+        }
+    }
+    return true;
 }
 
 def int Stream.count(){

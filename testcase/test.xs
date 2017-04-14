@@ -9,6 +9,7 @@ import  "container/hashmap.xs";
 import  "container/priorityqueue.xs";
 import  "ui/paintpad.xs";
 import  "ui/cyclepaintpad.xs";
+import  "ui/uicomponent.xs";
 import  "rpg/parser.xs";
 import  "reflection/reflect.xs";
 import  "lib/keymap.xs";
@@ -1354,10 +1355,6 @@ def int printarray(int[] arr,int len){
     f.close();
 }
 
-def int max(int a,int b){
-    return a>b?a:b;
-}
-
 def string trim(string str){
     string result = "";
     int len = strlen(str);
@@ -1380,14 +1377,6 @@ def bool is_prime(int n){
         }
     }
     return true;
-}
-
-def bigreal sqrt(bigreal n){
-    bigreal a = n/2;
-    for(int i = 0;i < 40;i++){
-        a = (n/a+a)/2;
-    }
-    return a;
 }
 
 def int string2int(string s){
