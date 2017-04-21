@@ -35,7 +35,7 @@ public class SimpleFont extends Struct {
 
         @Init(param = {"string","int","int"})
         public void init(Value str, Value style, Value size){
-            font = new Font(str.valueAs(String.class),style.valueAs(int.class),size.valueAs(int.class));
+            font = new Font(str.valueAs(String.class),style.valueAs(Integer.class),size.valueAs(Integer.class));
         }
 
         @StructMethod(ret = "string")

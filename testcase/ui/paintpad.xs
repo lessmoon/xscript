@@ -31,7 +31,10 @@ native<extension.ui>{
         def void redraw();
         def bool setPoint(int id,int x,int y);
         def bool setStringColor(int id);
+        def bool setStringFont(int id);
         def void setFont(Font font);
+        def int getFontHeight();
+        def int stringWidth(string str);
         def bool setCircle(int id,int x,int y);
         //virtual functions
         def virtual void onMouseClick(int bid,int x,int y);
@@ -461,6 +464,23 @@ struct PairContent : Content{
         return "";
     }
 }
+
+/**
+ * The plain style constant.
+ */
+const int FONT_PLAIN = 0;
+
+/**
+ * The bold style constant.  This can be combined with the other style
+ * constants (except PLAIN) for mixed styles.
+ */
+const int FONT_BOLD = 1;
+
+/**
+ * The italicized style constant.  This can be combined with the other
+ * style constants (except PLAIN) for mixed styles.
+ */
+const int FONT_ITALIC = 2;
 
 struct EventPool{
     DynamicArray eps ;

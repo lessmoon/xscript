@@ -186,6 +186,11 @@ public class PaintPadX extends Struct {
             return Value.valueOf(imp.setPoint(id.valueAs(Integer.class),x.valueAs(Integer.class),y.valueAs(Integer.class)));
         }
 
+        @StructMethod(param = {"int"}, ret = "bool")
+        public Value setStringFont(Value id) {
+            return Value.valueOf(this.imp.setStringFont(id.valueAs(Integer.class)));
+        }
+
         @StructMethod
         public void clearString(){
             imp.clearStrings();

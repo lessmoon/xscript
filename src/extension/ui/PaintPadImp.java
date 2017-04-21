@@ -177,7 +177,7 @@ public abstract class PaintPadImp extends JFrame {
     private final List<Item> itemList = Collections.synchronizedList(new ArrayList<>());
     private final List<StringItem> stringItemList = Collections.synchronizedList(new ArrayList<>());
     private final List<CircleItem> circleItemList = Collections.synchronizedList(new ArrayList<>());
-    
+
     private Color brushColor = Color.BLACK;
     private Font font = this.getFont();
 
@@ -206,6 +206,7 @@ public abstract class PaintPadImp extends JFrame {
 
 
         JPanel jp = new JPanel() {
+            @Override
             public void paint(Graphics g) {
                 synchronized (this) {
                     super.paint(g);

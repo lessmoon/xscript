@@ -17,6 +17,9 @@ struct UIGraphic{
     def virtual void redraw();
     def virtual bool setPoint(int id,int x,int y);
     def virtual bool setStringColor(int id);
+    def virtual void setFont(Font t);
+    def virtual Font getFont();
+    def virtual bool setStringFont(int id);
     def virtual bool setCircle(int id,int x,int y);
 }
 
@@ -99,6 +102,16 @@ struct UIGraphicProxy:UIGraphic{
         return this.graphic.setStringColor(id);
     }
 
+    def override void setFont(Font t){
+        this.graphic.setFont(t);
+    }
+    def override Font getFont(){
+        return this.graphic.getFont();
+    }
+    def override bool setStringFont(int id){
+        return this.graphic.setStringFont(id);
+    }
+    
     def override bool setCircle(int id,int x,int y){
         return this.graphic.setCircle(id,x,y);
     }
@@ -322,10 +335,11 @@ struct UIComponentContainer:UIComponent{
         this.container = new List(); 
     }
 
-    def void addComponent(UIComponent p,Point offset){
+    def UIComponentContainer addComponent(UIComponent p,Point offset){
         p.base = this;
         p.offset = offset;
         this.container.add(new UIComponentContent(p,offset));
+        return this;
     }
 
     def override void drawImpl(const UIGraphic p){
@@ -339,14 +353,14 @@ struct UIComponentContainer:UIComponent{
         this.container.stream()
         .filter(new Consumer^(c) -> new BoolContent(((UIComponentContent)c).component.contains(p)))
         .forEach(new Consumer^(c) -> {
-            new Future(new AsyncRunnable(){
-                def override Content get(){
+            //new Future(new AsyncRunnable(){
+                //def override Content get(){
                     ((UIComponentContent)c).component.onMouseClick(bid,p);
-                }
-            });
+                //}
+            //});
         });
     }
-
+    
     def override bool isCollisionWith(const UIComponent p){
         return this.container.stream().anyMatch(new Consumer^(c)->new BoolContent(((UIComponentContent)c).component.isCollisionWith(p)));
     }
@@ -443,6 +457,50 @@ struct UIRoundComponent:UIComponent{
     }
 }
 
+struct UITextComponent:UIComponent{
+    string  text;
+    int     id;
+    Point   pos;
+    Font    font;
+
+    def this(string text,Point pos){
+        super(null);
+        this.text = text;
+        this.id = -1;
+        this.pos = pos;
+        this.font = null;
+    }
+
+    def void setFont(Font f){
+        this.font = f;
+    }
+    
+    def override void drawImpl(UIGraphic p){
+        Font tmp = p.getFont();
+        //const auto height = p.getFontHeight();
+        //const auto width = p.stringWidth(this.text);
+        //println("text is `" + this.text + "`:" + width + "x" + height);
+        if(this.font != null){
+            p.setFont(this.font);
+        }
+        if(this.id < 0){
+            this.id = p.addString(this.text,this.pos.x,this.pos.y);
+        } else {
+            p.setStringPosition(this.id,this.pos.x,this.pos.y);
+            p.setString(this.id,this.text);
+            p.setStringColor(this.id);
+            p.setStringFont(this.id);
+        }
+        if(this.font != null){
+            p.setFont(tmp);
+        }
+    }
+
+    def override bool isCollisionWith(UIComponent p){
+        return false;
+    }
+}
+
 struct PaintPadGraphic : UIGraphic{
     PaintPad pad;
     //init function
@@ -502,9 +560,23 @@ struct PaintPadGraphic : UIGraphic{
     def override bool setPoint(int id,int x,int y){
         return this.pad.setPoint(id,x,y);
     }
+    
     def override bool setStringColor(int id){
         return this.pad.setStringColor(id);
     }
+    
+    def override void setFont(Font t){
+        this.pad.setFont(t);
+    }
+    
+    def override Font getFont(){
+        return this.pad.getFont();
+    }
+    
+    def override bool setStringFont(int id){
+        return this.pad.setStringFont(id);
+    }
+    
     def override bool setCircle(int id,int x,int y){
         return this.pad.setCircle(id,x,y);
     }
@@ -517,7 +589,6 @@ struct PaintPadGraphic : UIGraphic{
         this.pad.show();
     }
 };
-
 
 struct UIBaseComponent:UIComponentContainer{
     PaintPadGraphic g;
@@ -533,6 +604,7 @@ struct UIBaseComponent:UIComponentContainer{
     
     def override void onMouseClick(int bid,Point p){
         super.onMouseClick(bid,p);
+        println("clicked"+p);
         this.draw(this.g);
         this.g.redraw();
     }
@@ -548,8 +620,74 @@ struct UIBaseComponent:UIComponentContainer{
 }
 
 if(_isMain_){
-    auto c = new UIBaseComponent("test",600,800);
+    const auto scr = new UITextComponent("0",new Point(0,0));
 
+
+    const char[][] button = {{'C','(',')','/'},
+                             {'7','8','9','*'},
+                             {'4','5','6','-'},
+                             {'1','2','3','+'},
+                             {'-','0','.','='}};
+    const auto c = new UIBaseComponent("Calculator",sizeof button * 100 + 102,sizeof button[0] * 100 + 2);
+    const auto f = c.g.getFont();
+    scr.setFont(new Font("Times New Roman",FONT_ITALIC,32));
+    c.addComponent(scr,new Point(50,60));
+    c.addComponent(new UIRectComponent(new Point(0,0),380,80),new Point(10,10));
+    const bool[] isFirst = {true};
+    const string[] buff = {""};
+    for(int j = 0; j < sizeof button; j++){
+        for(int i =0; i < sizeof button[j]; i++){
+            const auto b = button[j][i];
+            auto h = new UITextComponent("" + b,new Point(i*100,0));
+            h.setFont(new Font(f.getFontName(),FONT_PLAIN,32));
+            c.addComponent(h,new Point(40,j*100+160));
+            
+            c.addComponent(new UIRectComponent(new Point(i*100,0),100,100){
+                def override void onMouseClick(const int bid,const Point p){
+                    if(b == 'C'){
+                        scr.text = "0";
+                        buff[0] = "";
+                        isFirst[0] = true;
+                        return;
+                    } else if( b == '='){
+                        parser p = new parser;
+                        lexer l = new lexer;
+                        l.init(buff[0]);
+                        p.init(l);
+                        scr.text = (string)p.expr().getValue();
+                        isFirst[0] = true;
+                        return;
+                    }
+                    if(isFirst[0]){
+                        scr.text = "0";
+                        isFirst[0] = false;
+                        buff[0] = "";
+                    }
+                    
+                    println("WHAT?-->" + p);
+                    this.setColor(new Color(rand()%255,rand()%255,rand()%255));
+                    buff[0] += b;
+                    int len = strlen(buff[0]);
+                    if(len > 19){
+                        scr.text = "";
+                        for(int i = len - 19;i < len;i++){
+                            scr.text += buff[0][i];
+                        }
+                    } else {
+                        scr.text = buff[0];
+                    }
+                    
+                }
+            },new Point(0,j*100+100));
+        }
+    }
+    c.show();
+    c.wait();
+}
+
+if(_isMain_){
+    auto c = new UIBaseComponent("test",600,800);
+    
     c.addComponent(new UIRectComponent(new Point(200,200),100,100){
         def override void onMouseClick(const int bid,const Point p){
             this.setColor(new Color(rand()%255,rand()%255,rand()%255));

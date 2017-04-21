@@ -49,7 +49,7 @@ struct Trigger {
 }
 
 struct Condition{
-    def virtual bool isTrue();
+    def default virtual bool isTrue();
 }
 
 struct Schedule : Runnable{
@@ -145,6 +145,7 @@ struct AtomicInteger{
         return res;
     }
 
+    //wait util the value is greater than param `min`(excluding min)
     def void waitAndDecrement(int min){
         do{
             this.lock.wait();
@@ -159,14 +160,16 @@ struct AtomicInteger{
         }while(true);
     }
     
+    //wait util the value is less than param `max`(excluding max)
+    //then increment it
     def void waitAndIncrement(int max){
         do{
             this.lock.wait();
             if(this.value < max){
-               ++ this.value;
-               this.n.triggerAll();
-            this.lock.release();
-            return;
+                ++ this.value;
+                this.n.triggerAll();
+                this.lock.release();
+                return;
             }
             this.lock.release();
             this.n.wait();

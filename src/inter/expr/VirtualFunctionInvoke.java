@@ -104,7 +104,7 @@ public class VirtualFunctionInvoke extends Expr {
         int i = 0;
         for(Value c : args){
             if(IS_DEBUG){
-                System.out.println("\narg[" + i + "]{" + this.args.get(i) + "} = " + c + "<->" + c.hashCode());
+                System.out.println("\narg[" + i + "]{" + (i==0?expr:this.args.get(i-1)) + "} = " + c + "<->" + c.hashCode());
                 i++;
             }
             VarTable.pushVar(c);
