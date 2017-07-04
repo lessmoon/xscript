@@ -1,6 +1,6 @@
 import "content.xs";
 
-struct HashPair{
+struct HashPair:Content{
     HashContent key;
     Content value;
     
@@ -10,7 +10,7 @@ struct HashPair{
     }
     
     @string
-    def string toString(){
+    def override string toString(){
         return "[" + this.key + ":" + this.value + "]";
     } 
 }
@@ -34,6 +34,7 @@ struct HashMap{
     int size;
     int capcity;
     HashMapNode[] map;
+    
     
     def this(){
         this.size = 0;
@@ -78,7 +79,7 @@ struct HashMap{
         if(this.size > 0.75 * this.capcity){
             this.rehash(2*this.capcity);
         }
-        
+
         return null;
     }
 
@@ -143,6 +144,16 @@ struct HashMap{
         }
         buf.append("}");
         return buf.toString();
+    }
+    
+    def Iterator iterator(){
+        Sequence s = new List();
+        for(int i = 0; i < this.capcity;i++){
+            for(auto p = this.map[i];p != null;p = p.next){
+                s.add(p.value);
+            }
+        }
+        return s.iterator();
     }
 }
 

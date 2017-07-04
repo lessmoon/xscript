@@ -1,15 +1,27 @@
 native<extension.util>{
-    "StringBufferX":struct StringBuffer{
+    "StringBufferX":struct StringBufferX{
         def this();
-        def StringBuffer append(string str);
-        def StringBuffer appendCharacter(char c);
-        def StringBuffer delete(int beg,int end);
-        def StringBuffer insert(int beg,string str);
-        def StringBuffer reverse();
-        def StringBuffer setCharAt(int index,char c);
+        def StringBufferX append(string str);
+        def StringBufferX appendCharacter(char c);
+        def StringBufferX delete(int beg,int end);
+        def StringBufferX insert(int beg,string str);
+        def StringBufferX reverse();
+        def StringBufferX setCharAt(int index,char c);
         def void reserve(int size);
         def string toString();
     };
+}
+
+struct StringBuffer:StringBufferX{
+    def this(){
+        super();
+    }
+    
+    def StringBufferX repeatCharacter(char c, int count){
+        while(count-->0){
+            this.append(c);
+        }
+    }
 }
 
 native<extension.util>{
@@ -26,6 +38,10 @@ def bool isEndLine(char c){
 
 def bool isBlank(char c){
     return c==' '||isEndLine(c);
+}
+
+def bool isAlphaBeta(char c){
+    return (c <= 'z' && c >= 'a') || (c <= 'Z' && c >= 'A');
 }
 
 import"system.xs";

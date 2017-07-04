@@ -13,6 +13,7 @@ import  "ui/uicomponent.xs";
 import  "rpg/parser.xs";
 import  "reflection/reflect.xs";
 import  "lib/keymap.xs";
+import  "parser/json.xs";
 
 struct ScrollTextOutput{
     PaintPad x;
@@ -133,6 +134,19 @@ struct derive:base{
     r.registerFunction("time",new RPGTime);
     r.open("test");
     //r.run();
+}
+
+{
+    auto fio = new FileInputStream(new SimpleFile("test.json"));
+    auto l = new JSONLexer(new CharInputStream(){
+        def override int next(){
+            return fio.readChar();
+        }
+    });
+
+    auto p = new JSONParser(l);
+    println(p.parse());
+    fio.close();
 }
 
 int[] r = {3243,545};
