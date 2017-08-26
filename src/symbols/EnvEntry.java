@@ -20,4 +20,14 @@ public class EnvEntry {
     public EnvEntry(Type t,int sl,int o){
         this(t,sl,o,false, null);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("[").append(offset).append("]").append(type);
+        if(isReadOnly){
+            sb.append("[O]");
+        }
+        return sb.toString();
+    }
 }

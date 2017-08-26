@@ -1,6 +1,10 @@
 package runtime;
 
 import inter.expr.Value;
+import lexer.Token;
+import symbols.Env;
+import symbols.EnvEntry;
+import symbols.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +30,9 @@ public enum VarTable {
     static final boolean IS_DEBUG = false;
     static final private List<ConstantReference> globalTable = new ArrayList<>();
     static final private ThreadLocal<Stack<List<ConstantReference>>> table = ThreadLocal.withInitial(Stack::new);
+    static final private ThreadLocal<Env> env = new ThreadLocal<>();
+    static final private Env global = new Env();
+    static boolean NEED_DEBUG = false;
 
     static private int levels(VarTable r){
         return 1;//r.prev==null?1:levels(r.prev) + 1;
@@ -41,8 +48,16 @@ public enum VarTable {
         return arr;
     }
 
+    static public void enableDebug(){
+        NEED_DEBUG = true;
+    }
+
     static public void popTop(){
         table.get().pop();
+        if(NEED_DEBUG){
+            assert env.get() != null;
+            env.set(env.get().getPrev());
+        }
         ///*
         if(IS_DEBUG){
             for(int i = 0 ; i < table.get().size() ; i++)
@@ -52,6 +67,9 @@ public enum VarTable {
     }
 
     static public void pushTop(){
+        if(NEED_DEBUG){
+            env.set(env.get()==null?new Env():new Env(env.get()));
+        }
         ///*
         if(IS_DEBUG){
             for(int i = 0 ; i < table.get().size() ; i++)
@@ -74,6 +92,16 @@ public enum VarTable {
             globalTable.add(new ConstantReference(v));
         } else {
             table.get().peek().add(new ConstantReference(v));
+        }
+    }
+
+    static public void defVar(Token name, Type t){
+        if(NEED_DEBUG){
+            if (table.get().empty()) {
+                global.put(name,t);
+            } else {
+                env.get().put(name,t);
+            }
         }
     }
 
@@ -116,5 +144,21 @@ public enum VarTable {
         }//*/
         List<ConstantReference> c = sl == 0 ? globalTable:table.get().get( sl - 1 );
         return c.get(offset).setValue(v);
+    }
+    static public EnvEntry getVarInfo(Token t){
+        if( env.get() != null){
+            EnvEntry e = env.get().get(t);
+            if(e != null){
+                return new EnvEntry(e.type,e.stacklevel + 1 ,e.offset,e.isReadOnly,e.initValue);
+            }
+        }
+        return global.get(t);
+    }
+    static public void printVarInfo() {
+        if(env.get() != null){
+            System.out.println(env.get().toString(1));
+        }
+        System.out.print("[G]");
+        System.out.println(global.toString(0));
     }
 }

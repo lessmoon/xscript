@@ -22,5 +22,6 @@ public class ArrayDecl extends Decl {
     @Override
     public void run(){
         VarTable.pushVar(value.getValue());
+        VarTable.defVar(id,type);
     }
 }

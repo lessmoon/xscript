@@ -3,11 +3,18 @@ package symbols;
 import inter.expr.Value;
 import lexer.Token;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Env {
     private     Map<Token,EnvEntry> table;
+
+    public Env getPrev() {
+        return prev;
+    }
+
     private final Env prev;
     public  final int level;
     public Env(Env n){
@@ -44,5 +51,20 @@ public class Env {
      */
     public boolean containsVar(Token w){
         return table.containsKey(w);
+    }
+
+    public String toString(final int offset) {
+        StringBuilder sb = new StringBuilder();
+        for (Env x = this; x != null ; x = x.prev) {
+            sb.append(x.level + offset).append(":{\n");
+            String collect = x.table.entrySet().stream()
+                    .sorted(Comparator.comparingInt(a -> a.getValue().offset))
+                    .map(e -> "[" + e.getValue().offset + "]: " + e.getKey() + "<" + e.getValue().type + ">")
+                    .collect(Collectors.joining(", "));
+            sb.append(collect);
+            sb.append("\n}\n");
+        }
+
+        return sb.toString();
     }
 }

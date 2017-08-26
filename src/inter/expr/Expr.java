@@ -6,7 +6,7 @@ import symbols.Type;
 
 public abstract class Expr extends Node {
     public Token op;
-    public Type type;
+    public  Type type;
     static public final Expr VoidExpr = new Expr(Type.Void,Type.Void){
         @Override
         public boolean isChangeable(){

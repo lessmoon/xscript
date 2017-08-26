@@ -16,8 +16,8 @@ public class Interface{
         
         VarTable.pushTop();
         VarTable.pushVar(c);
-
         args.forEach(VarTable::pushVar);
+        f.getParamList().forEach(p-> VarTable.defVar(p.name,p.type));
         //RunStack.invokeFunction(line,filename,f);
         try {
             f.run();
@@ -45,7 +45,7 @@ public class Interface{
         VarTable.pushTop();
         VarTable.pushVar(c);
         args.forEach(VarTable::pushVar);
-
+        f.getParamList().forEach(p->VarTable.defVar(p.name,p.type));
         //RunStack.invokeFunction(line,filename,f);
         try {
             f.run();

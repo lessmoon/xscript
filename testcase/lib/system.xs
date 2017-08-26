@@ -2,6 +2,10 @@ native<extension.system>{
     "sleep":void sleep(int duration);
 }
 
+native<extension.debug>{
+    "BreakAndDebug":bool breakWhen(bool condition);
+}
+
 native<extension.system>{
     "extime":struct Time{
         int hour;

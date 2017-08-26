@@ -401,7 +401,8 @@ def JSON JSONParser.element(){
         this.next();
         return JSON_TRUE;
     case TAG_JSON_FALSE:
-        this.next();v
+        breakWhen(true);
+        this.next();
         return JSON_FALSE;
     }
 }

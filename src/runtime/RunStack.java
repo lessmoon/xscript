@@ -46,6 +46,15 @@ public enum RunStack {
         } 
     }
 
+    static public void printStackTrace(){
+        System.out.println("Stack Trace:");
+        Stack cp = (Stack) run_stack.get().clone();
+        while (!cp.empty()) {
+            Entry e = (Entry) cp.pop();
+            System.out.println("  in `" + e.invokedFunction + "',called at \"" + e.filename + "\","+ e.line +":" + e.offset);
+        }
+    }
+
     static public void printStackTrace(String errinfo,int size){
         System.err.println(errinfo);
         while (!run_stack.get().empty() && size-- > 0 ) {

@@ -26,5 +26,6 @@ public class StructDecl extends Decl {
     @Override
     public void run(){
         VarTable.pushVar(value.getValue());
+        VarTable.defVar(id,type);
     }
 }

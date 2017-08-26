@@ -39,6 +39,7 @@ public class Decl extends Stmt {
     public void run(){
         Value v = (value == null)?null:value.getValue();
         VarTable.pushVar(v);
+        VarTable.defVar(id,type);
     }
     
     @Override

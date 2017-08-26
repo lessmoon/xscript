@@ -108,6 +108,7 @@ public class VirtualFunctionInvoke extends Expr {
                 i++;
             }
             VarTable.pushVar(c);
+            VarTable.defVar(this.func.getParamInfo(i).name,this.func.getParamInfo(i).type);
         }
         if(IS_DEBUG){
             System.out.println("\nVirtualInvoke " + func.toString() + "{");

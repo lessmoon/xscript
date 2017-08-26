@@ -6,6 +6,7 @@ import inter.expr.Value;
 import inter.stmt.ReturnResult;
 import inter.stmt.Stmt;
 import lexer.Lexer;
+import lexer.Word;
 import parser.Parser;
 import runtime.RunStack;
 import runtime.VarTable;
@@ -147,7 +148,7 @@ public class Main{
                     a.setElement(i,new Value(args[i + index]));
                 }
                 VarTable.pushVar(a);
-
+                VarTable.defVar(Word.args,a.type);
                 s.run();
             } else {
                 return;

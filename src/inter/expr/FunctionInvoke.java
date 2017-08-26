@@ -98,6 +98,7 @@ public class FunctionInvoke extends Expr {
                 System.out.println("\narg[" + i + "]{" + arguments.get(i) + "} = " + c + "<->" + c.hashCode());
             }
             VarTable.pushVar(c);
+            VarTable.defVar(functions.getParamInfo(i).name,functions.getParamInfo(i).type);
             i++;
         }
         if (IS_DEBUG) {
