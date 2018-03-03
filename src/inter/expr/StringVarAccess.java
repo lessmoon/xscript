@@ -46,6 +46,9 @@ public class StringVarAccess extends Var {
     public Value getValue(){
         int i = ((Num)(index.getValue().op)).value;
         String str = ((Str)(array.getValue().op)).value;
+        if(i >= str.length() || i < 0){
+            error("Index " + i + " out of string range( 0 ~ " + (str.length() - 1) + " )");
+        }
         return new Value(str.charAt(i));
     }
 
@@ -54,6 +57,9 @@ public class StringVarAccess extends Var {
         int i = ((Num)(index.getValue().op)).value;
         String str = ((Str)(array.getValue().op)).value;
         StringBuilder sb = new StringBuilder(str);
+        if(i >= str.length() || i < 0){
+            error("Index " + i + " out of string range( 0 ~ " + (str.length() - 1) + " )");
+        }
         sb.setCharAt(i,((Char)(c.op)).value);
         return array.setValue(new Value(sb.toString()));
     }

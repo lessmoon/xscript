@@ -11,8 +11,21 @@ import lexer.Word;
 import java.util.*;
 import java.util.stream.Stream;
 
+
+/**
+ * TODO: add template support
+ * struct HashMap<Key:KeyType, Value :Content>: Map<Key, Value> {
+ *     def override Content get(HashKey key) {
+ *          
+ *     }
+ * }
+ *
+ *auto p = new HashMap<Integer, String>();//define new HashMap<KeyType, Value>
+ *
+ */
 public class Struct extends Type implements Iterable<StructVariable> {
     public static final Struct StructPlaceHolder = new Struct(new Word("#StructPlaceHolder#", Tag.ID));
+    
     private final Map<Token, StructVariable> variableMap = new HashMap<>();
     /*store normal functions*/
     private final Map<Token, FunctionBasic> functionMap = new HashMap<>();

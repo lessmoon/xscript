@@ -80,13 +80,14 @@ class CircleItem {
     int y;
     int radius;
     Color color;
+    boolean fill;
 
-
-    public CircleItem(int x, int y, int radius, Color color) {
+    public CircleItem(int x, int y, int radius, Color color, boolean fill) {
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.color = color;
+        this.fill = fill;
     }
 
     public void setX(int x) {
@@ -103,6 +104,10 @@ class CircleItem {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+    
+    public void setFill(boolean fill) {
+        this.fill = fill;
     }
 }
 

@@ -28,7 +28,7 @@ public class Main{
             "-so        Enable statement optimizing[disabled at default]\n" +
             "-pc        Enable printing code translating result[disabled at default]\n" +
             "-pf        Enable printing function translating result[disabled at default]\n" +
-			"-brds --bigrealdivscale set the bigreal division scale[100 at default]" + 
+        	"-brds --bigrealdivscale set the bigreal division scale[100 at default]" +
             "path       The source file path you want to execute\n"+
             "           There should be only one source file\n"
         );

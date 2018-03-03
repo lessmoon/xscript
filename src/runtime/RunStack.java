@@ -27,8 +27,8 @@ public enum RunStack {
     static public void invokeFunction(int line, int offset, String file, FunctionBasic func){
         run_stack.get().push(new Entry(line,offset,file,func));
         if(MAX_STACK_SIZE <= run_stack.get().size()){
-            System.err.println("Runtime error:");
-            printStackTrace("\tcalling stack is too deep",PRINT_SIZE);
+            System.err.println("Runtime error: ");
+            printStackTrace("\tcalling stack is too deep", PRINT_SIZE);
             System.err.println(" .... ");
             System.exit(-1);
         }
@@ -42,7 +42,7 @@ public enum RunStack {
         System.err.println(errinfo);
         while (!run_stack.get().empty()) {
             Entry e = run_stack.get().pop();
-            System.err.println("  in `" + e.invokedFunction + "',called at \"" + e.filename + "\","+ e.line +":" + e.offset);
+            System.err.println("  in `" + e.invokedFunction + "', called at \"" + e.filename + "\", "+ e.line +": " + e.offset);
         } 
     }
 
@@ -51,7 +51,7 @@ public enum RunStack {
         Stack cp = (Stack) run_stack.get().clone();
         while (!cp.empty()) {
             Entry e = (Entry) cp.pop();
-            System.out.println("  in `" + e.invokedFunction + "',called at \"" + e.filename + "\","+ e.line +":" + e.offset);
+            System.out.println("  in `" + e.invokedFunction + "', called at \"" + e.filename + "\", "+ e.line +": " + e.offset);
         }
     }
 
@@ -59,7 +59,7 @@ public enum RunStack {
         System.err.println(errinfo);
         while (!run_stack.get().empty() && size-- > 0 ) {
             Entry e = run_stack.get().pop();
-            System.err.println("  in `" + e.invokedFunction + "',called at \"" + e.filename + "\","+ e.line + ":" + e.offset);
+            System.err.println("  in `" + e.invokedFunction + "', called at \"" + e.filename + "\", "+ e.line + ": " + e.offset);
         } 
     }
     

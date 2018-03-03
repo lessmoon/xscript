@@ -1,3 +1,50 @@
+"jump":"_Main_"
+<"stack">
+<"init">
+"set":"s_${arg0}_size" "0"
+"jump":"${back}"
+<"push">
+"set": "s_${arg0}_${s_${arg0}_size}" "${arg1}"
+"add": "s_${arg0}_size" "1"
+"jump" : "${back}"
+<"pop">
+"condition": "${s_${arg0}_size}" "0" "end_pop"
+"add": "s_${arg0}_size" "-1"
+<"end_pop">
+"jump":"${back}"
+<"top">
+"condition": "${s_${arg0}_size}" "0" "end_top"
+"set": "res" "${s_${arg0}_size}"
+<"end_top">
+"jump":"${back}"
+<"print">
+"set": "tmp" "0"
+<"print_condition">
+"condition": "${tmp}" "${s_${arg0}_size}" "end_print"
+"print": "${s_${arg0}_${tmp}}"
+"add": "tmp" "1"
+"jump" : "print_condition" 
+<"end_print">
+"jump":"${back}"
+<"_Main_">
+"set" : "arg0" "test_stack"
+"set" : "back" "back_0"
+"jump": "init"
+<"back_0">
+"set":"tmp" "0"
+"set":"back" "condition_a"
+<"condition_a">
+"condition": "${tmp}" "10" "back_2"
+<"push_var">
+"set": "arg1" "test${tmp}"
+"add":"tmp" "1"
+"jump": "push"
+<"back_2">
+"set":"back" "end"
+"checkpoint": "helloworld"
+"jump": "print"
+
+
 "jump":"beg"
 <"multiple">
 "set":"tmp_b" "${b}"

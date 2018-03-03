@@ -69,7 +69,7 @@ native<extension.reflection>{
     };
 
 }
-JNObject jnObject = new JNObject;
+const JNObject jnObject = new JNObject;
 import "../lib/system.xs";
 //test code
 if(_isMain_){

@@ -47,6 +47,9 @@ public class StringAccess extends Expr {
     public Value getValue(){
         int i = ((Num)(index.getValue().op)).value;
         String str = ((Str)(array.getValue().op)).value;
+        if(i >= str.length() || i < 0){
+            error("Index " + i + " out of string range( 0 ~ " + (str.length() - 1) + " )");
+        }
         return new Value(str.charAt(i));
     }
 }

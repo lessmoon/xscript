@@ -78,8 +78,8 @@ struct JSONObject:JSON{
         this.map = new HashMap();
     }
 
-    def void insert(string key,JSON o){
-        this.map.set(new StringHashContent(key),o);
+    def void insert(string key, JSON o){
+        this.map.set(new StringHashContent(key), o);
     }
     
     def JSON get(string key){
@@ -100,14 +100,18 @@ struct JSONObject:JSON{
 
     def override string alignedString(int align){
         StringBuffer b = new StringBuffer();
-        b.append("{\n");
+        b.append("{");
+        bool[] is_begin = {true};
         this.map.iterator().forEachRemained(new Consumer^v->{
             const auto x = (HashPair)v;
             const auto o = (JSON) x.value;
-            b.repeatCharacter(' ', (align+1)*2);
-            b.append("\"").append(x.key.toString()).append("\"").append(":").append(o.alignedString(align+1)).append(",\n");
+            b.append(is_begin[0]?"\n":",\n");
+            b.repeatCharacter(' ', (align+1)*4);
+            b.append("\"").append(x.key.toString()).append("\"").append(": ").append(o.alignedString(align+1));
+            is_begin[0] = false;
         });
-        b.repeatCharacter(' ', align*2);
+        b.append("\n");
+        b.repeatCharacter(' ', align*4);
         b.append("}");
         return b.toString();
     }
@@ -137,9 +141,14 @@ struct JSONArray:JSON{
     def override string alignedString(int align){
         StringBuffer b = new StringBuffer();
         b.append("[");
+        bool[] is_begin= {false};
         this.array.iterator().forEachRemained(new Consumer^v->{
             auto h = (JSON)v;
-            b.append(h.alignedString(align+1)).append(",");
+            if (is_begin[0]) {
+                b.append(", ");
+            }
+            b.append(h.alignedString(align+1));
+            is_begin[0] = true;
         });
         b.append("]");
         return b.toString();
@@ -381,7 +390,7 @@ struct JSONParser{
 }
 
 def JSON JSONParser.element(){
-    switch(this.look.tag){
+    switch (this.look.tag) {
     case TAG_JSON_NUM:
         auto tmp = this.look;
         this.next();

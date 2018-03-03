@@ -6,6 +6,11 @@ struct Consumer{
     def default virtual Content apply(Content c);
 }
 
+struct Consumer2 {
+    @(
+    def default virtual Content apply(Content a, Content b);
+}
+
 def void Iterator.forEachRemained(Consumer action){
     while(this.hasNext()){
         this.next();
@@ -23,13 +28,24 @@ def void Sequence.forEach(Consumer c){
 
 struct Comparator;
 
-struct Stream{
+struct Stream {
     def Stream filter(Consumer c);
     def void forEach(Consumer c);
+    def Content reduce(Consumer2 c, Content default_value);
     def Stream map(Consumer c);
-    def Sequence reduce(Collector c);
+    def Sequence collect(Collector c);
     def int count();
     def default virtual Iterator next();
+    def string join(string delimiter) {
+        StringBuffer sb = new StringBuffer();
+        string[] d = {""};
+        this.forEach(new Consumer^c->{
+            sb.append(d[0])
+              .append(c.toString());
+            d[0] = delimiter;
+        });
+        return sb.toString();
+    }
     def Stream sort(Comparator c);
     def Stream skip(int c);
     def Stream reverse();
@@ -125,7 +141,16 @@ def int Stream.count(){
     return i;
 }
 
-def Sequence Stream.reduce(Collector collector){
+def Content Stream.reduce(Consumer2 c, Content default_value) {
+    Iterator iter;
+    Content last_value = default_value;
+    while((iter = this.next()) != null){
+        last_value = c(last_value, iter.getValue());
+    }
+    return last_value;
+}
+
+def Sequence Stream.collect(Collector collector){
     Iterator iter;
     while((iter = this.next()) != null){
         collector.feed(iter.getValue());

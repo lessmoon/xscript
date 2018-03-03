@@ -34,6 +34,11 @@ public class SimpleFileOutputStream extends Struct{
         public void writeInt(Value value) throws IOException {
             fileOutputStream.write(value.valueAs(Integer.class));
         }
+        
+        @StructMethod(param = {"string"})
+        public void writeString(Value value) throws IOException {
+            fileOutputStream.write(value.valueAs(String.class).getBytes());
+        }
 
         @StructMethod
         public void close() throws IOException {
@@ -45,7 +50,6 @@ public class SimpleFileOutputStream extends Struct{
             fileOutputStream.flush();
         }
     }
-
 
     @Override
     public symbols.Struct setup(symbols.Struct struct, Dictionary dic, TypeTable typeTable) {

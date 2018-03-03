@@ -255,10 +255,6 @@ public class RelFactory {
         if (x1.type instanceof Struct) {
             Token fname = ((Struct) (x1.type)).getOverloading(tok);
             if (fname != null) {
-                if (x2.type != x1.type) {
-                    x2 = ConversionFactory.getConversion(x2, x1.type);
-                }
-
                 FunctionBasic f = ((Struct) (x1.type)).getNaiveFunction(fname);
                 ArrayList<Expr> p = new ArrayList<>();
                 if (f != null) {

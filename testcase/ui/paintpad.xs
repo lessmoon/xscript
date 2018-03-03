@@ -561,7 +561,7 @@ if(_isMain_){
  *   |_|_|_|
  *   |_|_|_|
  */
-if(_isMain_){
+if(true||_isMain_){
     Graphics g = new Graphics;
     EventPool ep = new EventPool();
     Screen scr = new Screen();
@@ -597,9 +597,9 @@ if(_isMain_){
        
     }
 
-    //g.init(new Calculator("Calculator",122,82,ep,g,scr),82,122);
-    //g.transite(new Point(20,10));
-    //scr.add(g);
+    g.init(new Calculator("Calculator",122,82,ep,g,scr),82,122);
+    g.transite(new Point(20,10));
+    scr.add(g);
     
     for(int i = 0; i < len;i++){
        switch(i%4){
@@ -618,8 +618,8 @@ if(_isMain_){
         break;
        }
     }
-    //g.setCenter(new Point(20,10));
-    //g.show();
-    //g.draw();
-    //g.wait();
+    g.setCenter(new Point(20,10));
+    g.show();
+    g.draw();
+    g.wait();
 }

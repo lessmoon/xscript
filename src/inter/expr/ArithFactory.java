@@ -294,30 +294,27 @@ class StringCat extends Arith {
 }
 
 public class ArithFactory {
-	public static void setBigRealDivideScale(int scale){
-		BigRealArith.setDivideScale(scale);
-	}
-	
-    public static Expr getArith(Token tok,Expr e1,Expr e2){
+    public static void setBigRealDivideScale(int scale){
+        BigRealArith.setDivideScale(scale);
+    }
+
+    public static Expr getArith(Token tok, Expr e1, Expr e2){
         if(e1.type instanceof Struct){
             Token fName = ((Struct)(e1.type)).getOverloading(tok);
             if(fName != null){
-                if(e2.type != e1.type){
-                    e2 = ConversionFactory.getConversion(e2,e1.type);
-                }
-                
+
                 if(e2 != null){
                     List<Expr> p = new ArrayList<>();
                     FunctionBasic f = ((Struct)(e1.type)).getNaiveFunction(fName);
                     if(f != null){
                         p.add(e1);
                         p.add(e2);
-                        return new FunctionInvoke(f,p);
+                        return new FunctionInvoke(f, p);
                     }
                     f = ((Struct)(e1.type)).getVirtualFunction(fName);
                     if(f != null){
                         p.add(e2);
-                        return new VirtualFunctionInvoke(e1,f,p);
+                        return new VirtualFunctionInvoke(e1, f, p);
                     }
                 }
             }

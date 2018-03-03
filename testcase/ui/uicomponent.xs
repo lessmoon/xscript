@@ -334,7 +334,6 @@ struct UIComponentContainer:UIComponent{
             ui.component.draw(new UITransiteGraphic(p,ui.offset));
         });
     }
-
     def override void onMouseClick(const int bid,const Point p){
         this.container.stream()
         .filter(new Consumer^(c) -> new BoolContent(((UIComponentContent)c).component.contains(p)))
@@ -346,7 +345,7 @@ struct UIComponentContainer:UIComponent{
             });
         });
     }
-
+    
     def override bool isCollisionWith(const UIComponent p){
         return this.container.stream().anyMatch(new Consumer^(c)->new BoolContent(((UIComponentContent)c).component.isCollisionWith(p)));
     }
@@ -521,22 +520,20 @@ struct PaintPadGraphic : UIGraphic{
 
 struct UIBaseComponent:UIComponentContainer{
     PaintPadGraphic g;
-    def this(string title,int x,int y){
+    def this(string title, int x, int y){
         super(null);
         const auto this_ = this;
-        this.g = new PaintPadGraphic(new PaintPad(title,x,y){
-            def override void onMouseClick(int bid,int x,int y){
-                this_.onMouseClick(bid,new Point(x,y));
+        this.g = new PaintPadGraphic(new PaintPad(title,x, y){
+            def override void onMouseClick(int bid, int x, int y){
+                this_.onMouseClick(bid, new Point(x, y));
             }
         });
     }
-    
     def override void onMouseClick(int bid,Point p){
-        super.onMouseClick(bid,p);
+        super.onMouseClick(bid, p);
         this.draw(this.g);
         this.g.redraw();
     }
-
     def void show(){
         this.draw(this.g);
         this.g.show();
@@ -547,9 +544,8 @@ struct UIBaseComponent:UIComponentContainer{
     }
 }
 
-if(_isMain_){
+if(true||_isMain_){
     auto c = new UIBaseComponent("test",600,800);
-
     c.addComponent(new UIRectComponent(new Point(200,200),100,100){
         def override void onMouseClick(const int bid,const Point p){
             this.setColor(new Color(rand()%255,rand()%255,rand()%255));

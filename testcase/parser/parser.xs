@@ -1,10 +1,9 @@
-
 struct Expr {
     @real
     def virtual real getValue();
 }
 
-struct Arith:Expr{
+struct Arith:Expr {
     Expr e1;
     Expr e2;
     def void init(Expr e1,Expr e2){
@@ -13,31 +12,31 @@ struct Arith:Expr{
     }
 }
 
-struct Add:Arith{
-    def override real getValue(){
+struct Add:Arith {
+    def override real getValue() {
         return this.e1.getValue()+this.e2.getValue();
     }
 }
 
-struct Sub:Arith{
-    def override real getValue(){
+struct Sub:Arith {
+    def override real getValue() {
         return this.e1.getValue()-this.e2.getValue();
     } 
 }
 
-struct Mult:Arith{
-    def override real getValue(){
+struct Mult:Arith {
+    def override real getValue() {
         return this.e1.getValue()*this.e2.getValue();
     } 
 }
 
-struct Div:Arith{
-    def override real getValue(){
+struct Div:Arith {
+    def override real getValue() {
         return this.e1.getValue()/this.e2.getValue();
     } 
 }
 
-struct Const:Expr{
+struct Const:Expr {
     real value;
     def void setValue(int v){
         this.value = v;
@@ -48,9 +47,9 @@ struct Const:Expr{
     }
 }
 
-struct Var:Const{}
+struct Var : Const {}
 
-struct Token{
+struct Token {
     int tag;
 
     @string
@@ -63,10 +62,10 @@ struct Token{
     }
 }
 
-struct Num:Token{
+struct Num : Token {
     real value;
 
-    def override string toString(){
+    def override string toString() {
         return (string)this.value;
     }
 
@@ -75,24 +74,21 @@ struct Num:Token{
         this.setTag(256);
     }
 }
-
-def bool isDigital(char c){
+def bool isDigital(char c) {
     return c <= '9' && c >= '0';
 }
-
-struct lexer{
+struct lexer {
     int no;
     char peek;
     string poly;
-    def void init(string poly){
+    def void init(string poly) {
         this.poly = poly;
         this.peek = ' ';
         this.no = 0;
     }
 
-    def void readch(){
-
-        if(this.no >= strlen(this.poly)){
+    def void readch() {
+        if(this.no >= strlen(this.poly)) {
             this.peek = 0;
         } else { 
             this.peek = this.poly[this.no];
@@ -100,21 +96,21 @@ struct lexer{
         }
     }
 
-    def Token scan(){
+    def Token scan() {
         Token t = new Token;
 
-        while(this.peek == ' '){
+        while (this.peek == ' ') {
             this.readch();
         }
         char c = this.peek;
-        if(isDigital(c)){
+        if (isDigital(c)) {
             int i = 0;
             do{
                 i *= 10;
                 i += (c-'0');
                 this.readch();
                 c = this.peek;
-            }while(isDigital(c));
+            } while (isDigital(c));
             Num n = new Num ;
             n.init(i);
             return n;
@@ -125,7 +121,6 @@ struct lexer{
    
     }
 }
-
 struct parser{
     lexer lex;
     Token look;
@@ -176,11 +171,10 @@ def Expr parser.term(){
         println("Unknown token `" + this.look + "' found");
     }
 }
-
 def Expr parser.mult(){
     Expr e = this.term();
     while(this.look.tag == '*' || this.look.tag == '/'){
-        if(this.look.tag == '*'){
+        if(this.look.tag == '*') {
             this.next();
             Mult m = new Mult;
             m.init(e,this.term());

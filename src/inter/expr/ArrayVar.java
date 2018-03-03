@@ -12,9 +12,9 @@ public class ArrayVar extends Var {
         super(Word.array,t);
         loc = l;
         array = arr;
-		if(!(array.type instanceof Array)){
-			error("`" + array + "' is not array type");
-		}
+        if(!(array.type instanceof Array)){
+            error("`" + array + "' is not array type");
+        }
         check();
     }
 
@@ -35,7 +35,7 @@ public class ArrayVar extends Var {
     @Override
     public Expr optimize(){
         loc = loc.optimize();
-		array = array.optimize();
+        array = array.optimize();
         return this;
     }
 

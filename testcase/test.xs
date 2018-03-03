@@ -14,92 +14,24 @@ import  "rpg/parser.xs";
 import  "reflection/reflect.xs";
 import  "lib/keymap.xs";
 import  "parser/json.xs";
+import "math/expression.xs";
 
-struct ScrollTextOutput{
-    PaintPad x;
-    int width,height;
-    int[] ids;
-    List contents;
-
-    int line;
-    
-    def this( const int width_tile,const int height_tile ){
-        this.width = width_tile;
-        this.height = height_tile;
-        this.contents = new List();
-        this.x = new PaintPad("XLand",16*height_tile+20,8*width_tile+20);
-        this.ids = new int[height_tile];
-        for(int i = 0; i < height_tile;i++){
-           this.ids[i] = this.x.addString("",10,16*i+20);
-        }
-        this.line = 0;
-    }
-
-    def void update(){
-        if(this.line >= this.height){
-            auto beg = this.contents.front();
-            for(int i = this.height - 1;i >= 0 ;i--){
-                this.x.setString(this.ids[i],beg.value);
-                beg = beg.next;
-            }
-        } else {
-            int i = 0;
-            for(auto iter = this.contents.back();iter.prev != null;iter = iter.prev){
-                this.x.setString(this.ids[i],iter.value);
-                i++;
-            }
-        }
-    }
-
-    def void addString(string str,int r,int p,int g){
-        int len = strlen(str);
-        
-        if(len > this.width){
-            StringBuffer sb1 = new StringBuffer();
-            sb1.append(str);
-            sb1.delete(this.width-1,len - 1);
-            this.contents.push_front(new StringContent(sb1.toString()));
-            len -= this.width;
-            int i = this.width;
-            this.line ++;
-            do{
-                StringBuffer sb = new StringBuffer();
-                for(int j = 0;j < this.width && len > 0;j++){
-                    sb.append(str[i + j]);
-                    len--;
-                }
-                this.contents.push_front(new StringContent(sb.toString()));
-                i += this.width;
-                this.line++;
-            }while(len > 0);
-        } else {
-            this.contents.push_front(new StringContent(str));
-            this.line++;
-        }
-    }
-    
-    def void addCharacter(char c,int r,int p,int g){
-        if(this.contents.front() == null){
-            this.contents.push_front(new StringContent(c));
-        }
-    }
-
-    def void changeLine(){
-        this.line ++;
-    }
-
-    def void open(){
-        this.x.show();
-    }
-    
-    def void close(){
-        this.x.close();
-    }
-    
-    def void wait(){
-        this.x.wait();
-    }
+/* struct UnaryOperator<ReturnT: Value, ParamT: Value> {
+    def default virtual ReturnT calculate(ParamT v);
 }
+
+struct HashMap<KeyType: HashKey, ValueType: Value> {
+    def default virtual ValueType get(KeyType key);
+}
+{
+    auto condition = new UnaryOperator<Integer, Bool>^x->new Bool(x>0);
+    auto list = new List<Integer>();
+    list.stream().filter(new UnaryOperator<Integer, Bool>^x->new Bool(x>0)).reduce();
+    //| map | HashMap | String, Integer |
+    auto x = map.get(value);
+    => x = (Integer)(map.get(value))
+       
+} */
 
 struct base;
 struct derive:base;
@@ -132,8 +64,30 @@ struct derive:base{
     r.registerFunction("read",new TypeString);
     r.registerFunction("case",new RPGCase);
     r.registerFunction("time",new RPGTime);
+    r.registerFunction("checkpoint", new Function^(r,args)->{
+        const auto fio = new FileOutputStream(new SimpleFile(args[0]), false);
+        JSONObject root = new JSONObject();
+        JSONObject vars = new JSONObject();
+        root.insert("variables", vars);
+        r.varMap.iterator().stream().forEach(new Consumer^x->{
+            vars.insert(((HashPair)x).key.toString(), new JSONString(((HashPair)x).value.toString()));
+        });
+        /*
+        .sort(new Comparator^(x1,x2)->{
+            auto x1_c = ((HashPair)x1).key.toString();
+            auto x2_c = ((HashPair)x2).key.toString();
+            return x1_c < x2_c?1:x1_c == x2_c?0:-1;
+        }).forEach(new Consumer^x->{
+            
+            //fio.writeString(x.toString() + "\r\n");
+        });*/
+        root.insert("filename", new JSONString(r.filename));
+        root.insert("cursor", new JSONNumber(r.index));
+        fio.writeString(root.toString());
+        fio.close();
+    });
     r.open("test");
-    //r.run();
+    r.run();
 }
 
 {
@@ -555,7 +509,7 @@ def void drawClockReal(PaintPad p,real hour,real minute,real second){
     }
 }
 
-struct shape{
+struct shape {
     string name;
     def void init(string name){
         this.name = name;

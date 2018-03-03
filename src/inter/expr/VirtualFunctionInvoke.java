@@ -44,7 +44,7 @@ public class VirtualFunctionInvoke extends Expr {
                 Expr e = args.get(i - 1);
                 Expr f = ConversionFactory.getConversion(e,func.getParamInfo(i).type);
                 assert(f != null);
-                args.set(i - 1,f);
+                args.set(i - 1, f);
             }
         }
     }
