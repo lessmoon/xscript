@@ -33,6 +33,16 @@ struct HashMap<KeyType: HashKey, ValueType: Value> {
        
 } */
 
+struct test_base {
+    def virtual void test_base();
+}
+struct error_{
+}
+
+{
+    auto z = new error_;
+}
+
 struct base;
 struct derive:base;
 struct base{

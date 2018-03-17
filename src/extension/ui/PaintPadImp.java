@@ -82,12 +82,12 @@ class CircleItem {
     Color color;
     boolean fill;
 
-    public CircleItem(int x, int y, int radius, Color color, boolean fill) {
+    public CircleItem(int x, int y, int radius, Color color) {
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.color = color;
-        this.fill = fill;
+        this.fill = false;
     }
 
     public void setX(int x) {

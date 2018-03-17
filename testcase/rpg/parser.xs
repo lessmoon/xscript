@@ -43,6 +43,7 @@ struct RuntimeBasic {
     HashMap labelMap;//<string,integer>
     HashMap functionMap;
     int index;
+    string filename;
     
     def this(){
         this.varMap = new HashMap();
@@ -51,7 +52,8 @@ struct RuntimeBasic {
         int index = 0;
     }
     
-    def string getVar(string varname){    
+    def string getVar(string varname){
+        println(varname);
         return ((StringContent)this.varMap[new StringHashContent(varname)].value);
     }
     
@@ -123,7 +125,7 @@ struct Function:Content{
         }
     }
 
-    def virtual void run(Runtime r,string[] args);
+    def default virtual void run(Runtime r,string[] args);
 
     def void procedure(Runtime r,string[] args){
         this.preprocessArgs(r,args);
@@ -378,7 +380,7 @@ def void RPGParser.parse(string file,Runtime r){
 
 struct RPGRuntime:Runtime{
     RPGParser parser;
-
+    
     def this(RPGParser p){
         super();
         this.parser = p;
@@ -388,6 +390,7 @@ struct RPGRuntime:Runtime{
         this.labelMap.clear();
         this.instructions.clear();
         this.parser.parse(filename,this);
+        this.filename = filename;
     }
 
     def void run(){
