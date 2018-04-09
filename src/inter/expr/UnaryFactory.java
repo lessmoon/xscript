@@ -21,7 +21,7 @@ class IntUnary extends Unary {
         case '-':
             return ;
         default:
-            error("Unknown operand:`" + op + "'");
+            error("Unknown operand: `" + op + "'");
             return;
         }
     }
@@ -37,7 +37,7 @@ class IntUnary extends Unary {
         case '-':
             return new Value(-((Num)(c.op)).value);
         default:
-            error("Unknown operand:`" + op + "'");
+            error("Unknown operand: `" + op + "'");
             return null;
         }
     }
@@ -59,7 +59,7 @@ class BigIntUnary extends IntUnary {
         case '-':
             return new Value(((BigNum)(c.op)).value.negate());
         default:
-            error("Unknown operand:`" + op + "'");
+            error("Unknown operand: `" + op + "'");
             return null;
         }
     }
@@ -76,7 +76,7 @@ class RealUnary extends Unary {
         case '-':
             return;
         default:
-            error("Operand:`" + op + "' is not permitted here");
+            error("Operand: `" + op + "' is not permitted here");
             return;
         }
     }
@@ -87,7 +87,7 @@ class RealUnary extends Unary {
             Value c = expr.getValue();
             return new Value(-((lexer.Float)(c.op)).value);
         } else {
-            error("Unknown operand:`" + op + "'");
+            error("Unknown operand: `" + op + "'");
             return null;
         }
     }
@@ -104,7 +104,7 @@ class BigRealUnary extends RealUnary {
             Value c = expr.getValue();
             return new Value(((BigFloat)(c.op)).value.negate());
         } else {
-            error("Unknown operand:`" + op + "'");
+            error("Unknown operand: `" + op + "'");
             return null;
         }
     } 
@@ -126,7 +126,7 @@ class CharUnary extends Unary {
         case '-':
             return;
         default:
-            error("Operand:`" + op + "' is not permitted here");
+            error("Operand: `" + op + "' is not permitted here");
             return;
         }
     }
@@ -143,7 +143,7 @@ class CharUnary extends Unary {
         case '-':
             return new Value((char)(-((Char)(c.op)).value));
         default:
-            error("Unknown operand:`" + op + "'");
+            error("Unknown operand: `" + op + "'");
             return null;
         }
     }
@@ -164,7 +164,7 @@ public class UnaryFactory {
                 return new BigRealUnary(tok,e);
             }
         }
-        e.error("Operand:`" + tok + "' is not permitted here");
+        e.error("Operand: `" + tok + "' is not permitted here");
         return null;
     }
 }

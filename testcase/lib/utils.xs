@@ -9,6 +9,7 @@ native<extension.util>{
         def StringBufferX setCharAt(int index,char c);
         def void reserve(int size);
         def string toString();
+        def int length();
     };
 }
 

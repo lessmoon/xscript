@@ -241,7 +241,7 @@ struct UIRectCutGraphic:UIGraphicProxy{
     }
 }
 
-struct Point;
+struct Point : Content;
 
 struct UIComponent{
     UIComponent base;
@@ -517,7 +517,6 @@ struct PaintPadGraphic : UIGraphic{
     }
 };
 
-
 struct UIBaseComponent:UIComponentContainer{
     PaintPadGraphic g;
     def this(string title, int x, int y){
@@ -544,7 +543,7 @@ struct UIBaseComponent:UIComponentContainer{
     }
 }
 
-if(true||_isMain_){
+if(false||_isMain_){
     auto c = new UIBaseComponent("test",600,800);
     c.addComponent(new UIRectComponent(new Point(200,200),100,100){
         def override void onMouseClick(const int bid,const Point p){

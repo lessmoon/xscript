@@ -34,7 +34,7 @@ public class If extends Stmt{
     
     @Override
     public String toString(){
-        return "if(" + expr + "){\n"
+        return "if (" + expr + ") {\n"
                 + stmt
                 + "}\n";
     }

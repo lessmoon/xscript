@@ -51,8 +51,8 @@ public class Condition extends Expr {
     public Value getValue(){
         return cond.getValue() != Value.False?iftrue.getValue():iffalse.getValue();
     }
-	
-	@Override
+    
+    @Override
     public String toString(){
         return "((" + cond + ")?(" + iftrue + "):(" + iffalse + "))";
     }

@@ -264,7 +264,7 @@ public class Parser implements TypeTable {
             Struct st = (Struct) (info.getValue());
             FunctionBasic f;
             if (st.isInstantiated() && (f = st.getFirstUncompletedFunction()) != null) {
-                error("`" + info.getValue() + "' instantiated but not completed:" + f, st.getFirstInstantiatedLine(), st.getFirstInstantiatedIndex(), st.getFirstInstantiatedFile());
+                error("`" + info.getValue() + "' instantiated but not completed: " + f, st.getFirstInstantiatedLine(), st.getFirstInstantiatedIndex(), st.getFirstInstantiatedFile());
             }
         }
     }
@@ -747,20 +747,20 @@ public class Parser implements TypeTable {
             f = new Function(name, returnType, l);
             /*check if its name has been used*/
             if (!table.addFunc(name, f)) {
-                error("function name has conflict:" + f);
+                error("function name has conflict: " + f);
             }
         } else {
             FunctionBasic fb = table.getFuncType(name);
             if (fb != null) {
                 if (fb.isCompleted()) {
-                    error("function redefined:" + fb);
+                    error("function redefined: " + fb);
                 }
                 f = (Function) fb;
                 if (!f.getType().isCongruentWith(returnType)) {
-                    error("function return type doesn't match with its former declaration:" + f + "\nnote: " + returnType);
+                    error("function return type doesn't match with its former declaration: " + f + "\nnote: " + returnType);
                 }
                 if (f.getParamList().size() != l.size()) {
-                    error("function arguments number doesn't match with its former declaration :" + new Function(name, returnType, l).toString() + " has " + l.size() + ",but " + f + " has " + f.getParamList().size());
+                    error("function arguments number doesn't match with its former declaration: " + new Function(name, returnType, l).toString() + " has " + l.size() + ", but " + f + " has " + f.getParamList().size());
                 }
                 int i = 0;
                 for (Param t : f.getParamList()) {
@@ -773,7 +773,7 @@ public class Parser implements TypeTable {
                 f = new Function(name, returnType, l);
                 /*check if its name has been used*/
                 if (!table.addFunc(name, f)) {
-                    error("Function name has conflict:" + f);
+                    error("Function name has conflict: " + f);
                 }
             }
             match('{');
@@ -806,7 +806,7 @@ public class Parser implements TypeTable {
         List<Param> l = parameters();
         l.add(0, new Param(t, Word.This));
         if (l.size() != f.getParamList().size()) {
-            error("arguments number of function `" + t.getName() + ".[init]' doesn't match with its former declaration:expect " + (f.getParamList().size() - 1) + " but found " + (l.size() - 1));
+            error("arguments number of function `" + t.getName() + ".[init]' doesn't match with its former declaration: expect " + (f.getParamList().size() - 1) + " but found " + (l.size() - 1));
         }
 
         for (int i = 1; i < l.size(); i++) {
@@ -876,7 +876,7 @@ public class Parser implements TypeTable {
                 }
                 pl.add(new Param(t, name));
                 if (top.put(name, t,isConst,null) != null) {
-                    error("function parameter names have conflict:`" + name.toString() + "'");
+                    error("function parameter names have conflict: `" + name.toString() + "'");
                 }
             } while (check(','));
             match(')');
@@ -1101,7 +1101,7 @@ public class Parser implements TypeTable {
                 /*stmts should be different from the normal stmts*/
                 sw.setDefault(casestmts());
             } else {
-                error("wrong symbol found in switch:`" + look + "'");
+                error("wrong symbol found in switch: `" + look + "'");
             }
         }
         match('}');
@@ -1284,12 +1284,12 @@ public class Parser implements TypeTable {
                 return null;//avoiding warning
             }
             Value value = null;
+            Decl decl = Decl.getDecl(tok, p, e);
             if(isConst && !e.isChangeable()){
-                value = e.getValue();
+                value = decl.getInitialValue().getValue();
             }
-            top.put(tok, p,isConst,value);
-
-            s.addDecl(Decl.getDecl(tok, p, e));
+            top.put(tok, p, isConst, value);
+            s.addDecl(decl);
         } while (check(','));
         match(';');
         //}
@@ -1352,7 +1352,7 @@ public class Parser implements TypeTable {
             e = ConversionFactory.getConversion(e, p);
         }
         if (e == null) {//type error
-            error("array init error:can't convert `" + tmp.type + "' to `" + p + "'");
+            error("array init error: can't convert `" + tmp.type + "' to `" + p + "'");
         }
         return e;
     }
@@ -1378,7 +1378,7 @@ public class Parser implements TypeTable {
         if (look.tag == Tag.BASIC) {
             p = (Type) copymove();
         } else {
-            error("type name wanted here,but found `" + look + "' ");
+            error("type name wanted here, but found `" + look + "' ");
         }
         return p;
     }
@@ -1562,7 +1562,7 @@ public class Parser implements TypeTable {
         if (look.tag == '(') {
             List<Expr> args = arguments();
             if (!(e.type instanceof Struct))
-                error("member function is for struct,not for `" + e.type + "'");
+                error("member function is for struct, not for `" + e.type + "'");
             Struct s = (Struct) (e.type);
             FunctionBasic f = s.getNaiveFunction(mname);
             if (f != null) {
@@ -1614,7 +1614,7 @@ public class Parser implements TypeTable {
             assert f != null;
             return new FunctionInvoke(f, Arrays.asList(e, loc));
         } else if (!(e.type instanceof Array)) {//update:remove the judge that e must be a variable
-            error("operand `[]` should be used for array type or string,not for " + e.type);
+            error("operand `[]` should be used for array type or string, not for " + e.type);
         }
 
         Type t = ((Array) (e.type)).of;/*element type*/
@@ -1780,14 +1780,14 @@ public class Parser implements TypeTable {
                         return eNew;
 
                     } else {
-                        error("new " + t + " is not permitted:`" + t + "' is not a struct type");
+                        error("new " + t + " is not permitted: `" + t + "' is not a struct type");
                         return null;
                     }
                 }
             case '(':
                 return cast();
             default:
-                error("unexpected token found:" + look);
+                error("unexpected token found: " + look);
                 return null;
         }
     }
@@ -1973,10 +1973,10 @@ public class Parser implements TypeTable {
 
         generateCaptures(savedDStruct, savedCaptures, savedLastFunctionLevel,savedIsInLambda);
 
-        FunctionBasic f;
-        if ((f = dStruct.getFirstUncompletedFunction()) != null) {
-            error("Anonymous inner struct of `" + base + "' is not completed:" + f);
-        }
+        //FunctionBasic f;
+        //if ((f = dStruct.getFirstUncompletedFunction()) != null) {
+            //error("Anonymous inner struct of `" + base + "' is not completed:" + f);
+        //}
         isInLambda = savedIsInLambda;
         //put the functions
         assert (null == defType(dStruct.getName(), dStruct));
@@ -2009,7 +2009,7 @@ public class Parser implements TypeTable {
         //^(params)\
         //^(params) \ -> {stmt}
         //`param    / -> expression
-        // empty  /
+        // empty   /
         List<Param> params = new ArrayList<>();
         params.add(new Param(dStruct, Word.HiddenThis));//shadow this
         Iterator<Param> paramIterator = f.getParamList().iterator();
@@ -2069,7 +2069,7 @@ public class Parser implements TypeTable {
         hasDecl = true;
         parameters.forEach(p -> {
             if (top.put(p.name, p.type) != null) {
-                error("lambda expression parameters redeclared:`" + p.name + "'");
+                error("lambda expression parameters redeclared: `" + p.name + "'");
             }
         });
         final Stmt s;

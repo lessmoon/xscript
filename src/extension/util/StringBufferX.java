@@ -43,6 +43,11 @@ public class StringBufferX extends Struct{
             sb.ensureCapacity(c.valueAs(int.class));
         }
 
+        @StructMethod(ret = "int")
+        public Value length() {
+            return new Value(sb.length());
+        }
+
         @PassThisReference
         @StructMethod(param ={"char"},ret = "$")
         public StructValue appendCharacter(StructValue _this,Value c){
@@ -53,7 +58,7 @@ public class StringBufferX extends Struct{
         @PassThisReference
         @StructMethod(param ={"int","int"},ret = "$")
         public StructValue delete(StructValue _this,Value beg, Value end){
-            sb.delete(beg.valueAs(Integer.class),end.valueAs(Integer.class));
+            sb.delete(beg.valueAs(Integer.class), end.valueAs(Integer.class));
             return _this;
         }
 

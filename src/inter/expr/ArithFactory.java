@@ -152,12 +152,12 @@ class RealArith extends Arith {
 }
 
 class BigRealArith extends Arith{
-	private static int DIVIDE_SCALE = 100;
+    private static int DIVIDE_SCALE = 100;
 
-	static void setDivideScale(int scale){
-		DIVIDE_SCALE = scale;
-	}
-	
+    static void setDivideScale(int scale){
+        DIVIDE_SCALE = scale;
+    }
+
     BigRealArith(Token tok, Expr x1, Expr x2){
         super(tok,x1,x2);
     }

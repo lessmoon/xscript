@@ -26,7 +26,7 @@ public class EnvEntry {
         final StringBuilder sb = new StringBuilder();
         sb.append("[").append(offset).append("]").append(type);
         if(isReadOnly){
-            sb.append("[O]");
+            sb.append("[RO]");
         }
         return sb.toString();
     }

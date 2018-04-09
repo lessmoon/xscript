@@ -47,7 +47,7 @@ public class While extends Stmt{
     
     @Override
     public String toString(){
-        return "while(" + expr + "){\n"
+        return "while (" + expr + ") {\n"
                 +stmt
                 +"}\n";
     }

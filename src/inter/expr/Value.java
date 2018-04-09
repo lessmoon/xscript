@@ -13,7 +13,7 @@ public class Value extends Expr{
     }
 
     public Value(char c){
-        super(new Char(c),Type.Str);
+        super(new Char(c),Type.Char);
     }
 
     public Value(int i){

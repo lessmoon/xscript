@@ -37,10 +37,10 @@ public class Seq extends Stmt{
         return "SEQ{" + stmt1.toString() + stmt2.toString() + "}";
     }
 
-	@Override
-	public boolean isLastStmt(){
-		return stmt1.isLastStmt()||stmt2.isLastStmt();
-	}
+    @Override
+    public boolean isLastStmt(){
+        return stmt1.isLastStmt()||stmt2.isLastStmt();
+    }
 
     @Override
     public void appendToSeq(LinkedSeq s) {

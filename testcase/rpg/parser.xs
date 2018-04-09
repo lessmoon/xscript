@@ -53,7 +53,6 @@ struct RuntimeBasic {
     }
     
     def string getVar(string varname){
-        println(varname);
         return ((StringContent)this.varMap[new StringHashContent(varname)].value);
     }
     
@@ -92,29 +91,31 @@ struct Function:Content{
     
     // by default,we treat the "${xxxx}" as a var in string
     // functions can customize this(or cancel by doing nothing to raw args)
-    def virtual string preprocessArg(Runtime r,string arg){
-        int len_1 = strlen(arg) - 1;
-        int j = 1;
-
-        StringBuffer sb = new StringBuffer();
-
-        for( int i = 0 ; i <= len_1 ; i++ ){
-            if( arg[i] == '$' ){
-                if( i < len_1 ){
-                    if( arg[i+1] == '{' ){
-                        i+=2;
-                        StringBuffer tmp = new StringBuffer();
-                        do{
-                            tmp.appendCharacter(arg[i]);
-                        } while(arg[++i] != '}');
-                        sb.append(r.getVar(tmp.toString()));
-                        continue;
-                    } 
+    def virtual string preprocessArg(Runtime r, string arg) {
+        auto sb = new StringBuffer();
+        auto list = new List();
+        int size = strlen(arg)-1;
+        for (int i=0; i<=size; i++) {
+            if (arg[i] == '$') {
+                if (i<size&&arg[i+1]=='{') {
+                    i++;
+                    list.push_back(new StringContent(sb.toString()));
+                    sb = new StringBuffer();
                 }
+            } else if(arg[i] == '}'&&!list.isEmpty()) {
+                string val = r.getVar(sb.toString());
+                sb = new StringBuffer();
+                sb.append(list.back().toString()).append(val);
+                list.pop_back();
+            } else {
+                sb.appendCharacter(arg[i]);
             }
-            sb.appendCharacter( arg[i] );
         }
-        
+        if (!list.isEmpty()) {
+            int i=1;
+            println("parse arg failed");
+            i/0;
+        }
         return sb.toString();
     }
     
@@ -308,6 +309,8 @@ struct RPGParser{
     
     def void error(string msg){
         println("error "+msg + "@" + this.lexer.lineno + ":" + this.lexer.index);
+        int i = 0;
+        i/0;
     }
     
     def void move(){

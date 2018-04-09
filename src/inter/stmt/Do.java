@@ -34,7 +34,7 @@ public class Do extends Stmt{
 
     @Override
     public  String toString(){
-        return "do{\n" + stmt.toString() + "}while(" + expr.toString()+");\n";
+        return "do {\n" + stmt.toString() + "} while (" + expr.toString()+");\n";
     }
 
     @Override

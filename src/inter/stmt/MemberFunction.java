@@ -28,7 +28,7 @@ public class MemberFunction extends StructFunction {
         if(i < getParamList().size()){
             sb.append(getParamList().get(i++).toString());
             while(i < getParamList().size() ){
-                sb.append(",");
+                sb.append(", ");
                 sb.append(getParamList().get(i++).toString());
             }
         }

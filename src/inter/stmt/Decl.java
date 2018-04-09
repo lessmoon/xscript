@@ -43,10 +43,14 @@ public class Decl extends Stmt {
     }
     
     @Override
-    public Stmt optimize(){
+    public Stmt optimize() {
         if(value != null)
             value = value.optimize();
         return this;
+    }
+    
+    public Expr getInitialValue() {
+        return value;
     }
     
     public static Decl getDecl(Token i,Type t,Expr v){

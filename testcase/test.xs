@@ -33,32 +33,483 @@ struct HashMap<KeyType: HashKey, ValueType: Value> {
        
 } */
 
-struct test_base {
-    def virtual void test_base();
+struct Shape {
+    def virtual void draw(PaintPad pad, Point offset);
 }
-struct error_{
+struct Triangle {
+    Point a, b, c;
+    PaintPad pad;
+    int lid_a, lid_b, lid_c;
+    
+    def this(Point a, Point b, Point c) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+        this.pad = null;
+        this.lid_a = 0;
+        this.lid_b = 0;
+        this.lid_c = 0;
+    }
+    
+    def void setPaintPad(PaintPad pad) {
+        this.pad = pad;
+        this.lid_a = this.pad.addLine(this.a.x, this.a.y, this.b.x, this.b.y);
+        this.lid_b = this.pad.addLine(this.a.x, this.a.y, this.c.x, this.c.y);
+        this.lid_c = this.pad.addLine(this.c.x, this.c.y, this.b.x, this.b.y);
+    }
+    
+    def void redraw(Point offset) {
+        this.a = this.a + offset;
+        this.b = this.b + offset;
+        this.c = this.c + offset;
+        this.pad.setLine(this.lid_a, this.a.x, this.a.y, this.b.x, this.b.y);
+        this.pad.setLine(this.lid_b, this.a.x, this.a.y, this.c.x, this.c.y);
+        this.pad.setLine(this.lid_c, this.c.x, this.c.y, this.b.x, this.b.y);
+        this.pad.redraw();
+    }
+};
+const int LEFT = 0,
+          RIGHT = 1,
+          UP    = 2,
+          DOWN  = 3;
+          
+def int oppositeDirection(int dir) {
+    switch (dir) {
+    case LEFT:
+        return RIGHT;
+    case RIGHT:
+        return LEFT;
+    case UP:
+        return DOWN;
+    case DOWN:
+        return UP;
+    }
+    return -1;
+    
 }
 
-{
-    auto z = new error_;
-}
+const auto BLACK_COLOR = new Color(0, 0, 0),
+           RED_COLOR = new Color(255, 0, 0);
 
-struct base;
-struct derive:base;
-struct base{
-    def virtual base getBase();
-}
+struct Rect {
+    int lid_0;
+    int lid_1;
+    int lid_2;
+    int lid_3;
+    PaintPad pad;
+    Point a;
+    Point b;
+    Color color;
+    
+    def this(PaintPad pad, Point a, Point b) {
+        this.pad = pad;
+        this.lid_0 = pad.addLine(a.x, a.y, a.x, b.y);
+        this.lid_1 = pad.addLine(a.x, a.y, b.x, a.y);
+        this.lid_2 = pad.addLine(b.x, a.y, b.x, b.y);
+        this.lid_3 = pad.addLine(a.x, b.y, b.x, b.y);
+        this.a = a;
+        this.b = b;
+        this.color = BLACK_COLOR;
+    }
+    
+    def void refresh() {
+        this.pad.setBrushColor(this.color.r, this.color.g, this.color.b);
+        this.pad.setLineColor(this.lid_0);
+        this.pad.setLineColor(this.lid_1);
+        this.pad.setLineColor(this.lid_2);
+        this.pad.setLineColor(this.lid_3);
+        this.pad.setLine(this.lid_0, this.a.x, this.a.y, this.a.x, this.b.y);
+        this.pad.setLine(this.lid_1, this.a.x, this.a.y, this.b.x, this.a.y);
+        this.pad.setLine(this.lid_2, this.b.x, this.a.y, this.b.x, this.b.y);
+        this.pad.setLine(this.lid_3, this.a.x, this.b.y, this.b.x, this.b.y);
+    }
+    
+    def void setColor(Color color) {
+        this.color = color;
+        this.refresh();
+    }
 
-struct rrr{
-    def void test(derive d){
-        d.getBase();
+    def void moveTo(Point a, Point b) {
+        this.a = a;
+        this.b = b;
+        this.refresh();
+    }
+    
+    def void move(Point offset) {
+        this.moveTo(this.a + offset,
+                    this.b + offset);
+    }
+
+    def void remove() {
+        this.pad.removeLine(this.lid_0);
+        this.pad.removeLine(this.lid_1);
+        this.pad.removeLine(this.lid_2);
+        this.pad.removeLine(this.lid_3);
+        this.pad = null;
     }
 }
 
-struct derive:base{
-    def void test();
+struct SnakeBodyNode : Content{
+    Rect bodyView;
+    Point point;
+    
+    def this(PaintPad pad, Point position) {
+        this.bodyView = new Rect(pad, new Point(position.x * 50 + 2, position.y * 50 + 2), new Point(position.x * 50 + 48, position.y * 50 + 48));
+        this.point = position;
+    }
+    
+    def void moveTo(Point position) {
+         this.point = position;
+         this.bodyView.moveTo(new Point(position.x * 50 + 2, position.y * 50 + 2),
+                              new Point(position.x * 50 + 48, position.y * 50 + 48));
+    }
+    
+    def void move(int direction) {
+        const Point[] offset = {new Point(-1, 0), new Point(1, 0), new Point(0, -1), new Point(0, 1)};
+        this.moveTo(this.point + offset[direction]);
+    }
+    
+    def void setColor(Color color) {
+        this.bodyView.setColor(color);
+    }
+    
+    @string
+    def override string toString() {
+        return this.point.toString();
+    }
 }
 
+struct Snake {
+    int speed;
+    List body;
+    int direction;
+    int lastDirection;
+    PaintPad pad;
+    bool[][] occMap;
+    
+    def this(int direction, int speed, List body, PaintPad pad, bool[][] occMap) {
+        this.direction = direction;
+        this.speed = speed;
+        this.body = body;
+        this.pad = pad;
+        this.lastDirection = direction;
+        this.occMap = occMap;
+        body.forEach(new Consumer^bodyNode->{
+            const auto node = (SnakeBodyNode) bodyNode;
+            occMap[node.point.x][node.point.y] = true;
+        });
+    }
+    
+    def void move(bool hasApple) {
+        SnakeBodyNode newHead = null;
+        const auto head = (SnakeBodyNode)this.body.front().value;
+        if (hasApple) {
+            auto p = new Point(head.point.x, head.point.y);
+            newHead = new SnakeBodyNode(this.pad, p);
+            newHead.move(this.direction);
+        } else {
+            newHead = (SnakeBodyNode)this.body.pop_back();
+            this.occMap[newHead.point.x][newHead.point.y] = false;
+            newHead.moveTo(head.point);
+            newHead.move(this.direction);
+        }
+        head.setColor(BLACK_COLOR);
+        newHead.setColor(RED_COLOR);
+        this.body.push_front(newHead);
+        this.occMap[newHead.point.x][newHead.point.y] = true;
+    }
+
+    def void newRound() {
+        this.lastDirection = this.direction;
+    }
+    
+    def void setDirection (int direction) {
+        this.direction = direction;
+    }
+    
+    def bool isDirectionOk(int direction) {
+        if (direction == oppositeDirection(this.lastDirection)) {
+            return false;
+        }
+        const auto head = (SnakeBodyNode)this.body.front().value;
+        int x = head.point.x;
+        int y = head.point.y;
+        switch(direction) {
+        case LEFT:
+            if (x == 0) {
+                return false;
+            }
+            x--;
+            break;
+        case RIGHT:
+            if (x == sizeof this.occMap - 1) {
+                return false;
+            }
+            x++;
+            break;
+        case UP:
+            if (y == 0) {
+                return false;
+            }
+            y--;
+            break;
+        case DOWN:
+            if (y == sizeof this.occMap[0] - 1) {
+                return false;
+            }
+            y++;
+            break;
+        }
+        return !this.occMap[x][y];
+    }
+    
+    @string
+    def string toString() {
+        return this.body.toString();
+    }
+    
+    def void redraw() {
+        this.pad.redraw();
+    }
+}
+
+{
+    const int WIDTH = 12,
+              HEIGHT = 12;
+    PaintPad pad = new PaintPad("snake", 50*WIDTH, 50*HEIGHT);
+    bool[][] occMap = new bool[][WIDTH];
+    for (int i = 0; i < WIDTH; i++) {
+        occMap[i] = new bool[HEIGHT];
+    }
+    
+    srand(time());
+    
+    List a = new List();
+    a.add(new SnakeBodyNode(pad, new Point(5, 3)));
+    a.add(new SnakeBodyNode(pad, new Point(6, 3)));
+    a.add(new SnakeBodyNode(pad, new Point(7, 3)));
+    a.add(new SnakeBodyNode(pad, new Point(8, 3)));
+    a.add(new SnakeBodyNode(pad, new Point(9, 3)));
+    const auto snake = new Snake(RIGHT, 0, a, pad, occMap);
+
+    const auto timer = new Timer2Adapter(100) {
+        def override void run() {
+            int dir;
+            do {
+                dir = rand() % 4;
+                println("try to dir:" + dir);
+            } while (!snake.isDirectionOk(dir));
+            println("decide to dir:" + dir);
+            snake.setDirection(dir);
+            snake.move(false);
+            snake.redraw();
+            snake.newRound();
+        }
+    };
+    timer.start();
+    pad.show();
+    pad.wait();
+    timer.stop();
+}
+
+
+{
+    const Point LEFT = new Point(-10, 0),
+                RIGHT = new Point(10, 0),
+                UP    = new Point(0, -10),
+                DOWN = new Point(0, 10);
+    const auto radius_a = 60,
+               radius_b = 40;
+    auto pad = new PaintPad("Space Invader", 600, 600) {
+        Triangle plane;
+        int id;
+        int id_2;
+        Point a;
+        Point b;
+        int score_id;
+        int score;
+        
+        def this(string name, int width, int height) {
+            super(name, width, height);
+            this.a = new Point(rand()%300, 80);
+            this.b = new Point(rand()%300 + 300, 40);
+            this.plane = new Triangle(new Point(280, 580), new Point(320, 580), new Point(300, 540));
+            this.plane.setPaintPad(this);
+            this.score = 0;
+            this.id = this.addCircle(this.a.x, this.a.y, 50);
+            this.id_2 = this.addCircle(this.b.x, this.b.y, 80);
+            this.setFont(new Font("heiti", 0, 32));
+            this.setBrushColor(255, 0, 0);
+            this.score_id = this.addString("0", 50, 50);
+            this.setBrushColor(0, 0, 0);
+            auto _this = this;
+            (new Timer2Adapter(5) {
+                def this(int interval) {
+                    super(interval);
+                }
+                
+                def override void run() {
+                    if (_this.a.y >= 600) {
+                        _this.a.y = 0;
+                        _this.a.x = rand()%300;
+                    }
+                    if (_this.b.y >= 600) {
+                        _this.b.y = 0;
+                        _this.b.x = rand()%300 + 300;
+                    }
+                    _this.a.y += 1;
+                    _this.b.y += 1;
+                    _this.setCircle(_this.id, _this.a.x, _this.a.y);
+                    _this.setCircle(_this.id_2, _this.b.x, _this.b.y);
+                    _this.redraw();
+                }
+            }).start();
+        }
+        
+        def void refreshScore(int score) {
+            this.setString(this.score_id, score);
+        }
+        
+        def override void onPress(int kid) {
+            Point dir;
+            switch (kid) {
+            case VK_A: case VK_LEFT:
+                dir = LEFT;
+                break;
+            case VK_D: case VK_RIGHT:
+                dir = RIGHT;
+                break;
+            case VK_W: case VK_UP:
+                dir = UP;
+                break;
+            case VK_S: case VK_DOWN:
+                dir = DOWN;
+                break;
+            case VK_SPACE: case VK_J:
+                auto _this = this;
+                //add a bullet
+                auto id = this.addCircle(this.plane.c.x-5, this.plane.c.y, 10);
+                (new Timer2Adapter(10, this.plane.c.x-5, this.plane.c.y) {
+                    int ox;
+                    int oy;
+                    def this(int interval, int x, int y) {
+                        super(interval);
+                        this.ox = x;
+                        this.oy = y;
+                    }
+                    
+                    def override void run() {
+                        if (this.oy <= 0) {
+                            _this.removeCircle(id);
+                            _this.redraw();
+                            this.stop();
+                            return;
+                        }
+                        this.oy -= 10;
+                        //x,y a,b
+                        //collision detection
+                        int x = this.ox + 5,
+                            y = this.oy + 5,
+                            x1= _this.a.x + radius_a/2,
+                            y1= _this.a.y + radius_a/2;
+
+                        int r2 = (radius_a/2 + 5) * (radius_a/2 + 5);
+                        int z = (x1-x)*(x1-x) + (y1-y)*(y1-y);
+                        if (z <= r2) {
+                            _this.removeCircle(id);
+                            _this.a.y = 0;
+                            _this.a.x = rand()%300;
+                            _this.score += 100;
+                            _this.refreshScore(_this.score);
+                            _this.redraw();
+                            this.stop();
+                            return;
+                        }
+                        _this.setCircle(id, this.ox, this.oy);
+                        _this.redraw();
+                    }
+                }).start();
+                return;
+            default:
+                return;
+            }
+            this.plane.redraw(dir);
+        }
+    };
+    pad.show();
+    pad.wait();
+}
+if(false)
+{
+    //blink
+    auto pad = new PaintPad("blink", 200, 200) {
+        StringBuffer buf;
+        int str_id;
+        int lid;
+        Thread t;
+        
+        def this(string name, int width, int height) {
+            super(name, width, height);
+            this.buf = new StringBuffer();
+            this.str_id = this.addString(this.buf.toString(), 50, 50);
+            this.lid = this.addLine(50, 40, 50, 50);
+            auto b = new bool[]{true};
+            auto _this = this;
+            this.t = new Thread(new Schedule(500, new RepeatSchedule, new Runnable->{
+                if (b[0]) {
+                    _this.setBrushColor(255, 255, 255);
+                } else {
+                    _this.setBrushColor(0, 0, 0);
+                }
+                _this.setLineColor(this.lid);
+                const int len = this.buf.length();
+                _this.setLine(this.lid, 50 + len*6, 40, 50 + len*6, 50);
+                b[0] = !b[0];
+                _this.redraw();
+            }));
+        }
+        
+        def override void show() {
+            this.t.start();
+            super.show();
+        }
+        
+        def override void onPress(int kid) {
+            if (kid >= VK_A&&kid <= VK_Z) {
+                this.buf.appendCharacter((char)('a' + (kid - VK_A)));
+            } else if (kid == VK_BACK_SPACE) {
+                const int len = this.buf.length();
+                if (len == 0) {
+                    return;
+                }
+                this.buf.delete(len-1, len);
+            }
+            this.setString(this.str_id, this.buf.toString());
+            this.redraw();
+        }
+        
+        def override void onClose() {
+            this.t.interrupt();
+            super.onClose();
+        }
+    };
+    pad.show();
+    pad.wait();
+}
+
+struct base;
+struct base {
+    def default virtual base getBase();
+}
+
+{
+    auto a = new base {
+        def override base getBase() {
+            return null;
+        }
+    };
+    
+}
 {
     RPGParser p = new RPGParser();
     RPGRuntime r = new RPGRuntime(p);
@@ -82,14 +533,12 @@ struct derive:base{
         r.varMap.iterator().stream().forEach(new Consumer^x->{
             vars.insert(((HashPair)x).key.toString(), new JSONString(((HashPair)x).value.toString()));
         });
-        /*
-        .sort(new Comparator^(x1,x2)->{
+        /*.sort(new Comparator^(x1,x2)->{
             auto x1_c = ((HashPair)x1).key.toString();
             auto x2_c = ((HashPair)x2).key.toString();
             return x1_c < x2_c?1:x1_c == x2_c?0:-1;
         }).forEach(new Consumer^x->{
-            
-            //fio.writeString(x.toString() + "\r\n");
+            fio.writeString(x.toString() + "\r\n");
         });*/
         root.insert("filename", new JSONString(r.filename));
         root.insert("cursor", new JSONNumber(r.index));

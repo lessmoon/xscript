@@ -38,16 +38,16 @@ public class Else extends Stmt {
         return this;
     }
     
-	@Override
-	public boolean isLastStmt(){
-		return stmt1.isLastStmt()&&stmt2.isLastStmt();
-	}
-	
+    @Override
+    public boolean isLastStmt(){
+        return stmt1.isLastStmt()&&stmt2.isLastStmt();
+    }
+
     @Override
     public String toString(){
-        return "if(" + expr.toString() + " ){\n"
+        return "if (" + expr.toString() + " ) {\n"
         + stmt1
-        + "}else {\n" + 
+        + "} else {\n" + 
         stmt2
         +"}\n";
     }

@@ -13,7 +13,7 @@ public class FunctionInvoke extends Expr {
     private static final boolean IS_DEBUG = false;
     private FunctionBasic functions;
     private final List<Expr> arguments;
-
+    private final boolean isMember;
     /*
      * NOTE:(fixed)
      * Wrong when recursively call itself
@@ -24,12 +24,12 @@ public class FunctionInvoke extends Expr {
     public FunctionInvoke(FunctionBasic function, List<Expr> arguments) {
         super(function.getName(), function.getType());
         functions = function;
+        isMember = function instanceof MemberFunction || function instanceof InitialFunction;
         this.arguments = arguments;
         check();
         function.setUsed();
-        //args = new Value[arguments.size()];
     }
-
+    
     void check() {
         if (functions.getParamSize() != arguments.size())
             error("function parameters number not match:" + functions);
@@ -89,11 +89,12 @@ public class FunctionInvoke extends Expr {
         for (int i = 0; i < args.length; i++) {
             args[i] = arguments.get(i).getValue();
         }
-
+        if (isMember && args[0] == Value.Null) {
+            error("null pointer error: try to invoke function `" + functions + "' of a null pointer");
+        }
         VarTable.pushTop();
         int i = 0;
         for (Value c : args) {
-
             if (IS_DEBUG) {
                 System.out.println("\narg[" + i + "]{" + arguments.get(i) + "} = " + c + "<->" + c.hashCode());
             }

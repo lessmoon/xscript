@@ -45,7 +45,7 @@ public class StructMemberAccess extends Var {
     public Value getValue(){
         Value c = value.getValue();
         if(c == Value.Null){
-            error("null pointer error:try to get member `" + member + "' of a null struct");
+            error("null pointer error: try to get member `" + member + "' of a null struct");
         }
         StructValue s = (StructValue)c;
         Value tmp = s.getElement(index);
@@ -56,7 +56,7 @@ public class StructMemberAccess extends Var {
     public Value setValue(Value v){
         Value c = value.getValue();
         if(c == Value.Null){
-            error("null pointer error:try to set member `" + member + "' of a null struct ");
+            error("null pointer error: try to set member `" + member + "' of a null struct ");
         }
         StructValue s = (StructValue)c;
         return s.setElement(index,v);

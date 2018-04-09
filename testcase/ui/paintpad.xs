@@ -15,6 +15,7 @@ native<extension.ui>{
         def bool setLineColor(int id);
         def bool setStringPosition(int id,int x,int y);
         def int addLine(int x1,int y1,int x2,int y2);
+        def bool removeLine(int id);
         def void clearPointAndLine();
         def void close();
         def void setBrushColor(int r,int g,int b);
@@ -23,11 +24,14 @@ native<extension.ui>{
         def bool setLine(int id,int x1,int y1,int x2,int y2);
         def bool setPointColor(int id);
         def int addString(string str,int x,int y);
+        def bool removeString(int id);
         def void clear();
         def Font getFont();
         def bool setCircleColor(int id);
         def int addCircle(int x,int y,int radius);
+        def bool removeCircle(int id);
         def int addPoint(int x,int y);
+        def bool removePoint(int id);
         def void redraw();
         def bool setPoint(int id,int x,int y);
         def bool setStringColor(int id);
@@ -42,24 +46,24 @@ native<extension.ui>{
 }
 
 struct PaintPad:PaintPadX{
-    Trigger t;
+    Trigger _t;
 
     def this(string name,int width,int height){
         super(name,width,height);
-        this.t = new Trigger();
+        this._t = new Trigger();
     }
 
-    def void show(){
+    def virtual void show(){
         super.open();
     }
 
     def override void onClose(){
         super.onClose();
-        this.t.triggerAll();
+        this._t.triggerAll();
     }
 
     def void wait(){
-        this.t.wait();
+        this._t.wait();
     }
 }
 
@@ -70,10 +74,11 @@ def void addRect(PaintPad pad,int x,int y,int w,int height){
     pad.addLine(x+w,y,x+w,y+height);
 }
 
-struct Point{
+import "../container/content.xs";
+struct Point :Content{
     int x;
     int y;
-    def this(int x,int y);
+    def this(int x, int y);
     
     def void init(int x,int y){
         this.x = x;
@@ -81,7 +86,7 @@ struct Point{
     }
 
     @string
-    def string toString(){
+    def override string toString() {
         return "[" + this.x + "," + this.y + "]";
     }
     
@@ -334,9 +339,10 @@ struct Button{
                     break;
                 }
                 cs.is_result = true;
+                cs.has_dot = false;
                 scr.setText(g,(string)cs.prev);
             }
-            cs.operand   = this.id;
+            cs.operand = this.id;
             break;
         case 'c':
             scr.clear(g);
@@ -561,7 +567,7 @@ if(_isMain_){
  *   |_|_|_|
  *   |_|_|_|
  */
-if(true||_isMain_){
+if(false||_isMain_){
     Graphics g = new Graphics;
     EventPool ep = new EventPool();
     Screen scr = new Screen();

@@ -89,7 +89,7 @@ public class VirtualFunctionInvoke extends Expr {
         final Value[] args = new Value[this.args.size() + 1];
         args[0] = expr.getValue();
         if(args[0] == Value.Null){
-            error("null pointer error:try to invoke virtual function `" + func + "' of a null pointer");
+            error("null pointer error: try to invoke virtual function `" + func + "' of a null pointer");
         }
 
         assert(args[0] instanceof StructValue);

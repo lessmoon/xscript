@@ -6,6 +6,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.LinkedList;
 
 /**
  * Created by lessmoon on 2016/8/15.
@@ -180,8 +181,11 @@ class StringItem {
 
 public abstract class PaintPadImp extends JFrame {
     private final List<Item> itemList = Collections.synchronizedList(new ArrayList<>());
+    private final List<Integer> freeItemList = Collections.synchronizedList(new LinkedList<>());
     private final List<StringItem> stringItemList = Collections.synchronizedList(new ArrayList<>());
+    private final List<Integer> freeStringItemList = Collections.synchronizedList(new LinkedList<>());
     private final List<CircleItem> circleItemList = Collections.synchronizedList(new ArrayList<>());
+    private final List<Integer> freeCircleItemList = Collections.synchronizedList(new LinkedList<>());
     
     private Color brushColor = Color.BLACK;
     private Font font = this.getFont();
@@ -216,12 +220,18 @@ public abstract class PaintPadImp extends JFrame {
                     super.paint(g);
                     synchronized (PaintPadImp.this.itemList) {
                         for (Item i : itemList) {
+                            if (i == null) {
+                                continue;
+                            }
                             g.setColor(i.color);
                             g.drawLine(i.x1, i.y1, i.x2, i.y2);
                         }
                     }
                     synchronized (PaintPadImp.this.stringItemList) {
                         for (StringItem i : stringItemList) {
+                            if (i == null) {
+                                continue;
+                            }
                             g.setColor(i.getColor());
                             g.setFont(i.getFont());
                             g.drawString(i.getStr(), i.getX(), i.getY());
@@ -230,6 +240,9 @@ public abstract class PaintPadImp extends JFrame {
 
                     synchronized (PaintPadImp.this.circleItemList){
                         for(CircleItem i : circleItemList){
+                            if (i == null) {
+                                continue;
+                            }
                             g.setColor(i.color);
                             g.drawOval(i.x,i.y,i.radius,i.radius);
                         }
@@ -276,19 +289,60 @@ public abstract class PaintPadImp extends JFrame {
     public int addLine(int x1, int y1, int x2, int y2) {
         int c;
         synchronized (itemList) {
-            c = itemList.size();
-            itemList.add(new Item(x1, y1, x2, y2, brushColor));
+            if (freeItemList.isEmpty()) {
+                c = itemList.size();
+                itemList.add(new Item(x1, y1, x2, y2, brushColor));
+            } else {
+                c = freeItemList.remove(0);
+                itemList.set(c, new Item(x1, y1, x2, y2, brushColor));
+            }
         }
         return c;
     }
 
+    public boolean removeLine(int id) {
+        if (id < 0) {
+            return false;
+        }
+
+        synchronized (itemList) {
+            int c = itemList.size();
+            if (id < c && itemList.get(id) != null){
+                itemList.set(id, null);
+                freeItemList.add(id);
+                return true;
+            }
+            return false;
+        }
+    }
+    
     public int addCircle(int x,int y,int r){
         int c;
         synchronized (circleItemList) {
-            c = circleItemList.size();
-            circleItemList.add(new CircleItem(x, y, r, brushColor));
+            if (freeCircleItemList.isEmpty()) {
+                c = circleItemList.size();
+                circleItemList.add(new CircleItem(x, y, r, brushColor));
+            } else {
+                c = freeCircleItemList.remove(0);
+                circleItemList.set(c, new CircleItem(x, y, r, brushColor));
+            }
         }
         return c;
+    }
+    
+    public boolean removeCircle(int id) {
+        if (id < 0) {
+            return false;
+        }
+        synchronized (circleItemList) {
+            int c = circleItemList.size();
+            if (id < c && circleItemList.get(id) != null){
+                circleItemList.set(id, null);
+                freeCircleItemList.add(id);
+                return true;
+            }
+            return false;
+        }
     }
     
     public boolean setCircle(int id,int x,int y){
@@ -298,7 +352,7 @@ public abstract class PaintPadImp extends JFrame {
 
         synchronized (circleItemList) {
             int c = circleItemList.size();
-            if (id < c){
+            if (id < c && circleItemList.get(id) != null){
                 circleItemList.get(id).setX(x);
                 circleItemList.get(id).setY(y);
                 return true;
@@ -314,7 +368,7 @@ public abstract class PaintPadImp extends JFrame {
 
         synchronized (circleItemList) {
             int c = circleItemList.size();
-            if (id < c){
+            if (id < c && circleItemList.get(id) != null){
                 circleItemList.get(id).setRadius(r);
                 return true;
             }
@@ -329,7 +383,7 @@ public abstract class PaintPadImp extends JFrame {
 
         synchronized (circleItemList) {
             int c = circleItemList.size();
-            if (id < c){
+            if (id < c && circleItemList.get(id) != null){
                 circleItemList.get(id).setColor(brushColor);
                 return true;
             }
@@ -340,21 +394,59 @@ public abstract class PaintPadImp extends JFrame {
     public int addString(String string, int x, int y) {
         int c;
         synchronized (stringItemList) {
-            c = stringItemList.size();
-            stringItemList.add(new StringItem(x, y, string, brushColor,font));
+            if (freeStringItemList.isEmpty()) {
+                c = stringItemList.size();
+                stringItemList.add(new StringItem(x, y, string, brushColor,font));
+            } else {
+                c = freeStringItemList.remove(0);
+                stringItemList.set(c, new StringItem(x, y, string, brushColor,font));
+            }
         }
         return c;
     }
-
+    
+    public boolean removeString(int id) {
+        if( id < 0){
+            return false;
+        }
+        synchronized (stringItemList){
+            if(id < stringItemList.size() && stringItemList.get(id) != null) {
+                stringItemList.set(id, null);
+                freeStringItemList.add(id);
+                return true;
+            }
+            return false;
+        }
+    }
+    
     public int addPoint(int x, int y) {
         int c;
         synchronized (itemList) {
-            c = itemList.size();
-            itemList.add(new Item(x, y, x, y, brushColor));
+            if (freeItemList.isEmpty()) {
+                c = itemList.size();
+                itemList.add(new Item(x, y, x, y, brushColor));
+            } else {
+                c = freeItemList.remove(0);
+                itemList.set(c, new Item(x, y, x, y, brushColor));
+            }
         }
         return c;
     }
-
+    
+    public boolean removePoint(int id) {
+        if(id < 0) {
+            return false;
+        }
+        synchronized (itemList) {
+            if(id < itemList.size() && itemList.get(id) != null){
+                itemList.set(id, null);
+                freeItemList.add(id);
+                return true;
+            }
+            return false;
+        }
+    }
+    
     public boolean setLine(int id, int x1, int y1, int x2, int y2) {
         if (id < 0) {
             return false;
@@ -362,7 +454,7 @@ public abstract class PaintPadImp extends JFrame {
 
         synchronized (itemList) {
             int c = itemList.size();
-            if (id < c){
+            if (id < c && itemList.get(id) != null){
                 Item i = itemList.get(id);
                 i.setX1(x1);
                 i.setX2(x2);
@@ -381,7 +473,7 @@ public abstract class PaintPadImp extends JFrame {
 
         synchronized (itemList) {
             int c = itemList.size();
-            if (id < c){
+            if (id < c && itemList.get(id) != null){
                 itemList.get(id).setColor(brushColor);
                 return true;
             }
@@ -394,7 +486,7 @@ public abstract class PaintPadImp extends JFrame {
             return false;
         }
         synchronized (stringItemList){
-            if(id < stringItemList.size()) {
+            if(id < stringItemList.size() && stringItemList.get(id) != null) {
                 stringItemList.get(id).setStr(string);
                 return true;
             }
@@ -407,7 +499,7 @@ public abstract class PaintPadImp extends JFrame {
             return false;
         }
         synchronized (stringItemList){
-            if(id < stringItemList.size()) {
+            if(id < stringItemList.size() && stringItemList.get(id) != null) {
                 stringItemList.get(id).setColor(brushColor);
                 return true;
             }
@@ -420,7 +512,7 @@ public abstract class PaintPadImp extends JFrame {
             return false;
         }
         synchronized (stringItemList){
-            if(id < stringItemList.size()) {
+            if(id < stringItemList.size() && stringItemList.get(id) != null) {
                 StringItem stringItem = stringItemList.get(id);
                 stringItem.setX(x);
                 stringItem.setY(y);
@@ -435,7 +527,7 @@ public abstract class PaintPadImp extends JFrame {
             return false;
         }
         synchronized (stringItemList){
-            if(id < stringItemList.size()) {
+            if(id < stringItemList.size() && stringItemList.get(id) != null) {
                 StringItem stringItem = stringItemList.get(id);
                 stringItem.setFont(font);
                 return true;
@@ -449,7 +541,7 @@ public abstract class PaintPadImp extends JFrame {
             return false;
         }
         synchronized (itemList) {
-            if(id < itemList.size()){
+            if(id < itemList.size() && itemList.get(id) != null){
                 Item i = itemList.get(id);
                 i.setX1(x);
                 i.setX2(x);
@@ -466,7 +558,7 @@ public abstract class PaintPadImp extends JFrame {
             return false;
         }
         synchronized (itemList) {
-            if(id < itemList.size()){
+            if(id < itemList.size() && itemList.get(id) != null){
                 itemList.get(id).setColor(brushColor);
                 return true;
             }

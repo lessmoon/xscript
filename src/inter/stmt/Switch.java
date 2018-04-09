@@ -55,7 +55,7 @@ public abstract class Switch<T> extends Stmt {
         } else if (c.type == Type.Int) {
             return new IntSwitch(c);
         } else {
-            c.error("switch expression should be `" + Type.Int + "',`" + Type.Str + "' or `" + Type.Char + "',but `" + c.type + "' found");
+            c.error("switch expression should be `" + Type.Int + "', `" + Type.Str + "' or `" + Type.Char + "', but `" + c.type + "' found");
             return new IntSwitch(c);
         }
     }
@@ -207,7 +207,7 @@ class IntSwitch extends Switch<Integer> {
     public boolean isCaseSet(Value c) {
         if (Type.max(Type.Int, c.type) != Type.Int) {
             c.error("case type should be `" + Type.Int +
-                    "',but `" + c.type + "' found.");
+                    "', but `" + c.type + "' found.");
         }
         c = ConversionFactory.getConversion(c, Type.Int).getValue();
         int i = ((Num) c.op).value;
@@ -241,7 +241,7 @@ class CharSwitch extends Switch<Character> {
     public boolean isCaseSet(Value c) {
         if (Type.max(Type.Int, c.type) != Type.Int) {
             c.error("case type should be `" + Type.Char +
-                    "',but `" + c.type + "' found.");
+                    "', but `" + c.type + "' found.");
         }
         if (Type.Int == c.type) {
             int i = ((Num) c.op).value;
@@ -281,7 +281,7 @@ class StrSwitch extends Switch<String> {
     public boolean isCaseSet(Value c) {
         if (c.type != Type.Str) {
             c.error("case type should be `" + Type.Str +
-                    "',but `" + c.type + "' found.");
+                    "', but `" + c.type + "' found.");
         }
         String i = ((Str) c.op).value;
         return map.get(i) != null;
