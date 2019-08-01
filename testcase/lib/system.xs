@@ -27,6 +27,7 @@ struct MyTime:Time{
 native<extension.system>{
     bool PutChar(char c);
     bool print(string str);
+	bool flush();
     bigint  time();
     int  getchar();
 }

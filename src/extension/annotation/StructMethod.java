@@ -12,9 +12,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface StructMethod {
     String value() default "";
+
     String[] param() default {};
+
     String ret() default "void";
+
     boolean virtual() default false;
+
     boolean purevirtual() default false;
+
     boolean _default() default false;
 }

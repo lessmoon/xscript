@@ -2,12 +2,12 @@ import "content.xs";
 import "sequence.xs";
 import "../lib/utils.xs";
 
-struct binode{
+struct binode {
     binode next;
     binode prev;
     Content value;
 
-    def this(Content value,binode prev,binode next){
+    def this(Content value, binode prev, binode next){
         this.value = value;
         this.next = next;
         this.prev = prev;
@@ -24,13 +24,13 @@ struct List:Sequence{
     binode tail;
 
     def this(){
-        this.head = new binode(null,null,null);
-        this.tail = new binode(null,this.head,null);
+        this.head = new binode(null, null, null);
+        this.tail = new binode(null, this.head, null);
         this.head.next = this.tail;
     }
 
     def void push_front(Content value){
-        this.head.next = new binode(value,this.head,this.head.next);
+        this.head.next = new binode(value, this.head, this.head.next);
         this.head.next.next.prev = this.head.next;
     }
 
@@ -47,13 +47,18 @@ struct List:Sequence{
         return this.head.next;
     }
 
+	def void clear() {
+		this.head.next = this.tail;
+		this.tail.prev = this.head;
+	}
+	
     def override bool isEmpty(){
         return this.head.next == this.tail;
     }
     
     def override int size(){
         int c = 0;
-        for(auto i = this.head.next;i.next != null;i = i.next,c++);
+        for(auto i = this.head.next; i.next != null; i = i.next, c++);
         return c;
     }
     
@@ -104,6 +109,7 @@ struct List:Sequence{
             sb.append(" " + i);
         }
         sb.append(" ]");
+		return sb.toString();
     }
 }
 

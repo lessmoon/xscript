@@ -43,13 +43,13 @@ struct Trigger {
         this.imp.triggerAll();
     }
     
-    def void wait(){
-        this.imp.wait();
+    def bool wait(){
+        return this.imp.wait();
     }
 }
 
-struct Condition{
-    def virtual bool isTrue();
+struct Condition {
+    def default virtual bool isTrue();
 }
 
 struct Schedule : Runnable{
@@ -57,7 +57,7 @@ struct Schedule : Runnable{
     Condition cond;
     Runnable run; 
     
-    def this(int interval,Condition cond,Runnable run){
+    def this(int interval, Condition cond,Runnable run){
         this.interval = interval;
         this.cond     = cond;
         this.run      = run;
@@ -77,11 +77,26 @@ struct RepeatSchedule : Condition{
     }
 }
 
+struct OnceScheduce : Condition {
+	bool x;
+	def this() {
+		this.x = true;
+	}
+	
+	def override bool isTrue() {
+		if (this.x) {
+			this.x = false;
+			return true;
+		}
+		return false;
+	}
+}
+
 struct Timer2 {
     Thread thread;
     
-    def this(Runnable run,int interval){
-        this.thread = new Thread(new Schedule(interval,new RepeatSchedule,run));
+    def this(Runnable run, int interval){
+        this.thread = new Thread(new Schedule(interval, new RepeatSchedule, run));
     }
 
     def void start(){
@@ -163,10 +178,10 @@ struct AtomicInteger{
         do{
             this.lock.wait();
             if(this.value < max){
-               ++ this.value;
-               this.n.triggerAll();
-            this.lock.release();
-            return;
+                ++ this.value;
+                this.n.triggerAll();
+                this.lock.release();
+                return;
             }
             this.lock.release();
             this.n.wait();
@@ -208,6 +223,94 @@ struct AtomicInteger{
     def string toString(){
         return this.get();
     }
+}
+
+import "../container/bilist.xs";
+struct ThreadContent : Content {
+	Thread thread;
+	
+	def this(Thread t) {
+		this.thread = t;
+	}
+	
+	def override string toString() {
+		return "";
+	}
+}
+
+struct ThreadWork : Content {
+	def default virtual void run(int tid);
+	
+	def override string toString() {
+		return "";
+	}
+}
+
+struct ThreadGroup {
+	List thread_list;
+	Trigger trigger;
+	AtomicInteger counter;
+	ThreadWork work;
+	MutexLock lock;
+
+	def this(int size) {
+		this.thread_list = new List();
+		this.trigger = new Trigger();
+		this.counter = new AtomicInteger();
+		this.lock = new MutexLock();
+		auto _trigger = this.trigger;
+		auto _counter = this.counter;
+		auto _this = this;
+		
+		for (int i = 0; i < size; i++) {
+			auto thread = new Thread(
+				new Runnable -> {
+					while(true) {
+						if(!_trigger.wait()) {
+							break;
+						}
+						if (_this.work != null) {
+							_this.work.run(i);
+						}
+						_counter.decrementAndGet();
+					}
+				}
+			);
+			thread.start();
+			this.thread_list.add(new ThreadContent(thread));
+		}
+	}
+	
+	def void run(ThreadWork work) {
+		this.lock.wait();
+		this.work = work;
+		this.counter.setAndGet(this.thread_list.size());
+		this.trigger.triggerAll();
+		while(this.counter.get() > 0){;}
+		this.work = null;
+		this.lock.release();
+	}
+	
+	def void close() {
+		this.lock.wait();
+		this.thread_list.forEach(new Consumer$thread->{
+			((ThreadContent)thread).thread.interrupt();
+		});
+		this.thread_list.clear();
+		this.lock.release();
+	}
+}
+
+if(_isMain_) {
+	auto grp = new ThreadGroup(20);
+	println("Running ThreadGroup");
+	grp.run(new ThreadWork$tid->{
+		println("tid is " + tid);
+	});
+	grp.close();
+	println("End Running ThreadGroup");
+	flush();
+	return 0;
 }
 
 struct Lock{
@@ -260,15 +363,17 @@ struct ConcurrentQueue {
     AtomicInteger empty;
     MutexLock     lock;
     List        list;
-    
-    def this(){
+    int 		capacity;
+	
+    def this(int capacity){
         this.full = new AtomicInteger();
         this.empty = new AtomicInteger();
         this.lock = new MutexLock();
     
-        this.full.set(100);
+        this.full.set(capacity);
         this.empty.set(0);
         this.list = new List();
+		this.capacity = capacity;
     }
     
     def void put(Content i){
@@ -291,4 +396,73 @@ struct ConcurrentQueue {
     def int size(){
         return this.empty.get();
     }
+	
+	def int capacity() {
+		return this.capacity;
+	}
+	
+	def void clear() {
+		this.lock.wait();
+		this.full.setAndGet(this.capacity);
+		this.empty.setAndGet(0);
+		this.lock.release();
+	}
+}
+
+struct ThreadWorkWrap : ThreadWork {
+	AtomicInteger latch;
+	def this() {
+		this.latch = new AtomicInteger();
+		this.latch.set(1);
+	}
+}
+
+struct ThreadPool {
+	List thread_list;
+	ConcurrentQueue job_queue;
+	MutexLock lock;
+
+	def this(int size) {
+		this.thread_list = new List();
+		this.lock = new MutexLock();
+		this.job_queue = new ConcurrentQueue(1024);
+
+		auto _this = this;
+		
+		for (int i = 0; i < size; i++) {
+			auto thread = new Thread(
+				new Runnable -> {
+					while(true) {
+						auto work = (ThreadWorkWrap)_this.job_queue.pop();
+						if (work != null) {
+							work.run(i);
+						}
+						work.latch.decrementAndGet();
+					}
+				}
+			);
+			thread.start();
+			this.thread_list.add(new ThreadContent(thread));
+		}
+	}
+
+	def void execute(ThreadWorkWrap work) {
+		this.job_queue.put(work);
+	}
+
+	def void wait(ThreadWorkWrap work) {
+		if (work != null) {
+			while( work.latch.get() != 0);
+		}
+	}
+	
+	def void close() {
+		this.lock.wait();
+		this.thread_list.forEach(new Consumer$thread->{
+			((ThreadContent)thread).thread.interrupt();
+		});
+		this.thread_list.clear();
+		this.job_queue.clear();
+		this.lock.release();
+	}
 }

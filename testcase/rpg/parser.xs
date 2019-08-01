@@ -392,7 +392,7 @@ struct RPGRuntime:Runtime{
     def override void open(string filename){
         this.labelMap.clear();
         this.instructions.clear();
-        this.parser.parse(filename,this);
+        this.parser.parse(filename, this);
         this.filename = filename;
     }
 
@@ -404,13 +404,13 @@ struct RPGRuntime:Runtime{
 }
 
 struct Sleep:Function{
-    def override void run(Runtime r,string[] args){
+    def override void run(Runtime r, string[] args){
         sleep(parseInt(args[0]));
     }
 }
 
 struct Choice:Function{
-    def override void run(Runtime r,string[] args){
+    def override void run(Runtime r, string[] args){
         string var = args[0];
         println("Choose");
         for(int i=1;i< sizeof args;i++){
@@ -423,13 +423,13 @@ struct Choice:Function{
 } 
 
 struct Set:Function{
-    def override void run(Runtime r,string[] args){
+    def override void run(Runtime r, string[] args){
         r.setVar(args[0],args[1]);
     }
 }
 
 struct Cond:Function{
-    def override void run(Runtime r,string[] args){
+    def override void run(Runtime r, string[] args){
         if(args[0] == args[1]){
             r.jump(args[2]);
         }
@@ -437,7 +437,7 @@ struct Cond:Function{
 }
 
 struct Select:Function{
-    def override void run(Runtime r,string[] args){
+    def override void run(Runtime r, string[] args){
         string var = args[0];
         int i = parseInt(args[1]);
         r.setVar(var,args[i-1]);
@@ -445,7 +445,7 @@ struct Select:Function{
 }
 
 struct Print:Function{
-    def override void run(Runtime r,string[] args){
+    def override void run(Runtime r, string[] args){
         
         string content = args[0];
         if(sizeof args < 1){
@@ -475,7 +475,7 @@ struct Print:Function{
 }
 
 struct StopPrint:Function{
-    def override void run(Runtime r,string[] args){
+    def override void run(Runtime r, string[] args){
         string content = args[0];
         int stop = parseInt(args[1]);
         if(sizeof args > 2){
@@ -510,25 +510,25 @@ struct StopPrint:Function{
 }
 
 struct Jump:Function{
-    def override void run(Runtime r,string[] args){
+    def override void run(Runtime r, string[] args){
         r.jump(args[0]);
     }
 }
 
 struct TypeString:Function{
-    def override void run(Runtime r,string[] args){
+    def override void run(Runtime r, string[] args){
         r.setVar(args[0],readString());
     }
 }
 
 struct RPGTime:Function{
-    def override void run(Runtime r,string[] args){
+    def override void run(Runtime r, string[] args){
         r.setVar(args[0],time());
     }
 }
 
 struct RPGAdd:Function{
-    def override void run(Runtime r,string[] args){
+    def override void run(Runtime r, string[] args){
         bigint val = parseBigInt(r.getVar(args[0]));
         val += parseBigInt(args[1]);
         r.setVar(args[0],val);
@@ -536,7 +536,7 @@ struct RPGAdd:Function{
 }
 
 struct RPGCase :Function{
-    def override void run(Runtime r,string[] args){
+    def override void run(Runtime r, string[] args){
         int len = sizeof args;
         int c = parseInt(args[0]);
         if(c < len - 1){
@@ -546,7 +546,7 @@ struct RPGCase :Function{
 }
 
 struct Open:Function{
-    def override void run(Runtime r,string[] args){
+    def override void run(Runtime r, string[] args) {
         r.open(args[0]);
         r.index = -1;
     }

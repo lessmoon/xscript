@@ -18,14 +18,12 @@ import java.math.BigInteger;
 public class JNObject extends Struct {
 
     public static class JNObjectProxy {
-        static final JNObjectProxy TRUE = new JNObjectProxy(Boolean.TRUE),
-                FALSE = new JNObjectProxy(Boolean.FALSE),
+        static final JNObjectProxy TRUE = new JNObjectProxy(Boolean.TRUE), FALSE = new JNObjectProxy(Boolean.FALSE),
                 NULL = new JNObjectProxy(null);
 
         static final StructValue VALUE_NULL = new StructValue(symbols.Struct.StructPlaceHolder, NULL),
                 VALUE_FALSE = new StructValue(symbols.Struct.StructPlaceHolder, FALSE),
                 VALUE_TRUE = new StructValue(symbols.Struct.StructPlaceHolder, TRUE);
-
 
         public JNObjectProxy(Object object) {
             this.object = object;
@@ -60,12 +58,13 @@ public class JNObject extends Struct {
 
         @StructMethod(ret = "$", param = "bool")
         public Value newBoolean(Value value) {
-            return value == Value.True?VALUE_TRUE:VALUE_FALSE;
+            return value == Value.True ? VALUE_TRUE : VALUE_FALSE;
         }
 
-        @StructMethod(ret = "$",param = "int")
-        public Value newLong(Value value){
-            return new StructValue(symbols.Struct.StructPlaceHolder,new JNObjectProxy(Long.valueOf(value.valueAs(Integer.class))));
+        @StructMethod(ret = "$", param = "int")
+        public Value newLong(Value value) {
+            return new StructValue(symbols.Struct.StructPlaceHolder,
+                    new JNObjectProxy(Long.valueOf(value.valueAs(Integer.class))));
         }
 
         @StructMethod(ret = "$", param = "int")
@@ -83,15 +82,16 @@ public class JNObject extends Struct {
             return new StructValue(symbols.Struct.StructPlaceHolder, new JNObjectProxy(value.valueAs(Character.class)));
         }
 
-
         @StructMethod(ret = "$", param = "bigint")
         public Value newBigInteger(Value value) {
-            return new StructValue(symbols.Struct.StructPlaceHolder, new JNObjectProxy(value.valueAs(BigInteger.class)));
+            return new StructValue(symbols.Struct.StructPlaceHolder,
+                    new JNObjectProxy(value.valueAs(BigInteger.class)));
         }
 
         @StructMethod(ret = "$", param = "bigreal")
         public Value newBigDecimal(Value value) {
-            return new StructValue(symbols.Struct.StructPlaceHolder, new JNObjectProxy(value.valueAs(BigDecimal.class)));
+            return new StructValue(symbols.Struct.StructPlaceHolder,
+                    new JNObjectProxy(value.valueAs(BigDecimal.class)));
         }
 
         @StructMethod(ret = "$", param = "real")
@@ -130,7 +130,7 @@ public class JNObject extends Struct {
         }
 
         @StructMethod(ret = "bigint")
-        public Value castLong(){
+        public Value castLong() {
             return new Value(BigInteger.valueOf((Long) object));
         }
 

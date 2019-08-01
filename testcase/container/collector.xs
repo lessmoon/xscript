@@ -1,6 +1,6 @@
 import "sequence.xs";
 
-struct Collector{
+struct Collector {
     Sequence seq;
     def this(Sequence s){
         this.seq = s;

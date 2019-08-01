@@ -15,7 +15,7 @@ import java.util.Scanner;
 /**
  * Created by lessmoon on 2017/7/4.
  */
-public class BreakAndDebug extends Function{
+public class BreakAndDebug extends Function {
     Dictionary dic;
     TypeTable typeTable;
 
@@ -27,30 +27,43 @@ public class BreakAndDebug extends Function{
         VarTable.enableDebug();
     }
 
-    public void process(){
+    public void process() {
         Scanner scanner = new Scanner(System.in);
-        while(true) {
+        while (true) {
             System.out.print("Debug>>>");
             String r = scanner.next();
-            switch (r){
-                case "q":case "quit":return;
-                case "t":case "type":
-                    String name = scanner.next();
-                    Token t = dic.getOrReserve(name);
-                    EnvEntry ee = VarTable.getVarInfo(t);
-                    Value v = VarTable.getVarAbsolutely(ee.stacklevel,ee.offset);
-                    System.out.print("["+ee.stacklevel+","+ee.offset+"]:"+v.type);
-                    if (v.type.isBuiltInType()) {
-                       System.out.print(" {" + v + "}") ;
-                    }
-                    System.out.print("\n");
+            switch (r) {
+            case "q":
+            case "quit":
+                return;
+            case "t":
+            case "type":
+                String name = scanner.next();
+                Token t = dic.getOrReserve(name);
+                EnvEntry ee = VarTable.getVarInfo(t);
+                if (ee == null) {
+                    System.out.print("variable `" + name + "' not found!\n");
                     break;
-                case "s":case "stack":
-                    RunStack.printStackTrace();
-                    break;
-                case "vs":case "varstack":
-                    VarTable.printVarInfo();
-                    break;
+                }
+                Value v = VarTable.getVarAbsolutely(ee.stacklevel, ee.offset);
+                System.out.print("[" + ee.stacklevel + "," + ee.offset + "]:" + v.type);
+                if (v.type.isBuiltInType()) {
+                    System.out.print(" {" + v + "}");
+                }
+                System.out.print("\n");
+                break;
+            case "s":
+            case "stack":
+                RunStack.printStackTrace();
+                break;
+            case "vs":
+            case "varstack":
+                VarTable.printVarInfo();
+                break;
+            case "eval":
+            case "evaluate":
+                String expr = scanner.next();
+                break;
             }
         }
     }
@@ -58,7 +71,7 @@ public class BreakAndDebug extends Function{
     @Override
     public Value run(List<Value> args) {
         Value condition = args.get(0).getValue();
-        if(condition == Value.True){//if it is true
+        if (condition == Value.True) {// if it is true
             process();
         }
         return condition;

@@ -329,29 +329,29 @@ struct UIComponentContainer:UIComponent{
     }
 
     def override void drawImpl(const UIGraphic p){
-        this.container.forEach(new Consumer^(c)->{
+        this.container.forEach(new Consumer$(c)->{
             const auto ui =((UIComponentContent) c);
             ui.component.draw(new UITransiteGraphic(p,ui.offset));
         });
     }
     def override void onMouseClick(const int bid,const Point p){
         this.container.stream()
-        .filter(new Consumer^(c) -> new BoolContent(((UIComponentContent)c).component.contains(p)))
-        .forEach(new Consumer^(c) -> {
-            new Future(new AsyncRunnable(){
-                def override Content get(){
-                    ((UIComponentContent)c).component.onMouseClick(bid,p);
-                }
-            });
-        });
+			.filter(new Consumer$(c) -> new BoolContent(((UIComponentContent)c).component.contains(p)))
+			.forEach(new Consumer$(c) -> {
+				new Future(new AsyncRunnable() {
+					def override Content get() {
+						((UIComponentContent)c).component.onMouseClick(bid, p);
+					}
+				});
+			});
     }
     
     def override bool isCollisionWith(const UIComponent p){
-        return this.container.stream().anyMatch(new Consumer^(c)->new BoolContent(((UIComponentContent)c).component.isCollisionWith(p)));
+        return this.container.stream().anyMatch(new Consumer$(c)->new BoolContent(((UIComponentContent)c).component.isCollisionWith(p)));
     }
     
     def override bool contains(Point p){
-        return this.container.stream().anyMatch(new Consumer^(c)->new BoolContent(((UIComponentContent)c).component.contains(p)));
+        return this.container.stream().anyMatch(new Consumer$(c)->new BoolContent(((UIComponentContent)c).component.contains(p)));
     }
 }
 
@@ -369,10 +369,10 @@ struct UIRectComponent:UIComponent{
         const int x = this.region.o.x,y = this.region.o.y,
                   x2 = x + this.region.width,y2 = y + this.region.height;
         if(this.id0 < 0){
-            this.id0 = p.addLine(x,y,x2,y);
-            this.id1 = p.addLine(x,y,x,y2);
-            this.id2 = p.addLine(x2,y,x2,y2);
-            this.id3 = p.addLine(x,y2,x2,y2);
+            this.id0 = p.addLine(x, y, x2,y);
+            this.id1 = p.addLine(x, y, x, y2);
+            this.id2 = p.addLine(x2,y, x2,y2);
+            this.id3 = p.addLine(x, y2,x2,y2);
         } else {
             p.setLine(this.id0,x,y,x2,y);
             p.setLine(this.id1,x,y,x,y2);
@@ -401,11 +401,34 @@ struct UIRectComponent:UIComponent{
     }
 }
 
+struct UITextRectComponent : UIRectComponent{
+    int string_id;
+	string content;
+
+    def this(Point o, int width, int height, string content){
+        super(o, width, height);
+		this.string_id = -1;
+		this.content = content;
+    }
+
+    def override void drawImpl(const UIGraphic p){
+		super.drawImpl(p);
+		const int x = this.region.o.x, y = this.region.o.y,
+            x2 = x + this.region.width, y2 = y + this.region.height;
+		if (this.string_id > 0) {
+			p.setStringPosition(this.string_id, x, y);
+			p.setStringColor(this.string_id);
+		} else {
+			this.string_id = p.addString(this.content, x, y);
+		}
+    }
+}
+
 struct UIRoundComponent:UIComponent{
     RoundRegion region;
     int id;
     
-    def this(Point o,int radius){
+    def this(Point o, int radius){
         super(null);
         this.region = new RoundRegion(o,radius);
         this.id = -1;
@@ -544,7 +567,7 @@ struct UIBaseComponent:UIComponentContainer{
 }
 
 if(false||_isMain_){
-    auto c = new UIBaseComponent("test",600,800);
+    auto c = new UIBaseComponent("test", 600, 800);
     c.addComponent(new UIRectComponent(new Point(200,200),100,100){
         def override void onMouseClick(const int bid,const Point p){
             this.setColor(new Color(rand()%255,rand()%255,rand()%255));
@@ -557,6 +580,7 @@ if(false||_isMain_){
             println("rect2");
         }
     },new Point(0,0));
+	c.addComponent(new UITextRectComponent(new Point(0, 0), 100,100, "test"), new Point(0, 0));
     c.addComponent(new UIRoundComponent(new Point(200,200),100){
         def override void onMouseClick(const int bid,const Point p){
             this.setColor(new Color(rand()%255,rand()%255,rand()%255));

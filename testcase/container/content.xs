@@ -88,11 +88,11 @@ struct StringHashContent:HashContent{
         
         int len = strlen(this.value);
         int hash_code = 0;
-        while(len-- > 0 ){
+        while(len-- > 0 ) {
             hash_code *= 10;
             hash_code += this.value[len];
         }
-        if( hash_code < 0 )
+        if(hash_code < 0)
             hash_code = - hash_code;
         return this.hash = hash_code;
     }
@@ -110,7 +110,7 @@ struct StringHashContent:HashContent{
 struct Consumer;
 struct Stream;
 
-struct Iterator{
+struct Iterator {
     def virtual void next(){}
     def virtual bool hasNext(){return false;}
     @Content

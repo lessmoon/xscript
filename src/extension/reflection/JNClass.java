@@ -37,35 +37,35 @@ public class JNClass extends Struct {
         @Init(param = "string")
         public void init(Value v) throws ClassNotFoundException {
             switch (v.toString()) {
-                case "int":
-                    clazz = int.class;
-                    break;
-                case "void":
-                    clazz = void.class;
-                    break;
-                case "short":
-                    clazz = short.class;
-                    break;
-                case "long":
-                    clazz = long.class;
-                    break;
-                case "double":
-                    clazz = double.class;
-                    break;
-                case "float":
-                    clazz = float.class;
-                    break;
-                case "boolean":
-                    clazz = boolean.class;
-                    break;
-                case "char":
-                    clazz = char.class;
-                    break;
-                case "byte":
-                    clazz = byte.class;
-                    break;
-                default:
-                    clazz = Class.forName(v.toString());
+            case "int":
+                clazz = int.class;
+                break;
+            case "void":
+                clazz = void.class;
+                break;
+            case "short":
+                clazz = short.class;
+                break;
+            case "long":
+                clazz = long.class;
+                break;
+            case "double":
+                clazz = double.class;
+                break;
+            case "float":
+                clazz = float.class;
+                break;
+            case "boolean":
+                clazz = boolean.class;
+                break;
+            case "char":
+                clazz = char.class;
+                break;
+            case "byte":
+                clazz = byte.class;
+                break;
+            default:
+                clazz = Class.forName(v.toString());
             }
         }
 
@@ -80,32 +80,32 @@ public class JNClass extends Struct {
         }
 
         @StructMethod(ret = "#.JNObject", param = "#.JNObject[]")
-        public Value newInstance(ArrayValue args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        public Value newInstance(ArrayValue args) throws NoSuchMethodException, IllegalAccessException,
+                InvocationTargetException, InstantiationException {
             if (args.getSize() == 0) {
-                return new StructValue(symbols.Struct.StructPlaceHolder, new JNObjectProxy(clazz.newInstance()));
+                return new StructValue(symbols.Struct.StructPlaceHolder,
+                        new JNObjectProxy(clazz.getDeclaredConstructor().newInstance()));
             }
-            List<Object> argv = args.toList()
-                    .stream()
-                    .map(v -> ((JNObjectProxy) ((StructValue) v).getExtension()).object)
-                    .collect(Collectors.toList());
+            List<Object> argv = args.toList().stream()
+                    .map(v -> ((JNObjectProxy) ((StructValue) v).getExtension()).object).collect(Collectors.toList());
 
-            Class[] params = argv.stream().map(Object::getClass).collect(Collectors.toList()).toArray(new Class[args.getSize()]);
+            Class<?>[] params = argv.stream().map(Object::getClass).collect(Collectors.toList())
+                    .toArray(new Class<?>[args.getSize()]);
 
             return new StructValue(symbols.Struct.StructPlaceHolder,
                     new JNObjectProxy(clazz.getConstructor(params).newInstance(argv.toArray())));
         }
 
-        @StructMethod(ret = "#.JNMethod", param = {"string", "$[]"})
+        @StructMethod(ret = "#.JNMethod", param = { "string", "$[]" })
         public Value getMethod(Value name, ArrayValue param) throws NoSuchMethodException {
             if (param.getSize() == 0) {
-                return new StructValue(symbols.Struct.StructPlaceHolder, new JNMethodProxy(clazz.getMethod(name.toString())));
+                return new StructValue(symbols.Struct.StructPlaceHolder,
+                        new JNMethodProxy(clazz.getMethod(name.toString())));
             }
-            Class[] params = param.toList()
-                    .stream()
-                    .map(v -> ((JNClassProxy) ((StructValue) v).getExtension()).clazz)
-                    .collect(Collectors.toList())
-                    .toArray(new Class[param.getSize()]);
-            return new StructValue(symbols.Struct.StructPlaceHolder, new JNMethodProxy(clazz.getMethod(name.toString(), params)));
+            Class<?>[] params = param.toList().stream().map(v -> ((JNClassProxy) ((StructValue) v).getExtension()).clazz)
+                    .collect(Collectors.toList()).toArray(new Class<?>[param.getSize()]);
+            return new StructValue(symbols.Struct.StructPlaceHolder,
+                    new JNMethodProxy(clazz.getMethod(name.toString(), params)));
         }
 
         @StructMethod(ret = "bool", param = "$")

@@ -19,7 +19,7 @@ struct HashMapNode{
     HashPair value;
     HashMapNode next;
     
-    def this(HashPair value,HashMapNode next){
+    def this(HashPair value, HashMapNode next){
         this.next = next;
         this.value = value;
     }
@@ -34,7 +34,6 @@ struct HashMap{
     int size;
     int capcity;
     HashMapNode[] map;
-    
     
     def this(){
         this.size = 0;
@@ -137,7 +136,7 @@ struct HashMap{
     def string toString(){
         StringBuffer buf = new StringBuffer();
         buf.append("{");
-        for(int i = 0 ; i < this.capcity;i++){
+        for(int i = 0; i < this.capcity; i++){
             if(this.map[i] != null){
                 buf.append(i).append(".").append(this.map[i]).append("\n");
             }
@@ -147,13 +146,53 @@ struct HashMap{
     }
     
     def Iterator iterator(){
-        Sequence s = new List();
-        for(int i = 0; i < this.capcity;i++){
-            for(auto p = this.map[i];p != null;p = p.next){
-                s.add(p.value);
+        return new Iterator(this){
+            int idx;
+            HashMap map;
+			HashMapNode node;
+			
+            def this(HashMap map){
+                this.map = map;
+                this.idx = -1;
+				this.node = null;
             }
-        }
-        return s.iterator();
+            
+            def override void next(){
+				int idx = this.idx;
+				HashMapNode p = this.node;
+				if (p != null && p.next != null) {
+					this.node = p.next;
+					return;
+				}
+				while(++idx < sizeof (this.map.map)) {
+					p = this.map.map[idx];
+					if (p != null) {
+						this.node = p;
+						this.idx = idx;
+						return;
+					}
+				}
+            }
+            
+            def override bool hasNext(){
+				int idx = this.idx;
+				HashMapNode p = this.node;
+				if (p != null && p.next != null) {
+					return true;
+				}
+				while(++idx < sizeof (this.map.map)) {
+					p = this.map.map[idx];
+					if (p != null) {
+						return true;
+					}
+				}
+                return false;
+            }
+            
+            def override Content getValue(){
+                return this.node.value;
+            }
+        };
     }
 }
 

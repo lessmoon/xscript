@@ -39,7 +39,7 @@ struct Stream {
     def string join(string delimiter) {
         StringBuffer sb = new StringBuffer();
         string[] d = {""};
-        this.forEach(new Consumer^c->{
+        this.forEach(new Consumer$c->{
             sb.append(d[0])
               .append(c.toString());
             d[0] = delimiter;

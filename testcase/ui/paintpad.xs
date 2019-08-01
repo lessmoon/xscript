@@ -75,7 +75,10 @@ def void addRect(PaintPad pad,int x,int y,int w,int height){
 }
 
 import "../container/content.xs";
-struct Point :Content{
+
+struct RealPoint : Content;
+
+struct Point : Content {
     int x;
     int y;
     def this(int x, int y);
@@ -103,12 +106,55 @@ struct Point :Content{
     def int dot(Point p){
         return p.x*this.x + p.y*this.y;
     }
+	
+	def RealPoint toRealPoint();
 }
 
-def Point.this(int x,int y){
-    this.init(x,y);
+def Point.this(int x, int y) {
+    this.init(x, y);
 }
 
+struct RealPoint :Content {
+    real x;
+    real y;
+    def this(real x, real y);
+    
+    def void init(real x, real y){
+        this.x = x;
+        this.y = y;
+    }
+
+    @string
+    def override string toString() {
+        return "[" + this.x + "," + this.y + "]";
+    }
+    
+    @+
+    def RealPoint add(RealPoint p){
+        return new RealPoint(this.x + p.x,this.y + p.y);
+    }
+
+    @-
+    def RealPoint sub(RealPoint p){
+        return new RealPoint(this.x - p.x,this.y - p.y);
+    }
+
+    def real dot(RealPoint p){
+        return p.x*this.x + p.y*this.y;
+    }
+	
+	def Point toPoint() {
+		return new Point(this.x, this.y);
+	}
+}
+
+def RealPoint.this(real x, real y) {
+	this.init(x, y);
+}
+
+def RealPoint Point.toRealPoint() {
+	return new RealPoint(this.x, this.y);
+}
 
 struct Color{
     int r,g,b;
@@ -120,6 +166,13 @@ struct Color{
     }
 }
 
+const auto BLACK_COLOR = new Color(0, 0, 0),
+           RED_COLOR = new Color(255, 0, 0),
+		   GREEN_COLOR = new Color(0, 255, 0),
+		   BLUE_COLOR = new Color(0, 0, 255),
+		   YELLOW_COLOR = new Color(255, 255, 0),
+		   WHITE_COLOR = new Color(255, 255, 255);
+		   
 import "../container/darray.xs";
 
 struct Graphics {
@@ -418,10 +471,10 @@ struct RectRegion : Region{
     def override bool isCollisionWith(const Region b){
         if(b instanceof RectRegion){
             const auto h = (RectRegion) b;
-            const auto x1 = this.o.x,x2 = h.o.x,
-                       x1_ = this.o.x + this.width,x2_ = this.o.x + h.width,
-                       y1 = this.o.y,y2 = h.o.y,
-                       y1_ = this.o.y + this.height,y2_ = this.o.y + h.height;
+            const auto x1 = this.o.x, x2 = h.o.x,
+                       x1_ = this.o.x + this.width, x2_ = this.o.x + h.width,
+                       y1 = this.o.y, y2 = h.o.y,
+                       y1_ = this.o.y + this.height, y2_ = this.o.y + h.height;
             
             return !(x1 > x2_ || x2 > x1_||y1 > y2_ || y2 > y1_);
         } else if (b instanceof RoundRegion){
@@ -430,10 +483,10 @@ struct RectRegion : Region{
                        x1_  = this.o.x + this.width,
                        y1   = this.o.y,
                        y1_  = this.o.y + this.height;
-            auto p = new Point(h.o.x,h.o.y);           
+            auto p = new Point(h.o.x, h.o.y);           
             p.x = abs(2*p.x-(x1+x1_));
             p.y = abs(2*p.y-(y1+y1_));
-            p = p.sub(new Point(this.width,this.height));
+            p = p.sub(new Point(this.width, this.height));
             if(p.x < 0){
                 p.x = 0;
             }
@@ -558,7 +611,6 @@ if(_isMain_){
     x.wait();
 }
 
-
 /*
  *    _____
  *   |_____|
@@ -603,7 +655,7 @@ if(false||_isMain_){
        
     }
 
-    g.init(new Calculator("Calculator",122,82,ep,g,scr),82,122);
+    g.init(new Calculator("Calculator", 122, 82, ep, g, scr),82,122);
     g.transite(new Point(20,10));
     scr.add(g);
     

@@ -3,7 +3,7 @@ struct Comparator{
     def default virtual int compare(Content a,Content b);
 }
 
-def void sortArray(Content[] s,int l,int r,Comparator less){
+def void sortArray(Content[] s, int l, int r, Comparator less){
     while (l < r){
         int i = l, j = r;
         auto x = s[l];  

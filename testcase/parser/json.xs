@@ -33,7 +33,7 @@ struct JSON:Content{
     }
 
     def virtual bool isNumber(){
-        return true;
+        return false;
     }
 
 }
@@ -102,7 +102,7 @@ struct JSONObject:JSON{
         StringBuffer b = new StringBuffer();
         b.append("{");
         bool[] is_begin = {true};
-        this.map.iterator().forEachRemained(new Consumer^v->{
+        this.map.iterator().forEachRemained(new Consumer$v->{
             const auto x = (HashPair)v;
             const auto o = (JSON) x.value;
             b.append(is_begin[0]?"\n":",\n");
@@ -134,6 +134,10 @@ struct JSONArray:JSON{
         return (JSON) this.array.get(id);
     }
 
+    def override bool isArray(){
+        return true;
+    }
+
     def int size(){
         return this.array.size();
     }
@@ -142,7 +146,7 @@ struct JSONArray:JSON{
         StringBuffer b = new StringBuffer();
         b.append("[");
         bool[] is_begin= {false};
-        this.array.iterator().forEachRemained(new Consumer^v->{
+        this.array.iterator().forEachRemained(new Consumer$v->{
             auto h = (JSON)v;
             if (is_begin[0]) {
                 b.append(", ");

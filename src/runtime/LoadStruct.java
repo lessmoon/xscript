@@ -8,12 +8,12 @@ import java.util.Map;
 
 public enum LoadStruct {
     ;
-    public static final Map<Class, Struct> map = new HashMap<>();
+    public static final Map<Class<?>, Struct> map = new HashMap<>();
 
-    public static Struct loadStruct(String pkg,String clazzname,Token sname,Dictionary dic,TypeTable typeTable){
+    public static Struct loadStruct(String pkg, String clazzname, Token sname, Dictionary dic, TypeTable typeTable) {
         ClassLoader loader = ClassLoader.getSystemClassLoader();
-        Class clazz;
-        try{
+        Class<?> clazz;
+        try {
             try {
                 clazz = loader.loadClass(pkg + "." + clazzname);
             } catch (Exception ignored) {
@@ -21,24 +21,24 @@ public enum LoadStruct {
             }
 
             Struct struct = map.get(clazz);
-            if(struct != null && struct.isClosed()){
+            if (struct != null && struct.isClosed()) {
                 throw new RuntimeException("reload struct `" + clazz.getCanonicalName() + "'");
             }
 
-            extension.Struct s = (extension.Struct) clazz.newInstance();
-            struct = struct != null?s.setup(struct,dic,typeTable):s.setup(sname, dic, typeTable);
-            map.put(clazz,struct.close());
+            extension.Struct s = (extension.Struct) clazz.getDeclaredConstructor().newInstance();
+            struct = struct != null ? s.setup(struct, dic, typeTable) : s.setup(sname, dic, typeTable);
+            map.put(clazz, struct.close());
             return struct;
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static Struct preDeclare(String pkg,String clazzName,Token sname,Dictionary dic,TypeTable typeTable){
+    public static Struct preDeclare(String pkg, String clazzName, Token sname, Dictionary dic, TypeTable typeTable) {
         ClassLoader loader = ClassLoader.getSystemClassLoader();
-        Class clazz;
+        Class<?> clazz;
 
-        try{
+        try {
             try {
                 clazz = loader.loadClass(pkg + "." + clazzName);
             } catch (Exception ignored) {
@@ -46,22 +46,22 @@ public enum LoadStruct {
             }
 
             Struct struct = map.get(clazz);
-            if(struct == null){
+            if (struct == null) {
                 struct = new Struct(sname);
-                map.put(clazz,struct);
-            } else if(struct.getName() != sname){
+                map.put(clazz, struct);
+            } else if (struct.getName() != sname) {
                 throw new RuntimeException("reload struct `" + clazz.getCanonicalName() + "'");
             }
 
             return struct;
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static Struct getBoundStructOfClass(String pkg,String clazzName){
+    public static Struct getBoundStructOfClass(String pkg, String clazzName) {
         ClassLoader loader = ClassLoader.getSystemClassLoader();
-        Class clazz;
+        Class<?> clazz;
         try {
             clazz = loader.loadClass(pkg + "." + clazzName);
         } catch (Exception ignored) {
@@ -74,16 +74,16 @@ public enum LoadStruct {
         return getBoundStructOfClass(clazz);
     }
 
-    public static Struct getBoundStructOfClass(String clazzName){
+    public static Struct getBoundStructOfClass(String clazzName) {
         try {
             ClassLoader loader = ClassLoader.getSystemClassLoader();
             return getBoundStructOfClass(loader.loadClass(clazzName));
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static Struct getBoundStructOfClass(Class clazz){
-            return map.get(clazz);
+    public static Struct getBoundStructOfClass(Class<?> clazz) {
+        return map.get(clazz);
     }
 }

@@ -1,4 +1,4 @@
-"jump":"_Main_"
+"jump":"_Main_1"
 <"stack">
 <"init">
 "set":"s_${arg0}_size" "0"
@@ -44,7 +44,7 @@
 "checkpoint": "helloworld"
 "jump": "print"
 
-
+<"_Main_1">
 "jump":"beg"
 <"multiple">
 "set":"tmp_b" "${b}"
@@ -95,7 +95,7 @@
 "print":"I can only remember there was a terrible earthquake."
 "jump":"checkingbag"
 <"name">
-"print":"Ahh...Headache.I don't remember my name!"
+"print":"Ahh...Headache. I don't remember my name!"
 <"checkingbag">
 "print":"Wait...I'm carrying a bag.Maybe I could get some useful information from it."
 "sleep":"2000"
@@ -106,11 +106,11 @@
 "print":"And what's your name?"
 "read":"playername"
 "print":"Nice to meet you,$!" "playername"
-"print":"Nice to meet you too,Dr.${rolename}!"
+"print":"Nice to meet you too, Dr.${rolename}!"
 <"dead">
 "jump":"${death}"
 <"hungry">
-"type":"Sorry,${rolename} died of starvation!" "200"
+"type":"Sorry, ${rolename} died of starvation!" "200"
 "jump":"end"
 <"cold">
 "type":"Sad,${rolename} froze to death!" "200"

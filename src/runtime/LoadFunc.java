@@ -9,21 +9,22 @@ import symbols.Type;
 import java.util.List;
 
 public class LoadFunc {
-    public static ExFunction loadFunc(Type t, String pkg, String clazzname, Token fn, List<Param> pl, Dictionary dic, TypeTable typeTable){
+    public static ExFunction loadFunc(Type t, String pkg, String clazzname, Token fn, List<Param> pl, Dictionary dic,
+            TypeTable typeTable) {
         ClassLoader loader = ClassLoader.getSystemClassLoader();
 
-        Class clazz;
+        Class<?> clazz;
 
-        try{
+        try {
             try {
                 clazz = loader.loadClass(pkg + "." + clazzname);
             } catch (Exception ignored) {
                 clazz = loader.loadClass(pkg + "$" + clazzname);
             }
 
-            Function f = (Function)clazz.newInstance();
+            Function f = (Function) clazz.getDeclaredConstructor().newInstance();
             f.init(dic, typeTable);
-            return new ExFunction(t,fn,pl,f);
+            return new ExFunction(t, fn, pl, f);
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }

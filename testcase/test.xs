@@ -36,6 +36,165 @@ struct HashMap<KeyType: HashKey, ValueType: Value> {
 struct Shape {
     def virtual void draw(PaintPad pad, Point offset);
 }
+
+def RealPoint getNormalVector(RealPoint p) {
+	return new RealPoint(-p.y, p.x);
+}
+
+def RealPoint normalize(RealPoint p) {
+	real norm = p.x*p.x + p.y*p.y;
+	if (norm > -0.000001 && norm < 0.000001) {
+		return p;
+	} else {
+		norm = sqrt(norm);
+		return new RealPoint(p.x / norm, p.y / norm);
+	}
+}
+
+def void calcCollision(RealPoint collisionPlane, RealPoint v1, RealPoint v2,
+						RealPoint v1_2, RealPoint v2_2, 
+						real mass1, real mass2, real ratio) {
+	RealPoint x_axis = getNormalVector(collisionPlane);
+	RealPoint y_axis = collisionPlane;
+	//rotation
+	RealPoint v1_v = new RealPoint(x_axis.dot(v1), y_axis.dot(v1));
+	RealPoint v2_v = new RealPoint(x_axis.dot(v2), y_axis.dot(v2));
+	real v1_x = ratio*((mass1-mass2)*v1_v.x + 2*mass2*v2_v.x)/(mass1+mass2);
+	//real v1_y = ((mass1-mass2)*v1_v.y + 2*mass2*v2_v.y)/(mass1+mass2);
+	real v2_x = ratio*((mass2-mass1)*v2_v.x + 2*mass1*v1_v.x)/(mass1+mass2);
+	//real v2_y = ((mass2-mass1)*v2_v.y + 2*mass1*v1_v.y)/(mass1+mass2);
+	v1_2.x = (x_axis.x * v1_x + y_axis.x * v1_v.y);
+	v1_2.y = (x_axis.y * v1_x + y_axis.y * v1_v.y);
+	v2_2.x = (x_axis.x * v2_x + y_axis.x * v2_v.y);
+	v2_2.y = (x_axis.y * v2_x + y_axis.y * v2_v.y); 
+}
+
+def RealPoint fixVelocity(RealPoint pos, RealPoint velocity, int width, int height, int radius, int cell, real ratio) {
+	RealPoint v = new RealPoint(velocity.x, velocity.y);
+	if ((pos.x <= radius+cell && velocity.x < 0) || (pos.x >= width-radius-cell && velocity.x > 0)) {
+		v.x = -v.x*ratio;
+	}
+	if ((pos.y <= radius+cell && velocity.y < 0) || (pos.y >= height-radius-cell && velocity.y > 0)) {
+		v.y = -v.y*ratio;
+	}
+	return v;
+}
+
+def void reduceVelocity(RealPoint velocity, real ratio) {
+	velocity.x *= ratio;
+	velocity.y *= ratio;
+}
+
+struct CollisionDemo : CyclePaintPad {
+    int[] cid;
+
+	int[] lid;//for v1
+
+ 
+    RoundRegion[] round;
+	RealPoint[] v;
+	RealPoint[] pos;
+	
+    def this(){
+        super(new PaintPad("CollisionDemo", 600, 600), 1);
+		
+		this.pos = new RealPoint[]{new RealPoint(300, 100), new RealPoint(300, 200), new RealPoint(300, 400)};
+		this.round = new RoundRegion[]{new RoundRegion(this.pos[0].toPoint(), 20),
+						new RoundRegion(this.pos[1].toPoint(), 20),
+						new RoundRegion(this.pos[2].toPoint(), 20)};
+		
+		this.v = new RealPoint[]{new RealPoint(0.0, 0.0), new RealPoint(0.0, 0.0), new RealPoint(0.0, 0.6)};
+		
+		this.cid = new int[sizeof(this.pos)];
+		for (int i = 0; i < sizeof(this.pos); i++) {
+			this.cid[i] = this.pad.addCircle(this.round[i].o.x-this.round[i].radius, 
+									   this.round[i].o.y-this.round[i].radius, 
+									   this.round[i].radius*2);
+		}
+		
+		this.pad.setBrushColor(GREEN_COLOR.r, GREEN_COLOR.g, GREEN_COLOR.b);
+		this.lid = new int[sizeof(this.pos)];
+		for (int i = 0; i < sizeof(this.pos); i++) {
+			this.lid[i] = this.pad.addLine(this.round[i].o.x, this.round[i].o.y, 
+							 this.round[i].o.x + this.v[i].x*20, 
+							 this.round[i].o.y + this.v[i].y*20);
+		}
+
+        this.pad.setBrushColor(BLUE_COLOR.r, BLUE_COLOR.g, BLUE_COLOR.b);
+
+        this.pad.addLine(10, 10, 10, 590);
+		this.pad.addLine(10, 10, 590, 10);
+		this.pad.addLine(10, 590, 590, 590);
+        this.pad.addLine(590, 10, 590, 590);
+    }
+    
+    def override void run(){
+		for (int i = 0; i < sizeof(this.pos); i++) {
+			this.pos[i] = this.pos[i] + this.v[i];
+			this.round[i].o = this.pos[i].toPoint();
+		}
+
+        //collision detection
+		RealPoint[] newVelocity = new RealPoint[sizeof(this.pos)];
+		for (int i = 0; i < sizeof(this.pos); i++) {
+			newVelocity[i] = fixVelocity(this.pos[i], this.v[i], 600, 600, this.round[i].radius, 10, 1);
+		}
+
+		for (int i = 0; i < sizeof(this.pos); i++) {
+			for (int j = i+1; j < sizeof(this.pos); j++) {
+				if (this.round[i].isCollisionWith(this.round[j])) {
+					auto c = this.pos[i].sub(this.pos[j]);
+					auto h = getNormalVector(c);
+					this.pad.setBrushColor(RED_COLOR.r, RED_COLOR.g, RED_COLOR.b);
+					this.pad.setCircleColor(this.cid[i]);
+					this.pad.setCircleColor(this.cid[j]);
+					calcCollision(normalize(h), newVelocity[i], newVelocity[j],
+								  newVelocity[i], newVelocity[j], 
+								  this.round[i].radius*this.round[i].radius, this.round[j].radius*this.round[j].radius, 
+								  1);
+					println("collision[" + i + " ,"+ j + "] = " + newVelocity[i].toString() + " " + newVelocity[j].toString());
+					this.pad.setBrushColor(BLACK_COLOR.r, BLACK_COLOR.g, BLACK_COLOR.b);
+
+					new Thread(new Schedule(500, new OnceScheduce, new Runnable->{
+						this.pad.setCircleColor(this.cid[i]);
+						this.pad.setCircleColor(this.cid[j]);
+						this.pad.redraw();
+					})).start();
+				}
+			}
+		}
+		
+		for (int i = 0; i < sizeof(this.pos); i++) {
+			this.v[i] = newVelocity[i];
+			reduceVelocity(this.v[i], 1);
+			this.pad.setCircle(this.cid[i], this.pos[i].x-this.round[i].radius, 
+								this.pos[i].y-this.round[i].radius);
+		
+			this.pad.setLine(this.lid[i], this.round[i].o.x, this.round[i].o.y,
+							 this.round[i].o.x + this.v[i].x*20, this.round[i].o.y + this.v[i].y*20);
+		
+		}
+
+        super.run();
+    }
+    
+    def void open(){
+        this.pad.show();
+    }
+
+    def void wait(){
+        this.pad.wait();
+		this.stop();
+    }
+}
+
+{
+	CollisionDemo game = new CollisionDemo();
+	game.open();
+	game.start();
+	game.wait();
+}
+
 struct Triangle {
     Point a, b, c;
     PaintPad pad;
@@ -87,9 +246,6 @@ def int oppositeDirection(int dir) {
     return -1;
     
 }
-
-const auto BLACK_COLOR = new Color(0, 0, 0),
-           RED_COLOR = new Color(255, 0, 0);
 
 struct Rect {
     int lid_0;
@@ -194,7 +350,7 @@ struct Snake {
         this.pad = pad;
         this.lastDirection = direction;
         this.occMap = occMap;
-        body.forEach(new Consumer^bodyNode->{
+        body.forEach(new Consumer$bodyNode->{
             const auto node = (SnakeBodyNode) bodyNode;
             occMap[node.point.x][node.point.y] = true;
         });
@@ -525,19 +681,19 @@ struct base {
     r.registerFunction("read",new TypeString);
     r.registerFunction("case",new RPGCase);
     r.registerFunction("time",new RPGTime);
-    r.registerFunction("checkpoint", new Function^(r,args)->{
+    r.registerFunction("checkpoint", new Function$(r,args)->{
         const auto fio = new FileOutputStream(new SimpleFile(args[0]), false);
         JSONObject root = new JSONObject();
         JSONObject vars = new JSONObject();
         root.insert("variables", vars);
-        r.varMap.iterator().stream().forEach(new Consumer^x->{
+        r.varMap.iterator().stream().forEach(new Consumer$x->{
             vars.insert(((HashPair)x).key.toString(), new JSONString(((HashPair)x).value.toString()));
         });
-        /*.sort(new Comparator^(x1,x2)->{
+        /*.sort(new Comparator$(x1,x2)->{
             auto x1_c = ((HashPair)x1).key.toString();
             auto x2_c = ((HashPair)x2).key.toString();
             return x1_c < x2_c?1:x1_c == x2_c?0:-1;
-        }).forEach(new Consumer^x->{
+        }).forEach(new Consumer$x->{
             fio.writeString(x.toString() + "\r\n");
         });*/
         root.insert("filename", new JSONString(r.filename));
@@ -562,9 +718,9 @@ struct base {
     fio.close();
 }
 
-int[] r = {3243,545};
+int[] r = {3243, 545};
 
-int x = 80,y = 170,width = 40;
+int x = 80, y = 170, width = 40;
 
 struct MyPaintPad:PaintPad{
     def this(){
@@ -744,7 +900,7 @@ struct PairContent2 : Content {
     }
 }
 
-ConcurrentQueue queue = new ConcurrentQueue();
+ConcurrentQueue queue = new ConcurrentQueue(100);
 
 struct PrintNumber : Runnable {
     int id ;
@@ -806,7 +962,7 @@ def void f2(int b){
         x.add(new IntContent(rand()%100));
     }
     println("Test");
-    x.forEach(new Consumer{
+    x.forEach(new Consumer {
         def override Content apply(Content i){
             print( " " + i);
         }
@@ -814,15 +970,15 @@ def void f2(int b){
     println("");
 
     new RangeStream(1,100)
-        .filter(new Consumer^i->new BoolContent(0==((int)(IntContent)i)%4))
-        .forEach(new Consumer^i->{println(i);});
+        .filter(new Consumer$i->new BoolContent(0==((int)(IntContent)i)%4))
+        .forEach(new Consumer$i->{println(i);});
 
     println("\nTest2");
     x.stream()
-     .filter(new Consumer^(i)->new BoolContent((((IntContent)i).val % 4) == 0))
-     .map(new Consumer^(i)->new IntContent(((IntContent)i).val * 4))
-     .sort(new Comparator^(a,b)->((IntContent)b).val - ((IntContent)a).val)
-     .forEach(new Consumer^(i)->{print( " " + i );});
+     .filter(new Consumer$(i)->new BoolContent((((IntContent)i).val % 4) == 0))
+     .map(new Consumer$(i)->new IntContent(((IntContent)i).val * 4))
+     .sort(new Comparator$(a,b)->((IntContent)b).val - ((IntContent)a).val)
+     .forEach(new Consumer$(i)->{print( " " + i );});
 
     println("\nTest2 end");
 }

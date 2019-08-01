@@ -13,6 +13,9 @@ def int square(int a){
 }
 
 def bigreal sqrt(bigreal n){
+	if ( n > -0.000001 && n < 0.000001) {
+		return 0;
+	}
     bigreal a = n/2;
     for(int i = 0;i < 40;i++){
         a = (n/a+a)/2;
