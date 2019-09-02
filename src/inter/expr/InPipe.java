@@ -2,49 +2,47 @@ package inter.expr;
 
 public class InPipe extends Expr {
     Value value;
-    Expr        expr;
+    Expr expr;
 
-    public InPipe(Expr expr){
-        super(expr.op,expr.type);
+    public InPipe(Expr expr) {
+        super(expr.op, expr.type);
         this.expr = expr;
-        value     = null;
+        value = null;
     }
 
     @Override
-    public boolean isChangeable(){
+    public boolean isChangeable() {
         return expr.isChangeable();
     }
 
-	/*
-	 * NOTE:if the opt option is on,while using inpipe and outpipe in a SeqExpr
-	 *      it should be awared that it will not affect the result of SeqExpr
-	 * e.g.:	SeqExpr(ip,op)
-	 *          after opt: -> SeqExpr(ip->opt,op->opt)
-	 *          if ip -> opt is still ip then it doesn't matter
-	 *          or ip -> opt is not changeable so op -> opt will be the value,
-	 *          it still doesn't matter
-	 */
+    /*
+     * NOTE:if the opt option is on, while using inpipe and outpipe in a SeqExpr it
+     * should be awared that it will not affect the result of SeqExpr e.g.:
+     * SeqExpr(ip,op) after opt: -> SeqExpr(ip->opt,op->opt) if ip -> opt is still
+     * ip then it doesn't matter or ip -> opt is not changeable so op -> opt will be
+     * the value, it still doesn't matter
+     */
     @Override
-    public Expr optimize(){
+    public Expr optimize() {
         expr = expr.optimize();
-        if(expr.isChangeable())
+        if (expr.isChangeable())
             return this;
         else
             return expr;
     }
 
     @Override
-    public Value getValue(){
+    public Value getValue() {
         value = expr.getValue();
         return value;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return expr.toString();
     }
 
-    public Value getPipeValue(){
+    public Value getPipeValue() {
         return value;
     }
 }

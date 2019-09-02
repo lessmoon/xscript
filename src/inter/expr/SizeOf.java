@@ -4,29 +4,30 @@ import lexer.Token;
 import symbols.Array;
 import symbols.Type;
 
-public class SizeOf extends Op{
+public class SizeOf extends Op {
     public Expr expr;
-    public SizeOf(Token tok,Expr x){
-        super(tok,Type.Int);
+
+    public SizeOf(Token tok, Expr x) {
+        super(tok, Type.Int);
         expr = x;
         check();
     }
 
-    void check(){
-        if(! (expr.type instanceof Array)){
-            error("Operand `" + op + "' can't be used for `" + expr.type + "',array type wanted" );
+    void check() {
+        if (!(expr.type instanceof Array)) {
+            error("Operand `" + op + "' can't be used for `" + expr.type + "',array type wanted");
         }
     }
 
     @Override
-    public boolean isChangeable(){
+    public boolean isChangeable() {
         return expr.isChangeable();
     }
 
     @Override
-    public Expr optimize(){
+    public Expr optimize() {
         expr = expr.optimize();
-        if(isChangeable()){
+        if (isChangeable()) {
             return this;
         } else {
             return getValue();
@@ -34,17 +35,17 @@ public class SizeOf extends Op{
     }
 
     @Override
-    public Value getValue(){
+    public Value getValue() {
         Value c = expr.getValue();
-        if(c == Value.Null){
-            error("null pointer error:try to get a null array size");
+        if (c == Value.Null) {
+            error("null pointer error: try to get a null array size");
         }
-        ArrayValue ac = (ArrayValue)c;
+        ArrayValue ac = (ArrayValue) c;
         return new Value(ac.getSize());
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return op.toString() + " " + expr.toString();
     }
 }

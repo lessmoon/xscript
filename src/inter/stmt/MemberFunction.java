@@ -19,15 +19,15 @@ public class MemberFunction extends StructFunction {
 
     @Override
     public String getDescription(boolean needStructInfo) {
-        StringBuilder sb = new StringBuilder(getType().toString() + " " );
-        if(needStructInfo) {
+        StringBuilder sb = new StringBuilder(getType().toString() + " ");
+        if (needStructInfo) {
             sb.append(getStruct().lexeme).append(".");
         }
         sb.append(getName()).append("(");
         int i = 1;
-        if(i < getParamList().size()){
+        if (i < getParamList().size()) {
             sb.append(getParamList().get(i++).toString());
-            while(i < getParamList().size() ){
+            while (i < getParamList().size()) {
                 sb.append(", ");
                 sb.append(getParamList().get(i++).toString());
             }

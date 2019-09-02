@@ -3,6 +3,11 @@ package inter.expr;
 import lexer.*;
 import lexer.Float;
 import symbols.Type;
+import vm.Compiler;
+import vm.Pointer;
+import vm.ReadOnlyPointer;
+import vm.detail.ImediateValuePointer;
+import vm.detail.SetOperator;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -57,8 +62,8 @@ public class Value extends Expr {
     /**
      * cast the value to java value
      * 
-     * @param t the target type class
-     * @param   <T> the target Type
+     * @param t   the target type class
+     * @param <T> the target Type
      * @return the value
      */
     @SuppressWarnings("unchecked")
@@ -70,9 +75,9 @@ public class Value extends Expr {
         } else if (t == String.class) {
             return (T) ((Str) op).value;
         } else if (t == java.lang.Float.class) {
-            return (T) java.lang.Float.valueOf(((Float) op).value);
+            return (T) java.lang.Float.valueOf(((lexer.Float) op).value);
         } else if (t == Double.class) {
-            return (T) java.lang.Double.valueOf(((Float) op).value);
+            return (T) java.lang.Double.valueOf(((lexer.Float) op).value);
         } else if (t == BigInteger.class) {
             return (T) ((BigNum) op).value;
         } else if (t == BigDecimal.class) {
@@ -87,5 +92,13 @@ public class Value extends Expr {
     @Override
     public String toString() {
         return op.toString();
+    }
+
+    @Override
+    public Pointer compile(Compiler compiler) {
+        ImediateValuePointer pointer = compiler.registerConstantValue(this);
+        Pointer output = compiler.acquireTemporary();
+        compiler.emitInstruction(new SetOperator(pointer, output));
+        return output;
     }
 }

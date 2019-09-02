@@ -13,11 +13,11 @@ public class ReadOnlyWrap extends Expr {
     private Expr variable;
 
     public ReadOnlyWrap(Expr variable) {
-        this(variable,variable.type);
+        this(variable, variable.type);
     }
 
-    public ReadOnlyWrap(Expr variable, Type type){
-        super(variable.op,type);
+    public ReadOnlyWrap(Expr variable, Type type) {
+        super(variable.op, type);
         this.variable = variable;
     }
 
@@ -37,7 +37,7 @@ public class ReadOnlyWrap extends Expr {
     }
 
     @Override
-    public  String toString(){
+    public String toString() {
         return "RO:" + variable.toString();
     }
 

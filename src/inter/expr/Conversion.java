@@ -5,20 +5,21 @@ import symbols.Type;
 
 public abstract class Conversion extends Expr {
     public Expr e;
-    Conversion(Expr e,Token op,Type t){
-        super(op,t);
+
+    Conversion(Expr e, Token op, Type t) {
+        super(op, t);
         this.e = e;
     }
 
     @Override
-    public boolean isChangeable(){
+    public boolean isChangeable() {
         return e.isChangeable();
     }
 
     @Override
-    public Expr optimize(){
+    public Expr optimize() {
         e = e.optimize();
-        if(isChangeable()){
+        if (isChangeable()) {
             return this;
         } else {
             return getValue();
@@ -26,7 +27,7 @@ public abstract class Conversion extends Expr {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return getClass().getSimpleName() + "(" + e + ")";
     }
 

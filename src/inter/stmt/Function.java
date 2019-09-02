@@ -11,12 +11,12 @@ public class Function extends FunctionBasic {
     private Stmt body;
 
     public Function(Token n, Type t, List<Param> p) {
-        super(n,t,p);
+        super(n, t, p);
         body = null;
     }
 
     public Function(Token n, Type t, List<Param> p, Stmt body) {
-        super(n,t,p);
+        super(n, t, p);
         this.body = body;
     }
 
@@ -29,13 +29,13 @@ public class Function extends FunctionBasic {
     }
 
     @Override
-    public final void run(){
+    public final void run() {
         body.run();
     }
-    
+
     @Override
-    public boolean isCompleted(){
+    public boolean isCompleted() {
         return body != null;
     }
-    
+
 }

@@ -35,26 +35,29 @@ public abstract class FunctionBasic extends Stmt {
     public int getParamSize() {
         return getParamList().size();
     }
-    
+
     public abstract void run();
+
     public abstract boolean isCompleted();
-    public boolean isNotCompleted(){
+
+    public boolean isNotCompleted() {
         return !isCompleted();
     }
 
-    public boolean used(){
+    public boolean used() {
         return used;
     }
-    public void setUsed(){
+
+    public void setUsed() {
         used = true;
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         return this.getDescription(true);
     }
 
-    public String getDescription(boolean needStructInfo){
+    public String getDescription(boolean needStructInfo) {
         StringBuilder sb = new StringBuilder(getType().toString());
         sb.append("  ").append(getName()).append("(");
         int i = 0;

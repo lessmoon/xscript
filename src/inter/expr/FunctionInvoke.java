@@ -6,6 +6,10 @@ import inter.stmt.MemberFunction;
 import inter.stmt.ReturnResult;
 import runtime.RunStack;
 import runtime.VarTable;
+import symbols.Struct;
+import vm.Compiler;
+import vm.Pointer;
+import vm.Compiler.TemporaryState;
 
 import java.util.List;
 
@@ -15,11 +19,10 @@ public class FunctionInvoke extends Expr {
     private final List<Expr> arguments;
     private final boolean isMember;
     /*
-     * NOTE:(fixed)
-     * Wrong when recursively call itself
-     * It may rewrite the args in another calling
+     * NOTE:(fixed) Wrong when recursively call itself It may rewrite the args in
+     * another calling
      */
-    //final Value[]     args;
+    // final Value[] args;
 
     public FunctionInvoke(FunctionBasic function, List<Expr> arguments) {
         super(function.getName(), function.getType());
@@ -29,7 +32,7 @@ public class FunctionInvoke extends Expr {
         check();
         function.setUsed();
     }
-    
+
     void check() {
         if (functions.getParamSize() != arguments.size())
             error("function parameters number not match:" + functions);
@@ -37,7 +40,7 @@ public class FunctionInvoke extends Expr {
             if (!functions.getParamInfo(i).type.isCongruentWith(arguments.get(i).type)) {
                 Expr e = arguments.get(i);
                 Expr f = ConversionFactory.getConversion(e, functions.getParamInfo(i).type);
-                assert (f != null);/*won't happen*/
+                assert (f != null);/* won't happen */
                 arguments.set(i, f);
             }
         }
@@ -50,8 +53,8 @@ public class FunctionInvoke extends Expr {
 
     @Override
     public Expr optimize() {
-        
-        /*may have conversion*/
+
+        /* may have conversion */
         for (int i = 0; i < arguments.size(); i++) {
             arguments.set(i, arguments.get(i).optimize());
         }
@@ -99,7 +102,7 @@ public class FunctionInvoke extends Expr {
                 System.out.println("\narg[" + i + "]{" + arguments.get(i) + "} = " + c + "<->" + c.hashCode());
             }
             VarTable.pushVar(c);
-            VarTable.defVar(functions.getParamInfo(i).name,functions.getParamInfo(i).type);
+            VarTable.defVar(functions.getParamInfo(i).name, functions.getParamInfo(i).type);
             i++;
         }
         if (IS_DEBUG) {
@@ -120,5 +123,36 @@ public class FunctionInvoke extends Expr {
         RunStack.endInvokeFunction();
         VarTable.popTop();
         return result;
+    }
+
+    @Override
+    public Pointer compile(Compiler compiler) {
+        int id;
+        if (isMember) {
+            id = compiler.getFunctionIdByName(functions.getName().toString());
+        } else {
+            Struct s = ((StructFunction)functions).getStruct();
+            id = compiler.getMemberFunctionIdByName(s.getName().toString(), functions.getName().toString());
+        }
+        Pointer[] argsValue = new Pointer[arguments.size()];
+        //TODO: emit member function check instruction.
+        boolean[] usage = compiler.getRegisterUsage();
+        TemporaryState state = compiler.getTemporaryVariableUsage();
+        for (int i = 0; i < arguments.size(); i++) {
+            argsValue[i] = arguments.get(i).compile(compiler);
+            compiler.setRegisterUsage(usage);
+            compiler.setTemporaryVariableUsage(state);
+        }
+        //TODO: emit save stack operator
+        //compiler.emitInstruction(new SaveStack())
+        //passing arguments frame
+        //compiler.emitInstruction(new PushStack())
+        //function invoke
+        //compiler.emitInstruction(new invoke())
+        //function ret
+        //compiler.emitInstruction(new StackRecover())
+        //return value will return to r#0
+        assert !compiler.isRegisterUsed(0);
+        return compiler.acquireRegister(0);
     }
 }

@@ -6,20 +6,20 @@ import symbols.Type;
 import java.math.BigInteger;
 
 class IntUnary extends Unary {
-    IntUnary(Token tok, Expr x){
-        super(tok,x);
+    IntUnary(Token tok, Expr x) {
+        super(tok, x);
         check();
     }
 
-    void check(){
-        switch(op.tag){
+    void check() {
+        switch (op.tag) {
         case Tag.INC:
         case Tag.DEC:
-            if(!(expr instanceof Var))
+            if (!(expr instanceof Var))
                 error("operand `" + op + "' should be used for variable");
             return;
         case '-':
-            return ;
+            return;
         default:
             error("Unknown operand: `" + op + "'");
             return;
@@ -27,15 +27,15 @@ class IntUnary extends Unary {
     }
 
     @Override
-    public Value getValue(){
+    public Value getValue() {
         Value c = expr.getValue();
-        switch(op.tag){
+        switch (op.tag) {
         case Tag.INC:
-            return ((Var)expr).setValue(new Value(((Num)(c.op)).value + 1));
+            return ((Var) expr).setValue(new Value(((Num) (c.op)).value + 1));
         case Tag.DEC:
-            return ((Var)expr).setValue(new Value(((Num)(c.op)).value - 1));
+            return ((Var) expr).setValue(new Value(((Num) (c.op)).value - 1));
         case '-':
-            return new Value(-((Num)(c.op)).value);
+            return new Value(-((Num) (c.op)).value);
         default:
             error("Unknown operand: `" + op + "'");
             return null;
@@ -44,20 +44,20 @@ class IntUnary extends Unary {
 }
 
 class BigIntUnary extends IntUnary {
-    BigIntUnary(Token tok, Expr x){
-        super(tok,x);
+    BigIntUnary(Token tok, Expr x) {
+        super(tok, x);
     }
 
     @Override
-    public Value getValue(){
+    public Value getValue() {
         Value c = expr.getValue();
-        switch(op.tag){
+        switch (op.tag) {
         case Tag.INC:
-            return ((Var)expr).setValue(new Value(((BigNum)(c.op)).value.add(BigInteger.ONE)));
+            return ((Var) expr).setValue(new Value(((BigNum) (c.op)).value.add(BigInteger.ONE)));
         case Tag.DEC:
-            return ((Var)expr).setValue(new Value(((BigNum)(c.op)).value.subtract(BigInteger.ONE)));
+            return ((Var) expr).setValue(new Value(((BigNum) (c.op)).value.subtract(BigInteger.ONE)));
         case '-':
-            return new Value(((BigNum)(c.op)).value.negate());
+            return new Value(((BigNum) (c.op)).value.negate());
         default:
             error("Unknown operand: `" + op + "'");
             return null;
@@ -66,13 +66,13 @@ class BigIntUnary extends IntUnary {
 }
 
 class RealUnary extends Unary {
-    RealUnary(Token tok, Expr x){
-        super(tok,x);
+    RealUnary(Token tok, Expr x) {
+        super(tok, x);
         check();
     }
-    
-    void check(){
-        switch(op.tag){
+
+    void check() {
+        switch (op.tag) {
         case '-':
             return;
         default:
@@ -80,12 +80,12 @@ class RealUnary extends Unary {
             return;
         }
     }
-    
+
     @Override
-    public Value getValue(){
-        if(op.tag == '-'){
+    public Value getValue() {
+        if (op.tag == '-') {
             Value c = expr.getValue();
-            return new Value(-((lexer.Float)(c.op)).value);
+            return new Value(-((lexer.Float) (c.op)).value);
         } else {
             error("Unknown operand: `" + op + "'");
             return null;
@@ -94,33 +94,33 @@ class RealUnary extends Unary {
 }
 
 class BigRealUnary extends RealUnary {
-    BigRealUnary(Token tok, Expr x){
-        super(tok,x);
+    BigRealUnary(Token tok, Expr x) {
+        super(tok, x);
     }
 
     @Override
-    public Value getValue(){
-        if(op.tag == '-'){
+    public Value getValue() {
+        if (op.tag == '-') {
             Value c = expr.getValue();
-            return new Value(((BigFloat)(c.op)).value.negate());
+            return new Value(((BigFloat) (c.op)).value.negate());
         } else {
             error("Unknown operand: `" + op + "'");
             return null;
         }
-    } 
+    }
 }
 
 class CharUnary extends Unary {
-    CharUnary(Token tok, Expr x){
-        super(tok,x);
+    CharUnary(Token tok, Expr x) {
+        super(tok, x);
         check();
     }
-    
-    void check(){
-        switch(op.tag){
+
+    void check() {
+        switch (op.tag) {
         case Tag.INC:
         case Tag.DEC:
-            if(!(expr instanceof Var))
+            if (!(expr instanceof Var))
                 error("operand `" + op + "' should be used for variable");
             return;
         case '-':
@@ -131,17 +131,17 @@ class CharUnary extends Unary {
         }
     }
 
-    public Value getValue(){
+    public Value getValue() {
         Value c = expr.getValue();
-        switch(op.tag){
+        switch (op.tag) {
         case Tag.INC:
-            c = ((Var)expr).setValue(new Value((char)(((Char)(c.op)).value + 1)));
+            c = ((Var) expr).setValue(new Value((char) (((Char) (c.op)).value + 1)));
             return c;
         case Tag.DEC:
-            c = ((Var)expr).setValue(new Value((char)(((Char)(c.op)).value - 1)));
+            c = ((Var) expr).setValue(new Value((char) (((Char) (c.op)).value - 1)));
             return c;
         case '-':
-            return new Value((char)(-((Char)(c.op)).value));
+            return new Value((char) (-((Char) (c.op)).value));
         default:
             error("Unknown operand: `" + op + "'");
             return null;
@@ -150,18 +150,18 @@ class CharUnary extends Unary {
 }
 
 public class UnaryFactory {
-    public static Unary getUnary(Token tok,Expr e){
-        if( Type.numeric(e.type) ){
-            if( Type.Int == e.type ){
-                return new IntUnary(tok,e);
-            } else if( Type.Real == e.type ){
-                return new RealUnary(tok,e);
-            } else if( Type.Char == e.type ){
-                return new CharUnary(tok,e);
-            } else if( Type.BigInt == e.type ){
-                return new BigIntUnary(tok,e);
-            } else if( Type.BigReal == e.type ){
-                return new BigRealUnary(tok,e);
+    public static Unary getUnary(Token tok, Expr e) {
+        if (Type.numeric(e.type)) {
+            if (Type.Int == e.type) {
+                return new IntUnary(tok, e);
+            } else if (Type.Real == e.type) {
+                return new RealUnary(tok, e);
+            } else if (Type.Char == e.type) {
+                return new CharUnary(tok, e);
+            } else if (Type.BigInt == e.type) {
+                return new BigIntUnary(tok, e);
+            } else if (Type.BigReal == e.type) {
+                return new BigRealUnary(tok, e);
             }
         }
         e.error("Operand: `" + tok + "' is not permitted here");

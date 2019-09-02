@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import vm.Compiler;
+
 /**
  * Created by lessmoon on 2017/3/7.
  */
@@ -42,15 +44,15 @@ public class LinkedSeq extends Stmt {
         stmts.forEach(Stmt::run);
     }
 
-    public void runAt(int beg){
+    public void runAt(int beg) {
         stmts.listIterator(beg).forEachRemaining(Stmt::run);
     }
 
-    public int length(){
+    public int length() {
         return stmts.size();
     }
 
-    public Iterator<Stmt> iterator(){
+    public Iterator<Stmt> iterator() {
         return stmts.iterator();
     }
 
@@ -75,16 +77,17 @@ public class LinkedSeq extends Stmt {
             }
         }
         switch (stmts.size()) {
-            case 0:
-                return Stmt.Null;
-            case 1:
-                return stmts.get(0);
-            case 2:
-                return new Seq(stmts.get(0), stmts.get(1));
-            default:
-                return this;
+        case 0:
+            return Stmt.Null;
+        case 1:
+            return stmts.get(0);
+        case 2:
+            return new Seq(stmts.get(0), stmts.get(1));
+        default:
+            return this;
         }
     }
+
     @Override
     public boolean isLastStmt() {
         return stmts.stream().anyMatch(Stmt::isLastStmt);
@@ -93,5 +96,10 @@ public class LinkedSeq extends Stmt {
     @Override
     public void appendToSeq(LinkedSeq s) {
         merge(s, this);
+    }
+
+    @Override
+    public void compile(Compiler compiler) {
+        stmts.forEach(stmt->stmt.compile(compiler));
     }
 }

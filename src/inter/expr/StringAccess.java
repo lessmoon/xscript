@@ -9,34 +9,34 @@ public class StringAccess extends Expr {
     private Expr array;
     private Expr index;
 
-    public StringAccess(Expr a,Expr i){
-        super(Word.array,Type.Char);
+    public StringAccess(Expr a, Expr i) {
+        super(Word.array, Type.Char);
         array = a;
         index = i;
         check();
     }
-    
-    void check(){
-        if(array.type != Type.Str)
+
+    void check() {
+        if (array.type != Type.Str)
             error("array access is only for " + Type.Str + "");
-        if( Type.max(Type.Int,index.type) != Type.Int ){
+        if (Type.max(Type.Int, index.type) != Type.Int) {
             error("type " + index.type + " is not valid for array");
         }
 
-        if(index.type != Type.Int)
-            index = ConversionFactory.getConversion(index,Type.Int);
+        if (index.type != Type.Int)
+            index = ConversionFactory.getConversion(index, Type.Int);
     }
 
     @Override
-    public boolean isChangeable(){
+    public boolean isChangeable() {
         return index.isChangeable() || array.isChangeable();
     }
 
     @Override
-    public Expr optimize(){
+    public Expr optimize() {
         index = index.optimize();
         array = array.optimize();
-        if(isChangeable()){
+        if (isChangeable()) {
             return this;
         } else {
             return getValue();
@@ -44,10 +44,10 @@ public class StringAccess extends Expr {
     }
 
     @Override
-    public Value getValue(){
-        int i = ((Num)(index.getValue().op)).value;
-        String str = ((Str)(array.getValue().op)).value;
-        if(i >= str.length() || i < 0){
+    public Value getValue() {
+        int i = ((Num) (index.getValue().op)).value;
+        String str = ((Str) (array.getValue().op)).value;
+        if (i >= str.length() || i < 0) {
             error("Index " + i + " out of string range( 0 ~ " + (str.length() - 1) + " )");
         }
         return new Value(str.charAt(i));

@@ -10,37 +10,36 @@ public class SeqExpr extends Expr {
     private Expr left;
     private Expr right;
 
-    public SeqExpr(Token tok,Expr left,Expr right){
-        super(tok,left.type);
+    public SeqExpr(Token tok, Expr left, Expr right) {
+        super(tok, left.type);
         this.left = left;
         this.right = right;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "(" + left + "," + right + ")";
     }
 
     @Override
-    public Expr optimize(){
+    public Expr optimize() {
         left = left.optimize();
         right = right.optimize();
-        if(right.isChangeable())
+        if (right.isChangeable())
             return this;
-        else 
+        else
             return left;
     }
 
     @Override
-    public boolean isChangeable(){
+    public boolean isChangeable() {
         return left.isChangeable() || right.isChangeable();
     }
 
     @Override
-    public Value getValue(){
+    public Value getValue() {
         Value c = left.getValue();
         right.getValue();
         return c;
     }
 }
-

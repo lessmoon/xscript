@@ -10,7 +10,6 @@ import symbols.Type;
 
 import java.util.*;
 
-
 public abstract class Switch<T> extends Stmt {
     private Expr condition;
     private boolean isDefaultSet = false;
@@ -24,12 +23,13 @@ public abstract class Switch<T> extends Stmt {
         condition = c;
     }
 
-    public final void appendCase(Value c, Stmt s){
-        this.appendCaseImp(c,s);
-        if(!isDefaultSet()){
+    public final void appendCase(Value c, Stmt s) {
+        this.appendCaseImp(c, s);
+        if (!isDefaultSet()) {
             indexOfDefault = stmts.length();
         }
     }
+
     public abstract void appendCaseImp(Value c, Stmt s);
 
     public abstract boolean isCaseSet(Value c);
@@ -47,7 +47,7 @@ public abstract class Switch<T> extends Stmt {
         isDefaultSet = true;
     }
 
-    public static Switch getSwitch(Expr c) {
+    public static Switch<?> getSwitch(Expr c) {
         if (c.type == Type.Str) {
             return new StrSwitch(c);
         } else if (c.type == Type.Char) {
@@ -55,7 +55,8 @@ public abstract class Switch<T> extends Stmt {
         } else if (c.type == Type.Int) {
             return new IntSwitch(c);
         } else {
-            c.error("switch expression should be `" + Type.Int + "', `" + Type.Str + "' or `" + Type.Char + "', but `" + c.type + "' found");
+            c.error("switch expression should be `" + Type.Int + "', `" + Type.Str + "' or `" + Type.Char + "', but `"
+                    + c.type + "' found");
             return new IntSwitch(c);
         }
     }
@@ -85,7 +86,7 @@ public abstract class Switch<T> extends Stmt {
             if (tmp != Stmt.Null) {
                 newStmts.append(tmp);
             } else if (newIndex != index) {
-                if(index == indexOfDefault){
+                if (index == indexOfDefault) {
                     indexOfDefault = newIndex;
                 }
 
@@ -103,7 +104,7 @@ public abstract class Switch<T> extends Stmt {
         }
         final int newIndex = newStmts.length();
         final List<T> list = mapidx2case.remove(index);
-        if(index == indexOfDefault){
+        if (index == indexOfDefault) {
             indexOfDefault = newIndex;
         }
         if (list != null) {
@@ -136,10 +137,7 @@ public abstract class Switch<T> extends Stmt {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(this.getClass().getSimpleName());
-        sb.append("(")
-                .append(condition)
-                .append(")")
-                .append("{\n");
+        sb.append("(").append(condition).append(")").append("{\n");
 
         Iterator<Stmt> iter = stmts.iterator();
         int i = 0;
@@ -154,12 +152,12 @@ public abstract class Switch<T> extends Stmt {
                 sb.append("case");
                 l.forEach(o -> sb.append(" ").append(o));
 
-                if(isDefaultSet()&&indexOfDefault == i){
+                if (isDefaultSet() && indexOfDefault == i) {
                     sb.append(" default");
                 }
                 sb.append("=>{\n");
                 needClose = true;
-            } else if(isDefaultSet()&&indexOfDefault == i){
+            } else if (isDefaultSet() && indexOfDefault == i) {
                 sb.append("default=>{\n");
                 needClose = true;
             }
@@ -175,11 +173,11 @@ public abstract class Switch<T> extends Stmt {
         if ((l = mapidx2case.get(i)) != null) {
             sb.append("case");
             l.forEach(o -> sb.append(" ").append(o));
-            if(isDefaultSet()&&indexOfDefault == i){
+            if (isDefaultSet() && indexOfDefault == i) {
                 sb.append(" default");
             }
             sb.append("=> {\n}\n");
-        } else if(isDefaultSet()&&indexOfDefault == i){
+        } else if (isDefaultSet() && indexOfDefault == i) {
             sb.append("default{\n}\n");
         }
 
@@ -206,8 +204,7 @@ class IntSwitch extends Switch<Integer> {
     @Override
     public boolean isCaseSet(Value c) {
         if (Type.max(Type.Int, c.type) != Type.Int) {
-            c.error("case type should be `" + Type.Int +
-                    "', but `" + c.type + "' found.");
+            c.error("case type should be `" + Type.Int + "', but `" + c.type + "' found.");
         }
         c = ConversionFactory.getConversion(c, Type.Int).getValue();
         int i = ((Num) c.op).value;
@@ -218,7 +215,6 @@ class IntSwitch extends Switch<Integer> {
     public Integer getIndex(Value c) {
         return map.get(((Num) c.op).value);
     }
-
 
 }
 
@@ -240,8 +236,7 @@ class CharSwitch extends Switch<Character> {
     @Override
     public boolean isCaseSet(Value c) {
         if (Type.max(Type.Int, c.type) != Type.Int) {
-            c.error("case type should be `" + Type.Char +
-                    "', but `" + c.type + "' found.");
+            c.error("case type should be `" + Type.Char + "', but `" + c.type + "' found.");
         }
         if (Type.Int == c.type) {
             int i = ((Num) c.op).value;
@@ -280,13 +275,11 @@ class StrSwitch extends Switch<String> {
     @Override
     public boolean isCaseSet(Value c) {
         if (c.type != Type.Str) {
-            c.error("case type should be `" + Type.Str +
-                    "', but `" + c.type + "' found.");
+            c.error("case type should be `" + Type.Str + "', but `" + c.type + "' found.");
         }
         String i = ((Str) c.op).value;
         return map.get(i) != null;
     }
-
 
     @Override
     public Integer getIndex(Value c) {
